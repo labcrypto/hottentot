@@ -1,2 +1,2 @@
 # hottentot
-A light weight RPC framewor and serialization framework for C++ and Java.
+A light weight RPC and serialization framework for C++ and Java.
