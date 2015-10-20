@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "generated/token.h"
-#include "generated/credential.h"
-#include "generated/authenticate_service.h"
-#include "generated/authenticate_service_proxy_builder.h"
+#include "../generated/token.h"
+#include "../generated/credential.h"
+#include "../generated/authenticate_service.h"
+#include "../generated/authenticate_service_proxy_builder.h"
 
 
 int 

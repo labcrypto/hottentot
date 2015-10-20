@@ -8,14 +8,14 @@
 #include <naeem/hottentot/runtime/proxy/proxy.h>
 
 #include "authenticate_service.h"
-#include "token.h"
-#include "credential.h"
 
 
 namespace naeem {
   namespace hottentot {
     namespace examples {
       namespace auth {
+        class Token;
+        class Credential;
         class AuthenticateServiceProxy : public AuthenticateService, 
                                          public ::naeem::hottentot::runtime::proxy::Proxy {
         public:
@@ -28,4 +28,5 @@ namespace naeem {
     }
   }
 }
+
 #endif
