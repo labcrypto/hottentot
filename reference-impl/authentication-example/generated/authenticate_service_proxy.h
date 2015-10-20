@@ -5,6 +5,9 @@
 
 #include <string>
 
+#include <naeem/hottentot/runtime/proxy/proxy.h>
+
+#include "authenticate_service.h"
 #include "token.h"
 #include "credential.h"
 
@@ -16,10 +19,10 @@ namespace naeem {
         class AuthenticateServiceProxy : public AuthenticateService, 
                                          public ::naeem::hottentot::runtime::proxy::Proxy {
         public:
-          AuthenticateServiceProxy();
-          virtual ~AuthenticateServiceProxy();
+          AuthenticateServiceProxy() {}
+          virtual ~AuthenticateServiceProxy() {}
         public:
-          virtual Token& Authenticate(Credential &) override;
+          virtual Token* Authenticate(Credential *);
         };
       }
     }

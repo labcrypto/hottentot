@@ -15,7 +15,7 @@ namespace naeem {
       namespace auth {
         class AuthenticateService {
         public:
-          virtual Token& Authenticate(Credential &) = 0;
+          virtual Token* Authenticate(Credential *) = 0;
         };
       }
     }

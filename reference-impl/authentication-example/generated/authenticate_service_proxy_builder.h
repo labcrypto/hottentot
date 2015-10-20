@@ -13,8 +13,9 @@ namespace naeem {
         class AuthenticateService;
         class AuthenticateServiceProxyBuilder {
         public:
-          static AuthenticateService* CreateAuthenticateServiceProxy(std::string    /* host */,
-                                                                     uint32_t       /* port */);
+          static AuthenticateService* Create(std::string    /* host */,
+                                             uint32_t       /* port */);
+          static void Destroy(AuthenticateService *);
         };
       }
     }

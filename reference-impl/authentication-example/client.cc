@@ -10,14 +10,15 @@ int
 main(int argc, char **argv) {
   try {
     ::naeem::hottentot::examples::auth::AuthenticateService *proxy = 
-        ::naeem::hottentot::examples::auth::AuthenticateServiceProxyBuilder("127.0.0.1", 2000);
+        ::naeem::hottentot::examples::auth::AuthenticateServiceProxyBuilder::Create("127.0.0.1", 2000);
     ::naeem::hottentot::examples::auth::Credential credential;
     credential.SetUsername("Admin");
     credential.SetPassword("12345");
-    ::naeem::hottentot::examples::auth::Token &token = 
-        proxy->Authenticate(credential);
-    std::cout << "Token: " << token.GetValue() << std::endl;
-    proxy->Destroy();  
+    ::naeem::hottentot::examples::auth::Token *token = 
+        proxy->Authenticate(&credential);
+    std::cout << "Token: " << token->GetValue() << std::endl;
+    ::naeem::hottentot::examples::auth::AuthenticateServiceProxyBuilder::Destroy(proxy);
+    delete token;
   } catch (...) {
     std::cout << "Error." << std::endl;
   }

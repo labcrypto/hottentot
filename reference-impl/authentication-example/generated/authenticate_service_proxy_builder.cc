@@ -7,11 +7,15 @@ namespace naeem {
     namespace examples {
       namespace auth {
         AuthenticateService*
-        AuthenticateServiceProxyBuilder::CreateAuthenticateServiceProxy(std::string host,
-                                                                        uint32_t port) {
-          // TODO Connect to server
-          // TODO Obtain a connection fro Authentication service
+        AuthenticateServiceProxyBuilder::Create(std::string host,
+                                                uint32_t port) {
+          // TODO(kamran) Connect to server
           return new AuthenticateServiceProxy(/* ... */);
+        }
+        void
+        AuthenticateServiceProxyBuilder::Destroy(AuthenticateService *authenticateService) {
+          // TODO(kamran) Destroy
+          delete authenticateService;
         }
       }
     }
