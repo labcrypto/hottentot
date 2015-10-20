@@ -1,2 +1,2 @@
 # hottentot
-A light weight RPC framework over Google protobuf for C++, Java and Python.
+A light weight RPC framewor and serialization framework for C++ and Java.
