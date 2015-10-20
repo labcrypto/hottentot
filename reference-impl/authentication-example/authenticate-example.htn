@@ -1,0 +1,18 @@
+module naeem.hottentot.examples.auth {
+  struct Credential {
+    string username id(1);
+    string password id(2);
+  }
+  struct User {
+    string name id(1);
+    string family id(2);
+    int age id(3);
+  }
+  struct Token {
+    string value id(1);
+    // User user id(2);
+  }
+  service AuthenticateService stateless {
+    Token authenticate(Credential) id(1);
+  }
+}
