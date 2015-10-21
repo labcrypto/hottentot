@@ -8,6 +8,11 @@ namespace naeem {
         Token::Serialize(uint32_t *length) {
           return NULL;
         }
+        Token*
+        Token::ParseFrom(unsigned char *data, 
+                         uint32_t length) {
+          return NULL;
+        }
       }
     }
   }

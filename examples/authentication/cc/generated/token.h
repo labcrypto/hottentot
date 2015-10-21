@@ -20,7 +20,9 @@ namespace naeem {
           inline void SetValue(std::string value) {
             value_ = value;
           }
-          virtual unsigned char * Serialize(uint32_t *  /* Pointer to length */);
+          virtual unsigned char * Serialize(uint32_t *   /* Pointer to length */);
+          virtual Token* ParseFrom(unsigned char *       /* Data */,
+                                   uint32_t              /* Data length */);
         private:
           std::string value_;
         };

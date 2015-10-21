@@ -8,6 +8,11 @@ namespace naeem {
         Credential::Serialize(uint32_t *length) {
           return NULL;
         }
+        Credential*
+        Credential::ParseFrom(unsigned char *data, 
+                              uint32_t length) {
+          return NULL;
+        }
       }
     }
   }

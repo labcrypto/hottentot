@@ -10,7 +10,9 @@ namespace naeem {
     namespace serialization {
       class Serializable {
       public:
-        virtual unsigned char * Serialize(uint32_t *  /* Pointer to length */) = 0;
+        virtual unsigned char * Serialize(uint32_t *   /* Pointer to length */) = 0;
+        virtual Serializable* ParseFrom(unsigned char *   /* Data */,
+                                     uint32_t          /* Data length */) = 0;
       };
     }
   }

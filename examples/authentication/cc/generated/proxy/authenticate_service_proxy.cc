@@ -21,7 +21,6 @@ namespace naeem {
             unsigned char *credentialSerializedData = credential->Serialize(&credentialSerializedDataLength);
             // Make request object
             ::naeem::hottentot::runtime::Request request;
-            request.SetType(::naeem::hottentot::runtime::Request::InvokeStateless);
             request.SetServiceId(1);
             request.SetMethodId(1);
             request.SetArgumentCount(1);
@@ -42,7 +41,7 @@ namespace naeem {
             // Finalization
             tcpClient->Close();
             delete tcpClient;
-            // TODO(kamran) Return token
+            // Return token
             return token;
           }
         }
