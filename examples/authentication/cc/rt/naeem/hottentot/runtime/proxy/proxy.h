@@ -1,6 +1,10 @@
 #ifndef _NAEEM_HOTTENTOT_RUNTIME_PROXY__PROXY_H_
 #define _NAEEM_HOTTENTOT_RUNTIME_PROXY__PROXY_H_
 
+#include <stdint.h>
+#include <string>
+
+
 namespace naeem {
   namespace hottentot {
     namespace runtime {

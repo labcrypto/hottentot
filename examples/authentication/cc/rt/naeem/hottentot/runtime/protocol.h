@@ -2,16 +2,19 @@
 #define _NAEEM_HOTTENTOT_RUNTIME__PROTOCOL_H_
 
 #include <stdint.h>
-#include <vector>
 
 
 namespace naeem {
   namespace hottentot {
     namespace runtime {
+      class Request;
+      class Response;
       class Protocol {
       public:
-        virtual unsigned char* SerializeRequest(Request *    /* Request object*/, 
-                                                uint32_t *   /* Length */) = 0;
+        virtual unsigned char* SerializeRequest(Request *      /* Request object*/, 
+                                                uint32_t *     /* Length */) = 0;
+        virtual Response* DeserializeResponse(unsigned char *  /* Response data */, 
+                                              uint32_t         /* Response data length */) = 0;
       };
     }
   }

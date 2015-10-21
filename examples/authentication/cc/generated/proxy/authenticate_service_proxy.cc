@@ -1,4 +1,9 @@
 #include <naeem/hottentot/runtime/request.h>
+#include <naeem/hottentot/runtime/request_writer.h>
+#include <naeem/hottentot/runtime/tcp_client.h>
+#include <naeem/hottentot/runtime/response.h>
+#include <naeem/hottentot/runtime/response_reader.h>
+#include <naeem/hottentot/runtime/default_tcp_client.h>
 
 #include "authenticate_service_proxy.h"
 #include "../token.h"
@@ -11,40 +16,34 @@ namespace naeem {
         namespace proxy {
           Token*
           AuthenticateServiceProxy::Authenticate(::naeem::hottentot::examples::auth::Credential *credential) {
-            // TODO(kamran) Serialize credential object
+            // Serialize credential object
             uint32_t credentialSerializedDataLength = 0;
             unsigned char *credentialSerializedData = credential->Serialize(&credentialSerializedDataLength);
-            // TODO(kamran) Make request
+            // Make request object
             ::naeem::hottentot::runtime::Request request;
-            request.SetType(::naeem::hottentot::runtime::RequestType::InvokeStateless);
+            request.SetType(::naeem::hottentot::runtime::Request::InvokeStateless);
             request.SetServiceId(1);
             request.SetMethodId(1);
             request.SetArgumentCount(1);
-            request.SetType(::naeem::hottentot::runtime::RequestType::InvokeStateless);
+            request.SetType(::naeem::hottentot::runtime::Request::InvokeStateless);
             request.AddArgument(credentialSerializedData, 
                                 credentialSerializedDataLength);
-            // TODO(kamran) Serailize request according to HTNP
-            ::naeem::hottentot::runtime::Protocol *protocol = 
-              new ::naeem::hottentot::runtime::ProtocolV1(); // TODO(kamran) Use factory.
-            uint32_t requestSerializedDataLength = 0;
-            unsigned char *requestSerilaizedData = protocol->SerializeRequest(&request, 
-                                                                              &requestSerializedDataLength);
-            // TODO(kamran) Connect to server
+            // Connect to server
             ::naeem::hottentot::runtime::TcpClient *tcpClient = 
               new ::naeem::hottentot::runtime::DefaultTcpClient(); // TODO(kamran) Use factory.
-            tcpClient->Connect(host_, port_); // TODO(kamran) Provide host and port
-            // TODO(kamran) Send request byte array
-            tcpClient->WriteRequest(requestSerilaizedData, requestSerializedDataLength); // TODO(kamran): Move serialization to a new class named RequestWriter.
-            // TODO(kamran) Read response byte array
-            uint32_t responseSerializedDataLength = 0;
-            unsigned char *responseSerializedData = tcpClient->ReadResponse(&responseSerializedDataLength);
-            // TODO(kamran) Deserialize response byte array
-            ::naeem::hottentot::runtime::Response *response = protocol->DeserializeResponse(responseSerializedData, 
-                                                                                            responseSerializedDataLenght);
+            tcpClient->Connect(host_, port_);
+            // Write the request object
+            ::naeem::hottentot::runtime::RequestWriter requestWriter(tcpClient);
+            requestWriter.WriteRequest(&request);
+            ::naeem::hottentot::runtime::ResponseReader responseReader(tcpClient);
+            ::naeem::hottentot::runtime::Response *response = responseReader.ReadResponse();
             // TODO(kamran) Deserialize token part of response
-            // TODO(kamran) GC
+            Token *token = NULL;
+            // Finalization
+            tcpClient->Close();
+            delete tcpClient;
             // TODO(kamran) Return token
-            return NULL;
+            return token;
           }
         }
       }

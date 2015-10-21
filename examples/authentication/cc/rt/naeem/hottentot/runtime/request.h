@@ -8,18 +8,19 @@
 namespace naeem {
   namespace hottentot {
     namespace runtime {
-      typedef enum {
-        Unknown,
-        ServiceListQuery,
-        InvokeStateless,
-        InvokeStateful
-      } RequestType;
       class _Argument {
       public:
         unsigned char *data_;
         uint32_t dataLength_;
       };
       class Request {
+      public:
+        enum RequestType {
+          Unknown,
+          ServiceListQuery,
+          InvokeStateless,
+          InvokeStateful
+        };
       public:
         Request() {}
         ~Request() {}
@@ -48,7 +49,7 @@ namespace naeem {
           argumentCount_ = argumentCount;
         }
         inline void AddArgument(unsigned char *data, uint32_t dataLength) {
-          Argument argument;
+          _Argument argument;
           argument.data_ = data;
           argument.dataLength_ = dataLength;
           args_.push_back(argument);

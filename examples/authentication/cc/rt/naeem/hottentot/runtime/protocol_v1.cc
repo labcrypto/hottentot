@@ -9,6 +9,11 @@ namespace naeem {
                                    uint32_t *length) {
         // TODO(kamran)
       }
+      Response* 
+      ProtocolV1::DeserializeResponse(unsigned char *data, 
+                                      uint32_t length) {
+        // TODO(kamran)
+      }
     }
   }
 }

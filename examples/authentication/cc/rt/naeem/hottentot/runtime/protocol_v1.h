@@ -9,8 +9,10 @@ namespace naeem {
     namespace runtime {
       class ProtocolV1 : public Protocol {
       public:
-        virtual unsigned char* SerializeRequest(Request *    /* Request object*/, 
-                                                uint32_t *   /* Length */);
+        virtual unsigned char* SerializeRequest(Request *      /* Request object*/, 
+                                                uint32_t *     /* Length */);
+        virtual Response* DeserializeResponse(unsigned char *  /* Response data */, 
+                                              uint32_t         /* Response data length */);
       };
     }
   }

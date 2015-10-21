@@ -3,12 +3,14 @@
 
 #include <string>
 
+#include <naeem/hottentot/serialization/serializable.h>
+
 
 namespace naeem {
   namespace hottentot {
     namespace examples {
       namespace auth {
-        class Credential {
+        class Credential : public ::naeem::hottentot::serialization::Serializable {
         public:
           Credential() {}
           ~Credential() {}
@@ -24,6 +26,7 @@ namespace naeem {
           inline void SetPassword(std::string password) {
             password_ = password;
           }
+          virtual unsigned char * Serialize(uint32_t *  /* Pointer to length */);
         private:
           std::string username_;
           std::string password_;
