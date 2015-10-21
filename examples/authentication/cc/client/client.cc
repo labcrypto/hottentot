@@ -3,21 +3,21 @@
 #include "../generated/token.h"
 #include "../generated/credential.h"
 #include "../generated/authenticate_service.h"
-#include "../generated/authenticate_service_proxy_builder.h"
+#include "../generated/proxy/authenticate_service_proxy_builder.h"
 
 
 int 
 main(int argc, char **argv) {
   try {
     ::naeem::hottentot::examples::auth::AuthenticateService *proxy = 
-        ::naeem::hottentot::examples::auth::AuthenticateServiceProxyBuilder::Create("127.0.0.1", 2000);
+        ::naeem::hottentot::examples::auth::proxy::AuthenticateServiceProxyBuilder::Create("127.0.0.1", 2000);
     ::naeem::hottentot::examples::auth::Credential credential;
     credential.SetUsername("Admin");
     credential.SetPassword("12345");
     ::naeem::hottentot::examples::auth::Token *token = 
         proxy->Authenticate(&credential);
     std::cout << "Token: " << token->GetValue() << std::endl;
-    ::naeem::hottentot::examples::auth::AuthenticateServiceProxyBuilder::Destroy(proxy);
+    ::naeem::hottentot::examples::auth::proxy::AuthenticateServiceProxyBuilder::Destroy(proxy);
     delete token;
   } catch (...) {
     std::cout << "Error." << std::endl;

@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <string>
 
-#include "../generated/abstract_authenticate_service.h"
+#include "../generated/service/abstract_authenticate_service.h"
 
 
 namespace naeem {
@@ -13,7 +13,7 @@ namespace naeem {
       namespace auth {
         class Token;
         class Credential;
-        class AuthenticateServiceImpl : public ::naeem::hottentot::examples::auth::AbstractAuthenticateService {
+        class AuthenticateServiceImpl : public ::naeem::hottentot::examples::auth::service::AbstractAuthenticateService {
         public:
           AuthenticateServiceImpl() {}
           virtual ~AuthenticateServiceImpl() {}

@@ -2,8 +2,8 @@ all:
 	
 	mkdir -p target
 
-	g++ -c -I./rt generated/authenticate_service_proxy_builder.cc -o target/authenticate_service_proxy_builder.o
-	g++ -c -I./rt generated/authenticate_service_proxy.cc -o target/authenticate_service_proxy.o
+	g++ -c -I./rt generated/proxy/authenticate_service_proxy_builder.cc -o target/authenticate_service_proxy_builder.o
+	g++ -c -I./rt generated/proxy/authenticate_service_proxy.cc -o target/authenticate_service_proxy.o
 	g++ -c -I./rt client/client.cc -o target/client.o
 	g++ -c -I./rt server/server.cc -o target/server.o
 	g++ -c -I./rt server/authenticate_service_impl.cc -o target/authenticate_service_impl.o

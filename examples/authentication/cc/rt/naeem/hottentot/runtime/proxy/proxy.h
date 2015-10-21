@@ -7,7 +7,15 @@ namespace naeem {
       namespace proxy {
         class Proxy {
         public:
+          Proxy(std::string host, uint32_t port)
+            : host_(host), port_(port) {
+          }
+          ~Proxy() {}
+        public:
           virtual void Destroy();
+        protected:
+          std::string host_;
+          uint32_t port_;
         };
       }
     }
