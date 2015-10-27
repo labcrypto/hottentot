@@ -1,5 +1,5 @@
-#ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__HTN_RUNTIME_H_
-#define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__HTN_RUNTIME_H_
+#ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__SERVICE_RUNTIME_H_
+#define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__SERVICE_RUNTIME_H_
 
 #include <stdint.h>
 #include <vector>
@@ -17,7 +17,7 @@ namespace naeem {
           uint32_t port_;
           Service *service_;
         };
-        class HtnRuntime {
+        class ServiceRuntime {
         public:
           static void Register(std::string   /* host */, 
                                uint32_t      /* port */, 
