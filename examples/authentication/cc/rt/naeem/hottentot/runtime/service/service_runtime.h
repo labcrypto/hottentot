@@ -11,12 +11,7 @@ namespace naeem {
     namespace runtime {
       namespace service {
         class Service;
-        class _ServiceInfo {
-        public:
-          std::string host_;
-          uint32_t port_;
-          Service *service_;
-        };
+        class ServiceInfo;
         class ServiceRuntime {
         public:
           static void Register(std::string   /* host */, 
@@ -24,7 +19,7 @@ namespace naeem {
                                Service *     /* service implementation */);
           static void Start();
         private:
-          static std::vector<_ServiceInfo*> serviceInfos_;
+          static std::vector<ServiceInfo*> serviceInfos_;
         };
       }
     }

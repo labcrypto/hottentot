@@ -3,7 +3,10 @@ all:
 	mkdir -p target
 
 	g++ -c rt/naeem/hottentot/runtime/proxy/proxy.cc -o target/proxy.o
-	g++ -c rt/naeem/hottentot/runtime/service/htn_runtime.cc -o target/htn_runtime.o
+
+	g++ -c rt/naeem/hottentot/runtime/service/service_runtime.cc -o target/service_runtime.o
+	g++ -c rt/naeem/hottentot/runtime/service/default_client_listener.cc -o target/default_client_listener.o
+
 	g++ -c rt/naeem/hottentot/runtime/protocol_v1.cc -o target/protocol_v1.o
 	g++ -c rt/naeem/hottentot/runtime/request_writer.cc -o target/request_writer.o
 	g++ -c rt/naeem/hottentot/runtime/response_reader.cc -o target/response_reader.o
