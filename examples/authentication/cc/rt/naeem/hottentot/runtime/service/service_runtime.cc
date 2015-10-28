@@ -14,21 +14,25 @@ namespace naeem {
         ServiceRuntime::Register(std::string   host, 
                                  uint32_t      port, 
                                  Service       *service) {
-          ServiceInfo *serviceInfo = new ServiceInfo;
-          serviceInfo->SetHost(host);
-          serviceInfo->SetPort(port);
-          serviceInfo->SetService(service);
-          serviceInfos_.push_back(serviceInfo);
+          Endpoint endpoint(host, port);
+          if (services_.find(endpoint) == std::map::end) {
+            std::vector<Service*> *e = new std::vector<Service*>();
+            e->push_back(service);
+            services_.insert(endpoint, e);
+          } else {
+            services_.find(endpoint)->second->push_back(service);
+          }
         }
         void
         ServiceRuntime::Start() {
-          for (std::vector<ServiceInfo*>::iterator it = serviceInfos_.begin();
-               it != serviceInfos_.end();
-               ++it) {
+          for (std::map<Endpoint, std::vector<Service*>*>::iterator it = services_.begin();
+               it != services_.end();
+               it++) {
             ::naeem::hottentot::runtime::service::TcpServer *tcpServer = 
-              ::naeem::hottentot::runtime::service::TcpServerFactory::CreateTcpServer(*it);
+              ::naeem::hottentot::runtime::service::TcpServerFactory::CreateTcpServer(it->first->GetHost(), 
+                                                                                      it->first->GetPort(),
+                                                                                      it->second);
             tcpServer->BindAndStart();
-            tcpServer->SetClientListener(new ::naeem::hottentot::runtime::service::DefaultClientListener(*it));
           }
         }
       }

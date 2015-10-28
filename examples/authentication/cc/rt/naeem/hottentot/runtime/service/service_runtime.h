@@ -19,7 +19,7 @@ namespace naeem {
                                Service *     /* service implementation */);
           static void Start();
         private:
-          static std::vector<ServiceInfo*> serviceInfos_;
+          static std::map<Endpoint, std::vector<Service*>*> services_;
         };
       }
     }

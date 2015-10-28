@@ -13,17 +13,20 @@ namespace naeem {
         class ClientListener;
         class TcpServer {
         public:
-          TcpServer(ServiceInfo *serviceInfo)
-            : serviceInfo_(serviceInfo) {
+          TcpServer(std::string host,
+                    uint32_t port,
+                    std::vector<Service*> *services)
+            : host_(host),
+              port_(port),
+              services_(service) {
           }
           ~TcpServer() {}
         public:
           virtual void BindAndStart() = 0;
-          virtual void SetClientListener(ClientListener *   /* Client listener */) = 0;
-          // virtual unsigned char * Read(uint32_t *           /* Pointer to length */) = 0;
-          // virtual void Close() = 0;
         protected:
-          ServiceInfo *serviceInfo_;
+          std::string host_;
+          uint32_t port_;
+          std::vector<Service*> *services_;
         };
       }
     }
