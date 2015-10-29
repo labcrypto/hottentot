@@ -3,13 +3,17 @@ all:
 	mkdir -p target
 
 	g++ -c rt/naeem/hottentot/runtime/proxy/proxy.cc -o target/proxy.o
+	g++ -c rt/naeem/hottentot/runtime/proxy/proxy_runtime.cc -o target/proxy_runtime.o
+	g++ -c rt/naeem/hottentot/runtime/proxy/request_writer.cc -o target/request_writer.o
+	g++ -c rt/naeem/hottentot/runtime/proxy/response_reader.cc -o target/response_reader.o
+	g++ -c rt/naeem/hottentot/runtime/proxy/default_tcp_client.cc -o target/default_tcp_client.o
+	g++ -c rt/naeem/hottentot/runtime/proxy/default_tcp_client_factory.cc -o target/default_tcp_client_factory.o
 
 	g++ -c rt/naeem/hottentot/runtime/service/service_runtime.cc -o target/service_runtime.o
-	g++ -c rt/naeem/hottentot/runtime/service/default_client_listener.cc -o target/default_client_listener.o
+	g++ -c rt/naeem/hottentot/runtime/service/default_tcp_server.cc -o target/default_tcp_server.o
+	g++ -c rt/naeem/hottentot/runtime/service/default_tcp_server_factory.cc -o target/default_tcp_server_factory.o
 
 	g++ -c rt/naeem/hottentot/runtime/protocol_v1.cc -o target/protocol_v1.o
-	g++ -c rt/naeem/hottentot/runtime/request_writer.cc -o target/request_writer.o
-	g++ -c rt/naeem/hottentot/runtime/response_reader.cc -o target/response_reader.o
 
 	g++ -c -I./rt generated/token.cc -o target/token.o
 	g++ -c -I./rt generated/credential.cc -o target/credential.o
@@ -30,11 +34,16 @@ all:
 	    target/protocol_v1.o \
 	    target/token.o \
 	    target/credential.o \
+	    target/default_tcp_client.o \
+	    target/default_tcp_client_factory.o \
+	    target/proxy_runtime.o \
 	    -o client.out
 	    
 	g++ target/server.o \
-	    target/htn_runtime.o \
+	    target/service_runtime.o \
 	    target/authenticate_service_impl.o \
 	    target/token.o \
 	    target/credential.o \
+	    target/default_tcp_server.o \
+	    target/default_tcp_server_factory.o \
 	    -o server.out

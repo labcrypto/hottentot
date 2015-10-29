@@ -11,15 +11,21 @@ namespace naeem {
       namespace proxy {
         class TcpClient {
         public:
-          TcpClient() {}
+          TcpClient(std::string host,
+                    uint32_t port)
+            : host_(host),
+              port_(port) {
+          }
           ~TcpClient() {}
         public:
-          virtual void Connect(std::string           /* Host */,
-                               uint32_t              /* Port */) = 0;
+          virtual void Connect() = 0;
           virtual void Write(unsigned char *         /* data */,
                              uint32_t                /* Length */) = 0;
           virtual unsigned char * Read(uint32_t *    /* Pointer to length */) = 0;
           virtual void Close() = 0;
+        protected:
+          std::string host_;
+          uint16_t port_;
         };
       }
     }

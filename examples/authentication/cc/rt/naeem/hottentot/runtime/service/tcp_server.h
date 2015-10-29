@@ -3,29 +3,30 @@
 
 #include <stdint.h>
 #include <string>
+#include <vector>
 
 
 namespace naeem {
   namespace hottentot {
     namespace runtime {
       namespace service {
-        class ServiceInfo;
+        class Service;
         class ClientListener;
         class TcpServer {
         public:
           TcpServer(std::string host,
-                    uint32_t port,
+                    uint16_t port,
                     std::vector<Service*> *services)
             : host_(host),
               port_(port),
-              services_(service) {
+              services_(services) {
           }
           ~TcpServer() {}
         public:
           virtual void BindAndStart() = 0;
         protected:
           std::string host_;
-          uint32_t port_;
+          uint16_t port_;
           std::vector<Service*> *services_;
         };
       }

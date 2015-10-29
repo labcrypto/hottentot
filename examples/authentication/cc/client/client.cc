@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <naeem/hottentot/runtime/proxy/proxy_runtime.h>
+
 #include "../generated/token.h"
 #include "../generated/credential.h"
 #include "../generated/authenticate_service.h"
@@ -9,6 +11,7 @@
 int 
 main(int argc, char **argv) {
   try {
+    ::naeem::hottentot::runtime::proxy::ProxyRuntime::Init(argc, argv);
     ::naeem::hottentot::examples::auth::AuthenticateService *proxy = 
         ::naeem::hottentot::examples::auth::proxy::AuthenticateServiceProxyBuilder::Create("127.0.0.1", 2000);
     ::naeem::hottentot::examples::auth::Credential credential;

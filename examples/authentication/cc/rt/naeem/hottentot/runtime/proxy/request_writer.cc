@@ -1,7 +1,9 @@
 #include "request_writer.h"
-#include "protocol_v1.h"
-#include "request.h"
 #include "tcp_client.h"
+
+#include "../protocol_v1.h"
+#include "../request.h"
+
 
 namespace naeem {
   namespace hottentot {

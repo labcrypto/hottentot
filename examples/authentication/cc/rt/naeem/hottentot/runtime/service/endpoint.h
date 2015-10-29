@@ -10,7 +10,6 @@ namespace naeem {
     namespace runtime {
       namespace service {
         // TODO(kamran) We need different endpoints for IPv4 and IPv6.
-        // TODO(kamran) Overload < operator.
         class Endpoint {
         public:
           Endpoint(std::string host, uint32_t port) 
@@ -29,6 +28,9 @@ namespace naeem {
           }
           inline void SetPort(uint32_t port) {
             port_ = port;
+          }
+          inline bool operator<(const Endpoint &e) const {
+            return host_ < e.host_ && port_ < e.port_;
           }
         private:
           std::string host_;

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <naeem/hottentot/runtime/service/htn_runtime.h>
+#include <naeem/hottentot/runtime/service/service_runtime.h>
 
 #include "../generated/token.h"
 #include "../generated/credential.h"
@@ -12,10 +12,11 @@
 int
 main(int argc, char **argv) {
   try {
+    ::naeem::hottentot::runtime::service::ServiceRuntime::Init(argc, argv);
     ::naeem::hottentot::examples::auth::AuthenticateServiceImpl *authenticateService =
         new ::naeem::hottentot::examples::auth::AuthenticateServiceImpl();
-    ::naeem::hottentot::runtime::service::HtnRuntime::Register("0.0.0.0", 2000, authenticateService);
-    ::naeem::hottentot::runtime::service::HtnRuntime::Start();
+    ::naeem::hottentot::runtime::service::ServiceRuntime::Register("0.0.0.0", 2000, authenticateService);
+    ::naeem::hottentot::runtime::service::ServiceRuntime::Start();
   } catch (...) {
     std::cout << "Error." << std::endl;
   }

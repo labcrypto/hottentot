@@ -1,13 +1,13 @@
-#ifndef _NAEEM_HOTTENTOT_RUNTIME__REQUEST_WRITER_H_
-#define _NAEEM_HOTTENTOT_RUNTIME__REQUEST_WRITER_H_
+#ifndef _NAEEM_HOTTENTOT_RUNTIME_PROXY__REQUEST_WRITER_H_
+#define _NAEEM_HOTTENTOT_RUNTIME_PROXY__REQUEST_WRITER_H_
 
 
 namespace naeem {
   namespace hottentot {
     namespace runtime {
+      class Request;
       namespace proxy {
         class TcpClient;
-        class Request;
         class RequestWriter {
         public:
           RequestWriter(TcpClient *tcpClient)

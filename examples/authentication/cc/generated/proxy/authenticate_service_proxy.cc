@@ -1,9 +1,10 @@
 #include <naeem/hottentot/runtime/request.h>
-#include <naeem/hottentot/runtime/request_writer.h>
-#include <naeem/hottentot/runtime/tcp_client.h>
 #include <naeem/hottentot/runtime/response.h>
-#include <naeem/hottentot/runtime/response_reader.h>
-#include <naeem/hottentot/runtime/default_tcp_client.h>
+#include <naeem/hottentot/runtime/proxy/request_writer.h>
+#include <naeem/hottentot/runtime/proxy/tcp_client.h>
+#include <naeem/hottentot/runtime/proxy/response_reader.h>
+#include <naeem/hottentot/runtime/proxy/proxy_runtime.h>
+#include <naeem/hottentot/runtime/proxy/tcp_client_factory.h>
 
 #include "authenticate_service_proxy.h"
 #include "../token.h"
@@ -28,13 +29,13 @@ namespace naeem {
             request.AddArgument(credentialSerializedData, 
                                 credentialSerializedDataLength);
             // Connect to server
-            ::naeem::hottentot::runtime::TcpClient *tcpClient = 
-              new ::naeem::hottentot::runtime::DefaultTcpClient(); // TODO(kamran) Use factory.
-            tcpClient->Connect(host_, port_);
+            ::naeem::hottentot::runtime::proxy::TcpClient *tcpClient = 
+              ::naeem::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
+            tcpClient->Connect();
             // Write the request object
-            ::naeem::hottentot::runtime::RequestWriter requestWriter(tcpClient);
+            ::naeem::hottentot::runtime::proxy::RequestWriter requestWriter(tcpClient);
             requestWriter.WriteRequest(&request);
-            ::naeem::hottentot::runtime::ResponseReader responseReader(tcpClient);
+            ::naeem::hottentot::runtime::proxy::ResponseReader responseReader(tcpClient);
             ::naeem::hottentot::runtime::Response *response = responseReader.ReadResponse();
             // TODO(kamran) Deserialize token part of response
             Token *token = NULL;

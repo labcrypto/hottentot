@@ -22,13 +22,20 @@ namespace naeem {
         virtual Response* DeserializeResponse(unsigned char *  /* Response data */, 
                                               uint32_t         /* Response data length */) = 0;
       public:
-        virtual void SetRequestCallback(RequestCallback *      /* Request callback object */) = 0;
-        virtual void SetResponseCallback(ResponseCallback *    /* Request callback object */) = 0;
+        virtual void SetRequestCallback(RequestCallback *requestCallback) {
+          requestCallback_ = requestCallback;
+        }
+        virtual void SetResponseCallback(ResponseCallback *responseCallback) {
+          responseCallback_ = responseCallback;
+        }
       public:
         virtual void ProcessDataForRequest(unsigned char *     /* Data chuck */,
-                                           uint32_t            /* Data chunk length */);
+                                           uint32_t            /* Data chunk length */) = 0;
         virtual void ProcessDataForResponse(unsigned char *    /* Data chuck */,
-                                            uint32_t           /* Data chunk length */);
+                                            uint32_t           /* Data chunk length */) = 0;
+      protected:
+        RequestCallback *requestCallback_;
+        ResponseCallback *responseCallback_;
       };
     }
   }
