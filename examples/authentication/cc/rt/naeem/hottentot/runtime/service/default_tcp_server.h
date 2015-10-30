@@ -16,6 +16,10 @@ namespace naeem {
           virtual ~DefaultTcpServer();
         public:
           virtual void BindAndStart();
+        private:
+          static void* AcceptClients(void *);
+        private:
+          int serverSocketFD_;
         };
       }
     }

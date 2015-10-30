@@ -46,4 +46,5 @@ all:
 	    target/credential.o \
 	    target/default_tcp_server.o \
 	    target/default_tcp_server_factory.o \
+	    -lpthread \
 	    -o server.out

@@ -12,6 +12,16 @@ namespace naeem {
         // TODO(kamran) We need different endpoints for IPv4 and IPv6.
         class Endpoint {
         public:
+          class Comparator {
+          public:
+            bool operator()(const Endpoint &left, const Endpoint &right) const {
+              if (left.host_ < right.host_) {
+                return true;
+              }
+              return left.port_ < right.port_;
+            }
+          };
+        public:
           Endpoint(std::string host, uint32_t port) 
             : host_(host), port_(port) {
           }
@@ -29,9 +39,7 @@ namespace naeem {
           inline void SetPort(uint32_t port) {
             port_ = port;
           }
-          inline bool operator<(const Endpoint &e) const {
-            return host_ < e.host_ && port_ < e.port_;
-          }
+          
         private:
           std::string host_;
           uint32_t port_;

@@ -10,7 +10,7 @@ namespace naeem {
         DefaultTcpClientFactory::CreateTcpClient(std::string host,
                                                  uint32_t port) {
           return new DefaultTcpClient(host, port);
-        }
+        } 
       }
     }
   }
