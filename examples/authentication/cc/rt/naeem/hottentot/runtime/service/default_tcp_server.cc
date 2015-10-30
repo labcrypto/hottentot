@@ -9,6 +9,8 @@
 #include <iostream>
 
 #include "default_tcp_server.h"
+#include "default_request_callback.h"
+#include "../protocol_v1.h"
 
 
 namespace naeem {
@@ -32,7 +34,7 @@ namespace naeem {
             servAddr.sin_addr.s_addr = INADDR_ANY;
             servAddr.sin_port = htons(port_);
             if (bind(serverSocketFD, (struct sockaddr *) &servAddr, sizeof(servAddr)) < 0) {
-              std::cerr << "ERROR on binding" << std::endl;
+              std::cerr << "Error on bind." << std::endl;
               exit(EXIT_FAILURE);
             }
             listen(serverSocketFD, 5);
@@ -43,7 +45,6 @@ namespace naeem {
               fprintf(stderr,"Error - pthread_create() return code: %d\n",ret);
               exit(EXIT_FAILURE);
             }
-            // pthread_join(thread, NULL);
           }
         }
         void*
@@ -54,9 +55,37 @@ namespace naeem {
           DefaultTcpServer *ref = (DefaultTcpServer*)data;
           while (ok) {
             int clientSocketFD = accept(ref->serverSocketFD_, (struct sockaddr *) &clientAddr, &clientAddrLength);
-            std::cout << "Client is connected." << std::endl;
-            close(clientSocketFD);
+            _HandleClientConnectionParams *params = new _HandleClientConnectionParams;
+            params->tcpServer_ = ref;
+            params->clientSocketFD_ = clientSocketFD;
+            pthread_t thread; // TODO(kamran): We need a thread pool here.
+            int ret = pthread_create(&thread, NULL, HandleClientConnection, (void *)params);
+            if (ret) {
+              fprintf(stderr,"Error - pthread_create() return code: %d\n",ret);
+              exit(EXIT_FAILURE);
+            }
           }
+        }
+        void*
+        DefaultTcpServer::HandleClientConnection(void *data) {
+          bool ok = true;
+          _HandleClientConnectionParams *ref = (_HandleClientConnectionParams*)data;
+          unsigned char buffer[256];
+          ::naeem::hottentot::runtime::Protocol *protocol = 
+            new ::naeem::hottentot::runtime::ProtocolV1();
+          DefaultRequestCallback *requestCallback = new DefaultRequestCallback;
+          protocol->SetRequestCallback(requestCallback);
+          while (ok) {            
+            uint32_t numOfReadBytes = read(ref->clientSocketFD_, buffer, 256);
+            if (numOfReadBytes < 0) {
+              ok = false;
+            }
+            protocol->ProcessDataForRequest(buffer, numOfReadBytes);
+          }
+          close(ref->clientSocketFD_);
+          delete protocol;
+          delete requestCallback;
+          delete ref;
         }
       }
     }

@@ -18,8 +18,14 @@ namespace naeem {
           virtual void BindAndStart();
         private:
           static void* AcceptClients(void *);
+          static void* HandleClientConnection(void *);
         private:
           int serverSocketFD_;
+        };
+        class _HandleClientConnectionParams {
+        public:
+          DefaultTcpServer *tcpServer_;
+          int clientSocketFD_;
         };
       }
     }

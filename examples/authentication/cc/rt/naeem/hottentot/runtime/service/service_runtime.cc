@@ -12,6 +12,7 @@ namespace naeem {
       namespace service {
         TcpServerFactory* ServiceRuntime::tcpServerFactory_ = 0;
         std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> ServiceRuntime::services_;
+        std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> requestHandlers_;
         void
         ServiceRuntime::Init(int argc,
                              char **argv) {
@@ -21,15 +22,11 @@ namespace naeem {
                                  uint32_t      port, 
                                  Service       *service) {
           Endpoint endpoint(host, port);
-          std::cout << "Size: " << services_.size() << std::endl;
-          std::cout << "Adding entry " << host << ":" << port << std::endl;
           if (services_.count(endpoint) == 0) {
-            std::cout << "Making a new entry ..." << std::endl;
             std::vector<Service*> *e = new std::vector<Service*>();
             e->push_back(service);
             services_.insert(std::pair<Endpoint, std::vector<Service*>*>(endpoint, e));
           } else {
-            std::cout << "Adding to available entry ..." << std::endl;
             services_.find(endpoint)->second->push_back(service);
           }
         }
@@ -38,11 +35,11 @@ namespace naeem {
           for (std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator>::iterator it = services_.begin();
                it != services_.end();
                it++) {
-            std::cout << "Starting endpoint: " << it->first.GetHost() << ":" << it->first.GetPort() << " >> " << it->second->size() << std::endl;
             TcpServer *tcpServer = GetTcpServerFactory()->CreateTcpServer(it->first.GetHost(), 
                                                                           it->first.GetPort(), 
                                                                           it->second);
             tcpServer->BindAndStart();
+            std::cout << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
           }
           while(true);
         }

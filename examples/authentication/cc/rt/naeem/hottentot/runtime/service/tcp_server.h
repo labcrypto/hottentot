@@ -11,7 +11,7 @@ namespace naeem {
     namespace runtime {
       namespace service {
         class Service;
-        class ClientListener;
+        class RequestHandler;
         class TcpServer {
         public:
           TcpServer(std::string host,
@@ -27,7 +27,7 @@ namespace naeem {
         protected:
           std::string host_;
           uint16_t port_;
-          std::vector<Service*> *services_;
+          std::vector<Service*> *services_;          
         };
       }
     }

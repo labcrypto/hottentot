@@ -10,6 +10,7 @@
 #include "../token.h"
 #include "../credential.h"
 #include "../authenticate_service.h"
+#include "authenticate_service_request_handler.h"
 
 
 namespace naeem {
@@ -22,6 +23,10 @@ namespace naeem {
           public:
             inline virtual uint8_t GetServiceId() const {
               return 1;
+            }
+          protected:
+            inline virtual ::naeem::hottentot::runtime::service:: RequestHandler* MakeRequestHandler() {
+              return new AuthenticateServiceRequestHandler(this);
             }
           };
         }
