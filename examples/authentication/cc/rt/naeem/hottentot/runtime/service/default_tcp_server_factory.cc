@@ -9,8 +9,8 @@ namespace naeem {
         TcpServer*
         DefaultTcpServerFactory::CreateTcpServer(std::string host,
                                                  uint16_t port,
-                                                 std::vector<Service*> *services) {
-          return new DefaultTcpServer(host, port, services);
+                                                 std::map<uint8_t, RequestHandler*> *requestHandlers) {
+          return new DefaultTcpServer(host, port, requestHandlers);
         }
       }
     }
