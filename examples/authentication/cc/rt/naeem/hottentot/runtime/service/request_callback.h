@@ -7,9 +7,9 @@
 namespace naeem {
   namespace hottentot {
     namespace runtime {
+      class Request;
+      class Response;
       namespace service {
-        class Request;
-        class Response;
         class RequestHandler;
         class RequestCallback {
         public:

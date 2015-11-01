@@ -15,7 +15,7 @@ main(int argc, char **argv) {
     ::naeem::hottentot::runtime::service::ServiceRuntime::Init(argc, argv);
     ::naeem::hottentot::examples::auth::AuthenticateServiceImpl *authenticateService =
         new ::naeem::hottentot::examples::auth::AuthenticateServiceImpl();
-    ::naeem::hottentot::runtime::service::ServiceRuntime::Register("0.0.0.0", 2000, authenticateService);
+    ::naeem::hottentot::runtime::service::ServiceRuntime::Register("0.0.0.0", 2005, authenticateService);
     ::naeem::hottentot::runtime::service::ServiceRuntime::Start();
   } catch (...) {
     std::cout << "Error." << std::endl;

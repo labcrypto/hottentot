@@ -42,7 +42,7 @@ namespace naeem {
         inline void SetMethodId(uint32_t methodId) {
           methodId_ = methodId;
         }
-        inline uint32_t SetArgumentCount() const {
+        inline uint32_t GetArgumentCount() const {
           return argumentCount_;
         }
         inline void SetArgumentCount(uint32_t argumentCount) {

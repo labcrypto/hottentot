@@ -73,18 +73,19 @@ namespace naeem {
           unsigned char buffer[256];
           ::naeem::hottentot::runtime::Protocol *protocol = 
             new ::naeem::hottentot::runtime::ProtocolV1();
-          DefaultRequestCallback *requestCallback = new DefaultRequestCallback(ref->tcpServer_->requestHandlers_);
-          protocol->SetRequestCallback(requestCallback);
+          DefaultRequestCallback requestCallback(ref->tcpServer_->requestHandlers_);
+          protocol->SetRequestCallback(&requestCallback);
           while (ok) {            
             uint32_t numOfReadBytes = read(ref->clientSocketFD_, buffer, 256);
-            if (numOfReadBytes < 0) {
+            if (numOfReadBytes <= 0) {
               ok = false;
             }
-            protocol->ProcessDataForRequest(buffer, numOfReadBytes);
+            if (ok) {
+              protocol->ProcessDataForRequest(buffer, numOfReadBytes);
+            }
           }
           close(ref->clientSocketFD_);
           delete protocol;
-          delete requestCallback;
           delete ref;
         }
       }
