@@ -12,7 +12,7 @@ namespace naeem {
         public:
           DefaultTcpServer(std::string,
                            uint16_t,
-                           std::vector<Service*> *);
+                           std::map<uint8_t, RequestHandler*> *);
           virtual ~DefaultTcpServer();
         public:
           virtual void BindAndStart();
