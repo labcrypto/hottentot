@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <string>
-#include <map>
+#include <vector>
 
 
 namespace naeem {
@@ -16,10 +16,10 @@ namespace naeem {
         public:
           TcpServer(std::string host,
                     uint16_t port,
-                    std::map<uint8_t, RequestHandler*> *requestHandlers)
+                    std::vector<Service*> *services)
             : host_(host),
               port_(port),
-              requestHandlers_(requestHandlers) {
+              services_(services) {
           }
           ~TcpServer() {}
         public:
@@ -27,7 +27,7 @@ namespace naeem {
         protected:
           std::string host_;
           uint16_t port_;
-          std::map<uint8_t, RequestHandler*> *requestHandlers_;          
+          std::vector<Service*> *services_;          
         };
       }
     }

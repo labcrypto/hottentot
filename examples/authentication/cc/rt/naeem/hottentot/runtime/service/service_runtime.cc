@@ -12,7 +12,7 @@ namespace naeem {
       namespace service {
         TcpServerFactory* ServiceRuntime::tcpServerFactory_ = 0;
         std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> ServiceRuntime::services_;
-        std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> ServiceRuntime::requestHandlers_;
+        std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> requestHandlers_;
         void
         ServiceRuntime::Init(int argc,
                              char **argv) {
@@ -29,6 +29,7 @@ namespace naeem {
           } else {
             services_.find(endpoint)->second->push_back(service);
           }
+<<<<<<< HEAD
           if (requestHandlers_.count(endpoint) == 0) {
             std::map<uint8_t, RequestHandler*> *m = new std::map<uint8_t, RequestHandler*>();
             m->insert(std::pair<uint8_t, RequestHandler*>(service->GetServiceId(), service->GetRequestHandler()));
@@ -36,6 +37,8 @@ namespace naeem {
           } else {
             requestHandlers_.find(endpoint)->second->insert(std::pair<uint8_t, RequestHandler*>(service->GetServiceId(), service->GetRequestHandler()));
           }
+=======
+>>>>>>> parent of e877f03... Callback system is being completed.
         }
         void
         ServiceRuntime::Start() {
@@ -44,7 +47,7 @@ namespace naeem {
                it++) {
             TcpServer *tcpServer = GetTcpServerFactory()->CreateTcpServer(it->first.GetHost(), 
                                                                           it->first.GetPort(), 
-                                                                          requestHandlers_.find(it->first)->second);
+                                                                          it->second);
             tcpServer->BindAndStart();
             std::cout << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
           }

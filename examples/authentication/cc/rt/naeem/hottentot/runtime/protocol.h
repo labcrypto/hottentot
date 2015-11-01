@@ -7,14 +7,10 @@
 namespace naeem {
   namespace hottentot {
     namespace runtime {
-      namespace proxy {
-        class ResponseCallback;
-      }
-      namespace service {
-        class RequestCallback;
-      }
       class Request;
       class Response;
+      class RequestCallback;
+      class ResponseCallback;
       class Protocol {
       public:
         virtual unsigned char* SerializeRequest(Request *      /* Request object*/, 
@@ -26,10 +22,10 @@ namespace naeem {
         virtual Response* DeserializeResponse(unsigned char *  /* Response data */, 
                                               uint32_t         /* Response data length */) = 0;
       public:
-        virtual void SetRequestCallback(::naeem::hottentot::runtime::service::RequestCallback *requestCallback) {
+        virtual void SetRequestCallback(RequestCallback *requestCallback) {
           requestCallback_ = requestCallback;
         }
-        virtual void SetResponseCallback(::naeem::hottentot::runtime::proxy::ResponseCallback *responseCallback) {
+        virtual void SetResponseCallback(ResponseCallback *responseCallback) {
           responseCallback_ = responseCallback;
         }
       public:
@@ -38,8 +34,8 @@ namespace naeem {
         virtual void ProcessDataForResponse(unsigned char *    /* Data chuck */,
                                             uint32_t           /* Data chunk length */) = 0;
       protected:
-        ::naeem::hottentot::runtime::service::RequestCallback *requestCallback_;
-        ::naeem::hottentot::runtime::proxy::ResponseCallback *responseCallback_;
+        RequestCallback *requestCallback_;
+        ResponseCallback *responseCallback_;
       };
     }
   }

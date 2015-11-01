@@ -12,7 +12,7 @@ namespace naeem {
         public:
           virtual TcpServer* CreateTcpServer(std::string              /* host */,
                                              uint16_t                 /* port */,
-                                             std::map<uint8_t, RequestHandler*> *  /* services */);
+                                             std::vector<Service*> *  /* services */);
         };
       }
     }

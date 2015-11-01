@@ -19,8 +19,8 @@ namespace naeem {
       namespace service {
         DefaultTcpServer::DefaultTcpServer(std::string host,
                                            uint16_t port,
-                                           std::map<uint8_t, RequestHandler*> *requestHandlers)
-            : TcpServer(host, port, requestHandlers), serverSocketFD_(-1) {
+                                           std::vector<Service*> *services)
+            : TcpServer(host, port, services), serverSocketFD_(-1) {
         }
         DefaultTcpServer::~DefaultTcpServer() {
         }
@@ -73,8 +73,13 @@ namespace naeem {
           unsigned char buffer[256];
           ::naeem::hottentot::runtime::Protocol *protocol = 
             new ::naeem::hottentot::runtime::ProtocolV1();
+<<<<<<< HEAD
           DefaultRequestCallback requestCallback(ref->tcpServer_->requestHandlers_);
           protocol->SetRequestCallback(&requestCallback);
+=======
+          DefaultRequestCallback *requestCallback = new DefaultRequestCallback;
+          protocol->SetRequestCallback(requestCallback);
+>>>>>>> parent of e877f03... Callback system is being completed.
           while (ok) {            
             uint32_t numOfReadBytes = read(ref->clientSocketFD_, buffer, 256);
             if (numOfReadBytes <= 0) {
