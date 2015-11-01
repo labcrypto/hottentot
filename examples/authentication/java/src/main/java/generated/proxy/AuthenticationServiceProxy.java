@@ -6,8 +6,9 @@ import generated.Credential;
 import generated.Token;
 import runtime.*;
 import runtime.exception.TcpClientConnectException;
+import runtime.exception.TcpClientReadException;
 import runtime.exception.TcpClientWriteException;
-import runtime.proxy.Proxy;
+import runtime.Proxy;
 
 public class AuthenticationServiceProxy extends AbstractAuthenticationService implements Proxy {
 
@@ -19,7 +20,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
         this.port = port;
     }
 
-    public Token authenticate(Credential credential) throws TcpClientConnectException, TcpClientWriteException {
+    public Token authenticate(Credential credential) throws TcpClientConnectException, TcpClientWriteException, TcpClientReadException {
 
         //serialize credential
         byte[] serializedCredential = credential.serialize();
@@ -32,7 +33,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
         request.setType(Request.RequestType.InvokeStateless);
         request.addArgument(new Argument(serializedCredential.length, serializedCredential));
         //connect to server
-        TcpClient tcpClient = new DefaultTcpClient(); // TODO Use factory.
+        TcpClient tcpClient = new DefaultTcpClient(); // TODO(ali) Use factory.
         tcpClient.connect(host, port);
         //write the request object
         RequestWriter requestWriter = new RequestWriter(tcpClient);
@@ -57,7 +58,5 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
         //TODO
     }
 
-    public RequestHandler getRequestHandler() {
-        return new AuthenticationRequestHandler();
-    }
+
 }

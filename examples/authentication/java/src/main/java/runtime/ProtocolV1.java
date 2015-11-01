@@ -1,9 +1,6 @@
 package runtime;
 
 
-import runtime.service.ResponseCallBack;
-import runtime.service.ServiceInfo;
-
 public class ProtocolV1 implements Protocol {
 
     private RequestCallBack requestCallBack;
@@ -64,6 +61,13 @@ public class ProtocolV1 implements Protocol {
         //some process until the entire request completely read
         //make a request object from byte array read
         Request request = new Request();
+        request.setType(Request.RequestType.InvokeStateful);
+        request.setServiceId((byte)1);
+        request.setMethodId((byte)1);
+        request.setArgumentCount((byte)1);
+        byte[] arg1 = new byte[]{ 97 , 98 };
+        request.addArgument(new Argument(2,arg1));
+        System.out.println(request);
         requestCallBack.onRequest(request);
     }
 

@@ -1,9 +1,6 @@
 package runtime;
 
 
-import runtime.service.ResponseCallBack;
-import runtime.service.ServiceInfo;
-
 public interface Protocol {
     byte[] serializeRequest(Request request);
     Request deserializeRequest(byte[] request);
