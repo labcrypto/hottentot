@@ -1,10 +1,10 @@
-package runtime.service;
+package runtime;
 
 
 import runtime.RequestHandler;
 
 public interface Service {
 
-    RequestHandler getRequestHandler();
+    RequestHandler makeRequestHandler();
     int getServiceId();
 }

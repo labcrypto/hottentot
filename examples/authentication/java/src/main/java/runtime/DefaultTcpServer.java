@@ -1,26 +1,23 @@
-package runtime.service;
+package runtime;
 
-
-import runtime.Endpoint;
-import runtime.Protocol;
-import runtime.RequestHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 import java.util.Map;
 
 public class DefaultTcpServer implements TcpServer{
 
-    private Protocol protocol;
+
     private int port;
     private String host;
     private Map<Integer ,RequestHandler> requestHandlers;
 
     public DefaultTcpServer(String host , int port , Map<Integer , RequestHandler> requestHandlers) {
-
+        this.requestHandlers = requestHandlers;
+        this.host = host;
+        this.port = port;
     }
 
     public void bindAndStart() {
@@ -34,8 +31,12 @@ public class DefaultTcpServer implements TcpServer{
             //TODO i dont know how many bytes should I have to read
             byte[] readBytes = new byte[1];
             readBytes[0] = (byte) is.read();
-            //TODO ASK KAMRAN !!!!
-            protocol.processDataForRequest(readBytes);
+            //TODO(ali) what is buffer size !!!!
+
+            //TODO(ali) use factory
+            ProtocolV1 protocolV1 = new ProtocolV1();
+            protocolV1.processDataForRequest(readBytes);
+            RequestCallBack requestCallBack = new DefaultRequestCallback(requestHandlers);
         } catch (IOException e) {
             //TODO
             e.printStackTrace();
@@ -43,7 +44,4 @@ public class DefaultTcpServer implements TcpServer{
 
     }
 
-    public void setProtocol(Protocol protocol) {
-        this.protocol = protocol;
-    }
 }
