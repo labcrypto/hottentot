@@ -19,7 +19,7 @@ namespace naeem {
                                                            ::naeem::hottentot::runtime::Response &response) {
             if (request.GetMethodId() == 1) {
               ::naeem::hottentot::examples::auth::Credential credential;
-              credential.Deserialize(request.GetArgumentData(0), request.GetArgumentDataLength(0));
+              credential.Deserialize(request.GetArgumentData(0), request.GetArgumentLength(0));
               ::naeem::hottentot::examples::auth::service::AbstractAuthenticateService *authenticateService = 
                 dynamic_cast<naeem::hottentot::examples::auth::service::AbstractAuthenticateService*>(service_);
               Token *token = authenticateService->Authenticate(&credential);

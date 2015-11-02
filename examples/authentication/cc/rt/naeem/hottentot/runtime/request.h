@@ -57,7 +57,7 @@ namespace naeem {
         inline unsigned char* GetArgumentData(uint8_t index) {
           return args_[index].data_;
         }
-        inline uint32_t GetArgumentDataLength(uint8_t index) {
+        inline uint32_t GetArgumentLength(uint8_t index) {
           return args_[index].dataLength_;
         }
       private:

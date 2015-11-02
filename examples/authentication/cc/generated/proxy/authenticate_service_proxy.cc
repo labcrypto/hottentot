@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <naeem/hottentot/runtime/request.h>
 #include <naeem/hottentot/runtime/response.h>
 #include <naeem/hottentot/runtime/protocol_v1.h>
