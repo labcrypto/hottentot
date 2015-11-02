@@ -32,7 +32,6 @@ namespace naeem {
             ::naeem::hottentot::runtime::proxy::TcpClient *tcpClient = 
               ::naeem::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
             tcpClient->Connect();
-            // Write the request object
             // Serialize request according to HTNP
             ::naeem::hottentot::runtime::Protocol *protocol = 
               new ::naeem::hottentot::runtime::ProtocolV1(); // TODO(kamran): Use factory.
@@ -41,26 +40,20 @@ namespace naeem {
                                                                               &requestSerializedDataLength);
             // Send request byte array
             tcpClient->Write(requestSerilaizedData, requestSerializedDataLength);
-            
+            // Read response from server
             unsigned char buffer[256];
-            bool ok = true;
-            while (ok) {
+            while (!protocol->IsResponseComplete()) {
               int numOfReadBytes = tcpClient_->Read(buffer, 256);
               protocol->ProcessDataForResponse(buffer, numOfReadBytes);
-              if (protocol->IsResponseComplete()) {
-                ok = false;
-              }
             }
-            // ::naeem::hottentot::runtime::proxy::RequestWriter requestWriter(tcpClient);
-            // requestWriter.WriteRequest(&request);
-            // ::naeem::hottentot::runtime::proxy::ResponseReader responseReader(tcpClient);
-            // ::naeem::hottentot::runtime::Response *response = responseReader.ReadResponse();
-            // TODO(kamran) Deserialize token part of response
-            Token *token = NULL;
+            // Deserialize token
+            Token *token = new Token;
+            token->Deserialize(protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
             // Finalization
             tcpClient->Close();
+            delete protocol;
             delete tcpClient;
-            // Return token
+            // Return the aquired token
             return token;
           }
         }

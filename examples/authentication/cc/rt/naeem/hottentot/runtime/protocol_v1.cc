@@ -31,7 +31,11 @@ namespace naeem {
       }
       bool
       ProtocolV1::IsResponseComplete() {
-        return true;
+        return isResponseComplete_;
+      }
+      Response*
+      ProtocolV1::GetResponse() {
+        return response_;
       }
       void 
       ProtocolV1::ProcessDataForRequest(unsigned char *dataChunk,

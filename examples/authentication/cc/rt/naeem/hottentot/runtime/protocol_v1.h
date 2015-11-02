@@ -24,6 +24,10 @@ namespace naeem {
                                             uint32_t           /* Data chunk length */);
       public:
         virtual bool IsResponseComplete();
+        virtual Response* GetResponse();
+      private:
+        bool isResponseComplete_;
+        Response *response_;
       };
     }
   }
