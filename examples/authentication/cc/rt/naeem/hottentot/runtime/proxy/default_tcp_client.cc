@@ -20,8 +20,9 @@ namespace naeem {
                                 uint32_t       dataLength) {
           // TODO(kamran)
         }
-        unsigned char * 
-        DefaultTcpClient::Read(uint32_t *length) {
+        uint32_t 
+        DefaultTcpClient::Read(unsigned char *buffer,
+                               uint32_t bufferLength) {
           // TODO(kamran)
         }
         void 

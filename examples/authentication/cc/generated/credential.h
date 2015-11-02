@@ -27,8 +27,8 @@ namespace naeem {
             password_ = password;
           }
           virtual unsigned char * Serialize(uint32_t *    /* Pointer to length */);
-          virtual Credential* ParseFrom(unsigned char *   /* Data */,
-                                        uint32_t          /* Data length */);
+          virtual Credential* Deserialize(unsigned char *   /* Data */,
+                                          uint32_t          /* Data length */);
         private:
           std::string username_;
           std::string password_;

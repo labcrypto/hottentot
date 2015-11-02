@@ -17,7 +17,8 @@ namespace naeem {
           virtual void Connect();
           virtual void Write(unsigned char *         /* data */,
                              uint32_t                /* Length */);
-          virtual unsigned char * Read(uint32_t *    /* Pointer to length */);
+          virtual uint32_t Read(unsigned char *          /* Buffer */,
+                                uint32_t                 /* Buffer length */);
           virtual void Close();
         };
       }

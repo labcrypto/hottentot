@@ -21,8 +21,8 @@ namespace naeem {
             value_ = value;
           }
           virtual unsigned char * Serialize(uint32_t *   /* Pointer to length */);
-          virtual Token* ParseFrom(unsigned char *       /* Data */,
-                                   uint32_t              /* Data length */);
+          virtual Token* Deserialize(unsigned char *       /* Data */,
+                                     uint32_t              /* Data length */);
         private:
           std::string value_;
         };

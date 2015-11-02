@@ -54,6 +54,12 @@ namespace naeem {
           argument.dataLength_ = dataLength;
           args_.push_back(argument);
         }
+        inline unsigned char* GetArgumentData(uint8_t index) {
+          return args_[index].data_;
+        }
+        inline uint32_t GetArgumentDataLength(uint8_t index) {
+          return args_[index].dataLength_;
+        }
       private:
         RequestType type_;
         uint32_t serviceId_;

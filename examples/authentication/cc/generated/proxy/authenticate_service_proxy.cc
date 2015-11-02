@@ -1,8 +1,8 @@
 #include <naeem/hottentot/runtime/request.h>
 #include <naeem/hottentot/runtime/response.h>
+#include <naeem/hottentot/runtime/protocol_v1.h>
 #include <naeem/hottentot/runtime/proxy/request_writer.h>
 #include <naeem/hottentot/runtime/proxy/tcp_client.h>
-#include <naeem/hottentot/runtime/proxy/response_reader.h>
 #include <naeem/hottentot/runtime/proxy/proxy_runtime.h>
 #include <naeem/hottentot/runtime/proxy/tcp_client_factory.h>
 
@@ -43,7 +43,7 @@ namespace naeem {
             // Read response from server
             unsigned char buffer[256];
             while (!protocol->IsResponseComplete()) {
-              int numOfReadBytes = tcpClient_->Read(buffer, 256);
+              int numOfReadBytes = tcpClient->Read(buffer, 256);
               protocol->ProcessDataForResponse(buffer, numOfReadBytes);
             }
             // Deserialize token

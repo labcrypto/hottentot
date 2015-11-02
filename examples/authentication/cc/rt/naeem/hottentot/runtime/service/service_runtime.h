@@ -31,6 +31,7 @@ namespace naeem {
           static TcpServerFactory *tcpServerFactory_;
           static std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> services_;
           static std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> requestHandlers_;
+          static std::map<Endpoint, std::map<uint8_t, Service*>*, Endpoint::Comparator> impls_;
         };
       }
     }

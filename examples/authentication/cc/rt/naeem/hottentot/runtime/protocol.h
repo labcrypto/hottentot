@@ -14,9 +14,9 @@ namespace naeem {
       class Response;
       class Protocol {
       public:
-        virtual unsigned char* SerializeRequest(Request *      /* Request object*/, 
+        virtual unsigned char* SerializeRequest(Request &      /* Request object*/, 
                                                 uint32_t *     /* Length */) = 0;
-        virtual unsigned char* SerializeResponse(Response *    /* Response object*/, 
+        virtual unsigned char* SerializeResponse(Response &    /* Response object*/, 
                                                  uint32_t *    /* Length */) = 0;
         virtual Response* DeserializeRequest(unsigned char *   /* Request data */, 
                                              uint32_t          /* Request data length */) = 0;

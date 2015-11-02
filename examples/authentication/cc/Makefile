@@ -7,7 +7,6 @@ all:
 	g++ -c rt/naeem/hottentot/runtime/proxy/proxy.cc -o target/proxy.o
 	g++ -c rt/naeem/hottentot/runtime/proxy/proxy_runtime.cc -o target/proxy_runtime.o
 	g++ -c rt/naeem/hottentot/runtime/proxy/request_writer.cc -o target/request_writer.o
-	g++ -c rt/naeem/hottentot/runtime/proxy/response_reader.cc -o target/response_reader.o
 	g++ -c rt/naeem/hottentot/runtime/proxy/default_tcp_client.cc -o target/default_tcp_client.o
 	g++ -c rt/naeem/hottentot/runtime/proxy/default_tcp_client_factory.cc -o target/default_tcp_client_factory.o
 
@@ -19,7 +18,7 @@ all:
 	g++ -c -I./rt generated/token.cc -o target/token.o
 	g++ -c -I./rt generated/credential.cc -o target/credential.o
 	g++ -c -I./rt generated/proxy/authenticate_service_proxy_builder.cc -o target/authenticate_service_proxy_builder.o
-	g++ -c -I./rt generated/proxy/authenticate_service_proxy.cc -o target/authenticate_service_proxy.
+	g++ -c -I./rt generated/proxy/authenticate_service_proxy.cc -o target/authenticate_service_proxy.o
 	g++ -c -I./rt generated/service/authenticate_service_request_handler.cc -o target/authenticate_service_request_handler.o
 
 	g++ -c -I./rt client/client.cc -o target/client.o
@@ -32,7 +31,6 @@ all:
 	    target/proxy.o \
 	    target/client.o \
 	    target/request_writer.o \
-	    target/response_reader.o \
 	    target/protocol_v1.o \
 	    target/token.o \
 	    target/credential.o \

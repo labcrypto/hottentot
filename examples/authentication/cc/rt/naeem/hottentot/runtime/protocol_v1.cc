@@ -10,12 +10,12 @@ namespace naeem {
   namespace hottentot {
     namespace runtime {
       unsigned char* 
-      ProtocolV1::SerializeRequest(Request  *request, 
+      ProtocolV1::SerializeRequest(Request  &request, 
                                    uint32_t *length) {
         // TODO(kamran)
       }
       unsigned char* 
-      ProtocolV1::SerializeResponse(Response *response, 
+      ProtocolV1::SerializeResponse(Response &response, 
                                     uint32_t *length) {
         // TODO(kamran)
       }

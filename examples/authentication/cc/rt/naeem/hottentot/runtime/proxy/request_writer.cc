@@ -15,7 +15,7 @@ namespace naeem {
           ::naeem::hottentot::runtime::Protocol *protocol = 
             new ::naeem::hottentot::runtime::ProtocolV1(); // TODO(kamran): Use factory.
           uint32_t requestSerializedDataLength = 0;
-          unsigned char *requestSerilaizedData = protocol->SerializeRequest(request, 
+          unsigned char *requestSerilaizedData = protocol->SerializeRequest(*request, 
                                                                             &requestSerializedDataLength);
           // Send request byte array
           tcpClient_->Write(requestSerilaizedData, requestSerializedDataLength);
