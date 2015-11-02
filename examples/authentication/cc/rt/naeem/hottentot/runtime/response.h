@@ -31,7 +31,7 @@ namespace naeem {
       private:
         /*
          * Success = 0
-         * Fault = 500+
+         * Fault > 0
          */
         uint8_t statusCode_;
         unsigned char *data_;

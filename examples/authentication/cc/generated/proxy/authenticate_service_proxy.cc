@@ -17,10 +17,14 @@ namespace naeem {
         namespace proxy {
           Token*
           AuthenticateServiceProxy::Authenticate(::naeem::hottentot::examples::auth::Credential *credential) {
-            // Serialize credential object
+            /*
+             * Serialize credential object
+             */
             uint32_t credentialSerializedDataLength = 0;
             unsigned char *credentialSerializedData = credential->Serialize(&credentialSerializedDataLength);
-            // Make request object
+            /*
+             * Make request object
+             */
             ::naeem::hottentot::runtime::Request request;
             request.SetServiceId(1);
             request.SetMethodId(1);
@@ -28,32 +32,47 @@ namespace naeem {
             request.SetType(::naeem::hottentot::runtime::Request::InvokeStateless);
             request.AddArgument(credentialSerializedData, 
                                 credentialSerializedDataLength);
-            // Connect to server
+            /*
+             * Connect to server
+             */
             ::naeem::hottentot::runtime::proxy::TcpClient *tcpClient = 
               ::naeem::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
             tcpClient->Connect();
-            // Serialize request according to HTNP
+            /*
+             * Serialize request according to HTNP
+             */
             ::naeem::hottentot::runtime::Protocol *protocol = 
               new ::naeem::hottentot::runtime::ProtocolV1(); // TODO(kamran): Use factory.
             uint32_t requestSerializedDataLength = 0;
             unsigned char *requestSerilaizedData = protocol->SerializeRequest(request, 
                                                                               &requestSerializedDataLength);
-            // Send request byte array
+            /*
+             * Send request byte array
+             */
             tcpClient->Write(requestSerilaizedData, requestSerializedDataLength);
-            // Read response from server
+            /*
+             * Read response from server
+             */
             unsigned char buffer[256];
             while (!protocol->IsResponseComplete()) {
               int numOfReadBytes = tcpClient->Read(buffer, 256);
               protocol->ProcessDataForResponse(buffer, numOfReadBytes);
             }
-            // Deserialize token
+            /*
+             * Deserialize token
+             */
             Token *token = new Token;
             token->Deserialize(protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
-            // Finalization
+            /*
+             * Finalization
+             */
             tcpClient->Close();
+            delete credentialSerializedData;
             delete protocol;
             delete tcpClient;
-            // Return the aquired token
+            /*
+             * Return the acquired token
+             */
             return token;
           }
         }
