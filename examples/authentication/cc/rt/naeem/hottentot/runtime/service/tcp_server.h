@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <string>
 #include <map>
+#include <vector>
 
 
 namespace naeem {
@@ -27,7 +28,7 @@ namespace naeem {
         protected:
           std::string host_;
           uint16_t port_;
-          std::map<uint8_t, RequestHandler*> *requestHandlers_;          
+          std::map<uint8_t, RequestHandler*> *requestHandlers_;
         };
       }
     }

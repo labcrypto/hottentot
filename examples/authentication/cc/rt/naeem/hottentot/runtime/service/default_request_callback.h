@@ -13,7 +13,7 @@ namespace naeem {
           DefaultRequestCallback(std::map<uint8_t, RequestHandler*> *requestHandlers)
             : RequestCallback(requestHandlers) {
           }
-        virtual ~DefaultRequestCallback() {}
+          virtual ~DefaultRequestCallback() {}
         public:
           virtual Response* OnRequest(void *     /* Source */,
                                       Request &  /* Request object */);

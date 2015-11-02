@@ -10,12 +10,10 @@ namespace naeem {
           AuthenticateService*
           AuthenticateServiceProxyBuilder::Create(std::string host,
                                                   uint32_t port) {
-            // TODO(kamran) Connect to server
             return new AuthenticateServiceProxy(host, port);
           }
           void
           AuthenticateServiceProxyBuilder::Destroy(AuthenticateService *authenticateService) {
-            // TODO(kamran) Destroy
             delete authenticateService;
           }
         }

@@ -7,9 +7,6 @@
 namespace naeem {
   namespace hottentot {
     namespace runtime {
-      namespace proxy {
-        class ResponseCallback;
-      }
       namespace service {
         class RequestCallback;
       }
@@ -17,11 +14,16 @@ namespace naeem {
       class Response;
       class Protocol {
       public:
-        virtual unsigned char* SerializeRequest(Request *      /* Request object*/, 
+        Protocol(int remoteSocketFD) 
+          : remoteSocketFD_(remoteSocketFD) {
+        }
+        virtual ~Protocol() {}
+      public:
+        virtual unsigned char* SerializeRequest(Request &      /* Request object*/, 
                                                 uint32_t *     /* Length */) = 0;
-        virtual unsigned char* SerializeResponse(Response *    /* Response object*/, 
+        virtual unsigned char* SerializeResponse(Response &    /* Response object*/, 
                                                  uint32_t *    /* Length */) = 0;
-        virtual Response* DeserializeRequest(unsigned char *   /* Request data */, 
+        virtual Request* DeserializeRequest(unsigned char *   /* Request data */, 
                                              uint32_t          /* Request data length */) = 0;
         virtual Response* DeserializeResponse(unsigned char *  /* Response data */, 
                                               uint32_t         /* Response data length */) = 0;
@@ -29,17 +31,17 @@ namespace naeem {
         virtual void SetRequestCallback(::naeem::hottentot::runtime::service::RequestCallback *requestCallback) {
           requestCallback_ = requestCallback;
         }
-        virtual void SetResponseCallback(::naeem::hottentot::runtime::proxy::ResponseCallback *responseCallback) {
-          responseCallback_ = responseCallback;
-        }
       public:
         virtual void ProcessDataForRequest(unsigned char *     /* Data chuck */,
                                            uint32_t            /* Data chunk length */) = 0;
         virtual void ProcessDataForResponse(unsigned char *    /* Data chuck */,
                                             uint32_t           /* Data chunk length */) = 0;
+      public:
+        virtual bool IsResponseComplete() = 0;
+        virtual Response* GetResponse() = 0;
       protected:
+        int remoteSocketFD_;
         ::naeem::hottentot::runtime::service::RequestCallback *requestCallback_;
-        ::naeem::hottentot::runtime::proxy::ResponseCallback *responseCallback_;
       };
     }
   }

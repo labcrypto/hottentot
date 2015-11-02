@@ -8,9 +8,11 @@
 #include <pthread.h>
 #include <iostream>
 
+#include "../logger.h"
+#include "../protocol_v1.h"
+
 #include "default_tcp_server.h"
 #include "default_request_callback.h"
-#include "../protocol_v1.h"
 
 
 namespace naeem {
@@ -20,7 +22,8 @@ namespace naeem {
         DefaultTcpServer::DefaultTcpServer(std::string host,
                                            uint16_t port,
                                            std::map<uint8_t, RequestHandler*> *requestHandlers)
-            : TcpServer(host, port, requestHandlers), serverSocketFD_(-1) {
+            : TcpServer(host, port, requestHandlers), 
+              serverSocketFD_(-1) {
         }
         DefaultTcpServer::~DefaultTcpServer() {
         }
@@ -34,7 +37,7 @@ namespace naeem {
             servAddr.sin_addr.s_addr = INADDR_ANY;
             servAddr.sin_port = htons(port_);
             if (bind(serverSocketFD, (struct sockaddr *) &servAddr, sizeof(servAddr)) < 0) {
-              std::cerr << "Error on bind." << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetError() << "Error on bind." << std::endl;
               exit(EXIT_FAILURE);
             }
             listen(serverSocketFD, 5);
@@ -42,7 +45,7 @@ namespace naeem {
             pthread_t thread;
             int ret = pthread_create(&thread, NULL, AcceptClients, (void *)this);
             if (ret) {
-              fprintf(stderr,"Error - pthread_create() return code: %d\n",ret);
+              ::naeem::hottentot::runtime::Logger::GetError() << "Error - pthread_create() return code: " << ret << std::endl;
               exit(EXIT_FAILURE);
             }
           }
@@ -55,13 +58,14 @@ namespace naeem {
           DefaultTcpServer *ref = (DefaultTcpServer*)data;
           while (ok) {
             int clientSocketFD = accept(ref->serverSocketFD_, (struct sockaddr *) &clientAddr, &clientAddrLength);
+            ::naeem::hottentot::runtime::Logger::GetOut() << "A new client is connected." << std::endl;
             _HandleClientConnectionParams *params = new _HandleClientConnectionParams;
             params->tcpServer_ = ref;
             params->clientSocketFD_ = clientSocketFD;
             pthread_t thread; // TODO(kamran): We need a thread pool here.
             int ret = pthread_create(&thread, NULL, HandleClientConnection, (void *)params);
             if (ret) {
-              fprintf(stderr,"Error - pthread_create() return code: %d\n",ret);
+              ::naeem::hottentot::runtime::Logger::GetError() << "Error - pthread_create() return code: " << ret << std::endl;
               exit(EXIT_FAILURE);
             }
           }
@@ -72,9 +76,9 @@ namespace naeem {
           _HandleClientConnectionParams *ref = (_HandleClientConnectionParams*)data;
           unsigned char buffer[256];
           ::naeem::hottentot::runtime::Protocol *protocol = 
-            new ::naeem::hottentot::runtime::ProtocolV1();
-          DefaultRequestCallback requestCallback(ref->tcpServer_->requestHandlers_);
-          protocol->SetRequestCallback(&requestCallback);
+            new ::naeem::hottentot::runtime::ProtocolV1(ref->clientSocketFD_);
+          DefaultRequestCallback *requestCallback = new DefaultRequestCallback(ref->tcpServer_->requestHandlers_);
+          protocol->SetRequestCallback(requestCallback);
           while (ok) {            
             uint32_t numOfReadBytes = read(ref->clientSocketFD_, buffer, 256);
             if (numOfReadBytes <= 0) {
@@ -84,6 +88,7 @@ namespace naeem {
               protocol->ProcessDataForRequest(buffer, numOfReadBytes);
             }
           }
+          ::naeem::hottentot::runtime::Logger::GetOut() << "Client is gone." << std::endl;
           close(ref->clientSocketFD_);
           delete protocol;
           delete ref;
