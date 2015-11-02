@@ -33,10 +33,28 @@ namespace naeem {
               ::naeem::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
             tcpClient->Connect();
             // Write the request object
-            ::naeem::hottentot::runtime::proxy::RequestWriter requestWriter(tcpClient);
-            requestWriter.WriteRequest(&request);
-            ::naeem::hottentot::runtime::proxy::ResponseReader responseReader(tcpClient);
-            ::naeem::hottentot::runtime::Response *response = responseReader.ReadResponse();
+            // Serialize request according to HTNP
+            ::naeem::hottentot::runtime::Protocol *protocol = 
+              new ::naeem::hottentot::runtime::ProtocolV1(); // TODO(kamran): Use factory.
+            uint32_t requestSerializedDataLength = 0;
+            unsigned char *requestSerilaizedData = protocol->SerializeRequest(request, 
+                                                                              &requestSerializedDataLength);
+            // Send request byte array
+            tcpClient->Write(requestSerilaizedData, requestSerializedDataLength);
+            
+            unsigned char buffer[256];
+            bool ok = true;
+            while (ok) {
+              int numOfReadBytes = tcpClient_->Read(buffer, 256);
+              protocol->ProcessDataForResponse(buffer, numOfReadBytes);
+              if (protocol->IsResponseComplete()) {
+                ok = false;
+              }
+            }
+            // ::naeem::hottentot::runtime::proxy::RequestWriter requestWriter(tcpClient);
+            // requestWriter.WriteRequest(&request);
+            // ::naeem::hottentot::runtime::proxy::ResponseReader responseReader(tcpClient);
+            // ::naeem::hottentot::runtime::Response *response = responseReader.ReadResponse();
             // TODO(kamran) Deserialize token part of response
             Token *token = NULL;
             // Finalization

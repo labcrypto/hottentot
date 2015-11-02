@@ -22,6 +22,8 @@ namespace naeem {
                                            uint32_t            /* Data chunk length */);
         virtual void ProcessDataForResponse(unsigned char *    /* Data chuck */,
                                             uint32_t           /* Data chunk length */);
+      public:
+        virtual bool IsResponseComplete();
       };
     }
   }

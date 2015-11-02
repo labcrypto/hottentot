@@ -29,6 +29,10 @@ namespace naeem {
                                       uint32_t       dataLength) {
         // TODO(kamran)
       }
+      bool
+      ProtocolV1::IsResponseComplete() {
+        return true;
+      }
       void 
       ProtocolV1::ProcessDataForRequest(unsigned char *dataChunk,
                                         uint32_t       dataChunkLength) {

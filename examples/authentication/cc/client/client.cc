@@ -17,8 +17,7 @@ main(int argc, char **argv) {
     ::naeem::hottentot::examples::auth::Credential credential;
     credential.SetUsername("Admin");
     credential.SetPassword("12345");
-    ::naeem::hottentot::examples::auth::Token *token = 
-        proxy->Authenticate(&credential);
+    ::naeem::hottentot::examples::auth::Token *token = proxy->Authenticate(&credential);
     std::cout << "Token: " << token->GetValue() << std::endl;
     ::naeem::hottentot::examples::auth::proxy::AuthenticateServiceProxyBuilder::Destroy(proxy);
     delete token;

@@ -37,6 +37,8 @@ namespace naeem {
                                            uint32_t            /* Data chunk length */) = 0;
         virtual void ProcessDataForResponse(unsigned char *    /* Data chuck */,
                                             uint32_t           /* Data chunk length */) = 0;
+      public:
+        virtual bool IsResponseComplete() = 0;
       protected:
         ::naeem::hottentot::runtime::service::RequestCallback *requestCallback_;
         ::naeem::hottentot::runtime::proxy::ResponseCallback *responseCallback_;
