@@ -11,6 +11,17 @@
 namespace naeem {
   namespace hottentot {
     namespace runtime {
+      ProtocolV1::ProtocolV1() 
+        : currentState_(ZeroState),
+          readType_(0),
+          readServiceId_(0),
+          readMethodId_(0),
+          readArgumentCount_(0),
+          readingArgumentLength_(0),
+          readingCounter(0) {
+      }
+      ProtocolV1::~ProtocolV1() {
+      }
       unsigned char* 
       ProtocolV1::SerializeRequest(Request  &request, 
                                    uint32_t *length) {
@@ -73,8 +84,64 @@ namespace naeem {
         return response_;
       }
       void 
-      ProtocolV1::ProcessDataForRequest(unsigned char *dataChunk,
-                                        uint32_t       dataChunkLength) {
+      ProtocolV1::ProcessDataForRequest(unsigned char *data,
+                                        uint32_t       dataLength) {
+        //=========================================================
+        for (unsigned int i = 0; i < dataLength; i++) {
+          if (currentState_ == ReadingTypeState) {
+            readType_ = data[i];
+            currentState_ = ReadingServiceIdState;
+          } else if (currentState_ == ReadingServiceIdState) {
+            readServiceId_ = data[i];
+            currentState_ = ReadingMethodIdState;
+          } else if (currentState_ == ReadingMethodIdState) {
+            readMethodId_ = data[i];
+            currentState_ = ReadingArgumentCountState;
+          } else if (currentState_ == ReadingArgumentCountState) {
+            readArgumentCount_ = data[i];
+            readingCounter_ = 0;
+            currentState_ = ReadingArgumentLengthState;
+          } else if (currentState_ == ReadingArgumentLengthState) {
+            if (readingCounter_ == 0) {
+              if (data[i] & 0x80 == 0) {
+                readingArgumentLength_ = data[i];
+                readingCounter_ = 0;
+                currentState_ = ReadingArgumentDataState;
+              } else {
+                targetCounter_ = (data[i] & 0x0f) + 1;
+                readingBuffer_.clear();
+                readingBuffer_.push_back(data[i]);
+                readingCounter_++;
+              }
+            } else {
+              if (readingCounter_ < targetCounter_) {
+                readingBuffer_.push_back(data[i]);
+                readingCounter_++;
+              } else {
+                uint32_t temp = 1;
+                readingArgumentLength_ = 0;
+                for (unsigned int c = targetCounter_ - 1; c > 0; c--) {
+                  readingArgumentLength_ += readingBuffer_[c] * temp;
+                  temp *= 256;
+                }
+                readingCounter_ = 0;
+                currentState_ = ReadingArgumentDataState;
+              }
+            }
+          }
+        } else if (currentState_ == ReadingArgumentDataState) {
+          if (readingCounter_ == 0) {
+            readingBuffer_.clear();
+            readingBuffer_.push_back(data[i]);
+            readingCounter_++;
+            targetCounter_ = readingArgumentLength_;
+          } else {
+            
+          }
+        }
+
+        //=========================================================
+
         Request request;
         request.SetType(Request::InvokeStateless);
         request.SetServiceId(1);

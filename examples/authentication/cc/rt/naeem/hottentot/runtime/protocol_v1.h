@@ -8,6 +8,17 @@ namespace naeem {
   namespace hottentot {
     namespace runtime {
       class ProtocolV1 : public Protocol {
+      enum State {
+        ReadingTypeState,
+        ReadingServiceIdState,
+        ReadingMethodIdState,
+        ReadingArgumentCountState,
+        ReadingArgumentLengthState,
+        ReadingArgumentDataState
+      };
+      public:
+        ProtocolV1();
+        ~ProtocolV1();
       public:
         virtual unsigned char* SerializeRequest(Request &      /* Request object*/, 
                                                 uint32_t *     /* Length */);
@@ -28,6 +39,16 @@ namespace naeem {
       private:
         bool isResponseComplete_;
         Response *response_;
+      private:
+        uint8_t readType_;
+        uint8_t readServiceId_;
+        uint8_t readMethodId_;
+        uint8_t readArgumentCount_;
+        uint32_t readingArgumentLength_;
+        uint32_t readingCounter_;
+        uint32_t targetCounter_;
+        std::vector<unsigned char> readingBuffer_;
+        State currentState_;
       };
     }
   }
