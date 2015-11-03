@@ -2,6 +2,7 @@ all:
 	
 	mkdir -p target
 
+	g++ -c rt/naeem/hottentot/runtime/logger.cc -o target/logger.o
 	g++ -c rt/naeem/hottentot/runtime/protocol_v1.cc -o target/protocol_v1.o
 
 	g++ -c rt/naeem/hottentot/runtime/proxy/proxy.cc -o target/proxy.o
@@ -35,6 +36,7 @@ all:
 	    target/default_tcp_client.o \
 	    target/default_tcp_client_factory.o \
 	    target/proxy_runtime.o \
+	    target/logger.o \
 	    -o client.out
 	    
 	g++ target/server.o \
@@ -47,5 +49,6 @@ all:
 	    target/credential.o \
 	    target/authenticate_service_request_handler.o \
 	    target/authenticate_service_impl.o \
+	    target/logger.o \
 	    -lpthread \
 	    -o server.out

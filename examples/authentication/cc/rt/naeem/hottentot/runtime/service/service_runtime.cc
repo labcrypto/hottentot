@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "../logger.h"
+
 #include "service_runtime.h"
 #include "service.h"
 #include "tcp_server.h"
@@ -46,7 +48,7 @@ namespace naeem {
                                                                           it->first.GetPort(), 
                                                                           requestHandlers_.find(it->first)->second);
             tcpServer->BindAndStart();
-            std::cout << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
           }
           while(true);
         }

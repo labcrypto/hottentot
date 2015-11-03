@@ -10,6 +10,7 @@
 
 #include "default_tcp_server.h"
 #include "default_request_callback.h"
+#include "../logger.h"
 #include "../protocol_v1.h"
 
 
@@ -35,7 +36,7 @@ namespace naeem {
             servAddr.sin_addr.s_addr = INADDR_ANY;
             servAddr.sin_port = htons(port_);
             if (bind(serverSocketFD, (struct sockaddr *) &servAddr, sizeof(servAddr)) < 0) {
-              std::cerr << "Error on bind." << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetError() << "Error on bind." << std::endl;
               exit(EXIT_FAILURE);
             }
             listen(serverSocketFD, 5);
@@ -43,7 +44,7 @@ namespace naeem {
             pthread_t thread;
             int ret = pthread_create(&thread, NULL, AcceptClients, (void *)this);
             if (ret) {
-              fprintf(stderr,"Error - pthread_create() return code: %d\n",ret);
+              ::naeem::hottentot::runtime::Logger::GetError() << "Error - pthread_create() return code: " << ret << std::endl;
               exit(EXIT_FAILURE);
             }
           }
@@ -62,7 +63,7 @@ namespace naeem {
             pthread_t thread; // TODO(kamran): We need a thread pool here.
             int ret = pthread_create(&thread, NULL, HandleClientConnection, (void *)params);
             if (ret) {
-              fprintf(stderr,"Error - pthread_create() return code: %d\n",ret);
+              ::naeem::hottentot::runtime::Logger::GetError() << "Error - pthread_create() return code: " << ret << std::endl;
               exit(EXIT_FAILURE);
             }
           }

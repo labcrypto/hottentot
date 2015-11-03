@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <naeem/hottentot/runtime/logger.h>
 #include <naeem/hottentot/runtime/service/service_runtime.h>
 
 #include "../generated/token.h"
@@ -12,6 +13,8 @@
 int
 main(int argc, char **argv) {
   try {
+    ::naeem::hottentot::runtime::Logger::Init();
+    ::naeem::hottentot::runtime::Logger::GetOut() << "Starting server ..." << std::endl;
     ::naeem::hottentot::runtime::service::ServiceRuntime::Init(argc, argv);
     ::naeem::hottentot::examples::auth::AuthenticateServiceImpl *authenticateService =
         new ::naeem::hottentot::examples::auth::AuthenticateServiceImpl();

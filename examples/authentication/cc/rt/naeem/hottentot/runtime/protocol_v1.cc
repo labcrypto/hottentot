@@ -128,7 +128,7 @@ namespace naeem {
                                       uint32_t       dataLength) {
         Response *response = new Response;
         uint32_t c = 0;
-        response.SetStatusCode(data[c++]);
+        response->SetStatusCode(data[c++]);
         uint32_t resultLength = 0;
         if (data[c] > 127) {
           uint32_t t = 1;
@@ -145,6 +145,8 @@ namespace naeem {
         for (uint32_t i = 0; i < resultLength; i++) {
           resultData[i] = data[c++];
         }
+        response->SetData(resultData);
+        response->SetDataLength(resultLength);
         return response;
       }
       void 
