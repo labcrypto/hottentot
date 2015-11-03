@@ -93,6 +93,7 @@ namespace naeem {
              * Deserialize token
              */
             Token *token = new Token;
+            ::naeem::hottentot::runtime::Utils::PrintArray("Response", protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
             token->Deserialize(protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
             /*
              * Finalization

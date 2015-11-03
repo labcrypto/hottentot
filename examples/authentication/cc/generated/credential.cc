@@ -31,10 +31,10 @@ namespace naeem {
           buffer[c++] = 0;
           return buffer;
         }
-        Credential*
+        void
         Credential::Deserialize(unsigned char *data, 
                                 uint32_t length) {
-          return NULL;
+          // TODO(kamran)
         }
       }
     }

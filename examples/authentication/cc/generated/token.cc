@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string.h>
 
 #include "token.h"
@@ -19,11 +20,10 @@ namespace naeem {
           buffer[actualLength - 1] = 0;
           return buffer;
         }
-        Token*
+        void
         Token::Deserialize(unsigned char *data, 
                            uint32_t length) {
-          Token *token = new Token; 
-          token->SetValue((char *)data);
+          SetValue((char *)data);
         }
       }
     }
