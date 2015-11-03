@@ -23,6 +23,14 @@ namespace naeem {
       }
       ProtocolV1::~ProtocolV1() {
       }
+      bool
+      ProtocolV1::IsResponseComplete() {
+        return isResponseComplete_;
+      }
+      Response*
+      ProtocolV1::GetResponse() {
+        return response_;
+      }
       unsigned char* 
       ProtocolV1::SerializeRequest(Request  &request, 
                                    uint32_t *length) {
@@ -118,15 +126,26 @@ namespace naeem {
       Response* 
       ProtocolV1::DeserializeResponse(unsigned char *data, 
                                       uint32_t       dataLength) {
-        // TODO(kamran)
-      }
-      bool
-      ProtocolV1::IsResponseComplete() {
-        return isResponseComplete_;
-      }
-      Response*
-      ProtocolV1::GetResponse() {
-        return response_;
+        Response *response = new Response;
+        uint32_t c = 0;
+        response.SetStatusCode(data[c++]);
+        uint32_t resultLength = 0;
+        if (data[c] > 127) {
+          uint32_t t = 1;
+          uint32_t n = data[c] & 0x0f;
+          for (uint32_t i = n; i > 0; i--) {
+            resultLength += data[c + i] * t;
+            t += 256;
+          }
+          c += n + 1;
+        } else {
+          resultLength = data[c++];
+        }
+        unsigned char *resultData = new unsigned char[resultLength];
+        for (uint32_t i = 0; i < resultLength; i++) {
+          resultData[i] = data[c++];
+        }
+        return response;
       }
       void 
       ProtocolV1::ProcessDataForRequest(unsigned char *data,
