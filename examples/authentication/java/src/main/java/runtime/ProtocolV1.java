@@ -1,14 +1,27 @@
 package runtime;
 
 
+import generated.Argument;
+import runtime.factory.RequestCallbackFactory;
+
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+
+
 public class ProtocolV1 implements Protocol {
 
     private RequestCallBack requestCallBack;
-    private ResponseCallBack responseCallBack;
+    private ResponseCallback responseCallback;
+    private Response response;
+    private boolean IsResponseComplete = false;
     public byte[] serializeRequest(Request request) {
+        List<Argument> args = request.getArgs();
+        Argument arg0 = args.get(0);
         //TODO maybe some section consist more than one byte !
         int serializedRequestLength = 4;
-        for(Argument arg : request.getArgs()){
+        for(Argument arg : request.getArgs()) {
             serializedRequestLength += arg.getDataLength() + 1;
         }
         byte[] serializedRequest = new byte[serializedRequestLength];
@@ -32,6 +45,7 @@ public class ProtocolV1 implements Protocol {
                 serializedRequest[counter] = b;
             }
         }
+
         return serializedRequest;
     }
 
@@ -40,46 +54,60 @@ public class ProtocolV1 implements Protocol {
     }
 
     public byte[] serializeResponse(Response response) {
-        return new byte[0];
-    }
 
-    public Response deserializeResponse(byte[] serializedResponse) {
-        //TODO done
-        Response response = new Response();
-        response.setStatusCode(serializedResponse[0]);
-        byte[] responseBody = new byte[serializedResponse.length -1 ];
-        for(int i = 1; i < serializedResponse.length ; i++ ){
-            responseBody[i - 1] = serializedResponse[i];
-        }
-        response.setResponseBody(responseBody);
-        return response;
+        return new byte[]{97};
     }
 
 
+    public void setResponseCallback(ResponseCallback responseCallback){
+        this.responseCallback = responseCallback;
+    }
 
     public void processDataForRequest(byte[] dataChunk) {
         //some process until the entire request completely read
         //make a request object from byte array read
+        System.out.println("----"+Arrays.toString(dataChunk));
         Request request = new Request();
         request.setType(Request.RequestType.InvokeStateful);
         request.setServiceId((byte)1);
         request.setMethodId((byte)1);
         request.setArgumentCount((byte)1);
-        byte[] arg1 = new byte[]{ 97 , 98 };
-        request.addArgument(new Argument(2,arg1));
-        System.out.println(request);
-        requestCallBack.onRequest(request);
+        request.addArgument(new Argument((byte)1 , new byte[]{97}));
+        Response response = requestCallBack.onRequest(request);
+
+        try {
+            responseCallback.onResponse(serializeResponse(response));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void processDataForResponse(byte[] dataChunk) {
+        //TODO
+        //fake impl
+        response = new Response();
+        response.setStatusCode((byte)100);
+        response.setResponseLength((byte)2);
+        response.setData(new byte[] {97});
+        IsResponseComplete = true;
+    }
 
+    public boolean IsResponseComplete() {
+        //TODO(ali)
+        //fake impl
+        return IsResponseComplete;
+    }
+
+    public Response getResponse() {
+        //TODO
+        return response;
     }
 
     public void setRequestCallBack(RequestCallBack requestCallBack) {
         this.requestCallBack = requestCallBack;
     }
 
-    public void setResponseCallBack(ResponseCallBack requestCallBack) {
-        this.responseCallBack = responseCallBack;
-    }
+
+
+
 }

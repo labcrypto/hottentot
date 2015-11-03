@@ -1,7 +1,8 @@
 package runtime;
 
 import runtime.factory.TcpServerFactory;
-import java.io.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +13,7 @@ public class ServiceRuntime {
     private Map<Endpoint,List<Service>> serviceMap = new HashMap<Endpoint, List<Service>>();
     private Map<Endpoint , Map<Integer , RequestHandler>> requestHandlerMap = new HashMap<Endpoint, Map<Integer, RequestHandler>>();
     public void register(String host , int port , Service service){
-        Endpoint endPoint = new Endpoint();
-        endPoint.setHost(host);
-        endPoint.setPort(port);
+        Endpoint endPoint = new Endpoint(host,port);
         if(serviceMap.containsKey(endPoint)){
             List<Service> serviceListInEndpoint = serviceMap.get(endPoint);
             //TODO search in service list for duplicate service registered
@@ -35,8 +34,12 @@ public class ServiceRuntime {
             Map<Integer, RequestHandler> requestHandlerMapInEndpoint = entry.getValue();
             Endpoint endpoint = entry.getKey();
             TcpServer tcpServer = TcpServerFactory.create(endpoint.getHost(), endpoint.getPort(), requestHandlerMapInEndpoint);
-            tcpServer.bindAndStart();
+            try {
+                tcpServer.bindAndStart();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
+        while(true);
     }
 }

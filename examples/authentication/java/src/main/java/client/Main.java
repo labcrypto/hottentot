@@ -17,6 +17,7 @@ public class Main {
         credential.setPassword("12345");
         try {
             Token token = proxy.authenticate(credential);
+            System.out.println(token.getValue());
         } catch (TcpClientConnectException e) {
             e.printStackTrace();
         } catch (TcpClientWriteException e) {
@@ -25,6 +26,5 @@ public class Main {
             e.printStackTrace();
         }
         AuthenticationServiceProxyBuilder.destroy();
-
     }
 }
