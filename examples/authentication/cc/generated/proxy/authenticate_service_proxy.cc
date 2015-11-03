@@ -3,7 +3,6 @@
 #include <naeem/hottentot/runtime/request.h>
 #include <naeem/hottentot/runtime/response.h>
 #include <naeem/hottentot/runtime/protocol_v1.h>
-#include <naeem/hottentot/runtime/proxy/request_writer.h>
 #include <naeem/hottentot/runtime/proxy/tcp_client.h>
 #include <naeem/hottentot/runtime/proxy/proxy_runtime.h>
 #include <naeem/hottentot/runtime/proxy/tcp_client_factory.h>
@@ -44,7 +43,7 @@ namespace naeem {
              * Serialize request according to HTNP
              */
             ::naeem::hottentot::runtime::Protocol *protocol = 
-              new ::naeem::hottentot::runtime::ProtocolV1(); // TODO(kamran): Use factory.
+              new ::naeem::hottentot::runtime::ProtocolV1(tcpClient->GetRemoteSocketFD()); // TODO(kamran): Use factory.
             uint32_t requestSerializedDataLength = 0;
             unsigned char *requestSerilaizedData = protocol->SerializeRequest(request, 
                                                                               &requestSerializedDataLength);

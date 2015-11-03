@@ -20,6 +20,9 @@ namespace naeem {
           virtual uint32_t Read(unsigned char *          /* Buffer */,
                                 uint32_t                 /* Buffer length */);
           virtual void Close();
+          virtual int GetRemoteSocketFD() {
+            return socketFD_;
+          }
         private:
           int socketFD_;
         };

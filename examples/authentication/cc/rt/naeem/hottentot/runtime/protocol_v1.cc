@@ -1,6 +1,8 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <iostream>
 #include <sstream>
+#include <unistd.h>
 
 #include "protocol_v1.h"
 #include "request.h"
@@ -11,14 +13,12 @@
 namespace naeem {
   namespace hottentot {
     namespace runtime {
-      ProtocolV1::ProtocolV1() 
-        : currentState_(ZeroState),
-          readType_(0),
-          readServiceId_(0),
-          readMethodId_(0),
-          readArgumentCount_(0),
-          readingArgumentLength_(0),
-          readingCounter(0) {
+      ProtocolV1::ProtocolV1(int remoteSocketFD) 
+        : Protocol(remoteSocketFD),
+          currentState_(ReadingLengthState),
+          readingLength_(0),
+          readingCounter_(0),
+          targetCounter_(0) {
       }
       ProtocolV1::~ProtocolV1() {
       }
@@ -65,7 +65,7 @@ namespace naeem {
                                     uint32_t *length) {
         // TODO(kamran)
       }
-      Response* 
+      Request* 
       ProtocolV1::DeserializeRequest(unsigned char  *data, 
                                      uint32_t       dataLength) {
         // TODO(kamran)
@@ -86,27 +86,13 @@ namespace naeem {
       void 
       ProtocolV1::ProcessDataForRequest(unsigned char *data,
                                         uint32_t       dataLength) {
-        //=========================================================
         for (unsigned int i = 0; i < dataLength; i++) {
-          if (currentState_ == ReadingTypeState) {
-            readType_ = data[i];
-            currentState_ = ReadingServiceIdState;
-          } else if (currentState_ == ReadingServiceIdState) {
-            readServiceId_ = data[i];
-            currentState_ = ReadingMethodIdState;
-          } else if (currentState_ == ReadingMethodIdState) {
-            readMethodId_ = data[i];
-            currentState_ = ReadingArgumentCountState;
-          } else if (currentState_ == ReadingArgumentCountState) {
-            readArgumentCount_ = data[i];
-            readingCounter_ = 0;
-            currentState_ = ReadingArgumentLengthState;
-          } else if (currentState_ == ReadingArgumentLengthState) {
+          if (currentState_ == ReadingLengthState) {
             if (readingCounter_ == 0) {
               if (data[i] & 0x80 == 0) {
-                readingArgumentLength_ = data[i];
+                readingLength_ = data[i];
                 readingCounter_ = 0;
-                currentState_ = ReadingArgumentDataState;
+                currentState_ = ReadingDataState;
               } else {
                 targetCounter_ = (data[i] & 0x0f) + 1;
                 readingBuffer_.clear();
@@ -119,49 +105,50 @@ namespace naeem {
                 readingCounter_++;
               } else {
                 uint32_t temp = 1;
-                readingArgumentLength_ = 0;
+                readingLength_ = 0;
                 for (unsigned int c = targetCounter_ - 1; c > 0; c--) {
-                  readingArgumentLength_ += readingBuffer_[c] * temp;
+                  readingLength_ += readingBuffer_[c] * temp;
                   temp *= 256;
                 }
                 readingCounter_ = 0;
-                currentState_ = ReadingArgumentDataState;
+                currentState_ = ReadingDataState;
+              }
+            }
+          } else if (currentState_ == ReadingDataState) {
+            if (readingCounter_ == 0) {
+              readingBuffer_.clear();
+              readingBuffer_.push_back(data[i]);
+              readingCounter_++;
+              targetCounter_ = readingLength_;
+            } else {
+              if (readingCounter_ < targetCounter_) {
+                readingBuffer_.push_back(data[i]);
+                readingCounter_++;
+              } else {
+                uint32_t requestLength = readingLength_;
+                unsigned char *requestData = new unsigned char[requestLength];
+                for (unsigned int c = 0; c < requestLength; c++) {
+                  requestData[c] = readingBuffer_[c];
+                }
+                Request *request = DeserializeRequest(requestData, requestLength);
+                readingBuffer_.clear();
+                readingCounter_ = 0;
+                currentState_ = ReadingLengthState;
+                Response *response = requestCallback_->OnRequest(this, *request);
+                if (response) {
+                  uint32_t responseSerializedLength = 0;
+                  unsigned char *responseSerializedData = SerializeResponse(*response, &responseSerializedLength);
+                  write(remoteSocketFD_, responseSerializedData, responseSerializedLength * sizeof(unsigned char));
+                  delete responseSerializedData;
+                  delete response;
+                } else {
+                  std::cout << "No handler is found." << std::endl;
+                }
+                delete requestData;
               }
             }
           }
-        } else if (currentState_ == ReadingArgumentDataState) {
-          if (readingCounter_ == 0) {
-            readingBuffer_.clear();
-            readingBuffer_.push_back(data[i]);
-            readingCounter_++;
-            targetCounter_ = readingArgumentLength_;
-          } else {
-            
-          }
-        }
-
-        //=========================================================
-
-        Request request;
-        request.SetType(Request::InvokeStateless);
-        request.SetServiceId(1);
-        request.SetMethodId(1);
-        request.SetArgumentCount(1);
-        unsigned char *argData = new unsigned char[5];
-        argData[0] = 65;
-        argData[1] = 66;
-        argData[2] = 67;
-        argData[3] = 68;
-        argData[4] = 69;
-        request.AddArgument(argData, 5);
-        Response *response = requestCallback_->OnRequest(this, request);
-        if (response) {
-          // TODO(kamran) Serialize response
-          delete response;
-        } else {
-          std::cout << "No handler is found." << std::endl;
-        }
-        delete argData;
+        }      
       }
       void 
       ProtocolV1::ProcessDataForResponse(unsigned char *dataChunk,

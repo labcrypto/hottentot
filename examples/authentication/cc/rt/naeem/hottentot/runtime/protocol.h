@@ -14,11 +14,16 @@ namespace naeem {
       class Response;
       class Protocol {
       public:
+        Protocol(int remoteSocketFD) 
+          : remoteSocketFD_(remoteSocketFD) {
+        }
+        virtual ~Protocol() {}
+      public:
         virtual unsigned char* SerializeRequest(Request &      /* Request object*/, 
                                                 uint32_t *     /* Length */) = 0;
         virtual unsigned char* SerializeResponse(Response &    /* Response object*/, 
                                                  uint32_t *    /* Length */) = 0;
-        virtual Response* DeserializeRequest(unsigned char *   /* Request data */, 
+        virtual Request* DeserializeRequest(unsigned char *   /* Request data */, 
                                              uint32_t          /* Request data length */) = 0;
         virtual Response* DeserializeResponse(unsigned char *  /* Response data */, 
                                               uint32_t         /* Response data length */) = 0;
@@ -35,6 +40,7 @@ namespace naeem {
         virtual bool IsResponseComplete() = 0;
         virtual Response* GetResponse() = 0;
       protected:
+        int remoteSocketFD_;
         ::naeem::hottentot::runtime::service::RequestCallback *requestCallback_;
       };
     }

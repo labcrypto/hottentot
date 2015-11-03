@@ -73,7 +73,7 @@ namespace naeem {
           _HandleClientConnectionParams *ref = (_HandleClientConnectionParams*)data;
           unsigned char buffer[256];
           ::naeem::hottentot::runtime::Protocol *protocol = 
-            new ::naeem::hottentot::runtime::ProtocolV1();
+            new ::naeem::hottentot::runtime::ProtocolV1(ref->clientSocketFD_);
           DefaultRequestCallback *requestCallback = new DefaultRequestCallback(ref->tcpServer_->requestHandlers_);
           protocol->SetRequestCallback(requestCallback);
           while (ok) {            
