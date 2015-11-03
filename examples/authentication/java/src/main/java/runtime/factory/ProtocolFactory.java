@@ -6,6 +6,8 @@ import runtime.ProtocolV1;
 
 public class ProtocolFactory {
     public static Protocol create(){
-        return new ProtocolV1();
+
+        Protocol protocol = new ProtocolV1();
+       return protocol;
     }
 }

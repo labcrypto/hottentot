@@ -1,6 +1,8 @@
 package runtime;
 
 
+import generated.Argument;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,5 +60,16 @@ public class Request {
 
     public List<Argument> getArgs() {
         return args;
+    }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "type=" + type +
+                ", methodId=" + methodId +
+                ", serviceId=" + serviceId +
+                ", argumentCount=" + argumentCount +
+                ", args=" + args +
+                '}';
     }
 }

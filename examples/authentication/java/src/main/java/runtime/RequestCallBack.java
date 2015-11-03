@@ -2,5 +2,5 @@ package runtime;
 
 
 public interface RequestCallBack {
-    void onRequest(Request request);
+    Response onRequest(Request request) ;
 }

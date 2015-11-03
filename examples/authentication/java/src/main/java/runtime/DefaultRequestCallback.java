@@ -1,6 +1,8 @@
 package runtime;
 
 
+
+
 import java.util.Map;
 
 public class DefaultRequestCallback implements RequestCallBack {
@@ -10,9 +12,10 @@ public class DefaultRequestCallback implements RequestCallBack {
         this.requestHandlers = requestHandlers;
     }
 
-    public void onRequest(Request request) {
+    public Response onRequest(Request request){
         //TODO(ali)
         RequestHandler requestHandler = requestHandlers.get((int)request.getServiceId());
-        Response response = requestHandler.handleRequest(request);
+        System.out.println(request);
+        return requestHandler.handleRequest(request);
     }
 }

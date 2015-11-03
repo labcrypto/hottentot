@@ -1,6 +1,8 @@
 package runtime;
 
 
-public interface TcpServer {
-    void bindAndStart();
+import java.io.IOException;
+
+public interface TcpServer{
+    void bindAndStart() throws IOException;
 }

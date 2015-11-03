@@ -6,14 +6,12 @@ import runtime.RequestHandler;
 import runtime.Service;
 
 
-abstract  class AbstractAuthenticationService implements Service, AuthenticationService {
+abstract class AbstractAuthenticationService implements Service, AuthenticationService {
 
     public RequestHandler makeRequestHandler(){
-        return new AuthenticationRequestHandler();
+        return new AuthenticationRequestHandler(this);
     }
     public int getServiceId() {
         return 1;
     }
-
-
 }

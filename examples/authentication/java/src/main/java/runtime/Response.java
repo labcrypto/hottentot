@@ -1,16 +1,18 @@
 package runtime;
 
 
+import java.util.Arrays;
+
 public class Response {
     private byte statusCode;
-    private byte[] responseBody;
-    private byte responseLength;
+    private byte[] data;
+    private int responseLength;
 
-    public byte getResponseLength() {
+    public int getResponseLength() {
         return responseLength;
     }
 
-    public void setResponseLength(byte responseLength) {
+    public void setResponseLength(int responseLength) {
         this.responseLength = responseLength;
     }
 
@@ -22,11 +24,20 @@ public class Response {
         this.statusCode = statusCode;
     }
 
-    public byte[] getResponseBody() {
-        return responseBody;
+    public byte[] getData() {
+        return data;
     }
 
-    public void setResponseBody(byte[] responseBody) {
-        this.responseBody = responseBody;
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "Response{" +
+                "statusCode=" + statusCode +
+                ", data=" + Arrays.toString(data) +
+                ", responseLength=" + responseLength +
+                '}';
     }
 }

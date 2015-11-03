@@ -1,47 +1,87 @@
 package runtime;
 
 
+import runtime.factory.ProtocolFactory;
+import runtime.factory.RequestCallbackFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Map;
 
-public class DefaultTcpServer implements TcpServer{
+public class DefaultTcpServer implements TcpServer {
+
 
 
     private int port;
     private String host;
-    private Map<Integer ,RequestHandler> requestHandlers;
+    private Map<Integer, RequestHandler> requestHandlers;
 
-    public DefaultTcpServer(String host , int port , Map<Integer , RequestHandler> requestHandlers) {
+    public DefaultTcpServer(String host, int port, Map<Integer, RequestHandler> requestHandlers) {
         this.requestHandlers = requestHandlers;
         this.host = host;
         this.port = port;
     }
 
-    public void bindAndStart() {
-        //TODO
+    public void bindAndStart() throws IOException {
+        //TODO write a multi thread approach
         //open server socket
         //accept socket
-        try {
-            ServerSocket serverSocket = new ServerSocket(port);
-            Socket acceptSocket = serverSocket.accept();
-            InputStream is = acceptSocket.getInputStream();
-            //TODO i dont know how many bytes should I have to read
-            byte[] readBytes = new byte[1];
-            readBytes[0] = (byte) is.read();
-            //TODO(ali) what is buffer size !!!!
 
-            //TODO(ali) use factory
-            ProtocolV1 protocolV1 = new ProtocolV1();
-            protocolV1.processDataForRequest(readBytes);
-            RequestCallBack requestCallBack = new DefaultRequestCallback(requestHandlers);
-        } catch (IOException e) {
-            //TODO
-            e.printStackTrace();
+        ServerSocket serverSocket = new ServerSocket(port);
+
+        class ClientHandler implements Runnable, ResponseCallback {
+            private Socket clientSocket;
+
+            public ClientHandler(Socket clientSocket) {
+                this.clientSocket = clientSocket;
+            }
+
+            public void run() {
+                //receive data
+                System.out.println("new thread ...");
+                byte[] buffer = new byte[256];
+                InputStream is = null;
+                try {
+                    is = clientSocket.getInputStream();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                int numReadBytes = 0;
+                try {
+                    numReadBytes = is.read(buffer, 0, buffer.length);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("number : " + numReadBytes);
+                byte[] readDataChunk;
+                Protocol protocol = ProtocolFactory.create();
+                RequestCallBack requestCallBack = RequestCallbackFactory.create(requestHandlers);
+                protocol.setRequestCallBack(requestCallBack);
+                protocol.setResponseCallback(this);
+                if (numReadBytes < 256) {
+                    readDataChunk = Arrays.copyOf(buffer, numReadBytes);
+                    System.out.println(Arrays.toString(readDataChunk));
+                    protocol.processDataForRequest(readDataChunk);
+                } else {
+                    protocol.processDataForRequest(buffer);
+                }
+            }
+
+            public void onResponse(byte[] serializedResponse) throws IOException {
+                OutputStream os = clientSocket.getOutputStream();
+                os.write(serializedResponse , 0 ,serializedResponse.length);
+            }
+        }
+        while (true) {
+            Socket clientSocket = serverSocket.accept();
+            new Thread(new ClientHandler(clientSocket)).start();
         }
 
     }
+
 
 }
