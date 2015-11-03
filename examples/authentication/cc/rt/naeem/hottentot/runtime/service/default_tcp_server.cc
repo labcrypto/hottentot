@@ -8,10 +8,11 @@
 #include <pthread.h>
 #include <iostream>
 
-#include "default_tcp_server.h"
-#include "default_request_callback.h"
 #include "../logger.h"
 #include "../protocol_v1.h"
+
+#include "default_tcp_server.h"
+#include "default_request_callback.h"
 
 
 namespace naeem {
@@ -57,6 +58,7 @@ namespace naeem {
           DefaultTcpServer *ref = (DefaultTcpServer*)data;
           while (ok) {
             int clientSocketFD = accept(ref->serverSocketFD_, (struct sockaddr *) &clientAddr, &clientAddrLength);
+            ::naeem::hottentot::runtime::Logger::GetOut() << "A new client is connected." << std::endl;
             _HandleClientConnectionParams *params = new _HandleClientConnectionParams;
             params->tcpServer_ = ref;
             params->clientSocketFD_ = clientSocketFD;
@@ -86,6 +88,7 @@ namespace naeem {
               protocol->ProcessDataForRequest(buffer, numOfReadBytes);
             }
           }
+          ::naeem::hottentot::runtime::Logger::GetOut() << "Client is gone." << std::endl;
           close(ref->clientSocketFD_);
           delete protocol;
           delete ref;

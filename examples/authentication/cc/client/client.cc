@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <naeem/hottentot/runtime/logger.h>
 #include <naeem/hottentot/runtime/proxy/proxy_runtime.h>
 
 #include "../generated/token.h"
@@ -11,6 +12,7 @@
 int 
 main(int argc, char **argv) {
   try {
+    ::naeem::hottentot::runtime::Logger::Init();
     ::naeem::hottentot::runtime::proxy::ProxyRuntime::Init(argc, argv);
     ::naeem::hottentot::examples::auth::AuthenticateService *proxy = 
         ::naeem::hottentot::examples::auth::proxy::AuthenticateServiceProxyBuilder::Create("127.0.0.1", 2005);

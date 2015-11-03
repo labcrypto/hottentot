@@ -6,6 +6,7 @@
 
 #include "protocol_v1.h"
 #include "request.h"
+#include "logger.h"
 #include "response.h"
 #include "service/request_callback.h"
 
@@ -64,7 +65,7 @@ namespace naeem {
           }
         }
         if (c != actualLength) {
-          std::cerr << "Inconsistency in request serialization process." << std::endl;
+          ::naeem::hottentot::runtime::Logger::GetError() << "Inconsistency in request serialization process." << std::endl;
           exit(1);
         }
         return data;
@@ -152,6 +153,7 @@ namespace naeem {
       void 
       ProtocolV1::ProcessDataForRequest(unsigned char *data,
                                         uint32_t       dataLength) {
+        ::naeem::hottentot::runtime::Logger::GetOut() << "We have data with length " << dataLength << " Bytes." << std::endl;
         for (unsigned int i = 0; i < dataLength; i++) {
           if (currentState_ == ReadingLengthState) {
             if (readingCounter_ == 0) {
