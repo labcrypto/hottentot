@@ -18,7 +18,8 @@ namespace naeem {
           currentState_(ReadingLengthState),
           readingLength_(0),
           readingCounter_(0),
-          targetCounter_(0) {
+          targetCounter_(0),
+          isResponseComplete_(false) {
       }
       ProtocolV1::~ProtocolV1() {
       }
@@ -148,12 +149,66 @@ namespace naeem {
               }
             }
           }
-        }      
+        }
       }
       void 
-      ProtocolV1::ProcessDataForResponse(unsigned char *dataChunk,
-                                         uint32_t       dataChunkLength) {
-        // TODO(kamran)
+      ProtocolV1::ProcessDataForResponse(unsigned char *data,
+                                         uint32_t       dataLength) {
+        for (unsigned int i = 0; i < dataLength; i++) {
+          if (currentState_ == ReadingLengthState) {
+            if (readingCounter_ == 0) {
+              if (data[i] & 0x80 == 0) {
+                isResponseComplete_ = false;
+                readingLength_ = data[i];
+                readingCounter_ = 0;
+                currentState_ = ReadingDataState;
+              } else {
+                targetCounter_ = (data[i] & 0x0f) + 1;
+                readingBuffer_.clear();
+                readingBuffer_.push_back(data[i]);
+                readingCounter_++;
+              }
+            } else {
+              if (readingCounter_ < targetCounter_) {
+                readingBuffer_.push_back(data[i]);
+                readingCounter_++;
+              } else {
+                uint32_t temp = 1;
+                readingLength_ = 0;
+                for (unsigned int c = targetCounter_ - 1; c > 0; c--) {
+                  readingLength_ += readingBuffer_[c] * temp;
+                  temp *= 256;
+                }
+                readingCounter_ = 0;
+                currentState_ = ReadingDataState;
+              }
+            }
+          } else if (currentState_ == ReadingDataState) {
+            if (readingCounter_ == 0) {
+              readingBuffer_.clear();
+              readingBuffer_.push_back(data[i]);
+              readingCounter_++;
+              targetCounter_ = readingLength_;
+            } else {
+              if (readingCounter_ < targetCounter_) {
+                readingBuffer_.push_back(data[i]);
+                readingCounter_++;
+              } else {
+                uint32_t responseLength = readingLength_;
+                unsigned char *responseData = new unsigned char[responseLength];
+                for (unsigned int c = 0; c < responseLength; c++) {
+                  responseData[c] = readingBuffer_[c];
+                }
+                response_ = DeserializeResponse(responseData, responseLength);
+                readingBuffer_.clear();
+                readingCounter_ = 0;
+                currentState_ = ReadingLengthState;
+                isResponseComplete_ = true;
+                delete responseData;
+              }
+            }
+          }
+        }
       }
     }
   }
