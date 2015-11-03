@@ -17,13 +17,20 @@ namespace naeem {
                                unsigned char *buffer, 
                                uint32_t length) {
           Logger::GetOut() << label << ":" << std::endl;
+          bool newLineInserted = false;
           for (uint32_t i = 0; i < length; i++) {
+            newLineInserted = false;
             Logger::GetOut() << std::uppercase << std::hex << "0x" << 
               std::setw(2) << std::setfill ('0') << (unsigned int)buffer[i] << " ";
             if ((i + 1) % 8 == 0) {
               Logger::GetOut() << std::endl;
+              newLineInserted = true;
             }
           }
+          if (!newLineInserted) {
+            Logger::GetOut() << std::endl;
+          }
+          Logger::GetOut() << std::dec;
         }
       };
     }

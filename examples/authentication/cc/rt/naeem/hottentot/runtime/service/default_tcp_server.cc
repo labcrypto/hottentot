@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "../logger.h"
+#include "../utils.h"
 #include "../protocol_v1.h"
 
 #include "default_tcp_server.h"
@@ -85,6 +86,7 @@ namespace naeem {
               ok = false;
             }
             if (ok) {
+              ::naeem::hottentot::runtime::Utils::PrintArray("Read", buffer, numOfReadBytes);
               protocol->ProcessDataForRequest(buffer, numOfReadBytes);
             }
           }
