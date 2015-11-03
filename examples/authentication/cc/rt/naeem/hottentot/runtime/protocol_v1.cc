@@ -69,7 +69,32 @@ namespace naeem {
       Request* 
       ProtocolV1::DeserializeRequest(unsigned char  *data, 
                                      uint32_t       dataLength) {
-        // TODO(kamran)
+        uint32_t c = 0;
+        Request *request = new Request;
+        request->SetType((Request::RequestType)data[c++]);
+        request->SetServiceId(data[c++]);
+        request->SetMethodId(data[c++]);
+        request->SetArgumentCount(data[c++]);
+        for (unsigned int k = 0; k < request->GetArgumentCount(); k++) {
+          uint32_t argLength = 0;
+          if (data[c] > 127) {
+            uint32_t t = 1;
+            uint32_t n = data[c] & 0x0f;
+            for (uint32_t i = n; i > 0; i--) {
+              argLength += data[c + i] * t;
+              t += 256;
+            }
+            c += n + 1;
+          } else {
+            argLength = data[c++];
+          }
+          unsigned char *argData = new unsigned char[argLength];
+          for (uint32_t i = 0; i < argLength; i++) {
+            argData[i] = data[c++];
+          }
+          request->AddArgument(argData, argLength);
+        }
+        return request;
       }
       Response* 
       ProtocolV1::DeserializeResponse(unsigned char *data, 
