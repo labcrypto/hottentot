@@ -64,7 +64,26 @@ namespace naeem {
       unsigned char* 
       ProtocolV1::SerializeResponse(Response &response, 
                                     uint32_t *length) {
-        // TODO(kamran)
+        uint32_t actualLength = 0;
+        actualLength += 1;  // Status Code
+        actualLength += response.GetDataLength() > 127 ? 3 : 1;
+        actualLength += response.GetDataLength();
+        *length = actualLength;
+        unsigned char *data = new unsigned char[*length];
+        unsigned int c = 0;
+        data[c++] = response.GetStatusCode();
+        if (response.GetDataLength() > 127) {
+          data[c++] = 0x82;
+          data[c++] = response.GetDataLength() / 256;
+          data[c++] = response.GetDataLength() % 256;
+        } else {
+          data[c++] = response.GetDataLength();
+        }
+        unsigned char *argData = response.GetData();
+        for (uint32_t i = 0; i < response.GetDataLength(); i++) {
+          data[c++] = argData[i];
+        }
+        return data;
       }
       Request* 
       ProtocolV1::DeserializeRequest(unsigned char  *data, 
@@ -164,7 +183,21 @@ namespace naeem {
                 if (response) {
                   uint32_t responseSerializedLength = 0;
                   unsigned char *responseSerializedData = SerializeResponse(*response, &responseSerializedLength);
-                  write(remoteSocketFD_, responseSerializedData, responseSerializedLength * sizeof(unsigned char));
+                  uint32_t sendLength = (responseSerializedLength > 127 ? 3 : 1) +  responseSerializedLength;
+                  unsigned char *sendData = new unsigned char[sendLength];
+                  uint32_t c = 0;
+                  if (responseSerializedLength > 127) {
+                    sendData[c++] = 0x82;
+                    sendData[c++] = responseSerializedLength / 256;
+                    sendData[c++] = responseSerializedLength % 256;
+                  } else {
+                    sendData[c++] = responseSerializedLength;
+                  }
+                  for (unsigned int k = 0; k < responseSerializedLength; k++) {
+                    sendData[c++] = responseSerializedData[k];
+                  }
+                  write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
+                  delete sendData;
                   delete responseSerializedData;
                   delete response;
                 } else {

@@ -50,7 +50,22 @@ namespace naeem {
             /*
              * Send request byte array
              */
-            tcpClient->Write(requestSerilaizedData, requestSerializedDataLength);
+             uint32_t sendLength = (requestSerializedDataLength > 127 ? 3 : 1) + requestSerializedDataLength;
+             unsigned char *sendData = new unsigned char[sendLength];
+             uint32_t c = 0;
+             if (requestSerializedDataLength > 127) {
+                sendData[c++] = 0x82;
+                sendData[c++] = requestSerializedDataLength / 256;
+                sendData[c++] = requestSerializedDataLength % 256;
+             } else {
+                sendData[c++] = requestSerializedDataLength;
+             }
+             for (uint32_t i = 0; i < requestSerializedDataLength; i++) {
+                sendData[c++] = requestSerilaizedData[i];
+             }
+            tcpClient->Write(sendData, sendLength);
+            delete sendData;
+            delete requestSerilaizedData;
             /*
              * Read response from server
              */
