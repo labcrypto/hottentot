@@ -3,6 +3,7 @@ package ir.ntnaeem.hottentot.runtime;
 
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.RequestCallbackFactory;
+import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,8 +60,8 @@ public class DefaultTcpServer implements TcpServer {
                 System.out.println("number : " + numReadBytes);
                 byte[] readDataChunk;
                 Protocol protocol = ProtocolFactory.create();
-                RequestCallBack requestCallBack = RequestCallbackFactory.create(requestHandlers);
-                protocol.setRequestCallBack(requestCallBack);
+                RequestCallback requestCallback = RequestCallbackFactory.create(requestHandlers);
+                protocol.setRequestCallback(requestCallback);
                 protocol.setResponseCallback(this);
                 if (numReadBytes < 256) {
                     readDataChunk = Arrays.copyOf(buffer, numReadBytes);

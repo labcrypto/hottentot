@@ -1,8 +1,8 @@
 package ir.ntnaeem.hottentot.runtime.factory;
 
 
-import ir.ntnaeem.hottentot.runtime.Protocol;
-import ir.ntnaeem.hottentot.runtime.ProtocolV1;
+import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
+import ir.ntnaeem.hottentot.runtime.protocol.ProtocolV1;
 
 public class ProtocolFactory {
     public static Protocol create(){
