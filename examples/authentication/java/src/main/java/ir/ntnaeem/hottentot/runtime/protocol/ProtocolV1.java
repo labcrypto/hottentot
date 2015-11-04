@@ -17,6 +17,13 @@ import static java.lang.Math.pow;
 public class ProtocolV1 implements Protocol {
 
 
+    private RequestProcessor requestProcessor;
+    private ResponseProcessor responseProcessor;
+    public ProtocolV1() {
+        requestProcessor = new RequestProcessor();
+        responseProcessor = new ResponseProcessor();
+    }
+
     public class RequestProcessor{
 
         private short currentState = 0;
@@ -196,13 +203,11 @@ public class ProtocolV1 implements Protocol {
     }
 
     public void processDataForRequest(byte[] dataChunk) {
-        RequestProcessor processor = new RequestProcessor();
-        processor.process(dataChunk);
+        requestProcessor.process(dataChunk);
     }
 
     public void processDataForResponse(byte[] dataChunk) {
-        ResponseProcessor processor = new ResponseProcessor();
-        processor.process(dataChunk);
+        responseProcessor.process(dataChunk);
     }
 
     public boolean IsResponseComplete() {
