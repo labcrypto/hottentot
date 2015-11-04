@@ -11,6 +11,7 @@ import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
 import ir.ntnaeem.hottentot.runtime.Proxy;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
+import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 
 public class AuthenticationServiceProxy extends AbstractAuthenticationService implements Proxy {
 

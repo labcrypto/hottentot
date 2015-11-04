@@ -1,6 +1,6 @@
 package ir.ntnaeem.hottentot.runtime;
 
 
-public interface RequestCallBack {
+public interface RequestCallback {
     Response onRequest(Request request) ;
 }

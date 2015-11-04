@@ -5,7 +5,7 @@ package ir.ntnaeem.hottentot.runtime;
 
 import java.util.Map;
 
-public class DefaultRequestCallback implements RequestCallBack {
+public class DefaultRequestCallback implements RequestCallback {
 
     private Map<Integer , RequestHandler> requestHandlers;
     public DefaultRequestCallback(Map<Integer,RequestHandler> requestHandlers) {
