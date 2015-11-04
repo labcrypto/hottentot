@@ -49,7 +49,7 @@ namespace naeem {
             tcpClient->Connect();
             ::naeem::hottentot::runtime::Logger::GetOut() << "Connected." << std::endl;
             /*
-             * Serialize request according to HTNP
+             * Serialize request according to HOTP
              */
             ::naeem::hottentot::runtime::Protocol *protocol = 
               new ::naeem::hottentot::runtime::ProtocolV1(tcpClient->GetRemoteSocketFD()); // TODO(kamran): Use factory.
