@@ -55,7 +55,7 @@ namespace naeem {
               new ::naeem::hottentot::runtime::ProtocolV1(tcpClient->GetRemoteSocketFD()); // TODO(kamran): Use factory.
             uint32_t requestSerializedDataLength = 0;
             ::naeem::hottentot::runtime::Logger::GetOut() << "Serializing request object ..." << std::endl;
-            unsigned char *requestSerilaizedData = protocol->SerializeRequest(request, 
+            unsigned char *requestSerializedData = protocol->SerializeRequest(request, 
                                                                               &requestSerializedDataLength);
             ::naeem::hottentot::runtime::Logger::GetOut() << "Request object is serialized." << std::endl;
             /*
@@ -72,14 +72,14 @@ namespace naeem {
               sendData[c++] = requestSerializedDataLength;
             }
             for (uint32_t i = 0; i < requestSerializedDataLength; i++) {
-              sendData[c++] = requestSerilaizedData[i];
+              sendData[c++] = requestSerializedData[i];
             }
             ::naeem::hottentot::runtime::Logger::GetOut() << "Writing " << sendLength << "  Bytes to socket ..." << std::endl;
             ::naeem::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
             tcpClient->Write(sendData, sendLength);
             ::naeem::hottentot::runtime::Logger::GetOut() << "Written." << std::endl;
             delete sendData;
-            delete requestSerilaizedData;
+            delete requestSerializedData;
             /*
              * Read response from server
              */
@@ -93,6 +93,7 @@ namespace naeem {
              * Deserialize token
              */
             Token *token = new Token;
+            ::naeem::hottentot::runtime::Utils::PrintArray("Response", protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
             token->Deserialize(protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
             /*
              * Finalization
