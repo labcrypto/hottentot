@@ -193,7 +193,7 @@ public class ProtocolV1 implements Protocol {
     }
 
     public byte[] serializeRequest(Request request) {
-        //this function have tested ! :)
+        //tested ! :)
         int counter = 0;
         byte[] serializedRequest = new byte[request.getLength()];
         byte[] byteArrayFromSerializedRequestLength = getByteArrayFromIntegerDataLength(request.getLength());
@@ -214,29 +214,114 @@ public class ProtocolV1 implements Protocol {
         List<Argument> args = request.getArgs();
         for (Argument arg : args) {
             byte[] byteArrayFromArgLength = getByteArrayFromIntegerDataLength(arg.getDataLength());
-            for(byte b : byteArrayFromArgLength){
+            for (byte b : byteArrayFromArgLength) {
                 serializedRequest[counter++] = b;
             }
-            for(byte b : arg.getData()){
+            for (byte b : arg.getData()) {
                 serializedRequest[counter++] = b;
             }
         }
         return serializedRequest;
     }
 
-    public Request deserializeRequest(byte[] request) {
-        //TODO
-        return null;
+    public Request deserializeRequest(byte[] serializedRequest) {
+        //tested :)
+        int counter = 0;
+        Request request = new Request();
+        byte firstByte = serializedRequest[0];
+        if (((int) firstByte & 0x80) == 0) {
+            request.setLength(serializedRequest[0]);
+            counter++;
+        } else {
+            int numOfByteForLength = (int) firstByte & 0x0f;
+            int requestLength = 0;
+            for (int i = numOfByteForLength; i > 0; i--) {
+                counter++;
+                requestLength += (int) pow(256, (numOfByteForLength - 1)) * serializedRequest[i];
+            }
+            request.setLength(requestLength);
+        }
+        request.setServiceId(serializedRequest[counter++]);
+        request.setMethodId(serializedRequest[counter++]);
+        if (serializedRequest[counter] == 1) {
+            request.setType(Request.RequestType.Unknown);
+        } else if (serializedRequest[counter] == 2) {
+            request.setType(Request.RequestType.InvokeStateful);
+        } else if (serializedRequest[counter] == 3) {
+            request.setType(Request.RequestType.InvokeStateless);
+        } else if (serializedRequest[counter] == 4) {
+            request.setType(Request.RequestType.ServiceListQuery);
+        }
+        counter++;
+        request.setArgumentCount(serializedRequest[counter++]);
+        //make arguments
+        while (counter < serializedRequest.length) {
+            Argument arg = new Argument();
+            firstByte = serializedRequest[counter];
+            if (((int) firstByte & 0x80) == 0) {
+                int dataLength = serializedRequest[counter];
+                arg.setDataLength(serializedRequest[counter]);
+                counter++;
+                //fill data
+                byte[] data = new byte[dataLength];
+                for(int i = 0 ; i < dataLength ; i++){
+                    data[i] = serializedRequest[counter++];
+                }
+                arg.setData(data);
+            } else {
+                int numOfByteForLength = (int) firstByte & 0x0f;
+                int dataLength = 0;
+                counter++;
+                for (int i = numOfByteForLength; i > 0; i--) {
+                    counter++;
+                    dataLength += (int) pow(256, (numOfByteForLength - 1)) * serializedRequest[i];
+                }
+                arg.setDataLength(dataLength);
+                //fill data
+                byte[] data = new byte[dataLength];
+                for(int i = 0 ; i < dataLength ; i++){
+
+                    data[i] = serializedRequest[counter++];
+                }
+                arg.setData(data);
+            }
+            request.addArgument(arg);
+        }
+        return request;
     }
 
-    public Response deserializeResponse(byte[] response) {
-        //TODO
-        return null;
+    public Response deserializeResponse(byte[] serializedResponse) {
+        //tested :)
+        int counter = 0;
+        Response response = new Response();
+        byte firstByte = serializedResponse[0];
+        if (((int) firstByte & 0x80) == 0) {
+            response.setLength(serializedResponse[0]);
+            counter++;
+        } else {
+            int numOfByteForLength = (int) firstByte & 0x0f;
+            int responseLength = 0;
+            for (int i = numOfByteForLength; i > 0; i--) {
+                counter++;
+                responseLength += (int) pow(256, (numOfByteForLength - 1)) * serializedResponse[i];
+            }
+            response.setLength(responseLength);
+        }
+        byte[] data = new byte[response.getLength() - 1 ];
+
+        response.setStatusCode(serializedResponse[counter++]);
+
+        for(int i = 0 ; counter < serializedResponse.length ; i++){
+
+            data[i] = serializedResponse[counter++];
+        }
+        response.setData(data);
+        return response;
     }
 
     public byte[] serializeResponse(Response response) {
-
-        return new byte[]{97};
+        //TODO
+        return null;
     }
 
 

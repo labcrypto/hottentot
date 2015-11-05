@@ -30,7 +30,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
                 byte[] serializedToken = token.serialize();
                 response.setStatusCode((byte) 100);
                 response.setData(serializedToken);
-                response.setResponseLength(serializedToken.length + 2);
+                response.setLength(serializedToken.length + 2);
 
             } catch (Exception e) {
                 e.printStackTrace();
