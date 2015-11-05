@@ -1,7 +1,7 @@
 package ir.ntnaeem.hottentot.generated.proxy;
 
 
-import ir.ntnaeem.hottentot.generated.Argument;
+import ir.ntnaeem.hottentot.runtime.Argument;
 import ir.ntnaeem.hottentot.generated.Credential;
 import ir.ntnaeem.hottentot.generated.Token;
 import ir.ntnaeem.hottentot.runtime.*;
@@ -35,7 +35,9 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
         request.setMethodId((byte) 1);
         request.setArgumentCount((byte) 1);
         request.setType(Request.RequestType.InvokeStateless);
-        request.addArgument(new Argument(serializedCredential.length, serializedCredential));
+        request.addArgument(new Argument());
+        //it depends on serialized arguments length !!! 1 byte or more than 1 byte for showing every arg length
+        request.setLength(4 + serializedCredential.length + 1);
 
 
         //connect to ir.ntnaeem.hottentot.server

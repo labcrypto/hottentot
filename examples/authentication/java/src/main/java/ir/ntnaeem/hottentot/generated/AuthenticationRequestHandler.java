@@ -2,10 +2,8 @@ package ir.ntnaeem.hottentot.generated;
 
 
 import ir.ntnaeem.hottentot.generated.service.AbstractAuthenticationService;
-import ir.ntnaeem.hottentot.runtime.Request;
-import ir.ntnaeem.hottentot.runtime.RequestHandler;
-import ir.ntnaeem.hottentot.runtime.Response;
-import ir.ntnaeem.hottentot.runtime.Service;
+import ir.ntnaeem.hottentot.runtime.*;
+
 import java.util.List;
 
 

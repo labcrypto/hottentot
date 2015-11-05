@@ -1,8 +1,6 @@
 package ir.ntnaeem.hottentot.runtime;
 
 
-import ir.ntnaeem.hottentot.generated.Argument;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +18,17 @@ public class Request {
     private byte methodId;
     private byte serviceId;
     private byte argumentCount;
+    private int length;
+
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
     private List<Argument> args = new ArrayList<Argument>();
 
     public RequestType getType() {
