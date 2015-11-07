@@ -4,7 +4,6 @@ package ir.ntnaeem.hottentot.runtime;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.RequestCallbackFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,7 +42,6 @@ public class DefaultTcpServer implements TcpServer {
 
             public void run() {
                 //receive data
-                System.out.println("new thread ...");
                 byte[] buffer = new byte[256];
                 InputStream is = null;
                 try {
@@ -57,7 +55,6 @@ public class DefaultTcpServer implements TcpServer {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println("number : " + numReadBytes);
                 byte[] readDataChunk;
                 Protocol protocol = ProtocolFactory.create();
                 RequestCallback requestCallback = RequestCallbackFactory.create(requestHandlers);
@@ -65,7 +62,6 @@ public class DefaultTcpServer implements TcpServer {
                 protocol.setResponseCallback(this);
                 if (numReadBytes < 256) {
                     readDataChunk = Arrays.copyOf(buffer, numReadBytes);
-                    System.out.println(Arrays.toString(readDataChunk));
                     protocol.processDataForRequest(readDataChunk);
                 } else {
                     protocol.processDataForRequest(buffer);

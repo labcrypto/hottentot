@@ -8,6 +8,7 @@ import ir.ntnaeem.hottentot.runtime.Response;
 import ir.ntnaeem.hottentot.runtime.ResponseCallback;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,7 @@ public class ProtocolV1 implements Protocol {
         private int lStateLength = 0;
         private int dataLength;
         private byte[] data;
+
 
         public void resetStates() {
             currentState = 0;
@@ -51,9 +53,10 @@ public class ProtocolV1 implements Protocol {
                         data[dStateCounter] = b;
                         //TODO use logger
                         System.out.println("request has been read ... ");
-                        System.out.println(Arrays.toString(data));
+                        System.out.println("request data : " +Arrays.toString(data));
                         //
-                        Response response = requestCallback.onRequest(deserializeRequest(data));
+                        Response response = requestCallback.onRequest(deserializeRequestBody(data));
+
                         try {
                             responseCallback.onResponse(serializeResponse(response));
                         } catch (IOException e) {
@@ -97,6 +100,7 @@ public class ProtocolV1 implements Protocol {
         }
 
         public void process(byte[] dataChunk) {
+            System.out.println("data chunk : "+Arrays.toString(dataChunk));
             for (byte b : dataChunk) {
                 if (currentState == 0) {
                     if ((b & 0x80) == 0) {
@@ -113,7 +117,7 @@ public class ProtocolV1 implements Protocol {
                     } else {
                         data[dStateCounter] = b;
                         //TODO use logger
-                        response = deserializeResponse(data);
+                        response = deserializeResponseBody(data);
                         isResponseComplete = true;
                         //reset states
                         resetStates();
@@ -183,8 +187,8 @@ public class ProtocolV1 implements Protocol {
             }
         } else {
             //ex 0x7f
-            byteArray = new byte[0];
-            byteArray[1] = (byte) dataLength;
+            byteArray = new byte[1];
+            byteArray[0] = (byte) dataLength;
         }
         return byteArray;
     }
@@ -192,8 +196,8 @@ public class ProtocolV1 implements Protocol {
     public byte[] serializeRequest(Request request) {
         //tested ! :)
         int counter = 0;
-        byte[] serializedRequest = new byte[request.getLength()];
         byte[] byteArrayFromSerializedRequestLength = getByteArrayFromIntegerDataLength(request.getLength());
+        byte[] serializedRequest = new byte[request.getLength() + byteArrayFromSerializedRequestLength.length];
         for (byte b : byteArrayFromSerializedRequestLength) {
             serializedRequest[counter++] = b;
         }
@@ -208,61 +212,71 @@ public class ProtocolV1 implements Protocol {
         } else if (request.getType().equals(Request.RequestType.ServiceListQuery)) {
             serializedRequest[counter++] = 4;
         }
+
+
+        serializedRequest[counter++] = request.getArgumentCount();
         List<Argument> args = request.getArgs();
+
         for (Argument arg : args) {
             byte[] byteArrayFromArgLength = getByteArrayFromIntegerDataLength(arg.getDataLength());
             for (byte b : byteArrayFromArgLength) {
                 serializedRequest[counter++] = b;
             }
+            System.out.println(counter);
             for (byte b : arg.getData()) {
                 serializedRequest[counter++] = b;
             }
         }
+        System.out.println("s request : " + Arrays.toString(serializedRequest));
         return serializedRequest;
     }
 
-    public Request deserializeRequest(byte[] serializedRequest) {
+    public Request deserializeRequestBody(byte[] serializedRequestBody) {
         //tested :)
         int counter = 0;
         Request request = new Request();
-        byte firstByte = serializedRequest[0];
-        if (((int) firstByte & 0x80) == 0) {
-            request.setLength(serializedRequest[0]);
-            counter++;
-        } else {
-            int numOfByteForLength = (int) firstByte & 0x0f;
-            int requestLength = 0;
-            for (int i = numOfByteForLength; i > 0; i--) {
-                counter++;
-                requestLength += (int) pow(256, (numOfByteForLength - 1)) * serializedRequest[i];
-            }
-            request.setLength(requestLength);
-        }
-        request.setServiceId(serializedRequest[counter++]);
-        request.setMethodId(serializedRequest[counter++]);
-        if (serializedRequest[counter] == 1) {
+//        byte firstByte = serializedRequest[0];
+//        if (((int) firstByte & 0x80) == 0) {
+//            request.setLength(serializedRequest[0]);
+//            counter++;
+//        } else {
+//            int numOfByteForLength = (int) firstByte & 0x0f;
+//            int requestLength = 0;
+//            for (int i = numOfByteForLength; i > 0; i--) {
+//                counter++;
+//                requestLength += (int) pow(256, (numOfByteForLength - 1)) * serializedRequest[i];
+//            }
+//            request.setLength(requestLength);
+//        }
+        System.out.println(Arrays.toString(serializedRequestBody));
+        request.setLength(serializedRequestBody.length);
+        request.setServiceId(serializedRequestBody[counter++]);
+        request.setMethodId(serializedRequestBody[counter++]);
+        if (serializedRequestBody[counter] == 1) {
             request.setType(Request.RequestType.Unknown);
-        } else if (serializedRequest[counter] == 2) {
+        } else if (serializedRequestBody[counter] == 2) {
             request.setType(Request.RequestType.InvokeStateful);
-        } else if (serializedRequest[counter] == 3) {
+        } else if (serializedRequestBody[counter] == 3) {
             request.setType(Request.RequestType.InvokeStateless);
-        } else if (serializedRequest[counter] == 4) {
+        } else if (serializedRequestBody[counter] == 4) {
             request.setType(Request.RequestType.ServiceListQuery);
         }
         counter++;
-        request.setArgumentCount(serializedRequest[counter++]);
+        request.setArgumentCount(serializedRequestBody[counter++]);
+        System.out.println(counter);
         //make arguments
-        while (counter < serializedRequest.length) {
+        byte firstByte;
+        while (counter < serializedRequestBody.length) {
             Argument arg = new Argument();
-            firstByte = serializedRequest[counter];
+            firstByte = serializedRequestBody[counter];
             if (((int) firstByte & 0x80) == 0) {
-                int dataLength = serializedRequest[counter];
-                arg.setDataLength(serializedRequest[counter]);
+                int dataLength = serializedRequestBody[counter];
+                arg.setDataLength(serializedRequestBody[counter]);
                 counter++;
                 //fill data
                 byte[] data = new byte[dataLength];
                 for(int i = 0 ; i < dataLength ; i++){
-                    data[i] = serializedRequest[counter++];
+                    data[i] = serializedRequestBody[counter++];
                 }
                 arg.setData(data);
             } else {
@@ -271,14 +285,14 @@ public class ProtocolV1 implements Protocol {
                 counter++;
                 for (int i = numOfByteForLength; i > 0; i--) {
                     counter++;
-                    dataLength += (int) pow(256, (numOfByteForLength - 1)) * serializedRequest[i];
+                    dataLength += (int) pow(256, (numOfByteForLength - 1)) * serializedRequestBody[i];
                 }
                 arg.setDataLength(dataLength);
                 //fill data
                 byte[] data = new byte[dataLength];
                 for(int i = 0 ; i < dataLength ; i++){
 
-                    data[i] = serializedRequest[counter++];
+                    data[i] = serializedRequestBody[counter++];
                 }
                 arg.setData(data);
             }
@@ -287,30 +301,29 @@ public class ProtocolV1 implements Protocol {
         return request;
     }
 
-    public Response deserializeResponse(byte[] serializedResponse) {
+    public Response deserializeResponseBody(byte[] serializedResponseBody) {
         //tested :)
         int counter = 0;
         Response response = new Response();
-        byte firstByte = serializedResponse[0];
-        if (((int) firstByte & 0x80) == 0) {
-            response.setLength(serializedResponse[0]);
-            counter++;
-        } else {
-            int numOfByteForLength = (int) firstByte & 0x0f;
-            int responseLength = 0;
-            for (int i = numOfByteForLength; i > 0; i--) {
-                counter++;
-                responseLength += (int) pow(256, (numOfByteForLength - 1)) * serializedResponse[i];
-            }
-            response.setLength(responseLength);
-        }
+//        byte firstByte = serializedResponse[0];
+//        if (((int) firstByte & 0x80) == 0) {
+//            response.setLength(serializedResponse[0]);
+//            counter++;
+//        } else {
+//            int numOfByteForLength = (int) firstByte & 0x0f;
+//            int responseLength = 0;
+//            for (int i = numOfByteForLength; i > 0; i--) {
+//                counter++;
+//                responseLength += (int) pow(256, (numOfByteForLength - 1)) * serializedResponse[i];
+//            }
+//            response.setLength(responseLength);
+//        }
+        response.setLength(serializedResponseBody.length);
+        response.setStatusCode(serializedResponseBody[counter++]);
         byte[] data = new byte[response.getLength() - 1 ];
+        for(int i = 0 ; counter < serializedResponseBody.length ; i++){
 
-        response.setStatusCode(serializedResponse[counter++]);
-
-        for(int i = 0 ; counter < serializedResponse.length ; i++){
-
-            data[i] = serializedResponse[counter++];
+            data[i] = serializedResponseBody[counter++];
         }
         response.setData(data);
         return response;
@@ -319,8 +332,9 @@ public class ProtocolV1 implements Protocol {
     public byte[] serializeResponse(Response response) {
         //tested ! :)
         int counter = 0;
-        byte[] serializedResponse = new byte[response.getLength()];
+        System.out.println(response);
         byte[] byteArrayFromSerializedResponseLength = getByteArrayFromIntegerDataLength(response.getLength());
+        byte[] serializedResponse = new byte[response.getLength() + byteArrayFromSerializedResponseLength.length];
         for (byte b : byteArrayFromSerializedResponseLength) {
             serializedResponse[counter++] = b;
         }
@@ -337,6 +351,7 @@ public class ProtocolV1 implements Protocol {
     }
 
     public void processDataForRequest(byte[] dataChunk) {
+        System.out.println(Arrays.toString(dataChunk));
         requestProcessor.process(dataChunk);
     }
 

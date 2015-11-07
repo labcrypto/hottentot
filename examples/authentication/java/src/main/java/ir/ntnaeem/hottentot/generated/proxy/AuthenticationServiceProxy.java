@@ -13,6 +13,8 @@ import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 
+import java.util.Arrays;
+
 public class AuthenticationServiceProxy extends AbstractAuthenticationService implements Proxy {
 
     private String host;
@@ -35,9 +37,12 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
         request.setMethodId((byte) 1);
         request.setArgumentCount((byte) 1);
         request.setType(Request.RequestType.InvokeStateless);
-        request.addArgument(new Argument());
+        Argument arg = new Argument();
+        arg.setDataLength(credential.serialize().length);
+        arg.setData(credential.serialize());
+        request.addArgument(arg);
         //it depends on serialized arguments length !!! 1 byte or more than 1 byte for showing every arg length
-        request.setLength(4 + serializedCredential.length + 1);
+        request.setLength(4  + 1 + serializedCredential.length);
 
 
         //connect to ir.ntnaeem.hottentot.server
@@ -55,7 +60,6 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
         byte[] buffer = new byte[256];
         while (!protocol.IsResponseComplete()) {
 
-            System.out.println("counter");
             byte[] dataChunkRead = tcpClient.read();
             protocol.processDataForResponse(dataChunkRead);
         }
@@ -68,7 +72,6 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
 
 
         //***********
-        System.out.println(response);
         //*************
         if (response.getStatusCode() == -1) {
             //throw exception

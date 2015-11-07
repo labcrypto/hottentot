@@ -14,10 +14,17 @@ public class Token {
 
     public byte[] serialize(){
         //TODO(ali)
+        //fake implementation
         return new byte[]{ 97 };
     }
     public void deserialize(byte[] serializedToken){
         //TODO(ali)
+        //fake implementation
         setValue("test-token");
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }
