@@ -7,7 +7,7 @@ public class Credential {
 
     public byte[] serialize(){
         //TODO
-        return new byte[]{ 99 , 100 };
+        return new byte[]{ 99 };
     }
 
     public void deserialize(byte[] serializedCredential){

@@ -15,7 +15,6 @@ public class DefaultRequestCallback implements RequestCallback {
     public Response onRequest(Request request){
         //TODO(ali)
         RequestHandler requestHandler = requestHandlers.get((int)request.getServiceId());
-        System.out.println(request);
         return requestHandler.handleRequest(request);
     }
 }
