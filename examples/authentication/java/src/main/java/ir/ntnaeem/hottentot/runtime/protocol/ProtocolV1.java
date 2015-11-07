@@ -17,16 +17,7 @@ import static java.lang.Math.pow;
 
 public class ProtocolV1 implements Protocol {
 
-
-
-    private RequestProcessor requestProcessor;
-    private ResponseProcessor responseProcessor;
-    public ProtocolV1() {
-        requestProcessor = new RequestProcessor();
-        responseProcessor = new ResponseProcessor();
-    }
-
-
+    public class RequestProcessor{
         private short currentState = 0;
         private int lStateCounter = 0;
         private int dStateCounter = 0;
@@ -126,7 +117,6 @@ public class ProtocolV1 implements Protocol {
                         isResponseComplete = true;
                         //reset states
                         resetStates();
-
                     }
                 } else if (currentState == 1) {
                     if (lStateCounter < lStateLength) {
@@ -148,7 +138,7 @@ public class ProtocolV1 implements Protocol {
     private ResponseCallback responseCallback;
     private Response response;
     private boolean isResponseComplete = false;
-    ;
+
     private RequestProcessor requestProcessor;
     private ResponseProcessor responseProcessor;
 
@@ -327,8 +317,18 @@ public class ProtocolV1 implements Protocol {
     }
 
     public byte[] serializeResponse(Response response) {
-        //TODO
-        return null;
+        //tested ! :)
+        int counter = 0;
+        byte[] serializedResponse = new byte[response.getLength()];
+        byte[] byteArrayFromSerializedResponseLength = getByteArrayFromIntegerDataLength(response.getLength());
+        for (byte b : byteArrayFromSerializedResponseLength) {
+            serializedResponse[counter++] = b;
+        }
+        serializedResponse[counter++] = response.getStatusCode();
+        for (byte b : response.getData()) {
+            serializedResponse[counter++] = b;
+        }
+        return serializedResponse;
     }
 
 
