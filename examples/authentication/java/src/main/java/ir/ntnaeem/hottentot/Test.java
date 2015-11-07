@@ -13,7 +13,7 @@ import static java.lang.Math.pow;
 
 public class Test {
 
-    private byte[] getByteArrayFromIntegerDataLength(int dataLength) {
+    private static byte[] getByteArrayFromIntegerDataLength(int dataLength) {
         byte[] byteArray;
         if (dataLength >= 0x80) {
             if (dataLength <= 0xff) {
@@ -184,6 +184,22 @@ public class Test {
     }
 
 
+    public static byte[] serializeResponse(Response response) {
+        //tested ! :)
+        int counter = 0;
+        byte[] serializedResponse = new byte[response.getLength()];
+        byte[] byteArrayFromSerializedResponseLength = getByteArrayFromIntegerDataLength(response.getLength());
+        for (byte b : byteArrayFromSerializedResponseLength) {
+            serializedResponse[counter++] = b;
+        }
+        serializedResponse[counter++] = response.getStatusCode();
+        for (byte b : response.getData()) {
+            serializedResponse[counter++] = b;
+        }
+        return serializedResponse;
+    }
+
+
     public static void main(String[] args) {
 
         //test serializeRequest
@@ -212,10 +228,17 @@ public class Test {
 
         //testing deserialized response
 
-        byte[] serializedResponse = new byte[]{8, 2 , 1, 2, 3, 4, 5, 6,7};
-        System.out.println(Arrays.toString(serializedResponse));
-        Response response = new Test().deserializeResponse(serializedResponse);
-        System.out.println(response.toString());
+//        byte[] serializedResponse = new byte[]{8, 2 , 1, 2, 3, 4, 5, 6,7};
+//        System.out.println(Arrays.toString(serializedResponse));
+//        Response response = new Test().deserializeResponse(serializedResponse);
+//        System.out.println(response.toString());
 //        System.out.println(Arrays.toString(response.getData()));
+
+        //testing serializing response
+        Response response1 = new Response();
+        response1.setLength(5);
+        response1.setStatusCode((byte)0);
+        response1.setData(new byte[]{97, 98, 99});
+        System.out.println(Arrays.toString(serializeResponse(response1)));
     }
 }
