@@ -1,13 +1,9 @@
-package ir.ntnaeem.hottentot.runtime.protocol;
-
+package ir.ntnaeem.hottentot;
 
 import ir.ntnaeem.hottentot.runtime.Argument;
 import ir.ntnaeem.hottentot.runtime.Request;
-import ir.ntnaeem.hottentot.runtime.RequestCallback;
 import ir.ntnaeem.hottentot.runtime.Response;
-import ir.ntnaeem.hottentot.runtime.ResponseCallback;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
@@ -15,148 +11,7 @@ import java.util.List;
 import static java.lang.Math.pow;
 
 
-public class ProtocolV1 implements Protocol {
-
-
-
-    private RequestProcessor requestProcessor;
-    private ResponseProcessor responseProcessor;
-    public ProtocolV1() {
-        requestProcessor = new RequestProcessor();
-        responseProcessor = new ResponseProcessor();
-    }
-
-
-        private short currentState = 0;
-        private int lStateCounter = 0;
-        private int dStateCounter = 0;
-        private int lStateLength = 0;
-        private int dataLength;
-        private byte[] data;
-
-        public void resetStates() {
-            currentState = 0;
-            lStateCounter = 0;
-            dStateCounter = 0;
-            lStateLength = 0;
-            dataLength = 0;
-        }
-
-        public void process(byte[] dataChunk) {
-            for (byte b : dataChunk) {
-                if (currentState == 0) {
-                    if ((b & 0x80) == 0) {
-                        dataLength = b;
-                        data = new byte[dataLength];
-                        currentState = 2;
-                    } else {
-                        lStateLength = b & 0x0f;
-                        currentState = 1;
-                    }
-                } else if (currentState == 2) {
-                    if (dStateCounter < dataLength - 1) {
-                        data[dStateCounter++] = b;
-                    } else {
-                        data[dStateCounter] = b;
-                        //TODO use logger
-                        System.out.println("request has been read ... ");
-                        System.out.println(Arrays.toString(data));
-                        //
-                        Response response = requestCallback.onRequest(deserializeRequest(data));
-                        try {
-                            responseCallback.onResponse(serializeResponse(response));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        //reset states
-                        resetStates();
-
-                    }
-                } else if (currentState == 1) {
-                    if (lStateCounter < lStateLength) {
-                        if (b < 0) {
-                            dataLength += pow(256, (lStateLength - lStateCounter - 1)) * (b + 256);
-                        } else {
-                            dataLength += pow(256, (lStateLength - lStateCounter - 1)) * b;
-                        }
-                    } else {
-                        currentState = 2;
-                        data[dStateCounter++] = b;
-                    }
-                }
-            }
-        }
-    }
-
-    public class ResponseProcessor {
-
-        private short currentState = 0;
-        private int lStateCounter = 0;
-        private int dStateCounter = 0;
-        private int lStateLength = 0;
-        private int dataLength;
-        private byte[] data;
-
-        public void resetStates() {
-            currentState = 0;
-            lStateCounter = 0;
-            dStateCounter = 0;
-            lStateLength = 0;
-            dataLength = 0;
-        }
-
-        public void process(byte[] dataChunk) {
-            for (byte b : dataChunk) {
-                if (currentState == 0) {
-                    if ((b & 0x80) == 0) {
-                        dataLength = b;
-                        data = new byte[dataLength];
-                        currentState = 2;
-                    } else {
-                        lStateLength = b & 0x0f;
-                        currentState = 1;
-                    }
-                } else if (currentState == 2) {
-                    if (dStateCounter < dataLength - 1) {
-                        data[dStateCounter++] = b;
-                    } else {
-                        data[dStateCounter] = b;
-                        //TODO use logger
-                        response = deserializeResponse(data);
-                        isResponseComplete = true;
-                        //reset states
-                        resetStates();
-
-                    }
-                } else if (currentState == 1) {
-                    if (lStateCounter < lStateLength) {
-                        if (b < 0) {
-                            dataLength += pow(256, (lStateLength - lStateCounter - 1)) * (b + 256);
-                        } else {
-                            dataLength += pow(256, (lStateLength - lStateCounter - 1)) * b;
-                        }
-                    } else {
-                        currentState = 2;
-                        data[dStateCounter++] = b;
-                    }
-                }
-            }
-        }
-    }
-
-    private RequestCallback requestCallback;
-    private ResponseCallback responseCallback;
-    private Response response;
-    private boolean isResponseComplete = false;
-    ;
-    private RequestProcessor requestProcessor;
-    private ResponseProcessor responseProcessor;
-
-    public ProtocolV1() {
-        requestProcessor = new RequestProcessor();
-        responseProcessor = new ResponseProcessor();
-    }
-
+public class Test {
 
     private byte[] getByteArrayFromIntegerDataLength(int dataLength) {
         byte[] byteArray;
@@ -193,14 +48,14 @@ public class ProtocolV1 implements Protocol {
             }
         } else {
             //ex 0x7f
-            byteArray = new byte[0];
-            byteArray[1] = (byte) dataLength;
+            byteArray = new byte[1];
+            byteArray[0] = (byte) dataLength;
         }
         return byteArray;
     }
 
     public byte[] serializeRequest(Request request) {
-        //tested ! :)
+        //TODO test this function
         int counter = 0;
         byte[] serializedRequest = new byte[request.getLength()];
         byte[] byteArrayFromSerializedRequestLength = getByteArrayFromIntegerDataLength(request.getLength());
@@ -232,7 +87,7 @@ public class ProtocolV1 implements Protocol {
     }
 
     public Request deserializeRequest(byte[] serializedRequest) {
-        //tested :)
+        //TODO
         int counter = 0;
         Request request = new Request();
         byte firstByte = serializedRequest[0];
@@ -271,7 +126,7 @@ public class ProtocolV1 implements Protocol {
                 counter++;
                 //fill data
                 byte[] data = new byte[dataLength];
-                for(int i = 0 ; i < dataLength ; i++){
+                for (int i = 0; i < dataLength; i++) {
                     data[i] = serializedRequest[counter++];
                 }
                 arg.setData(data);
@@ -286,7 +141,7 @@ public class ProtocolV1 implements Protocol {
                 arg.setDataLength(dataLength);
                 //fill data
                 byte[] data = new byte[dataLength];
-                for(int i = 0 ; i < dataLength ; i++){
+                for (int i = 0; i < dataLength; i++) {
 
                     data[i] = serializedRequest[counter++];
                 }
@@ -296,6 +151,7 @@ public class ProtocolV1 implements Protocol {
         }
         return request;
     }
+
 
     public Response deserializeResponse(byte[] serializedResponse) {
         //tested :)
@@ -324,38 +180,42 @@ public class ProtocolV1 implements Protocol {
         }
         response.setData(data);
         return response;
-    }
 
-    public byte[] serializeResponse(Response response) {
-        //TODO
-        return null;
     }
 
 
-    public void setResponseCallback(ResponseCallback responseCallback) {
-        this.responseCallback = responseCallback;
+    public static void main(String[] args) {
+
+        //test serializeRequest
+
+//        Request request = new Request();
+//        request.setLength(255);
+//        request.setServiceId((byte) 1);
+//        request.setMethodId((byte) 1);
+//        request.setType(Request.RequestType.InvokeStateless);
+//        request.setArgumentCount((byte) 1);
+//        Argument arg = new Argument();
+//        arg.setDataLength(2);
+//        arg.setData(new byte[]{97, 98});
+//        request.addArgument(arg);
+//
+//        byte[] bytes = new Test().serializeRequest(request);
+//        System.out.println(Arrays.toString(bytes));
+
+        //test deserialize request
+
+//        byte[] serializedRequest = new byte[]{ 7 , 1, 1, 1,2, 2, 97, 98 , 1 , 100};
+//        Request request1 = new Test().deserializeRequest(serializedRequest);
+//        System.out.println(request1.toString());
+//        System.out.println(request1.getArgs().get(1).getDataLength());
+//        System.out.println(Arrays.toString(request1.getArgs().get(1).getData()));
+
+        //testing deserialized response
+
+        byte[] serializedResponse = new byte[]{8, 2 , 1, 2, 3, 4, 5, 6,7};
+        System.out.println(Arrays.toString(serializedResponse));
+        Response response = new Test().deserializeResponse(serializedResponse);
+        System.out.println(response.toString());
+//        System.out.println(Arrays.toString(response.getData()));
     }
-
-    public void processDataForRequest(byte[] dataChunk) {
-        requestProcessor.process(dataChunk);
-    }
-
-    public void processDataForResponse(byte[] dataChunk) {
-        responseProcessor.process(dataChunk);
-    }
-
-    public boolean IsResponseComplete() {
-        return isResponseComplete;
-    }
-
-    public Response getResponse() {
-        //TODO
-        return response;
-    }
-
-    public void setRequestCallback(RequestCallback requestCallback) {
-        this.requestCallback = requestCallback;
-    }
-
-
 }

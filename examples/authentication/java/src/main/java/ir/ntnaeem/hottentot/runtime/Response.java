@@ -6,15 +6,20 @@ import java.util.Arrays;
 public class Response {
     private byte statusCode;
     private byte[] data;
-    private int responseLength;
 
-    public int getResponseLength() {
-        return responseLength;
+    private int length;
+
+
+    public int getLength() {
+        return length;
     }
 
-    public void setResponseLength(int responseLength) {
-        this.responseLength = responseLength;
+
+    public void setLength(int length) {
+        this.length = length;
     }
+
+
 
     public byte getStatusCode() {
         return statusCode;
@@ -37,7 +42,7 @@ public class Response {
         return "Response{" +
                 "statusCode=" + statusCode +
                 ", data=" + Arrays.toString(data) +
-                ", responseLength=" + responseLength +
+                ", length=" + length +
                 '}';
     }
 }

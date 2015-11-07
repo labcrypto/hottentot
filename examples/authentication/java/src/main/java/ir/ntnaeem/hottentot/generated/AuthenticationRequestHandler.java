@@ -2,10 +2,8 @@ package ir.ntnaeem.hottentot.generated;
 
 
 import ir.ntnaeem.hottentot.generated.service.AbstractAuthenticationService;
-import ir.ntnaeem.hottentot.runtime.Request;
-import ir.ntnaeem.hottentot.runtime.RequestHandler;
-import ir.ntnaeem.hottentot.runtime.Response;
-import ir.ntnaeem.hottentot.runtime.Service;
+import ir.ntnaeem.hottentot.runtime.*;
+
 import java.util.List;
 
 
@@ -32,7 +30,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
                 byte[] serializedToken = token.serialize();
                 response.setStatusCode((byte) 100);
                 response.setData(serializedToken);
-                response.setResponseLength(serializedToken.length + 2);
+                response.setLength(serializedToken.length + 2);
 
             } catch (Exception e) {
                 e.printStackTrace();
