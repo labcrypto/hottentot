@@ -1,4 +1,4 @@
-package ir.ntnaeem.hottentot.generated;
+package ir.ntnaeem.hottentot.runtime;
 
 
 public class Argument {
@@ -24,7 +24,7 @@ public class Argument {
         this.data = data;
     }
 
-    public Argument(int dataLength, byte[] data) {
+    public Argument() {
         this.dataLength = dataLength;
         this.data = data;
     }
