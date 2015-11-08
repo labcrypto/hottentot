@@ -4,4 +4,4 @@ all:
 	lex hot.l
 	gcc -c lex.yy.c
 	gcc y.tab.o lex.yy.o -ll -o hot-parser.out
-	echo "module ir.ntnaeem.services { }" | ./hot-parser.out
+	./hot-parser.out test1.hot

@@ -36,17 +36,16 @@ void yyerror(char *);
 %start hot
 %%
 
-hot:            modules '\n' { 
+hot:            modules { 
                   printf("HOT parsed.\n"); 
                 }
-                |
                 ;
 
 modules:        modules module
                 |
                 ;
 
-module:         MODULE package '{' module_body '}' {
+module:         MODULE package '{' module_body '}' ';' {
                   printf("Module parsed.\n");
                 }
                 ;
@@ -72,6 +71,14 @@ int yywrap(void) {
   return 1;
 }
 
-int main(void) {
+extern FILE *yyin;
+
+int main(int argc, char **argv) {
+  yyin = fopen(argv[1],"r+");
+  if (!yyin) {
+    printf("ERROR: File can't be opened.\n");
+    return 1;
+  }
   yyparse();
+  return 0;
 }

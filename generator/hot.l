@@ -40,12 +40,12 @@ struct {
   sprintf(yylval.string, "%s", yytext);
   return IDENTIFIER;
 }
-[\{\}\;\n] { 
+[\{\}\;\.] { 
   fprintf(stdout, "'%c' seen.\n", *yytext);
   return *yytext; 
 }
-[ \t] ;
+[ \t\r\n] ;
 . { 
-  fprintf(stderr, "Unknown token.\n"); 
+  fprintf(stderr, "Unknown token: %c\n", *yytext); 
 }
 %%
