@@ -20,3 +20,45 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
+
+%{
+#include <stdio.h>
+#include <stdlib.h>
+void yyerror(char *);
+%}
+%union {
+  char *string;
+}
+%token MODULE
+%token STRUCT
+%token <string> IDENTIFIER
+%token <string> TYPE
+%start hot
+%%
+
+hot:            modules                           { printf("HOT parsed."); }
+                |
+                ;
+
+modules:        modules module
+                |
+                ;
+
+module:         MODULE IDENTIFIER '{' module_body '}'
+                ;
+
+module_body:    ;
+
+%%
+
+void yyerror(char *s) {
+  fprintf(stderr, "ERROR: %s\n", s);
+}
+
+int yywrap(void) {
+  return 1;
+}
+
+int main(void) {
+  yyparse();
+}

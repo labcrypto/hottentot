@@ -23,7 +23,29 @@
 
 %{
 #include <stdio.h>
+#include "y.tab.h"
 %}
 %%
-hello ;
+module {
+  fprintf(stdout, "MODULE seen.\n");
+  return MODULE;
+}
+struct {
+  fprintf(stdout, "STRUCT seen.\n");
+  return STRUCT;
+}
+[a-zA-Z]([a-zA-Z0-9])* {
+  fprintf(stdout, "IDENTIFIER seen.\n");
+  yylval.str = malloc(yyleng); 
+  sprintf(yylval.str, "%s", yytext);
+  return IDENTIFIER;
+}
+[\{\}\;\n] { 
+  fprintf(stdout, "'%c' seen.\n", *yytext);
+  return *yytext; 
+}
+[ \t] ;
+. { 
+  fprintf(stderr, "Unknown token.\n"); 
+}
 %%

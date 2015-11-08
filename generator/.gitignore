@@ -1,4 +1,4 @@
-lex.yy.cc
+lex.yy.c
 y.tab.h
 y.tab.c
 *.out
