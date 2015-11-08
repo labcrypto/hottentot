@@ -31,7 +31,7 @@ namespace naeem {
             /*
              * Make request object
              */
-             ::naeem::hottentot::runtime::Logger::GetOut() << "Making request object ..." << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() << "Making request object ..." << std::endl;
             ::naeem::hottentot::runtime::Request request;
             request.SetServiceId(1);
             request.SetMethodId(1);
@@ -43,7 +43,7 @@ namespace naeem {
             /*
              * Connect to server
              */
-             ::naeem::hottentot::runtime::Logger::GetOut() << "Connecting to server " << host_ << ":" << port_ << " ..." << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() << "Connecting to server " << host_ << ":" << port_ << " ..." << std::endl;
             ::naeem::hottentot::runtime::proxy::TcpClient *tcpClient = 
               ::naeem::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
             tcpClient->Connect();
