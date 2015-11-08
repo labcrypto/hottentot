@@ -1,7 +1,7 @@
 package ir.ntnaeem.hottentot.generated.proxy;
 
 
-import ir.ntnaeem.hottentot.generated.Argument;
+import ir.ntnaeem.hottentot.runtime.Argument;
 import ir.ntnaeem.hottentot.generated.Credential;
 import ir.ntnaeem.hottentot.generated.Token;
 import ir.ntnaeem.hottentot.runtime.*;
@@ -12,6 +12,8 @@ import ir.ntnaeem.hottentot.runtime.Proxy;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
+
+import java.util.Arrays;
 
 public class AuthenticationServiceProxy extends AbstractAuthenticationService implements Proxy {
 
@@ -35,7 +37,12 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
         request.setMethodId((byte) 1);
         request.setArgumentCount((byte) 1);
         request.setType(Request.RequestType.InvokeStateless);
-        request.addArgument(new Argument(serializedCredential.length, serializedCredential));
+        Argument arg = new Argument();
+        arg.setDataLength(credential.serialize().length);
+        arg.setData(credential.serialize());
+        request.addArgument(arg);
+        //it depends on serialized arguments length !!! 1 byte or more than 1 byte for showing every arg length
+        request.setLength(4  + 1 + serializedCredential.length);
 
 
         //connect to ir.ntnaeem.hottentot.server
@@ -53,7 +60,6 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
         byte[] buffer = new byte[256];
         while (!protocol.IsResponseComplete()) {
 
-            System.out.println("counter");
             byte[] dataChunkRead = tcpClient.read();
             protocol.processDataForResponse(dataChunkRead);
         }
@@ -66,7 +72,6 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
 
 
         //***********
-        System.out.println(response);
         //*************
         if (response.getStatusCode() == -1) {
             //throw exception
