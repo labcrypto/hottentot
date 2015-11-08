@@ -36,7 +36,7 @@ void yyerror(char *);
 %start hot
 %%
 
-hot:            modules                           { printf("HOT parsed."); }
+hot:            modules  '\n'                      { printf("HOT parsed.\n"); }
                 |
                 ;
 
@@ -44,7 +44,12 @@ modules:        modules module
                 |
                 ;
 
-module:         MODULE IDENTIFIER '{' module_body '}'
+module:         MODULE package '{' module_body '}'
+                ;
+
+package:        IDENTIFIER package                 { printf("Package seen: %s\n", $1); }
+                | IDENTIFIER '.' package           { printf("Package seen: %s\n", $1); }
+                |
                 ;
 
 module_body:    ;

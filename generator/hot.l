@@ -36,8 +36,8 @@ struct {
 }
 [a-zA-Z]([a-zA-Z0-9])* {
   fprintf(stdout, "IDENTIFIER seen.\n");
-  yylval.str = malloc(yyleng); 
-  sprintf(yylval.str, "%s", yytext);
+  yylval.string = malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
   return IDENTIFIER;
 }
 [\{\}\;\n] { 
