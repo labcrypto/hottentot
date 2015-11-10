@@ -6,8 +6,8 @@ module ir.ntnaeem.services {
     string str id(4);
   };
   struct Phone {
-    bool done;
-    Person p;
-    map<string, Phone> phones;
+    bool done id(1);
+    Person p id(2);
+    map<string, Phone> phones id(3);
   };
 };
