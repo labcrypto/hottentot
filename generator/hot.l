@@ -26,6 +26,30 @@
 #include "y.tab.h"
 %}
 %%
+int {
+  fprintf(stdout, "INT seen.\n");
+  yylval.string = malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
+  return TYPE;
+}
+double {
+  fprintf(stdout, "DOUBLE seen.\n");
+  yylval.string = malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
+  return TYPE;
+}
+string {
+  fprintf(stdout, "STRING seen.\n");
+  yylval.string = malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
+  return TYPE;
+}
+bool {
+  fprintf(stdout, "BOOL seen.\n");
+  yylval.string = malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
+  return TYPE;
+}
 module {
   fprintf(stdout, "MODULE seen.\n");
   return MODULE;

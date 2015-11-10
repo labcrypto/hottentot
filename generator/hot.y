@@ -59,7 +59,29 @@ package:        IDENTIFIER package {
                 |
                 ;
 
-module_body:    ;
+module_body:    structs
+                ;
+
+structs:        structs struct
+                |
+                ;
+
+struct:         STRUCT IDENTIFIER '{' struct_body '}' ';' {
+                  printf("Struct seen: %s\n", $2);
+                }
+
+struct_body:    declarations;
+
+declarations:   declarations declaration
+                |
+                ;
+
+declaration:    TYPE IDENTIFIER ';' {
+                  printf("Declaration seen:    %s %s\n", $1, $2);
+                }
+                | IDENTIFIER IDENTIFIER ';' {
+                  printf("Declaration2 seen:    %s %s\n", $1, $2);
+                }
 
 %%
 

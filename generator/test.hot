@@ -1,0 +1,13 @@
+module ir.ntnaeem.services {
+  struct Person {
+    set<string> names id(1);
+    list<int> sum id(2);
+    double x id(3);
+    string str id(4);
+  };
+  struct Phone {
+    bool done;
+    Person p;
+    map<string, Phone> phones;
+  };
+};
