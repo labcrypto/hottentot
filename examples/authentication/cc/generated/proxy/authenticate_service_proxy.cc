@@ -1,5 +1,27 @@
-#include <iostream>
+/*  The MIT License (MIT)
+ *
+ *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE.
+ */
 
+#include <iostream>
 
 #include <naeem/hottentot/runtime/logger.h>
 #include <naeem/hottentot/runtime/utils.h>
@@ -31,7 +53,7 @@ namespace naeem {
             /*
              * Make request object
              */
-             ::naeem::hottentot::runtime::Logger::GetOut() << "Making request object ..." << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() << "Making request object ..." << std::endl;
             ::naeem::hottentot::runtime::Request request;
             request.SetServiceId(1);
             request.SetMethodId(1);
@@ -43,19 +65,19 @@ namespace naeem {
             /*
              * Connect to server
              */
-             ::naeem::hottentot::runtime::Logger::GetOut() << "Connecting to server " << host_ << ":" << port_ << " ..." << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() << "Connecting to server " << host_ << ":" << port_ << " ..." << std::endl;
             ::naeem::hottentot::runtime::proxy::TcpClient *tcpClient = 
               ::naeem::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
             tcpClient->Connect();
             ::naeem::hottentot::runtime::Logger::GetOut() << "Connected." << std::endl;
             /*
-             * Serialize request according to HTNP
+             * Serialize request according to HOTP
              */
             ::naeem::hottentot::runtime::Protocol *protocol = 
               new ::naeem::hottentot::runtime::ProtocolV1(tcpClient->GetRemoteSocketFD()); // TODO(kamran): Use factory.
             uint32_t requestSerializedDataLength = 0;
             ::naeem::hottentot::runtime::Logger::GetOut() << "Serializing request object ..." << std::endl;
-            unsigned char *requestSerilaizedData = protocol->SerializeRequest(request, 
+            unsigned char *requestSerializedData = protocol->SerializeRequest(request, 
                                                                               &requestSerializedDataLength);
             ::naeem::hottentot::runtime::Logger::GetOut() << "Request object is serialized." << std::endl;
             /*
@@ -72,14 +94,14 @@ namespace naeem {
               sendData[c++] = requestSerializedDataLength;
             }
             for (uint32_t i = 0; i < requestSerializedDataLength; i++) {
-              sendData[c++] = requestSerilaizedData[i];
+              sendData[c++] = requestSerializedData[i];
             }
             ::naeem::hottentot::runtime::Logger::GetOut() << "Writing " << sendLength << "  Bytes to socket ..." << std::endl;
             ::naeem::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
             tcpClient->Write(sendData, sendLength);
             ::naeem::hottentot::runtime::Logger::GetOut() << "Written." << std::endl;
             delete sendData;
-            delete requestSerilaizedData;
+            delete requestSerializedData;
             /*
              * Read response from server
              */
@@ -93,6 +115,7 @@ namespace naeem {
              * Deserialize token
              */
             Token *token = new Token;
+            ::naeem::hottentot::runtime::Utils::PrintArray("Response", protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
             token->Deserialize(protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
             /*
              * Finalization
