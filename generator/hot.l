@@ -26,6 +26,48 @@
 #include "y.tab.h"
 %}
 %%
+id\([1-9][0-9]*\) {
+  fprintf(stdout, "ID seen.\n");
+  yylval.string = malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
+  return ID;
+}
+list {
+  fprintf(stdout, "LIST seen.\n");
+  return LIST;
+}
+set {
+  fprintf(stdout, "SET seen.\n");
+  return SET;
+}
+map {
+  fprintf(stdout, "MAP seen.\n");
+  return MAP;
+}
+int {
+  fprintf(stdout, "INT seen.\n");
+  yylval.string = malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
+  return TYPE;
+}
+double {
+  fprintf(stdout, "DOUBLE seen.\n");
+  yylval.string = malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
+  return TYPE;
+}
+string {
+  fprintf(stdout, "STRING seen.\n");
+  yylval.string = malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
+  return TYPE;
+}
+bool {
+  fprintf(stdout, "BOOL seen.\n");
+  yylval.string = malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
+  return TYPE;
+}
 module {
   fprintf(stdout, "MODULE seen.\n");
   return MODULE;
@@ -40,7 +82,7 @@ struct {
   sprintf(yylval.string, "%s", yytext);
   return IDENTIFIER;
 }
-[\{\}\;\.] { 
+[\{\}\;\.><,] { 
   fprintf(stdout, "'%c' seen.\n", *yytext);
   return *yytext; 
 }
