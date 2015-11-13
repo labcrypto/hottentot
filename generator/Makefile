@@ -1,7 +1,8 @@
 all:
 	yacc -d hot.y
-	gcc -c y.tab.c
-	lex hot.l
-	gcc -c lex.yy.c
-	gcc y.tab.o lex.yy.o -ll -o hot-parser.out
+	g++ -c y.tab.c
+	flex hot.l
+	g++ -c lex.yy.c
+	g++ -c shared.cc
+	g++ y.tab.o lex.yy.o shared.o -lfl -ll -o hot-parser.out
 	./hot-parser.out test.hot

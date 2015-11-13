@@ -24,7 +24,17 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "shared.h"
+#include "module.h"
+
 void yyerror(char *);
+
+extern "C" {
+  int yylex(void);
+}
+
+
 %}
 %union {
   char *string;
