@@ -7,5 +7,8 @@ using namespace std;
 int main() {
     Hot hot;
     hot.GenerateJava();
+
+
+
     return 0;
 }

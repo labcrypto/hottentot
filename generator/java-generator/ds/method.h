@@ -14,6 +14,7 @@ public:
     vector<Argument*> args_;
     string returnType_;
     string name_;
+    int id_;
 };
 
 
