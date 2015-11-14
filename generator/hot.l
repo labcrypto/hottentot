@@ -23,12 +23,14 @@
 
 %{
 #include <stdio.h>
+#include "shared.h"
+#include "module.h"
 #include "y.tab.h"
 %}
 %%
 id\([1-9][0-9]*\) {
   fprintf(stdout, "ID seen.\n");
-  yylval.string = malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return ID;
 }
@@ -46,30 +48,36 @@ map {
 }
 int {
   fprintf(stdout, "INT seen.\n");
-  yylval.string = malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 double {
   fprintf(stdout, "DOUBLE seen.\n");
-  yylval.string = malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 string {
   fprintf(stdout, "STRING seen.\n");
-  yylval.string = malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 bool {
   fprintf(stdout, "BOOL seen.\n");
-  yylval.string = malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 module {
   fprintf(stdout, "MODULE seen.\n");
+  if (currentModule == NULL) {
+    currentModule = new ::naeem::hottentot::generator::Module();
+  } else {
+    fprintf(stdout, "SYNTAX ERROR: Modules can't be nested.\n");
+    exit(1);
+  }
   return MODULE;
 }
 struct {
@@ -78,7 +86,7 @@ struct {
 }
 [a-zA-Z]([a-zA-Z0-9])* {
   fprintf(stdout, "IDENTIFIER seen.\n");
-  yylval.string = malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return IDENTIFIER;
 }
