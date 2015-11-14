@@ -8,9 +8,10 @@
 #include <sstream>
 #include "service.h"
 
-Hot::~Hot(){
+Hot::~Hot() {
     //TODO delete all in madules_
 };
+
 void
 Hot::FakeInsert() {
     //fake insert
@@ -125,34 +126,38 @@ Hot::GenerateStructs(Module *modulePtr) {
     //cout << structTmpStr << endl << "-----" << endl;
     for (int i = 0; i < modulePtr->structs_.size(); i++) {
         Struct *aStruct = modulePtr->structs_.at(i);
-        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/"+aStruct->name_+".java");
+        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + aStruct->name_ +
+                ".java");
         string basePackageName = modulePtr->name_;
         string replacableStructTmpStr = structTmpStr;
-        replacableStructTmpStr.replace(replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]"),21, basePackageName);
+        replacableStructTmpStr.replace(replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%STRUCT_NAME%]"), 15, aStruct->name_);
         string memberDeclarationStr;
         string memberGetterSetterStr;
         for (int i = 0; i < aStruct->members_.size(); i++) {
-            Member* memberPtr = aStruct->members_.at(i);
+            Member *memberPtr = aStruct->members_.at(i);
             string memberName = memberPtr->name_;
             memberPtr->name_[0] -= 32;
             string capitalizedMemberName = memberPtr->name_;
-            memberDeclarationStr += "\tprivate "+memberPtr->type_+" "+memberName+";\n";
-            memberGetterSetterStr += "\tpublic void set"+capitalizedMemberName+"("+memberPtr->type_+" "+memberName+") {\n";
-            memberGetterSetterStr += "\t\tthis."+memberName+" = "+memberName+"\n";
+            memberPtr->name_ = memberName;
+            memberDeclarationStr += "\tprivate " + memberPtr->type_ + " " + memberName + ";\n";
+            memberGetterSetterStr +=
+                    "\tpublic void set" + capitalizedMemberName + "(" + memberPtr->type_ + " " + memberName + ") {\n";
+            memberGetterSetterStr += "\t\tthis." + memberName + " = " + memberName + "\n";
             memberGetterSetterStr += "\t}\n";
-            memberGetterSetterStr += "\tpublic "+memberPtr->type_+" get"+capitalizedMemberName+"() {\n";
-            memberGetterSetterStr += "\t\treturn "+memberPtr->name_+"\n";
+            memberGetterSetterStr += "\tpublic " + memberPtr->type_ + " get" + capitalizedMemberName + "() {\n";
+            memberGetterSetterStr += "\t\treturn " + memberPtr->name_ + "\n";
             memberGetterSetterStr += "\t}";
         }
-        replacableStructTmpStr.replace(replacableStructTmpStr.find("[%MEMBERS%]"), 11, memberDeclarationStr + memberGetterSetterStr);
-        os.write(replacableStructTmpStr.c_str() , replacableStructTmpStr.size());
+        replacableStructTmpStr.replace(replacableStructTmpStr.find("[%MEMBERS%]"), 11,
+                                       memberDeclarationStr + memberGetterSetterStr);
+        os.write(replacableStructTmpStr.c_str(), replacableStructTmpStr.size());
         os.close();
     }
 }
 
 void
-Hot::GenerateAbstractService(Module* modulePtr){
+Hot::GenerateAbstractService(Module *modulePtr) {
     //loop for every services
     Service *servicePtr;
     string replacableAbstractServiceTmpStr;
@@ -160,15 +165,23 @@ Hot::GenerateAbstractService(Module* modulePtr){
         //write abstractService.tmp
         string basePackageName = modulePtr->name_;
         servicePtr = modulePtr->services_.at(i);
-        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/Abstract" + servicePtr->name_ + "Service.java", ios::trunc);
+        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/Abstract" +
+                servicePtr->name_ + "Service.java", ios::trunc);
         replacableAbstractServiceTmpStr = abstractServiceTmpStr;
-        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
-        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
-        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
-        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16, servicePtr->name_);
-        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16, servicePtr->name_);
-        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16, servicePtr->name_);
-        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16, servicePtr->name_);
+        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
+                                                basePackageName);
+        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
+                                                basePackageName);
+        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
+                                                basePackageName);
+        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16,
+                                                servicePtr->name_);
+        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16,
+                                                servicePtr->name_);
+        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16,
+                                                servicePtr->name_);
+        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16,
+                                                servicePtr->name_);
         stringstream ssID;
         ssID << servicePtr->id_;
         replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_ID%]"), 14, ssID.str());
@@ -180,7 +193,7 @@ Hot::GenerateAbstractService(Module* modulePtr){
 }
 
 void
-Hot::GenerateServiceInterface(Module* modulePtr){
+Hot::GenerateServiceInterface(Module *modulePtr) {
     Service *servicePtr;
     string replacableServiceTmpStr;
     for (int i = 0; i < modulePtr->services_.size(); i++) {
@@ -189,12 +202,13 @@ Hot::GenerateServiceInterface(Module* modulePtr){
         servicePtr = modulePtr->services_.at(i);
         //write service interface
         string replacableServiceTmpStr = serviceTmpStr;
-        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + servicePtr->name_ + "Service.java", ios::trunc);
+        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + servicePtr->name_ +
+                "Service.java", ios::trunc);
         replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
         replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%SERVICE_NAME%]"), 16, servicePtr->name_);
         string serviceMethodsStr;
         //loop for service methods
-        Method* methodPtr;
+        Method *methodPtr;
         for (int i = 0; i < servicePtr->methods_.size(); i++) {
             methodPtr = servicePtr->methods_.at(i);
             serviceMethodsStr += "\tpublic " + methodPtr->returnType_ + " " + methodPtr->name_ + "(";
@@ -205,6 +219,7 @@ Hot::GenerateServiceInterface(Module* modulePtr){
                 string argType = argPtr->type_;
                 argPtr->type_[0] += 32;
                 string argName = argPtr->type_;
+                argPtr->type_ = argType;
                 serviceMethodsStr += argType + " " + argName;
                 if (i < methodPtr->args_.size() - 1) {
                     serviceMethodsStr += ",";
@@ -219,9 +234,8 @@ Hot::GenerateServiceInterface(Module* modulePtr){
 }
 
 
-
 void
-Hot::GenerateServiceProxyBuilder(Module* pModule){
+Hot::GenerateServiceProxyBuilder(Module *pModule) {
     Service *servicePtr;
     string replacableServiceProxyBuilderTmpStr;
     for (int i = 0; i < pModule->services_.size(); i++) {
@@ -230,20 +244,23 @@ Hot::GenerateServiceProxyBuilder(Module* pModule){
         servicePtr = pModule->services_.at(i);
         string replacableServiceProxyBuilderTmpStr;
         //write service proxy builder
-        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + servicePtr->name_ + "ServiceProxyBuilder.java", ios::trunc);
+        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + servicePtr->name_ +
+                "ServiceProxyBuilder.java", ios::trunc);
         replacableServiceProxyBuilderTmpStr = serviceProxyBuilderTmpStr;
-        replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
-                                          basePackageName);
-        replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
-                                          basePackageName);
+        replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]"),
+                                                    21,
+                                                    basePackageName);
+        replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]"),
+                                                    21,
+                                                    basePackageName);
         replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]"), 16,
-                                          servicePtr->name_);
+                                                    servicePtr->name_);
         replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]"), 16,
-                                          servicePtr->name_);
+                                                    servicePtr->name_);
         replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]"), 16,
-                                          servicePtr->name_);
+                                                    servicePtr->name_);
         replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]"), 16,
-                                          servicePtr->name_);
+                                                    servicePtr->name_);
         os.write(replacableServiceProxyBuilderTmpStr.c_str(), replacableServiceProxyBuilderTmpStr.size());
         os.close();
     }
@@ -251,7 +268,7 @@ Hot::GenerateServiceProxyBuilder(Module* pModule){
 }
 
 void
-Hot::GenerateRequestHandler(Module* pModule){
+Hot::GenerateRequestHandler(Module *pModule) {
 
 
     Service *pService;
@@ -260,64 +277,86 @@ Hot::GenerateRequestHandler(Module* pModule){
     for (int i = 0; i < pModule->services_.size(); i++) {
         string basePackageName = pModule->name_;
         pService = pModule->services_.at(i);
-        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/"+pService->name_+"RequestHandler.java");;
+        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + pService->name_ +
+                "RequestHandler.java");;
         string serviceName = pService->name_;
         pService->name_[0] += 32;
         string lowerCaseServiceName = pService->name_;
         replacableRequestHandlerTmpStr = requestHandlerTmpStr;
-        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]"),21,basePackageName);
-        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]"),21,basePackageName);
-        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"),16,serviceName);
-        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"),16,serviceName);
-        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"),16,serviceName);
-        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"),16,serviceName);
-        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"),16,serviceName);
-        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME_LOWERCASE%]"),26,lowerCaseServiceName);
+        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
+                                               basePackageName);
+        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
+                                               basePackageName);
+        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16,
+                                               serviceName);
+        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16,
+                                               serviceName);
+        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16,
+                                               serviceName);
+        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16,
+                                               serviceName);
+        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16,
+                                               serviceName);
+        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME_LOWERCASE%]"), 26,
+                                               lowerCaseServiceName);
 
-        Method* pMethod;
+        Method *pMethod;
         string methodConditionStr;
-        string returnType = pMethod->returnType_;
-        pMethod->returnType_[0] += 32;
-        string returnTypeLowerCase = pMethod->returnType_;
-        for(int i = 0 ; i < pService->methods_.size() ; i++){
+
+        for (int i = 0; i < pService->methods_.size(); i++) {
             pMethod = pService->methods_.at(i);
-            //TODO
+            string returnType = pMethod->returnType_;
+            pMethod->returnType_[0] += 32;
+            string returnTypeLowerCase = pMethod->returnType_;
+            pMethod->returnType_ = returnType;
             stringstream ssID;
             ssID << pMethod->id_;
-            methodConditionStr += "if(methodId == " + ssID.str()+"){\n";
-            methodConditionStr += "\t\t\tList <Argument> args = request.getArgs();\n";
-            Argument* pArg;
-            for(int i = 0 ; i < pMethod->args_.size() ; i++){
+            methodConditionStr += "if(methodId == " + ssID.str() + "){\n";
+            methodConditionStr += "\t\tList <Argument> args = request.getArgs();\n";
+            Argument *pArg;
+            for (int i = 0; i < pMethod->args_.size(); i++) {
                 pArg = pMethod->args_.at(i);
                 stringstream ssI;
                 ssI << i;
-                methodConditionStr += "\t\t\tArgument arg"+ssI.str()+" = args.get("+ssI.str()+")\n";
+                methodConditionStr += "\t\tArgument arg" + ssI.str() + " = args.get(" + ssI.str() + ")\n";
+
                 string argType = pArg->type_;
                 pArg->type_[0] += 32;
                 string argName = pArg->type_;
-                methodConditionStr += "\t\t\tbyte[] serialized"+argType;
+                pArg->type_ = argType;
+                methodConditionStr += "\t\tbyte[] serialized" + argType;
                 methodConditionStr += " = arg" + ssI.str() + ".getData();\n";
                 methodConditionStr += "\t\t" + argType + " " + argName + " = new " + argType + "();\n";
                 methodConditionStr += "\t\t" + argName + ".deserialize(serialized" + argType + ")\n";
             }
-            methodConditionStr += "\t\t" + returnType+" " + returnTypeLowerCase + " = null;\n";
+            methodConditionStr += "\t\t" + returnType + " " + returnTypeLowerCase + " = null;\n";
             methodConditionStr += "\t\tResponse response = new Response();\n";
             methodConditionStr += "\t\ttry{\n";
-            methodConditionStr += "\t\t\t = " + lowerCaseServiceName + "Impl." + pMethod->name_ + "(";
-            for(int i = 0 ; i < pMethod->args_.size() ; i++) {
+            methodConditionStr += "\t\t\t"+ returnTypeLowerCase +" = " + lowerCaseServiceName + "Impl." + pMethod->name_ + "(";
+            for (int i = 0; i < pMethod->args_.size(); i++) {
                 pArg = pMethod->args_.at(i);
                 string argType = pArg->type_;
                 pArg->type_[0] += 32;
                 string argName = pArg->type_;
-                if( i < pMethod->args_.size() - 1 ){
-                    methodConditionStr += argName + "," ;
+                if (i < pMethod->args_.size() - 1) {
+                    methodConditionStr += argName + ",";
                 }
             }
             methodConditionStr += ");\n";
-            methodConditionStr += "\t\t}";
-        }
+            methodConditionStr +=
+                    "\t\t\tbyte[] serialized" + returnType + " = " + returnTypeLowerCase + ".serialize();\n";
+            methodConditionStr += "\t\t\tresponse.setStatusCode((byte) 100);\n";
+            methodConditionStr += "\t\t\tresponse.setData(serialized" + returnType + ");\n";
+            methodConditionStr += "\t\t\tresponse.setLength(serialized" + returnType + ".length + 1);\n";
+            methodConditionStr += "\t\t} catch (Exception e) {\n";
+            methodConditionStr += "\t\t\te.printStackTrace();\n";
+            methodConditionStr += "\t\t}\n";
+            methodConditionStr += "\t\treturn response;\n";
+            methodConditionStr += "\t}";
 
-        os.write(replacableRequestHandlerTmpStr.c_str() , replacableRequestHandlerTmpStr.size());
+        }
+        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%METHOD_CONDITIONS%]"),21,methodConditionStr);
+        os.write(replacableRequestHandlerTmpStr.c_str(), replacableRequestHandlerTmpStr.size());
         os.close();
     }
 
@@ -349,7 +388,6 @@ Hot::GenerateRequestHandler(Module* pModule){
 }
 
 
-
 void
 Hot::GenerateJava() {
     FakeInsert();
@@ -362,5 +400,6 @@ Hot::GenerateJava() {
         GenerateServiceInterface(pModule);
         GenerateServiceProxyBuilder(pModule);
         GenerateRequestHandler(pModule);
+        //TODO generate serviceProxy
     }
 }

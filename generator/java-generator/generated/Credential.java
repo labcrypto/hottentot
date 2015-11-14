@@ -7,12 +7,12 @@ public class Credential {
 		this.username = username
 	}
 	public string getUsername() {
-		return Username
+		return username
 	}	public void setPassword(string password) {
 		this.password = password
 	}
 	public string getPassword() {
-		return Password
+		return password
 	}	
 	public byte[] serialize() {
 		//TODO(ali)

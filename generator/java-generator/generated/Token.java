@@ -6,7 +6,7 @@ public class Token {
 		this.value = value
 	}
 	public string getValue() {
-		return Value
+		return value
 	}	
 	public byte[] serialize() {
 		//TODO(ali)
