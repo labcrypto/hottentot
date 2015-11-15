@@ -464,14 +464,32 @@ Hot::GenerateServiceProxy(Module *pModule) {
                 methodsStr += "\t\targ.setData(" + pArg->name_ + ".serialize());\n";
                 methodsStr += "\t\trequest.addArgument(arg" + ssI.str() + ");\n";
             }
-            //TODO calculate request length
-            methodsStr += "\t\t//it depends on serialized arguments length !!! 1 byte or more than 1 byte for showing every arg length\n";
-            methodsStr += "\t\trequest.setlength(4 + ";
+            //calculate request length
+            methodsStr += "\t\tint dataLength = 0;\n";
+            methodsStr += "\t\t//calculate data length for every argument\n";
             for(int i= 0 ; i < pMethod->args_.size() ; i++){
                 pArg = pMethod->args_.at(i);
-                //TODO it is not always 1 .... maybe 2 or 3
-                methodsStr += "1 + serialized" + pArg->type_+ ".length);\n";
+                string argDataLengthVarName =  pArg->name_ + "DataLength";
+                string argDataLengthByteArrayLengthVarName =  pArg->name_ + "DataLengthByteArrayLength";
+                methodsStr += "\t\t//calulate " + argDataLengthVarName + "\n";
+                methodsStr += "\t\tint " + argDataLengthVarName + "= serialized" + pArg->type_ + ".length;\n";
+                methodsStr += "\t\tint " + argDataLengthByteArrayLengthVarName + " = 1;\n";
+                methodsStr += "\t\tif (" + argDataLengthVarName + " >= 0x80) {\n";
+                methodsStr += "\t\t\tif (" + argDataLengthVarName + " <= 0xff) {\n";
+                methodsStr += "\t\t\t\t//ex 0x81 0xff\n";
+                methodsStr += "\t\t\t\t" + argDataLengthByteArrayLengthVarName + " = 2;\n";
+                methodsStr += "\t\t\t} else if (" + argDataLengthVarName + " <= 0xffff) {\n";
+                methodsStr += "\t\t\t\t//ex 0x82 0xff 0xff\n";
+                methodsStr += "\t\t\t\t" + argDataLengthByteArrayLengthVarName + " = 3;\n";
+                methodsStr += "\t\t\t} else if (" + argDataLengthVarName + " <= 0xffffff) {\n";
+                methodsStr += "\t\t\t\t//ex 0x83 0xff 0xff 0xff\n";
+                methodsStr += "\t\t\t\t" + argDataLengthByteArrayLengthVarName + " = 4;\n";
+                methodsStr += "\t\t\t}\n";
+                methodsStr += "\t\t}\n";
+                methodsStr += "\t\tdataLength += " + argDataLengthVarName + " + " + argDataLengthByteArrayLengthVarName + ";\n";
             }
+            methodsStr += "\t\t//\n";
+            methodsStr += "\t\trequest.setLength(4 + dataLength);\n";
             methodsStr += "\t\t//connect to server\n";
             methodsStr += "\t\tTcpClient tcpClient = TcpClientFactory.create();\n";
             methodsStr += "\t\ttcpClient.connect(host, port);\n";
@@ -489,7 +507,6 @@ Hot::GenerateServiceProxy(Module *pModule) {
             methodsStr += "\t\t//deserialize token part of response\n";
             methodsStr += "\t\tResponse response = protocol.getResponse();\n";
             methodsStr += "\t\t//close everything\n";
-
             methodsStr += "\t\t//deserialize " + pMethod->returnType_ +  "part from response\n";
             string lowerCaseReturnType = pMethod->returnType_;
             lowerCaseReturnType[0] += 32;
@@ -523,8 +540,28 @@ Hot::GenerateServiceProxy(Module *pModule) {
                  arg.setDataLength(credential.serialize().length);
                  arg.setData(credential.serialize());
                  request.addArgument(arg);
-                 //it depends on serialized arguments length !!! 1 byte or more than 1 byte for showing every arg length
-                 request.setLength(4  + 1 + serializedCredential.length);
+
+
+                 int dataLength = 0;
+                //calculate data length for every argument
+                //credential
+                int credentialDataLength = serializedCredential.length;
+                int credentialDataLengthByteArrayLength = 1;
+                if (credentialDataLength >= 0x80) {
+                    if (credentialDataLength <= 0xff) {
+                        //ex 0x81 0xff
+                        credentialDataLengthByteArrayLength = 2;
+                    } else if (credentialDataLength <= 0xffff) {
+                        //ex 0x82 0xff 0xff
+                        credentialDataLengthByteArrayLength = 3;
+                    } else if (credentialDataLength <= 0xffffff) {
+                        //ex 0x83 0xff 0xff 0xff
+                        credentialDataLengthByteArrayLength = 4;
+                    }
+                }
+                dataLength += credentialDataLength + credentialDataLengthByteArrayLength;
+                //
+                request.setLength(4 + dataLength);
 
 
                  //connect to ir.ntnaeem.hottentot.server
