@@ -27,6 +27,9 @@
 
 #include "shared.h"
 #include "ds/hot.h"
+#include "ds/list_declaration.h"
+#include "ds/set_declaration.h"
+#include "ds/map_declaration.h"
 
 
 void yyerror(char *);
@@ -64,15 +67,23 @@ modules:        modules module
 
 module:         MODULE package '{' module_body '}' ';' {
                   printf("Module parsed.\n");
+                  std::string package = "";
+                  while (!stack.empty()) {
+                    package += stack.top() + ".";
+                    stack.pop();
+                  }
+                  currentModule->SetPackage(package.substr(0, package.size() - 1));
                   currentModule = NULL;
                 }
                 ;
 
 package:        IDENTIFIER package { 
-                  printf("Package seen: %s\n", $1); 
+                  printf("Package seen ### : %s\n", $1);
+                  stack.push($1);
                 }
                 | IDENTIFIER '.' package { 
-                  printf("Package seen: %s\n", $1); 
+                  printf("Package seen >>> : %s\n", $1);
+                  stack.push($1); 
                 }
                 |
                 ;
@@ -86,6 +97,7 @@ structs:        structs struct
 
 struct:         STRUCT IDENTIFIER '{' struct_body '}' ';' {
                   printf("Struct seen: %s\n", $2);
+                  currentStruct->SetName($2);
                   currentStruct = NULL;
                 }
 
@@ -97,33 +109,43 @@ declarations:   declarations declaration
 
 declaration:    LIST '<' TYPE '>' IDENTIFIER ID  ';' {
                   printf("Declaration3 seen:    LIST<%s> %s %s\n", $3, $5, $6);
+                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::ListDeclaration($3, $5, $6));
                 }
                 | LIST '<' IDENTIFIER '>' IDENTIFIER ID ';' {
                   printf("Declaration4 seen:    LIST<%s> %s %s\n", $3, $5, $6);
+                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::ListDeclaration($3, $5, $6));
                 }
                 | SET '<' TYPE '>' IDENTIFIER ID ';' {
                   printf("Declaration5 seen:    SET<%s> %s %s\n", $3, $5, $6);
+                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::SetDeclaration($3, $5, $6));
                 }
                 | SET '<' IDENTIFIER '>' IDENTIFIER ID ';' {
                   printf("Declaration6 seen:    SET<%s> %s %s\n", $3, $5, $6);
+                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::SetDeclaration($3, $5, $6));
                 }
                 | MAP '<' TYPE ','  TYPE '>' IDENTIFIER ID ';' {
                   printf("Declaration7 seen:    MAP<%s, %s> %s %s\n", $3, $5, $7, $8);
+                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::MapDeclaration($3, $5, $7, $8));
                 }
                 | MAP '<' TYPE ','  IDENTIFIER '>' IDENTIFIER ID ';' {
                   printf("Declaration7 seen:    MAP<%s, %s> %s %s\n", $3, $5, $7, $8);
+                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::MapDeclaration($3, $5, $7, $8));
                 }
                 | MAP '<' IDENTIFIER ','  TYPE '>' IDENTIFIER ID ';' {
                   printf("Declaration8 seen:    MAP<%s, %s> %s %s\n", $3, $5, $7, $8);
+                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::MapDeclaration($3, $5, $7, $8));
                 }
                 | MAP '<' IDENTIFIER ','  IDENTIFIER '>' IDENTIFIER ID ';' {
                   printf("Declaration8 seen:    MAP<%s, %s> %s %s\n", $3, $5, $7, $8);
+                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::MapDeclaration($3, $5, $7, $8));
                 }
                 | TYPE IDENTIFIER ID ';' {
                   printf("Declaration seen:    %s %s %s\n", $1, $2, $3);
+                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::Declaration($1, $2, $3));
                 }
                 | IDENTIFIER IDENTIFIER ID ';' {
                   printf("Declaration2 seen:    %s %s %s\n", $1, $2, $3);
+                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::Declaration($1, $2, $3));
                 }
                 ;
 

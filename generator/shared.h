@@ -24,6 +24,8 @@
 #ifndef _NAEEM_HOTTENTOT_GENERATOR__SHARED_H_
 #define _NAEEM_HOTTENTOT_GENERATOR__SHARED_H_
 
+#include <stack>
+
 #include "ds/hot.h"
 #include "ds/module.h"
 #include "ds/struct.h"
@@ -35,5 +37,6 @@
 extern ::naeem::hottentot::generator::ds::Hot *currentHot;
 extern ::naeem::hottentot::generator::ds::Module *currentModule;
 extern ::naeem::hottentot::generator::ds::Struct *currentStruct;
+extern std::stack<std::string> stack;
 
 #endif

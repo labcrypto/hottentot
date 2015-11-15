@@ -30,3 +30,4 @@
 ::naeem::hottentot::generator::ds::Hot *currentHot = NULL;
 ::naeem::hottentot::generator::ds::Module *currentModule = NULL;
 ::naeem::hottentot::generator::ds::Struct *currentStruct = NULL;
+std::stack<std::string> stack;
