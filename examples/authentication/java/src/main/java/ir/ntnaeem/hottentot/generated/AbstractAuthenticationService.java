@@ -1,8 +1,7 @@
-package ir.ntnaeem.hottentot.generated.service;
+package ir.ntnaeem.hottentot.generated;
 
-import ir.ntnaeem.hottentot.generated.AuthenticationRequestHandler;
-import ir.ntnaeem.hottentot.generated.AuthenticationService;
 import ir.ntnaeem.hottentot.runtime.RequestHandler;
+import ir.ntnaeem.hottentot.runtime.Service;
 
 
 public abstract class AbstractAuthenticationService implements AuthenticationService{
