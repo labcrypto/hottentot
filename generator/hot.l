@@ -92,6 +92,15 @@ module {
 }
 struct {
   fprintf(stdout, "STRUCT seen.\n");
+  if (currentStruct == NULL) {
+    currentStruct = new ::naeem::hottentot::generator::ds::Struct();
+    fprintf(stdout, ">>> GENERATOR: Struct object created.\n");
+    currentModule->AddStruct(currentStruct);
+    fprintf(stdout, ">>> GENERATOR: Struct object has been added to model.\n");
+  } else {
+    fprintf(stdout, "SYNTAX ERROR: Structs can't be nested.\n");
+    exit(1);
+  }
   return STRUCT;
 }
 [a-zA-Z]([a-zA-Z0-9])* {
