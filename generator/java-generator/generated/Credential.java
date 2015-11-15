@@ -4,16 +4,18 @@ public class Credential {
 	private string username;
 	private string password;
 	public void setUsername(string username) {
-		this.username = username
+		this.username = username;
 	}
 	public string getUsername() {
-		return username
-	}	public void setPassword(string password) {
-		this.password = password
+		return username;
+	}
+	public void setPassword(string password) {
+		this.password = password;
 	}
 	public string getPassword() {
-		return password
-	}	
+		return password;
+	}
+	
 	public byte[] serialize() {
 		//TODO(ali)
 		//fake implementation
