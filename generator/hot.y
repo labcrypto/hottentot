@@ -70,7 +70,7 @@ std::stack<std::string> stack;
 
 hot:            modules { 
                   // printf("HOT parsed.\n"); 
-                  printf("======================\n");
+                  // printf("======================\n");
                   currentHot->Display();
                 }
                 ;
@@ -195,7 +195,6 @@ method:         {
                     currentService->AddMethod(currentMethod);
                   }
                 } type IDENTIFIER '(' arguments ')' ';' {
-                  printf("AAAAAAA %s\n", $2);
                   currentMethod->SetReturnType($2);
                   currentMethod->SetName($3);
                   currentMethod = NULL;
@@ -209,7 +208,7 @@ arguments:      argument
 
 argument:       type IDENTIFIER {
                   currentMethod->AddArgument(new ::naeem::hottentot::generator::ds::Argument($1, $2));
-                  printf("Argument has been added.\n");
+                  // printf("Argument has been added.\n");
                 }
                 ;
 
@@ -219,7 +218,6 @@ type:           LIST '<' type '>' {
                   strcat($$, "<");
                   strcat($$, $3);
                   strcat($$, ">");
-                  printf(")))))))) %s\n", $$);
                 }               
                 | SET '<' type '>' {
                   $$ = (char*)malloc(strlen($1) + strlen($3) + 10);
@@ -227,7 +225,6 @@ type:           LIST '<' type '>' {
                   strcat($$, "<");
                   strcat($$, $3);
                   strcat($$, ">");
-                  printf(")))))))) %s\n", $$);
                 }                
                 | MAP '<' type ',' type '>' {
                   $$ = (char*)malloc(strlen($1) + strlen($3) + strlen($5) + 10);
@@ -237,7 +234,6 @@ type:           LIST '<' type '>' {
                   strcat($$, ",");
                   strcat($$, $5);
                   strcat($$, ">");
-                  printf(">>>>>>>>>>>> %s\n", $$);
                 }                
                 | TYPE  {
                   $$ = (char *)malloc(strlen($1) + 2);

@@ -31,91 +31,91 @@ extern "C" int yylex();
 %}
 %%
 ord\([1-9][0-9]*\) {
-  fprintf(stdout, "ORD seen.\n");
+  // fprintf(stdout, "ORD seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return ORD;
 }
 stateless {
-  fprintf(stdout, "STATELESS seen.\n");
+  // fprintf(stdout, "STATELESS seen.\n");
   return STATELESS;
 }
 stateful {
-  fprintf(stdout, "STATEFUL seen.\n");
+  // fprintf(stdout, "STATEFUL seen.\n");
   return STATEFUL;
 }
 service {
-  fprintf(stdout, "SERVICE seen.\n");
+  // fprintf(stdout, "SERVICE seen.\n");
   return SERVICE;
 }
 list {
-  fprintf(stdout, "LIST seen.\n");
+  // fprintf(stdout, "LIST seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return LIST;
 }
 set {
-  fprintf(stdout, "SET seen.\n");
+  // fprintf(stdout, "SET seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return SET;
 }
 map {
-  fprintf(stdout, "MAP seen.\n");
+  // fprintf(stdout, "MAP seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return MAP;
 }
 int {
-  fprintf(stdout, "INT seen.\n");
+  // fprintf(stdout, "INT seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 double {
-  fprintf(stdout, "DOUBLE seen.\n");
+  // fprintf(stdout, "DOUBLE seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 string {
-  fprintf(stdout, "STRING seen.\n");
+  // fprintf(stdout, "STRING seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 bool {
-  fprintf(stdout, "BOOL seen.\n");
+  // fprintf(stdout, "BOOL seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 date {
-  fprintf(stdout, "DATE seen.\n");
+  // fprintf(stdout, "DATE seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 module {
-  fprintf(stdout, "MODULE seen.\n");
+  // fprintf(stdout, "MODULE seen.\n");
   return MODULE;
 }
 struct {
-  fprintf(stdout, "STRUCT seen.\n");
+  // fprintf(stdout, "STRUCT seen.\n");
   return STRUCT;
 }
 [a-zA-Z]([a-zA-Z0-9])* {
-  fprintf(stdout, "IDENTIFIER seen: %s\n", yytext);
+  // fprintf(stdout, "IDENTIFIER seen: %s\n", yytext);
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return IDENTIFIER;
 }
 [\{\}\;\.><,()] { 
-  fprintf(stdout, "'%c' seen.\n", *yytext);
+  // fprintf(stdout, "'%c' seen.\n", *yytext);
   return *yytext; 
 }
 [ \t\r\n] ;
 . { 
-  fprintf(stderr, "Unknown token: %c\n", *yytext); 
+  // fprintf(stderr, "Unknown token: %c\n", *yytext); 
 }
 %%
