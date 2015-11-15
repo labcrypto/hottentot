@@ -84,6 +84,9 @@ module {
     fprintf(stdout, ">>> GENERATOR: Module object created.\n");
     currentHot->AddModule(currentModule);
     fprintf(stdout, ">>> GENERATOR: Module object has been added to hot.\n");
+    while (!stack.empty()) {
+      stack.pop();
+    }
   } else {
     fprintf(stdout, "SYNTAX ERROR: Modules can't be nested.\n");
     exit(1);

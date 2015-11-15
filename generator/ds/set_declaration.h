@@ -36,17 +36,23 @@ namespace naeem {
         public:
           SetDeclaration(std::string type = "", 
                          std::string variable = "",
-                         uint32_t id = 0)
-            : Declaration(::naeem::hottentot::generator::StringHelper::trim(type), variable, id) {
-              setType_ = type_.substr(4, type_.size() - 5);
+                         std::string idString = "")
+            : Declaration("", variable, idString) {
+              setType_ = type;
           }
           virtual ~SetDeclaration() {}
         public:
+          inline virtual DeclarationType GetDeclarationType() const {
+            return Set;
+          }
           inline virtual std::string GetSetType() const {
             return setType_;
           }
           inline virtual void SetSetType(std::string setType) {
             setType_ = setType;
+          }
+          inline virtual void Display() {
+            std::cout << variable_ << ":SET<" << setType_ << "> with id(" << id_ << ")";
           }
         protected:
           std::string setType_;

@@ -34,25 +34,27 @@ namespace naeem {
       namespace ds {
         class MapDeclaration : public Declaration {
         public:
-          MapDeclaration(std::string type = "", 
+          MapDeclaration(std::string keyType = "", 
+                         std::string valueType = "",
                          std::string variable = "",
-                         uint32_t id = 0)
-            : Declaration(StringHelper::trim(type), variable, id) {
-              size_t index = type_.find(",");
-              std::string temp0 = type_.substr(0, index);
-              std::string temp = ::naeem::hottentot::generator::StringHelper::trim(temp0);
-              keyType_ = temp.substr(4, temp.size() - 5);
-              temp0 = type_.substr(index + 1, type_.size() - index);
-              temp = ::naeem::hottentot::generator::StringHelper::trim(temp0);
-              valueType_ = temp.substr(0, temp.size() - 1);
+                         std::string idString = "")
+            : Declaration("", variable, idString) {
+              keyType_ = keyType;
+              valueType_ = valueType;
           }
           virtual ~MapDeclaration() {}
         public:
+          inline virtual DeclarationType GetDeclarationType() const {
+            return Map;
+          }
           inline virtual std::string GetKeyType() const {
             return keyType_;
           }
           inline virtual void SetKeyType(std::string keyType) {
             keyType_ = keyType;
+          }
+          inline virtual void Display() {
+            std::cout << variable_ << ":MAP<" << keyType_ << ", " << valueType_ << "> with id(" << id_ << ")";
           }
         protected:
           std::string keyType_;

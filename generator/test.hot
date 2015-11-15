@@ -11,3 +11,8 @@ module ir.ntnaeem.services {
     map<string, Phone> phones id(3);
   };
 };
+module org.apache.tests {
+  struct Test {
+    int x id(1);
+  };
+};

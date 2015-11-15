@@ -27,6 +27,8 @@
 #include <vector>
 #include <string>
 #include <stdint.h>
+#include <iostream>
+#include <stdlib.h>
 
 
 namespace naeem {
@@ -35,15 +37,25 @@ namespace naeem {
       namespace ds {
         class Declaration {
         public:
+          enum DeclarationType {
+            NonGeneric,
+            List,
+            Set,
+            Map
+          };
+        public:
           Declaration(std::string type = "", 
                       std::string variable = "",
-                      uint32_t id = 0)
+                      std::string idString = "")
             : type_(type),
-              variable_(variable),
-              id_(id) {
+              variable_(variable) {
+              id_ = atoi(idString.substr(3, idString.size() - 4).c_str());
           }
           virtual ~Declaration() {}
         public:
+          inline virtual DeclarationType GetDeclarationType() const {
+            return NonGeneric;
+          }
           inline virtual std::string GetType() const {
             return type_;
           }
@@ -61,6 +73,9 @@ namespace naeem {
           }
           inline virtual void SetId(uint32_t id) {
             id_ = id;
+          }
+          inline virtual void Display() {
+            std::cout << variable_ << ":" << type_ << " with id(" << id_ << ")";
           }
         protected:
           std::string type_;
