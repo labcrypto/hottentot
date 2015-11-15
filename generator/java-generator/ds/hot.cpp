@@ -28,6 +28,7 @@ Hot::FakeInsert() {
     passwordMemberPtr->name_ = "password";
     credStructPtr->members_.push_back(usernameMemberPtr);
     credStructPtr->members_.push_back(passwordMemberPtr);
+
     modulePtr->structs_.push_back(credStructPtr);
 
     //Token struct
@@ -157,11 +158,11 @@ Hot::GenerateStructs(Module *modulePtr) {
             memberDeclarationStr += "\tprivate " + memberPtr->type_ + " " + memberName + ";\n";
             memberGetterSetterStr +=
                     "\tpublic void set" + capitalizedMemberName + "(" + memberPtr->type_ + " " + memberName + ") {\n";
-            memberGetterSetterStr += "\t\tthis." + memberName + " = " + memberName + "\n";
+            memberGetterSetterStr += "\t\tthis." + memberName + " = " + memberName + ";\n";
             memberGetterSetterStr += "\t}\n";
             memberGetterSetterStr += "\tpublic " + memberPtr->type_ + " get" + capitalizedMemberName + "() {\n";
-            memberGetterSetterStr += "\t\treturn " + memberPtr->name_ + "\n";
-            memberGetterSetterStr += "\t}";
+            memberGetterSetterStr += "\t\treturn " + memberPtr->name_ + ";\n";
+            memberGetterSetterStr += "\t}\n";
         }
         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%MEMBERS%]"), 11,
                                        memberDeclarationStr + memberGetterSetterStr);
