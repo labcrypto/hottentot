@@ -52,7 +52,7 @@ namespace naeem {
             listType_ = listType;
           }
           inline virtual void Display() {
-            std::cout << variable_ << ":LIST<" << listType_ << "> with id(" << id_ << ")";
+            std::cout << variable_ << ": LIST<" << listType_ << "> with id(" << id_ << ")";
           }
         protected:
           std::string listType_;

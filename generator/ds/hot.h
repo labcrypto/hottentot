@@ -30,9 +30,10 @@
 
 #include "module.h"
 #include "struct.h"
- #include "list_declaration.h"
- #include "set_declaration.h"
- #include "map_declaration.h"
+#include "service.h"
+#include "list_declaration.h"
+#include "set_declaration.h"
+#include "map_declaration.h"
 
 
 namespace naeem {
@@ -59,6 +60,13 @@ namespace naeem {
                   modules_[i]->structs_[j]->declarations_[k]->Display();
                   std::cout << std::endl;
                 }
+                std::cout << "      }\n";
+              }
+              for (uint32_t j = 0; j < modules_[i]->services_.size(); j++) {
+                std::cout << "      ";
+                std::cout << (modules_[i]->services_[j]->GetServiceType() == ::naeem::hottentot::generator::ds::Service::Stateless ? "STATELESS" : "STATEFUL");
+                std::cout << " SERVICE " <<  modules_[i]->services_[j]->GetName() << " with id(" << modules_[i]->services_[j]->GetId() << ") {\n";
+                
                 std::cout << "      }\n";
               }
               std::cout << "   }\n";

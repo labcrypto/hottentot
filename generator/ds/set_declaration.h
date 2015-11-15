@@ -52,7 +52,7 @@ namespace naeem {
             setType_ = setType;
           }
           inline virtual void Display() {
-            std::cout << variable_ << ":SET<" << setType_ << "> with id(" << id_ << ")";
+            std::cout << variable_ << ": SET<" << setType_ << "> with id(" << id_ << ")";
           }
         protected:
           std::string setType_;

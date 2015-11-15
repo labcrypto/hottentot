@@ -75,7 +75,7 @@ namespace naeem {
             id_ = id;
           }
           inline virtual void Display() {
-            std::cout << variable_ << ":" << type_ << " with id(" << id_ << ")";
+            std::cout << variable_ << ": " << type_ << " with id(" << id_ << ")";
           }
         protected:
           std::string type_;

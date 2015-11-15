@@ -29,6 +29,7 @@
 #include "ds/hot.h"
 #include "ds/module.h"
 #include "ds/struct.h"
+#include "ds/service.h"
 #include "ds/list_declaration.h"
 #include "ds/set_declaration.h"
 #include "ds/map_declaration.h"
@@ -37,6 +38,7 @@
 extern ::naeem::hottentot::generator::ds::Hot *currentHot;
 extern ::naeem::hottentot::generator::ds::Module *currentModule;
 extern ::naeem::hottentot::generator::ds::Struct *currentStruct;
+extern ::naeem::hottentot::generator::ds::Service *currentService;
 extern std::stack<std::string> stack;
 
 #endif

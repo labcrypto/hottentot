@@ -32,58 +32,74 @@ extern "C" int yylex();
 %}
 %%
 id\([1-9][0-9]*\) {
-  fprintf(stdout, "ID seen.\n");
+  // fprintf(stdout, "ID seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return ID;
 }
+stateless {
+  return STATELESS;
+}
+stateful {
+  return STATEFUL;
+}
+service {
+  if (currentService == NULL) {
+    currentService = new ::naeem::hottentot::generator::ds::Service();
+    currentModule->AddService(currentService);
+  } else {
+    fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
+    exit(1);
+  }
+  return SERVICE;
+}
 list {
-  fprintf(stdout, "LIST seen.\n");
+  // fprintf(stdout, "LIST seen.\n");
   return LIST;
 }
 set {
-  fprintf(stdout, "SET seen.\n");
+  // fprintf(stdout, "SET seen.\n");
   return SET;
 }
 map {
-  fprintf(stdout, "MAP seen.\n");
+  // fprintf(stdout, "MAP seen.\n");
   return MAP;
 }
 int {
-  fprintf(stdout, "INT seen.\n");
+  // fprintf(stdout, "INT seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 double {
-  fprintf(stdout, "DOUBLE seen.\n");
+  // fprintf(stdout, "DOUBLE seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 string {
-  fprintf(stdout, "STRING seen.\n");
+  // fprintf(stdout, "STRING seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 bool {
-  fprintf(stdout, "BOOL seen.\n");
+  // fprintf(stdout, "BOOL seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 module {
-  fprintf(stdout, "MODULE seen.\n");
+  // fprintf(stdout, "MODULE seen.\n");
   if (currentHot == NULL) {
     currentHot = new ::naeem::hottentot::generator::ds::Hot();
-    fprintf(stdout, ">>> GENERATOR: Hot object created.\n");
+    // fprintf(stdout, ">>> GENERATOR: Hot object created.\n");
   }
   if (currentModule == NULL) {
     currentModule = new ::naeem::hottentot::generator::ds::Module();
-    fprintf(stdout, ">>> GENERATOR: Module object created.\n");
+    // fprintf(stdout, ">>> GENERATOR: Module object created.\n");
     currentHot->AddModule(currentModule);
-    fprintf(stdout, ">>> GENERATOR: Module object has been added to hot.\n");
+    // fprintf(stdout, ">>> GENERATOR: Module object has been added to hot.\n");
     while (!stack.empty()) {
       stack.pop();
     }
@@ -94,12 +110,12 @@ module {
   return MODULE;
 }
 struct {
-  fprintf(stdout, "STRUCT seen.\n");
+  // fprintf(stdout, "STRUCT seen.\n");
   if (currentStruct == NULL) {
     currentStruct = new ::naeem::hottentot::generator::ds::Struct();
-    fprintf(stdout, ">>> GENERATOR: Struct object created.\n");
+    // fprintf(stdout, ">>> GENERATOR: Struct object created.\n");
     currentModule->AddStruct(currentStruct);
-    fprintf(stdout, ">>> GENERATOR: Struct object has been added to model.\n");
+    // fprintf(stdout, ">>> GENERATOR: Struct object has been added to model.\n");
   } else {
     fprintf(stdout, "SYNTAX ERROR: Structs can't be nested.\n");
     exit(1);
@@ -107,13 +123,13 @@ struct {
   return STRUCT;
 }
 [a-zA-Z]([a-zA-Z0-9])* {
-  fprintf(stdout, "IDENTIFIER seen.\n");
+  // fprintf(stdout, "IDENTIFIER seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return IDENTIFIER;
 }
 [\{\}\;\.><,] { 
-  fprintf(stdout, "'%c' seen.\n", *yytext);
+  // fprintf(stdout, "'%c' seen.\n", *yytext);
   return *yytext; 
 }
 [ \t\r\n] ;

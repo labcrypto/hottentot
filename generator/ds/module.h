@@ -32,6 +32,7 @@ namespace naeem {
     namespace generator {
       namespace ds {
         class Struct;
+        class Service;
         class Module {
         friend class Hot;
         public:
@@ -40,6 +41,9 @@ namespace naeem {
         public:
           inline virtual void AddStruct(Struct *struc) {
             structs_.push_back(struc);
+          }
+          inline virtual void AddService(Service *service) {
+            services_.push_back(service);
           }
           inline virtual std::string GetPackage() const {
             return package_;
@@ -50,6 +54,7 @@ namespace naeem {
         private:
           std::string package_;
           std::vector<Struct*> structs_;
+          std::vector<Service*> services_;
         };
       }
     }

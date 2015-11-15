@@ -5,13 +5,22 @@ module ir.ntnaeem.services {
     double x id(3);
     string str id(4);
   };
+  stateful service PersonAuthenticator id(100) {
+
+  };
   struct Phone {
     bool done id(1);
     Person p id(2);
     map<string, Phone> phones id(3);
   };
+  stateless service PhoneManager id(101) {
+
+  };
 };
 module org.apache.tests {
+  stateless service ApacheLicenseManager id(200) {
+
+  };
   struct Test {
     int x id(1);
   };

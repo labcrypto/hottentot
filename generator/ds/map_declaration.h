@@ -54,7 +54,7 @@ namespace naeem {
             keyType_ = keyType;
           }
           inline virtual void Display() {
-            std::cout << variable_ << ":MAP<" << keyType_ << ", " << valueType_ << "> with id(" << id_ << ")";
+            std::cout << variable_ << ": MAP<" << keyType_ << ", " << valueType_ << "> with id(" << id_ << ")";
           }
         protected:
           std::string keyType_;
