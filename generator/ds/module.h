@@ -33,6 +33,7 @@ namespace naeem {
       namespace ds {
         class Struct;
         class Module {
+        friend class Hot;
         public:
           Module() {}
           virtual ~Module() {}
@@ -40,7 +41,14 @@ namespace naeem {
           inline virtual void AddStruct(Struct *struc) {
             structs_.push_back(struc);
           }
+          inline virtual std::string GetPackage() const {
+            return package_;
+          }
+          inline void SetPackage(std::string package) {
+            package_ = package;
+          }
         private:
+          std::string package_;
           std::vector<Struct*> structs_;
         };
       }

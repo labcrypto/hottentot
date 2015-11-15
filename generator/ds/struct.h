@@ -33,6 +33,7 @@ namespace naeem {
       namespace ds {
         class Declaration;
         class Struct {
+        friend class Hot;
         public:
           Struct() {}
           virtual ~Struct() {}
@@ -40,7 +41,14 @@ namespace naeem {
           inline virtual void AddDeclaration(Declaration *declaration) {
             declarations_.push_back(declaration);
           }
+          inline virtual std::string GetName() const {
+            return name_;
+          }
+          inline virtual void SetName(std::string name) {
+            name_ = name;
+          }
         private:
+          std::string name_;
           std::vector<Declaration*> declarations_;
         };
       }
