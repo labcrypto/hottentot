@@ -26,6 +26,7 @@
 #include "shared.h"
 #include "module.h"
 #include "y.tab.h"
+extern "C" int yylex();
 %}
 %%
 id\([1-9][0-9]*\) {
@@ -74,6 +75,7 @@ module {
   fprintf(stdout, "MODULE seen.\n");
   if (currentModule == NULL) {
     currentModule = new ::naeem::hottentot::generator::Module();
+    fprintf(stdout, ">>> GENERATOR: Module object created.\n");
   } else {
     fprintf(stdout, "SYNTAX ERROR: Modules can't be nested.\n");
     exit(1);
