@@ -1,18 +1,18 @@
-package ir.naeem.hottentot.generated;
+package ir.ntnaeem.hottentot.generated;
 
 public class Credential {
-	private string username;
-	private string password;
-	public void setUsername(string username) {
+	private String username;
+	private String password;
+	public void setUsername(String username) {
 		this.username = username;
 	}
-	public string getUsername() {
+	public String getUsername() {
 		return username;
 	}
-	public void setPassword(string password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
-	public string getPassword() {
+	public String getPassword() {
 		return password;
 	}
 	

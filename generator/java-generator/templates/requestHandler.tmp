@@ -1,11 +1,7 @@
 package [%BASE_PACKAGE_NAME%];
 
-
-import [%BASE_PACKAGE_NAME%].Abstract[%SERVICE_NAME%]Service;
 import ir.ntnaeem.hottentot.runtime.*;
-
 import java.util.List;
-
 
 public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
     public [%SERVICE_NAME%]RequestHandler(Service service) {

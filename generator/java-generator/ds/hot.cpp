@@ -16,15 +16,15 @@ void
 Hot::FakeInsert() {
     //fake insert
     Module *modulePtr = new Module();
-    modulePtr->name_ = "ir.naeem.hottentot.generated";
+    modulePtr->name_ = "ir.ntnaeem.hottentot.generated";
     //Credential struct
     Struct *credStructPtr = new Struct();
     credStructPtr->name_ = "Credential";
     Member *usernameMemberPtr = new Member();
-    usernameMemberPtr->type_ = "string";
+    usernameMemberPtr->type_ = "String";
     usernameMemberPtr->name_ = "username";
     Member *passwordMemberPtr = new Member();
-    passwordMemberPtr->type_ = "string";
+    passwordMemberPtr->type_ = "String";
     passwordMemberPtr->name_ = "password";
     credStructPtr->members_.push_back(usernameMemberPtr);
     credStructPtr->members_.push_back(passwordMemberPtr);
@@ -35,7 +35,7 @@ Hot::FakeInsert() {
     Struct *tokenStructPtr = new Struct();
     tokenStructPtr->name_ = "Token";
     Member *valueMemberPtr = new Member();
-    valueMemberPtr->type_ = "string";
+    valueMemberPtr->type_ = "String";
     valueMemberPtr->name_ = "value";
     tokenStructPtr->members_.push_back(valueMemberPtr);
     modulePtr->structs_.push_back(tokenStructPtr);
@@ -152,12 +152,10 @@ Hot::GenerateStructs(Module *modulePtr) {
         for (int i = 0; i < aStruct->members_.size(); i++) {
             Member *memberPtr = aStruct->members_.at(i);
             string memberName = memberPtr->name_;
-            memberPtr->name_[0] -= 32;
             string capitalizedMemberName = memberPtr->name_;
-            memberPtr->name_ = memberName;
+            capitalizedMemberName[0] -= 32;
             memberDeclarationStr += "\tprivate " + memberPtr->type_ + " " + memberName + ";\n";
-            memberGetterSetterStr +=
-                    "\tpublic void set" + capitalizedMemberName + "(" + memberPtr->type_ + " " + memberName + ") {\n";
+            memberGetterSetterStr += "\tpublic void set" + capitalizedMemberName + "(" + memberPtr->type_ + " " + memberName + ") {\n";
             memberGetterSetterStr += "\t\tthis." + memberName + " = " + memberName + ";\n";
             memberGetterSetterStr += "\t}\n";
             memberGetterSetterStr += "\tpublic " + memberPtr->type_ + " get" + capitalizedMemberName + "() {\n";
@@ -294,10 +292,7 @@ Hot::GenerateRequestHandler(Module *pModule) {
         replacableRequestHandlerTmpStr = requestHandlerTmpStr_;
         replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
                                                basePackageName);
-        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
-                                               basePackageName);
-        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16,
-                                               serviceName);
+
         replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16,
                                                serviceName);
         replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16,
@@ -325,11 +320,11 @@ Hot::GenerateRequestHandler(Module *pModule) {
                 pArg = pMethod->args_.at(i);
                 stringstream ssI;
                 ssI << i;
-                methodConditionStr += "\t\tArgument arg" + ssI.str() + " = args.get(" + ssI.str() + ")\n";
+                methodConditionStr += "\t\tArgument arg" + ssI.str() + " = args.get(" + ssI.str() + ");\n";
                 methodConditionStr += "\t\tbyte[] serialized" + pArg->type_;
                 methodConditionStr += " = arg" + ssI.str() + ".getData();\n";
                 methodConditionStr += "\t\t" + pArg->type_ + " " + pArg->name_ + " = new " + pArg->type_ + "();\n";
-                methodConditionStr += "\t\t" + pArg->name_ + ".deserialize(serialized" + pArg->type_ + ")\n";
+                methodConditionStr += "\t\t" + pArg->name_ + ".deserialize(serialized" + pArg->type_ + ");\n";
             }
             methodConditionStr += "\t\t" + pMethod->returnType_ + " " + lowerCaseReturnType + " = null;\n";
             methodConditionStr += "\t\tResponse response = new Response();\n";
@@ -338,8 +333,9 @@ Hot::GenerateRequestHandler(Module *pModule) {
                     "\t\t\t" + lowerCaseReturnType + " = " + lowerCaseServiceName + "Impl." + pMethod->name_ + "(";
             for (int i = 0; i < pMethod->args_.size(); i++) {
                 pArg = pMethod->args_.at(i);
+                methodConditionStr += pArg->name_;
                 if (i < pMethod->args_.size() - 1) {
-                    methodConditionStr += pArg->name_ + ",";
+                    methodConditionStr += pArg->name_ += ",";
                 }
             }
             methodConditionStr += ");\n";
@@ -435,7 +431,7 @@ Hot::GenerateServiceProxy(Module *pModule) {
             }
             methodsStr += "\n";
             methodsStr += "\t\t//make request\n";
-            methodsStr += "\t\tRequest request = nee Request();\n";
+            methodsStr += "\t\tRequest request = new Request();\n";
             stringstream serviceId;
             serviceId << pService->id_;
             methodsStr += "\t\trequest.setServiceId((byte) " + serviceId.str() + ");\n";
@@ -460,9 +456,9 @@ Hot::GenerateServiceProxy(Module *pModule) {
                 stringstream ssI;
                 pArg = pMethod->args_.at(i);
                 ssI << i;
-                methodsStr += "\t\tArgument arg" + ssI.str() + "new Argument();\n";
+                methodsStr += "\t\tArgument arg" + ssI.str() + " = new Argument();\n";
                 methodsStr += "\t\targ" + ssI.str() + ".setDataLength(" + pArg->name_.c_str() + ".serialize().length);\n";
-                methodsStr += "\t\targ.setData(" + pArg->name_ + ".serialize());\n";
+                methodsStr += "\t\targ" + ssI.str() + ".setData(" + pArg->name_.c_str() + ".serialize());\n";
                 methodsStr += "\t\trequest.addArgument(arg" + ssI.str() + ");\n";
             }
             //calculate request length
@@ -498,7 +494,7 @@ Hot::GenerateServiceProxy(Module *pModule) {
             methodsStr += "\t\tProtocol protocol = ProtocolFactory.create();\n";
             methodsStr += "\t\tbyte[] serializedRequest = protocol.serializeRequest(request);\n";
             methodsStr += "\t\t//send request\n";
-            methodsStr += "\t\tcpClient.write(serializedRequest);\n";
+            methodsStr += "\t\ttcpClient.write(serializedRequest);\n";
             methodsStr += "\t\t//read response from server\n";
             methodsStr += "\t\tbyte[] buffer = new byte[256];\n";
             methodsStr += "\t\twhile (!protocol.IsResponseComplete()) {\n";

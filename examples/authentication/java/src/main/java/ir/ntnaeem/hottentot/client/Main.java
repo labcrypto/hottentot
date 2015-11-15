@@ -40,12 +40,8 @@ public class Main {
         credential.setPassword("12345");
         try {
             Token token = proxy.authenticate(credential);
-            System.out.println(token);
-        } catch (TcpClientConnectException e) {
-            e.printStackTrace();
-        } catch (TcpClientWriteException e) {
-            e.printStackTrace();
-        } catch (TcpClientReadException e){
+            System.out.println(token.getValue());
+        }catch (Exception e) {
             e.printStackTrace();
         }
         AuthenticationServiceProxyBuilder.destroy();
