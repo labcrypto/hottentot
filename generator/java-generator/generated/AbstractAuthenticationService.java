@@ -1,7 +1,7 @@
-package ir.naeem.hottentot.generated.service;
+package ir.ntnaeem.hottentot.generated;
 
-import ir.naeem.hottentot.generated.AuthenticationRequestHandler;
-import ir.naeem.hottentot.generated.AuthenticationService;
+import ir.ntnaeem.hottentot.generated.AuthenticationRequestHandler;
+import ir.ntnaeem.hottentot.generated.AuthenticationService;
 import ir.ntnaeem.hottentot.runtime.RequestHandler;
 
 

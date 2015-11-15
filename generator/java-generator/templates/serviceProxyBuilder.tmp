@@ -1,4 +1,4 @@
-package [%BASE_PACKAGE_NAME%].proxy;
+package [%BASE_PACKAGE_NAME%];
 
 
 import [%BASE_PACKAGE_NAME%].[%SERVICE_NAME%]Service;
