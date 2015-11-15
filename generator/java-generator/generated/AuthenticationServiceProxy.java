@@ -1,14 +1,6 @@
 package ir.naeem.hottentot.generated;
 
-
 import ir.ntnaeem.hottentot.runtime.Argument;
-
-[%IMPORT_STRUCTS%]
-
-/*
-import [%BASE_PACKAGE_NAME%].Credential;
-import ir.ntnaeem.hottentot.generated.Token;
-*/
 import ir.ntnaeem.hottentot.runtime.*;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
@@ -20,16 +12,58 @@ import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 import java.util.Arrays;
 
 public class AuthenticationServiceProxy extends AbstractAuthenticationService implements Proxy {
-
-	private String host;
+	
+    private String host;
 	private int port;
 
-	public [%SERVICE_NAME%]ServiceProxy(String host, int port) {
+	public AuthenticationServiceProxy(String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
+	public Token authenticate(Credential credential) throws Exception { 
+		//serialize credential
+		byte[] serializedCredential = credential.serialize();
 
-	[%METHODS%]
+		//make request
+		Request request = nee Request();
+		request.setServiceId((byte) 1);
+		request.setMethodId((byte) 1);
+		request.setArgumentCount((byte) 1);
+		request.setType(Request.RequestType.InvokeStateless);
+		Argument arg0new Argument();
+		arg0.setDataLength(credential.serialize().length);
+		arg.setData(credential.serialize());
+		request.addArgument(arg0);
+		//it depends on serialized arguments length !!! 1 byte or more than 1 byte for showing every arg length
+		request.setlength(4 + 1 + serializedCredential.length);
+		//connect to server
+		TcpClient tcpClient = TcpClientFactory.create();
+		tcpClient.connect(host, port);
+		//serialize request according to HTNP
+		Protocol protocol = ProtocolFactory.create();
+		byte[] serializedRequest = protocol.serializeRequest(request);
+		//send request
+		cpClient.write(serializedRequest);
+		//read response from server
+		byte[] buffer = new byte[256];
+		while (!protocol.IsResponseComplete()) {
+			byte[] dataChunkRead = tcpClient.read();
+			protocol.processDataForResponse(dataChunkRead);
+		}
+		//deserialize token part of response
+		Response response = protocol.getResponse();
+		//close everything
+		//deserialize Tokenpart from response
+		Token token= null;
+		if (response.getStatusCode() == -1) {
+			//throw exception
+		} else {
+			token= new Token();
+			token.deserialize(response.getData());
+		}
+		return token
+	}
+
 	/*
     public Token authenticate(Credential credential) throws Exception {
 
@@ -87,11 +121,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
         return token;
 	*/
     }
-
-
     public void destroy() {
         //TODO
     }
-
-
 }

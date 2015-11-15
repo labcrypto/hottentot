@@ -1,14 +1,6 @@
 package [%BASE_PACKAGE_NAME%];
 
-
 import ir.ntnaeem.hottentot.runtime.Argument;
-
-[%IMPORT_STRUCTS%]
-
-/*
-import [%BASE_PACKAGE_NAME%].Credential;
-import ir.ntnaeem.hottentot.generated.Token;
-*/
 import ir.ntnaeem.hottentot.runtime.*;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
@@ -20,15 +12,14 @@ import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 import java.util.Arrays;
 
 public class [%SERVICE_NAME%]ServiceProxy extends Abstract[%SERVICE_NAME%]Service implements Proxy {
-
-	private String host;
+	
+    private String host;
 	private int port;
 
 	public [%SERVICE_NAME%]ServiceProxy(String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
-
 	[%METHODS%]
 	/*
     public Token authenticate(Credential credential) throws Exception {
@@ -87,11 +78,7 @@ public class [%SERVICE_NAME%]ServiceProxy extends Abstract[%SERVICE_NAME%]Servic
         return token;
 	*/
     }
-
-
     public void destroy() {
         //TODO
     }
-
-
 }

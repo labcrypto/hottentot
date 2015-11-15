@@ -10,7 +10,7 @@ public class Request {
         Unknown,
         ServiceListQuery,
         InvokeStateless,
-        InvokeStateful
+        InvokeStatefull
     }
 
 
