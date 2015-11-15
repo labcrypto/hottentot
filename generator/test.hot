@@ -8,6 +8,7 @@ module ir.ntnaeem.services {
   stateful service PersonAuthenticator {
     string GetName(int age, double percent);
     list<string> GetNames(string predicate);
+    list<map<set<list<string>>, Phone>> GetG();
   };
   struct Phone {
     bool done ord(1);
@@ -17,12 +18,13 @@ module ir.ntnaeem.services {
   stateless service PhoneManager {
     map<Person, list<Phone>> GetPhonebook();
     void AddEntry(Person person, Phone phone, date d);
+    map<list<Person>, string> FFF(string abc);
   };
 };
 module org.apache.tests {
   stateless service ApacheLicenseManager {
     set<License> GetThem();
-    map<list<Person>, string> GetMap(list<string> names, set<map<list<int>, string>> s);
+    map<list<Person>, asdasdaasdasdsda> GetMap(list<string> names, set<map<list<int>, string>> s);
   };
   struct License {
     int version ord(1);

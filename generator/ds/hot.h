@@ -32,6 +32,8 @@
 #include "struct.h"
 #include "service.h"
 #include "declaration.h"
+#include "method.h"
+#include "argument.h"
 
 
 namespace naeem {
@@ -64,7 +66,11 @@ namespace naeem {
                 std::cout << "      ";
                 std::cout << (modules_[i]->services_[j]->GetServiceType() == ::naeem::hottentot::generator::ds::Service::Stateless ? "STATELESS" : "STATEFUL");
                 std::cout << " SERVICE " <<  modules_[i]->services_[j]->GetName() << " {\n";
-                
+                for (uint32_t k = 0; k < modules_[i]->services_[j]->methods_.size(); k++) {
+                  std::cout << "         ";
+                  modules_[i]->services_[j]->methods_[k]->Display();
+                  std::cout << std::endl;
+                }
                 std::cout << "      }\n";
               }
               std::cout << "   }\n";

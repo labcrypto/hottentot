@@ -192,8 +192,10 @@ methods:        methods method
 method:         {
                   if (currentMethod == NULL) {
                     currentMethod = new ::naeem::hottentot::generator::ds::Method();
+                    currentService->AddMethod(currentMethod);
                   }
                 } type IDENTIFIER '(' arguments ')' ';' {
+                  printf("AAAAAAA %s\n", $2);
                   currentMethod->SetReturnType($2);
                   currentMethod->SetName($3);
                   currentMethod = NULL;
@@ -212,35 +214,38 @@ argument:       type IDENTIFIER {
                 ;
 
 type:           LIST '<' type '>' {
-                  $$ = (char*)malloc(strlen($3) + 10);
-                  strcat($$, $1);
+                  $$ = (char*)malloc(strlen($1) + strlen($3) + 10);
+                  strcpy($$, $1);
                   strcat($$, "<");
                   strcat($$, $3);
                   strcat($$, ">");
+                  printf(")))))))) %s\n", $$);
                 }               
                 | SET '<' type '>' {
-                  $$ = (char*)malloc(strlen($3) + 10);
-                  strcat($$, $1);
+                  $$ = (char*)malloc(strlen($1) + strlen($3) + 10);
+                  strcpy($$, $1);
                   strcat($$, "<");
                   strcat($$, $3);
                   strcat($$, ">");
+                  printf(")))))))) %s\n", $$);
                 }                
                 | MAP '<' type ',' type '>' {
-                  $$ = (char*)malloc(strlen($3) + 10);
-                  strcat($$, $1);
+                  $$ = (char*)malloc(strlen($1) + strlen($3) + strlen($5) + 10);
+                  strcpy($$, $1);
                   strcat($$, "<");
                   strcat($$, $3);
                   strcat($$, ",");
                   strcat($$, $5);
                   strcat($$, ">");
+                  printf(">>>>>>>>>>>> %s\n", $$);
                 }                
                 | TYPE  {
-                  $$ = (char *)malloc(strlen($1) + 1);
-                  strcat($$, $1);
+                  $$ = (char *)malloc(strlen($1) + 2);
+                  strcpy($$, $1);
                 }
                 | IDENTIFIER {
-                  $$ = (char *)malloc(strlen($1) + 1);
-                  strcat($$, $1);
+                  $$ = (char *)malloc(strlen($1) + 2);
+                  strcpy($$, $1);
                 }
                 ;
 

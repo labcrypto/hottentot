@@ -105,7 +105,7 @@ struct {
   return STRUCT;
 }
 [a-zA-Z]([a-zA-Z0-9])* {
-  fprintf(stdout, "IDENTIFIER seen.\n");
+  fprintf(stdout, "IDENTIFIER seen: %s\n", yytext);
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return IDENTIFIER;

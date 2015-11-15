@@ -26,6 +26,8 @@
 
 #include <vector>
 
+#include "argument.h"
+
 
 namespace naeem {
   namespace hottentot {
@@ -52,6 +54,16 @@ namespace naeem {
           }
           inline void SetName(std::string name) {
             name_ = name;
+          }
+          inline virtual void Display() {
+            std::cout << name_ <<  "(";
+            std::string del = "";
+            for (uint32_t i = 0; i < arguments_.size(); i++) {
+              std::cout << del;
+              arguments_[i]->Display();
+              del = ",";
+            }
+            std::cout << "): " << returnType_;
           }
         private:
           std::string returnType_;
