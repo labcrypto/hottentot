@@ -68,10 +68,7 @@ std::stack<std::string> stack;
 %type<string> type
 %%
 
-hot:            modules { 
-                  // printf("HOT parsed.\n"); 
-                  // printf("======================\n");
-                  currentHot->Display();
+hot:            modules {                 
                 }
                 ;
 
@@ -264,5 +261,6 @@ int main(int argc, char **argv) {
     return 1;
   }
   yyparse();
+  currentHot->Display();
   return 0;
 }
