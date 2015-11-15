@@ -20,6 +20,7 @@ public:
     string serviceTmpStr;
     string serviceProxyBuilderTmpStr;
     string requestHandlerTmpStr;
+    string serviceProxyTmpStr;
     void FakeInsert();
     void GenerateStructs(Module*);
     void ReadTemplateFiles();
@@ -28,6 +29,7 @@ public:
     void GenerateServiceInterface(Module*);
     void GenerateServiceProxyBuilder(Module*);
     void GenerateRequestHandler(Module*);
+    void GenerateServiceProxy(Module*);
     ~Hot();
 
 };

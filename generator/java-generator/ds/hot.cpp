@@ -96,12 +96,12 @@ Hot::ReadTemplateFiles() {
         serviceTmpStr += c;
     }
     is.close();
-    //service proxy builder
-    is.open("/home/developer/projects/hottentot-git/generator/java-generator/templates/serviceProxyBuider.tmp",
+    //service proxy
+    is.open("/home/developer/projects/hottentot-git/generator/java-generator/templates/serviceProxy.tmp",
             ios::in);
     //TODO use buffer reader
     while ((c = is.get()) != -1) {
-        serviceProxyBuilderTmpStr += c;
+        serviceProxyTmpStr += c;
     }
     is.close();
 
@@ -269,8 +269,6 @@ Hot::GenerateServiceProxyBuilder(Module *pModule) {
 
 void
 Hot::GenerateRequestHandler(Module *pModule) {
-
-
     Service *pService;
     string replacableRequestHandlerTmpStr;
     string basePackageName = pModule->name_;
@@ -278,7 +276,7 @@ Hot::GenerateRequestHandler(Module *pModule) {
         string basePackageName = pModule->name_;
         pService = pModule->services_.at(i);
         os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + pService->name_ +
-                "RequestHandler.java");;
+                "RequestHandler.java");
         string serviceName = pService->name_;
         pService->name_[0] += 32;
         string lowerCaseServiceName = pService->name_;
@@ -361,33 +359,84 @@ Hot::GenerateRequestHandler(Module *pModule) {
     }
 
 
-
-//    if(methodId == 1) {
-//        List <Argument> args = request.getArgs();
-//        Argument arg0 = args.get(0);
-//        byte[]
-//        serializedCredential = arg0.getData();
-//        Credential credential = new Credential();
-//        credential.deserialize(serializedCredential);
-//        Token token = null;
-//        Response response = new Response();
-//        try {
-//            token = authenticationImpl.authenticate(credential);
-//            byte[]
-//            serializedToken = token.serialize();
-//            response.setStatusCode((byte) 100);
-//            response.setData(serializedToken);
-//            response.setLength(serializedToken.length + 1);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return response;
-//    }
+//sample code
+    //    if(methodId == 1) {
+    //        List <Argument> args = request.getArgs();
+    //        Argument arg0 = args.get(0);
+    //        byte[]
+    //        serializedCredential = arg0.getData();
+    //        Credential credential = new Credential();
+    //        credential.deserialize(serializedCredential);
+    //        Token token = null;
+    //        Response response = new Response();
+    //        try {
+    //            token = authenticationImpl.authenticate(credential);
+    //            byte[]
+    //            serializedToken = token.serialize();
+    //            response.setStatusCode((byte) 100);
+    //            response.setData(serializedToken);
+    //            response.setLength(serializedToken.length + 1);
+    //
+    //        } catch (Exception e) {
+    //            e.printStackTrace();
+    //        }
+    //
+    //        return response;
+    //    }
 }
 
+void
+<<<<<<< HEAD
+Hot::GenerateServiceProxy(Module*){
+    //TODO
+}
+=======
+Hot::GenerateServiceProxy(Module* pModule) {
+    Service* pService;
+    string basePackageName = pModule->name_;
+    for(int i = 0 ; i < pModule->services_.size() ; i++){
+        string replacableServiceProxyStrTmp = serviceProxyTmpStr;
+        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + pService->name_ +
+                "ServiceProxy.java");
+        pService = pModule->services_.at(i);
+        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]"),
+                                             16,
+                                             pService->name_);
+        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"),
+                                             21,
+                                             basePackageName);
+        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"),
+                                             21,
+                                             basePackageName);
 
+<<<<<<< HEAD
+=======
+void
+Hot::GenerateServiceProxy(Module* pModule) {
+    Service* pService;
+    string basePackageName = pModule->name_;
+    for(int i = 0 ; i < pModule->services_.size() ; i++){
+        string replacableServiceProxyStrTmp = serviceProxyTmpStr;
+        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + pService->name_ +
+                "ServiceProxy.java");
+        pService = pModule->services_.at(i);
+        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]"),
+                                             16,
+                                             pService->name_);
+        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"),
+                                             21,
+                                             basePackageName);
+        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"),
+                                             21,
+                                             basePackageName);
+
+>>>>>>> dcd8483... some implementation on generator has been added.
+        os.write(replacableServiceProxyStrTmp.c_str() , replacableServiceProxyStrTmp.size());
+        os.close();
+    }
+}
+
+>>>>>>> dcd8483... some implementation on generator has been added.
 void
 Hot::GenerateJava() {
     FakeInsert();
@@ -400,6 +449,6 @@ Hot::GenerateJava() {
         GenerateServiceInterface(pModule);
         GenerateServiceProxyBuilder(pModule);
         GenerateRequestHandler(pModule);
-        //TODO generate serviceProxy
+        GenerateServiceProxy(pModule);
     }
 }
