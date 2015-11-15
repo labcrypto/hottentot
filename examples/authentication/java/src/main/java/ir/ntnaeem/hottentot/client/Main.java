@@ -27,7 +27,7 @@ package ir.ntnaeem.hottentot.client;
 import ir.ntnaeem.hottentot.generated.AuthenticationService;
 import ir.ntnaeem.hottentot.generated.Credential;
 import ir.ntnaeem.hottentot.generated.Token;
-import ir.ntnaeem.hottentot.generated.proxy.AuthenticationServiceProxyBuilder;
+import ir.ntnaeem.hottentot.generated.AuthenticationServiceProxyBuilder;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;

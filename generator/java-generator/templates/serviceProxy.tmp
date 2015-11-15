@@ -21,62 +21,6 @@ public class [%SERVICE_NAME%]ServiceProxy extends Abstract[%SERVICE_NAME%]Servic
 		this.port = port;
 	}
 	[%METHODS%]
-	/*
-    public Token authenticate(Credential credential) throws Exception {
-
-        //serialize credential
-        byte[] serializedCredential = credential.serialize();
-
-        //make request
-        Request request = new Request();
-        request.setServiceId((byte) 1);
-        request.setMethodId((byte) 1);
-        request.setArgumentCount((byte) 1);
-        request.setType(Request.RequestType.InvokeStateless);
-        Argument arg = new Argument();
-        arg.setDataLength(credential.serialize().length);
-        arg.setData(credential.serialize());
-        request.addArgument(arg);
-        //it depends on serialized arguments length !!! 1 byte or more than 1 byte for showing every arg length
-        request.setLength(4  + 1 + serializedCredential.length);
-
-
-        //connect to ir.ntnaeem.hottentot.server
-        TcpClient tcpClient = TcpClientFactory.create();
-        tcpClient.connect(host, port);
-        //serialize request according to HTNP
-
-
-        Protocol protocol = ProtocolFactory.create();
-        byte[] serializedRequest = protocol.serializeRequest(request);
-
-        //send request
-        tcpClient.write(serializedRequest);
-        //read response from ir.ntnaeem.hottentot.server
-        byte[] buffer = new byte[256];
-        while (!protocol.IsResponseComplete()) {
-
-            byte[] dataChunkRead = tcpClient.read();
-            protocol.processDataForResponse(dataChunkRead);
-        }
-        //deserialize token part of response
-        Response response = protocol.getResponse();
-        //close everything
-
-        //deserialize token part from response
-        Token token = null;
-
-
-        //***********
-        //*************
-        if (response.getStatusCode() == -1) {
-            //throw exception
-        } else {
-            token = new Token();
-            token.deserialize(response.getData());
-        }
-        return token;
-	*/
     }
     public void destroy() {
         //TODO

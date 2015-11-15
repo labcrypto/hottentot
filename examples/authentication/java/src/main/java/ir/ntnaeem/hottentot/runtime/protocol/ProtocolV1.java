@@ -205,7 +205,7 @@ public class ProtocolV1 implements Protocol {
         serializedRequest[counter++] = request.getMethodId();
         if (request.getType().equals(Request.RequestType.Unknown)) {
             serializedRequest[counter++] = 1;
-        } else if (request.getType().equals(Request.RequestType.InvokeStateful)) {
+        } else if (request.getType().equals(Request.RequestType.InvokeStatefull)) {
             serializedRequest[counter++] = 2;
         } else if (request.getType().equals(Request.RequestType.InvokeStateless)) {
             serializedRequest[counter++] = 3;
@@ -255,7 +255,7 @@ public class ProtocolV1 implements Protocol {
         if (serializedRequestBody[counter] == 1) {
             request.setType(Request.RequestType.Unknown);
         } else if (serializedRequestBody[counter] == 2) {
-            request.setType(Request.RequestType.InvokeStateful);
+            request.setType(Request.RequestType.InvokeStatefull);
         } else if (serializedRequestBody[counter] == 3) {
             request.setType(Request.RequestType.InvokeStateless);
         } else if (serializedRequestBody[counter] == 4) {
