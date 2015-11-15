@@ -20,20 +20,40 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
- 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__SHARED_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__SHARED_H_
 
-#include "ds/hot.h"
-#include "ds/module.h"
-#include "ds/struct.h"
-#include "ds/list_declaration.h"
-#include "ds/set_declaration.h"
-#include "ds/map_declaration.h"
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__LIST_DECLARATION_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__DS__LIST_DECLARATION_H_
+
+#include "declaration.h"
+#include "../string_helper.h"
 
 
-extern ::naeem::hottentot::generator::ds::Hot *currentHot;
-extern ::naeem::hottentot::generator::ds::Module *currentModule;
-extern ::naeem::hottentot::generator::ds::Struct *currentStruct;
+namespace naeem {
+  namespace hottentot {
+    namespace generator {
+      namespace ds {
+        class ListDeclaration : public Declaration {
+        public:
+          ListDeclaration(std::string type = "", 
+                          std::string variable = "",
+                          uint32_t id = 0)
+            : Declaration(::naeem::hottentot::generator::StringHelper::trim(type), variable, id) {
+              listType_ = type_.substr(5, type_.size() - 6);
+          }
+          virtual ~ListDeclaration() {}
+        public:
+          inline virtual std::string GetListType() const {
+            return listType_;
+          }
+          inline virtual void SetListType(std::string listType) {
+            listType_ = listType;
+          }
+        protected:
+          std::string listType_;
+        };
+      }
+    }
+  }
+}
 
 #endif

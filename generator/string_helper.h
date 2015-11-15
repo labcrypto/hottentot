@@ -21,19 +21,34 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__SHARED_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__SHARED_H_
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__STRING_HELPER_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__STRING_HELPER_H_
 
-#include "ds/hot.h"
-#include "ds/module.h"
-#include "ds/struct.h"
-#include "ds/list_declaration.h"
-#include "ds/set_declaration.h"
-#include "ds/map_declaration.h"
+#include <algorithm>
+#include <functional> 
+#include <cctype>
+#include <locale>
 
 
-extern ::naeem::hottentot::generator::ds::Hot *currentHot;
-extern ::naeem::hottentot::generator::ds::Module *currentModule;
-extern ::naeem::hottentot::generator::ds::Struct *currentStruct;
+namespace naeem {
+  namespace hottentot {
+    namespace generator {
+      class StringHelper {
+      public:
+        static inline std::string &ltrim(std::string &s) {
+          s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+          return s;
+        }
+        static inline std::string &rtrim(std::string &s) {
+          s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+          return s;
+        }
+        static inline std::string &trim(std::string &s) {
+          return ltrim(rtrim(s));
+        }
+      };
+    }
+  }
+}
 
 #endif
