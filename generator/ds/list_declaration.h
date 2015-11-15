@@ -36,17 +36,23 @@ namespace naeem {
         public:
           ListDeclaration(std::string type = "", 
                           std::string variable = "",
-                          uint32_t id = 0)
-            : Declaration(::naeem::hottentot::generator::StringHelper::trim(type), variable, id) {
-              listType_ = type_.substr(5, type_.size() - 6);
+                          std::string idString = "")
+            : Declaration("", variable, idString) {
+              listType_ = type;
           }
           virtual ~ListDeclaration() {}
         public:
+          inline virtual DeclarationType GetDeclarationType() const {
+            return List;
+          }
           inline virtual std::string GetListType() const {
             return listType_;
           }
           inline virtual void SetListType(std::string listType) {
             listType_ = listType;
+          }
+          inline virtual void Display() {
+            std::cout << variable_ << ":LIST<" << listType_ << "> with id(" << id_ << ")";
           }
         protected:
           std::string listType_;
