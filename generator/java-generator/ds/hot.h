@@ -15,12 +15,12 @@ public:
     ofstream os;
     ifstream is;
     vector<Module*> modules_;
-    string structTmpStr;
-    string abstractServiceTmpStr;
-    string serviceTmpStr;
-    string serviceProxyBuilderTmpStr;
-    string requestHandlerTmpStr;
-    string serviceProxyTmpStr;
+    string structTmpStr_;
+    string abstractServiceTmpStr_;
+    string serviceTmpStr_;
+    string serviceProxyBuilderTmpStr_;
+    string requestHandlerTmpStr_;
+    string serviceProxyTmpStr_;
     void FakeInsert();
     void GenerateStructs(Module*);
     void ReadTemplateFiles();

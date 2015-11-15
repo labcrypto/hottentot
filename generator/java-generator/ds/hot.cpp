@@ -43,11 +43,13 @@ Hot::FakeInsert() {
     Service *authServicePtr = new Service();
     authServicePtr->name_ = "Authentication";
     authServicePtr->id_ = 1;
+    authServicePtr->requestType_ = 3;
     Method *methodPtr = new Method();
     methodPtr->id_ = 1;
     methodPtr->name_ = "authenticate";
     Argument *credentialArgPtr = new Argument();
     credentialArgPtr->type_ = "Credential";
+    credentialArgPtr->name_ = "credential";
     methodPtr->args_.push_back(credentialArgPtr);
     methodPtr->returnType_ = "Token";
     authServicePtr->methods_.push_back(methodPtr);
@@ -81,19 +83,21 @@ Hot::ReadTemplateFiles() {
     //TODO use buffer reader
     char c;
     while ((c = is.get()) != -1) {
-        structTmpStr += c;
+        structTmpStr_ += c;
     }
     is.close();
     is.open("/home/developer/projects/hottentot-git/generator/java-generator/templates/abstractService.tmp", ios::in);
     //TODO use buffer reader
     while ((c = is.get()) != -1) {
-        abstractServiceTmpStr += c;
+        abstractServiceTmpStr_ += c;
     }
     is.close();
+
+    //service interface
     is.open("/home/developer/projects/hottentot-git/generator/java-generator/templates/service.tmp", ios::in);
     //TODO use buffer reader
     while ((c = is.get()) != -1) {
-        serviceTmpStr += c;
+        serviceTmpStr_ += c;
     }
     is.close();
     //service proxy
@@ -101,7 +105,16 @@ Hot::ReadTemplateFiles() {
             ios::in);
     //TODO use buffer reader
     while ((c = is.get()) != -1) {
-        serviceProxyTmpStr += c;
+        serviceProxyTmpStr_ += c;
+    }
+    is.close();
+
+    //service proxy builder
+    is.open("/home/developer/projects/hottentot-git/generator/java-generator/templates/serviceProxyBuilder.tmp",
+            ios::in);
+    //TODO use buffer reader
+    while ((c = is.get()) != -1) {
+        serviceProxyBuilderTmpStr_ += c;
     }
     is.close();
 
@@ -110,14 +123,15 @@ Hot::ReadTemplateFiles() {
             ios::in);
     //TODO use buffer reader
     while ((c = is.get()) != -1) {
-        requestHandlerTmpStr += c;
+        requestHandlerTmpStr_ += c;
     }
     is.close();
-//    cout << structTmpStr;
-//    cout << abstractServiceTmpStr;
-//    cout << serviceTmpStr;
-//    cout << serviceProxyBuilderTmpStr;
-//    cout << requestHandlerTmpStr;
+//    cout << structTmpStr_;
+//    cout << abstractServiceTmpStr_;
+//    cout << serviceTmpStr_;
+//    cout << serviceProxyBuilderTmpStr_;
+//    cout << serviceProxyTmpStr_;
+//    cout << requestHandlerTmpStr_;
 }
 
 void
@@ -129,7 +143,7 @@ Hot::GenerateStructs(Module *modulePtr) {
         os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + aStruct->name_ +
                 ".java");
         string basePackageName = modulePtr->name_;
-        string replacableStructTmpStr = structTmpStr;
+        string replacableStructTmpStr = structTmpStr_;
         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%STRUCT_NAME%]"), 15, aStruct->name_);
         string memberDeclarationStr;
@@ -167,7 +181,7 @@ Hot::GenerateAbstractService(Module *modulePtr) {
         servicePtr = modulePtr->services_.at(i);
         os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/Abstract" +
                 servicePtr->name_ + "Service.java", ios::trunc);
-        replacableAbstractServiceTmpStr = abstractServiceTmpStr;
+        replacableAbstractServiceTmpStr = abstractServiceTmpStr_;
         replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
                                                 basePackageName);
         replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
@@ -201,7 +215,7 @@ Hot::GenerateServiceInterface(Module *modulePtr) {
         string basePackageName = modulePtr->name_;
         servicePtr = modulePtr->services_.at(i);
         //write service interface
-        string replacableServiceTmpStr = serviceTmpStr;
+        string replacableServiceTmpStr = serviceTmpStr_;
         os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + servicePtr->name_ +
                 "Service.java", ios::trunc);
         replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
@@ -213,14 +227,10 @@ Hot::GenerateServiceInterface(Module *modulePtr) {
             methodPtr = servicePtr->methods_.at(i);
             serviceMethodsStr += "\tpublic " + methodPtr->returnType_ + " " + methodPtr->name_ + "(";
             //loop on methods arguments
-            Argument *argPtr;
+            Argument *pArg;
             for (int i = 0; i < methodPtr->args_.size(); i++) {
-                argPtr = methodPtr->args_.at(i);
-                string argType = argPtr->type_;
-                argPtr->type_[0] += 32;
-                string argName = argPtr->type_;
-                argPtr->type_ = argType;
-                serviceMethodsStr += argType + " " + argName;
+                pArg = methodPtr->args_.at(i);
+                serviceMethodsStr +=  pArg->type_ + " " + pArg->name_;
                 if (i < methodPtr->args_.size() - 1) {
                     serviceMethodsStr += ",";
                 }
@@ -246,7 +256,7 @@ Hot::GenerateServiceProxyBuilder(Module *pModule) {
         //write service proxy builder
         os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + servicePtr->name_ +
                 "ServiceProxyBuilder.java", ios::trunc);
-        replacableServiceProxyBuilderTmpStr = serviceProxyBuilderTmpStr;
+        replacableServiceProxyBuilderTmpStr = serviceProxyBuilderTmpStr_;
         replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]"),
                                                     21,
                                                     basePackageName);
@@ -278,9 +288,9 @@ Hot::GenerateRequestHandler(Module *pModule) {
         os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + pService->name_ +
                 "RequestHandler.java");
         string serviceName = pService->name_;
-        pService->name_[0] += 32;
         string lowerCaseServiceName = pService->name_;
-        replacableRequestHandlerTmpStr = requestHandlerTmpStr;
+        lowerCaseServiceName[0] += 32;
+        replacableRequestHandlerTmpStr = requestHandlerTmpStr_;
         replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
                                                basePackageName);
         replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
@@ -303,10 +313,8 @@ Hot::GenerateRequestHandler(Module *pModule) {
 
         for (int i = 0; i < pService->methods_.size(); i++) {
             pMethod = pService->methods_.at(i);
-            string returnType = pMethod->returnType_;
-            pMethod->returnType_[0] += 32;
-            string returnTypeLowerCase = pMethod->returnType_;
-            pMethod->returnType_ = returnType;
+            string lowerCaseReturnType = pMethod->returnType_;
+            lowerCaseReturnType[0] += 32;
             stringstream ssID;
             ssID << pMethod->id_;
             methodConditionStr += "if(methodId == " + ssID.str() + "){\n";
@@ -317,35 +325,28 @@ Hot::GenerateRequestHandler(Module *pModule) {
                 stringstream ssI;
                 ssI << i;
                 methodConditionStr += "\t\tArgument arg" + ssI.str() + " = args.get(" + ssI.str() + ")\n";
-
-                string argType = pArg->type_;
-                pArg->type_[0] += 32;
-                string argName = pArg->type_;
-                pArg->type_ = argType;
-                methodConditionStr += "\t\tbyte[] serialized" + argType;
+                methodConditionStr += "\t\tbyte[] serialized" + pArg->type_;
                 methodConditionStr += " = arg" + ssI.str() + ".getData();\n";
-                methodConditionStr += "\t\t" + argType + " " + argName + " = new " + argType + "();\n";
-                methodConditionStr += "\t\t" + argName + ".deserialize(serialized" + argType + ")\n";
+                methodConditionStr += "\t\t" + pArg->type_ + " " + pArg->name_ + " = new " + pArg->type_ + "();\n";
+                methodConditionStr += "\t\t" + pArg->name_ + ".deserialize(serialized" + pArg->type_ + ")\n";
             }
-            methodConditionStr += "\t\t" + returnType + " " + returnTypeLowerCase + " = null;\n";
+            methodConditionStr += "\t\t" + pMethod->returnType_ + " " + lowerCaseReturnType + " = null;\n";
             methodConditionStr += "\t\tResponse response = new Response();\n";
             methodConditionStr += "\t\ttry{\n";
-            methodConditionStr += "\t\t\t"+ returnTypeLowerCase +" = " + lowerCaseServiceName + "Impl." + pMethod->name_ + "(";
+            methodConditionStr +=
+                    "\t\t\t" + lowerCaseReturnType + " = " + lowerCaseServiceName + "Impl." + pMethod->name_ + "(";
             for (int i = 0; i < pMethod->args_.size(); i++) {
                 pArg = pMethod->args_.at(i);
-                string argType = pArg->type_;
-                pArg->type_[0] += 32;
-                string argName = pArg->type_;
                 if (i < pMethod->args_.size() - 1) {
-                    methodConditionStr += argName + ",";
+                    methodConditionStr += pArg->name_ + ",";
                 }
             }
             methodConditionStr += ");\n";
             methodConditionStr +=
-                    "\t\t\tbyte[] serialized" + returnType + " = " + returnTypeLowerCase + ".serialize();\n";
+                    "\t\t\tbyte[] serialized" + pMethod->returnType_ + " = " + lowerCaseReturnType + ".serialize();\n";
             methodConditionStr += "\t\t\tresponse.setStatusCode((byte) 100);\n";
-            methodConditionStr += "\t\t\tresponse.setData(serialized" + returnType + ");\n";
-            methodConditionStr += "\t\t\tresponse.setLength(serialized" + returnType + ".length + 1);\n";
+            methodConditionStr += "\t\t\tresponse.setData(serialized" + pMethod->returnType_ + ");\n";
+            methodConditionStr += "\t\t\tresponse.setLength(serialized" + pMethod->returnType_ + ".length + 1);\n";
             methodConditionStr += "\t\t} catch (Exception e) {\n";
             methodConditionStr += "\t\t\te.printStackTrace();\n";
             methodConditionStr += "\t\t}\n";
@@ -353,7 +354,8 @@ Hot::GenerateRequestHandler(Module *pModule) {
             methodConditionStr += "\t}";
 
         }
-        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%METHOD_CONDITIONS%]"),21,methodConditionStr);
+        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%METHOD_CONDITIONS%]"), 21,
+                                               methodConditionStr);
         os.write(replacableRequestHandlerTmpStr.c_str(), replacableRequestHandlerTmpStr.size());
         os.close();
     }
@@ -385,58 +387,186 @@ Hot::GenerateRequestHandler(Module *pModule) {
     //    }
 }
 
+
 void
-<<<<<<< HEAD
-Hot::GenerateServiceProxy(Module*){
-    //TODO
-}
-=======
-Hot::GenerateServiceProxy(Module* pModule) {
-    Service* pService;
+Hot::GenerateServiceProxy(Module *pModule) {
+    Service *pService;
     string basePackageName = pModule->name_;
-    for(int i = 0 ; i < pModule->services_.size() ; i++){
-        string replacableServiceProxyStrTmp = serviceProxyTmpStr;
+    for (int i = 0; i < pModule->services_.size(); i++) {
+        string replacableServiceProxyStrTmp = serviceProxyTmpStr_;
+        pService = pModule->services_.at(i);
         os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + pService->name_ +
                 "ServiceProxy.java");
         pService = pModule->services_.at(i);
         replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]"),
                                              16,
                                              pService->name_);
-        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"),
-                                             21,
-                                             basePackageName);
-        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"),
-                                             21,
-                                             basePackageName);
-
-<<<<<<< HEAD
-=======
-void
-Hot::GenerateServiceProxy(Module* pModule) {
-    Service* pService;
-    string basePackageName = pModule->name_;
-    for(int i = 0 ; i < pModule->services_.size() ; i++){
-        string replacableServiceProxyStrTmp = serviceProxyTmpStr;
-        os.open("/home/developer/projects/hottentot-git/generator/java-generator/generated/" + pService->name_ +
-                "ServiceProxy.java");
-        pService = pModule->services_.at(i);
+        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]"),
+                                             16,
+                                             pService->name_);
         replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]"),
                                              16,
                                              pService->name_);
         replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"),
                                              21,
                                              basePackageName);
-        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"),
-                                             21,
-                                             basePackageName);
 
->>>>>>> dcd8483... some implementation on generator has been added.
-        os.write(replacableServiceProxyStrTmp.c_str() , replacableServiceProxyStrTmp.size());
+        //loop on service methods
+        Method *pMethod;
+        string methodsStr;
+        for (int i = 0; i < pService->methods_.size(); i++) {
+            pMethod =  pService->methods_.at(i);
+            pMethod = pService->methods_.at(i);
+            methodsStr += "public " + pMethod->returnType_ + " " + pMethod->name_ + "(";
+            Argument *pArg;
+            for (int i = 0; i < pMethod->args_.size(); i++) {
+
+                pArg = pMethod->args_.at(i);
+                methodsStr += pArg->type_ + " " + pArg->name_;
+                if (i < pMethod->args_.size() - 1) {
+                    methodsStr += ",";
+                }
+            }
+            methodsStr += ") throws Exception { \n";
+            for (int i = 0; i < pMethod->args_.size(); i++) {
+                methodsStr += "\t\t//serialize " + pArg->name_ + "\n";
+                methodsStr += "\t\tbyte[] serialized" + pArg->type_ + " = " + pArg->name_ + ".serialize();\n";
+            }
+            methodsStr += "\n";
+            methodsStr += "\t\t//make request\n";
+            methodsStr += "\t\tRequest request = nee Request();\n";
+            stringstream serviceId;
+            serviceId << pService->id_;
+            methodsStr += "\t\trequest.setServiceId((byte) " + serviceId.str() + ");\n";
+            stringstream methodId;
+            methodId << pMethod->id_;
+            methodsStr += "\t\trequest.setMethodId((byte) " + methodId.str() + ");\n";
+            stringstream argSize;
+            argSize << pMethod->args_.size();
+            methodsStr += "\t\trequest.setArgumentCount((byte) " + argSize.str() + ");\n";
+            methodsStr += "\t\trequest.setType(Request.RequestType.";
+            if(pService->requestType_ == 1) {
+                methodsStr += "Unknown";
+            }else if(pService->requestType_ == 2){
+                methodsStr += "ServiceListQuery";
+            }else if(pService->requestType_ == 3){
+                methodsStr += "InvokeStateless";
+            }else if(pService->requestType_ == 4){
+                methodsStr += "InvokeStatefull";
+            }
+            methodsStr += ");\n";
+            for (int i = 0; i < pMethod->args_.size(); i++) {
+                stringstream ssI;
+                pArg = pMethod->args_.at(i);
+                ssI << i;
+                methodsStr += "\t\tArgument arg" + ssI.str() + "new Argument();\n";
+                methodsStr += "\t\targ" + ssI.str() + ".setDataLength(" + pArg->name_.c_str() + ".serialize().length);\n";
+                methodsStr += "\t\targ.setData(" + pArg->name_ + ".serialize());\n";
+                methodsStr += "\t\trequest.addArgument(arg" + ssI.str() + ");\n";
+            }
+            //TODO calculate request length
+            methodsStr += "\t\t//it depends on serialized arguments length !!! 1 byte or more than 1 byte for showing every arg length\n";
+            methodsStr += "\t\trequest.setlength(4 + ";
+            for(int i= 0 ; i < pMethod->args_.size() ; i++){
+                pArg = pMethod->args_.at(i);
+                //TODO it is not always 1 .... maybe 2 or 3
+                methodsStr += "1 + serialized" + pArg->type_+ ".length);\n";
+            }
+            methodsStr += "\t\t//connect to server\n";
+            methodsStr += "\t\tTcpClient tcpClient = TcpClientFactory.create();\n";
+            methodsStr += "\t\ttcpClient.connect(host, port);\n";
+            methodsStr += "\t\t//serialize request according to HTNP\n";
+            methodsStr += "\t\tProtocol protocol = ProtocolFactory.create();\n";
+            methodsStr += "\t\tbyte[] serializedRequest = protocol.serializeRequest(request);\n";
+            methodsStr += "\t\t//send request\n";
+            methodsStr += "\t\tcpClient.write(serializedRequest);\n";
+            methodsStr += "\t\t//read response from server\n";
+            methodsStr += "\t\tbyte[] buffer = new byte[256];\n";
+            methodsStr += "\t\twhile (!protocol.IsResponseComplete()) {\n";
+            methodsStr += "\t\t\tbyte[] dataChunkRead = tcpClient.read();\n";
+            methodsStr += "\t\t\tprotocol.processDataForResponse(dataChunkRead);\n";
+            methodsStr += "\t\t}\n";
+            methodsStr += "\t\t//deserialize token part of response\n";
+            methodsStr += "\t\tResponse response = protocol.getResponse();\n";
+            methodsStr += "\t\t//close everything\n";
+
+            methodsStr += "\t\t//deserialize " + pMethod->returnType_ +  "part from response\n";
+            string lowerCaseReturnType = pMethod->returnType_;
+            lowerCaseReturnType[0] += 32;
+            methodsStr += "\t\t"+pMethod->returnType_ + " " + lowerCaseReturnType + "= null;\n";
+            methodsStr += "\t\tif (response.getStatusCode() == -1) {\n";
+            methodsStr += "\t\t\t//throw exception\n";
+            methodsStr += "\t\t} else {\n";
+            methodsStr += "\t\t\t" + lowerCaseReturnType + "= new " + pMethod->returnType_ + "();\n";
+            methodsStr += "\t\t\t" + lowerCaseReturnType + ".deserialize(response.getData());\n";
+            methodsStr += "\t\t}\n";
+            methodsStr += "\t\treturn " + lowerCaseReturnType + ";\n";
+            methodsStr += "\t}\n";
+        }
+        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%METHODS%]"),11,methodsStr);
+        os.write(replacableServiceProxyStrTmp.c_str(), replacableServiceProxyStrTmp.size());
         os.close();
     }
+/*  sample code for [%METHODS%]
+                      public Token authenticate(Credential credential) throws Exception {
+
+                 //serialize credential
+                 byte[] serializedCredential = credential.serialize();
+
+                 //make request
+                 Request request = new Request();
+                 request.setServiceId((byte) 1);
+                 request.setMethodId((byte) 1);
+                 request.setArgumentCount((byte) 1);
+                 request.setType(Request.RequestType.InvokeStateless);
+                 Argument arg = new Argument();
+                 arg.setDataLength(credential.serialize().length);
+                 arg.setData(credential.serialize());
+                 request.addArgument(arg);
+                 //it depends on serialized arguments length !!! 1 byte or more than 1 byte for showing every arg length
+                 request.setLength(4  + 1 + serializedCredential.length);
+
+
+                 //connect to ir.ntnaeem.hottentot.server
+                 TcpClient tcpClient = TcpClientFactory.create();
+                 tcpClient.connect(host, port);
+                 //serialize request according to HTNP
+
+
+                 Protocol protocol = ProtocolFactory.create();
+                 byte[] serializedRequest = protocol.serializeRequest(request);
+
+                 //send request
+                 tcpClient.write(serializedRequest);
+                 //read response from ir.ntnaeem.hottentot.server
+                 byte[] buffer = new byte[256];
+                 while (!protocol.IsResponseComplete()) {
+
+                     byte[] dataChunkRead = tcpClient.read();
+                     protocol.processDataForResponse(dataChunkRead);
+                 }
+                 //deserialize token part of response
+                 Response response = protocol.getResponse();
+                 //close everything
+
+                 //deserialize token part from response
+                 Token token = null;
+
+
+                 //***********
+                 //*************
+                 if (response.getStatusCode() == -1) {
+                     //throw exception
+                 } else {
+                     token = new Token();
+                     token.deserialize(response.getData());
+                 }
+                 return token;
+
+                 }
+*/
 }
 
->>>>>>> dcd8483... some implementation on generator has been added.
 void
 Hot::GenerateJava() {
     FakeInsert();

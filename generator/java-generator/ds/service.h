@@ -17,6 +17,7 @@ public:
     vector<Method*> methods_;
     string name_;
     int id_;
+    int requestType_;
 };
 
 
