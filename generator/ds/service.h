@@ -45,29 +45,14 @@ namespace naeem {
           };
         public:
           Service(std::string serviceTypeString = "stateless",
-                  std::string name = "",
-                  std::string idString = "") 
+                  std::string name = "") 
             : name_(name) {
             SetServiceType(serviceTypeString);
-            SetId(idString);
           }
           virtual ~Service() {}
         public:
           inline virtual void AddMethod(Method *method) {
             methods_.push_back(method);
-          }
-          inline virtual uint32_t GetId() const {
-            return id_;
-          }
-          inline virtual void SetId(uint32_t id) {
-            id_ = id;
-          }
-          inline virtual void SetId(std::string idString) {
-            if (idString.size() <= 4) {
-              id_ = 0;
-              return;
-            }
-            id_ = atoi(idString.substr(3, idString.size() - 4).c_str());
           }
           inline virtual ServiceType GetServiceType() const {
             return serviceType_;
@@ -76,7 +61,6 @@ namespace naeem {
             serviceType_ = serviceType;
           }
           inline virtual void SetServiceType(std::string serviceTypeString) {
-            std::cout << "<<< " << serviceTypeString << std::endl;
             if (serviceTypeString == "stateless") {
               serviceType_ = Stateless;
             } else if (serviceTypeString == "stateful") {
@@ -93,7 +77,6 @@ namespace naeem {
             name_ = name;
           }
         private:
-          uint32_t id_;
           ServiceType serviceType_;
           std::string name_;
           std::vector<Method*> methods_;

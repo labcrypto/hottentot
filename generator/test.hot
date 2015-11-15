@@ -1,27 +1,29 @@
 module ir.ntnaeem.services {
   struct Person {
-    set<string> names id(1);
-    list<int> sum id(2);
-    double x id(3);
-    string str id(4);
+    set<string> names ord(1);
+    list<int> sum ord(2);
+    double x ord(3);
+    string str ord(4);
   };
-  stateful service PersonAuthenticator id(100) {
-
+  stateful service PersonAuthenticator {
+    string GetName(int age, double percent);
+    list<string> GetNames(string predicate);
   };
   struct Phone {
-    bool done id(1);
-    Person p id(2);
-    map<string, Phone> phones id(3);
+    bool done ord(1);
+    Person p ord(2);
+    map<string, Phone> phones ord(3);
   };
-  stateless service PhoneManager id(101) {
-
+  stateless service PhoneManager {
+    map<Person, Phone> GetPhonebook();
+    void AddEntry(Person person, Phone phone, date d);
   };
 };
 module org.apache.tests {
-  stateless service ApacheLicenseManager id(200) {
-
+  stateless service ApacheLicenseManager {
+    
   };
   struct Test {
-    int x id(1);
+    int x ord(1);
   };
 };

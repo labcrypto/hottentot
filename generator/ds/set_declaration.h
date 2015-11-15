@@ -36,8 +36,8 @@ namespace naeem {
         public:
           SetDeclaration(std::string type = "", 
                          std::string variable = "",
-                         std::string idString = "")
-            : Declaration("", variable, idString) {
+                         std::string ordString = "")
+            : Declaration("", variable, ordString) {
               setType_ = type;
           }
           virtual ~SetDeclaration() {}
@@ -52,7 +52,7 @@ namespace naeem {
             setType_ = setType;
           }
           inline virtual void Display() {
-            std::cout << variable_ << ": SET<" << setType_ << "> with id(" << id_ << ")";
+            std::cout << variable_ << ": SET<" << setType_ << "> with ORD(" << ord_ << ")";
           }
         protected:
           std::string setType_;

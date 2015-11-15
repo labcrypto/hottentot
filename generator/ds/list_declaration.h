@@ -36,8 +36,8 @@ namespace naeem {
         public:
           ListDeclaration(std::string type = "", 
                           std::string variable = "",
-                          std::string idString = "")
-            : Declaration("", variable, idString) {
+                          std::string ordString = "")
+            : Declaration("", variable, ordString) {
               listType_ = type;
           }
           virtual ~ListDeclaration() {}
@@ -52,7 +52,7 @@ namespace naeem {
             listType_ = listType;
           }
           inline virtual void Display() {
-            std::cout << variable_ << ": LIST<" << listType_ << "> with id(" << id_ << ")";
+            std::cout << variable_ << ": LIST<" << listType_ << "> with ORD(" << ord_ << ")";
           }
         protected:
           std::string listType_;

@@ -37,8 +37,8 @@ namespace naeem {
           MapDeclaration(std::string keyType = "", 
                          std::string valueType = "",
                          std::string variable = "",
-                         std::string idString = "")
-            : Declaration("", variable, idString) {
+                         std::string ordString = "")
+            : Declaration("", variable, ordString) {
               keyType_ = keyType;
               valueType_ = valueType;
           }
@@ -54,7 +54,7 @@ namespace naeem {
             keyType_ = keyType;
           }
           inline virtual void Display() {
-            std::cout << variable_ << ": MAP<" << keyType_ << ", " << valueType_ << "> with id(" << id_ << ")";
+            std::cout << variable_ << ": MAP<" << keyType_ << ", " << valueType_ << "> with ORD(" << ord_ << ")";
           }
         protected:
           std::string keyType_;

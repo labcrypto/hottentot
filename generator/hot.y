@@ -52,7 +52,7 @@ extern "C" {
 %token STATELESS
 %token STATEFUL
 %token SERVICE
-%token <string> ID
+%token <string> ORD
 %token <string> IDENTIFIER
 %token <string> TYPE
 %start hot
@@ -104,17 +104,15 @@ item:           STRUCT IDENTIFIER '{' struct_body '}' ';' {
                   currentStruct->SetName($2);
                   currentStruct = NULL;
                 }
-                | STATELESS SERVICE IDENTIFIER ID '{' service_body '}' ';' {
+                | STATELESS SERVICE IDENTIFIER '{' service_body '}' ';' {
                   // printf("Stateless service seen: %s\n", $3);
                   currentService->SetName($3);
-                  currentService->SetId($4);
                   currentService->SetServiceType("stateless");
                   currentService = NULL;
                 }
-                | STATEFUL SERVICE IDENTIFIER ID '{' service_body '}' ';' {
+                | STATEFUL SERVICE IDENTIFIER '{' service_body '}' ';' {
                   // printf("Stateful service seen: %s\n", $3);
                   currentService->SetName($3);
-                  currentService->SetId($4);
                   currentService->SetServiceType("stateful");
                   currentService = NULL;
                 }
@@ -125,49 +123,122 @@ declarations:   declarations declaration
                 |
                 ;
 
-declaration:    LIST '<' TYPE '>' IDENTIFIER ID  ';' {
+declaration:    LIST '<' TYPE '>' IDENTIFIER ORD ';' {
                   // printf("Declaration3 seen:    LIST<%s> %s %s\n", $3, $5, $6);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::ListDeclaration($3, $5, $6));
                 }
-                | LIST '<' IDENTIFIER '>' IDENTIFIER ID ';' {
+                | LIST '<' IDENTIFIER '>' IDENTIFIER ORD ';' {
                   // printf("Declaration4 seen:    LIST<%s> %s %s\n", $3, $5, $6);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::ListDeclaration($3, $5, $6));
                 }
-                | SET '<' TYPE '>' IDENTIFIER ID ';' {
+                | SET '<' TYPE '>' IDENTIFIER ORD ';' {
                   // printf("Declaration5 seen:    SET<%s> %s %s\n", $3, $5, $6);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::SetDeclaration($3, $5, $6));
                 }
-                | SET '<' IDENTIFIER '>' IDENTIFIER ID ';' {
+                | SET '<' IDENTIFIER '>' IDENTIFIER ORD ';' {
                   // printf("Declaration6 seen:    SET<%s> %s %s\n", $3, $5, $6);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::SetDeclaration($3, $5, $6));
                 }
-                | MAP '<' TYPE ','  TYPE '>' IDENTIFIER ID ';' {
+                | MAP '<' TYPE ','  TYPE '>' IDENTIFIER ORD ';' {
                   // printf("Declaration7 seen:    MAP<%s, %s> %s %s\n", $3, $5, $7, $8);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::MapDeclaration($3, $5, $7, $8));
                 }
-                | MAP '<' TYPE ','  IDENTIFIER '>' IDENTIFIER ID ';' {
+                | MAP '<' TYPE ','  IDENTIFIER '>' IDENTIFIER ORD ';' {
                   // printf("Declaration7 seen:    MAP<%s, %s> %s %s\n", $3, $5, $7, $8);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::MapDeclaration($3, $5, $7, $8));
                 }
-                | MAP '<' IDENTIFIER ','  TYPE '>' IDENTIFIER ID ';' {
+                | MAP '<' IDENTIFIER ','  TYPE '>' IDENTIFIER ORD ';' {
                   // printf("Declaration8 seen:    MAP<%s, %s> %s %s\n", $3, $5, $7, $8);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::MapDeclaration($3, $5, $7, $8));
                 }
-                | MAP '<' IDENTIFIER ','  IDENTIFIER '>' IDENTIFIER ID ';' {
+                | MAP '<' IDENTIFIER ','  IDENTIFIER '>' IDENTIFIER ORD ';' {
                   // printf("Declaration8 seen:    MAP<%s, %s> %s %s\n", $3, $5, $7, $8);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::MapDeclaration($3, $5, $7, $8));
                 }
-                | TYPE IDENTIFIER ID ';' {
+                | TYPE IDENTIFIER ORD ';' {
                   // printf("Declaration seen:    %s %s %s\n", $1, $2, $3);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::Declaration($1, $2, $3));
                 }
-                | IDENTIFIER IDENTIFIER ID ';' {
+                | IDENTIFIER IDENTIFIER ORD ';' {
                   // printf("Declaration2 seen:    %s %s %s\n", $1, $2, $3);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::Declaration($1, $2, $3));
                 }
                 ;
 
-service_body:   ;
+service_body:   methods
+                ;
+
+methods:        methods method
+                |
+                ;
+
+method:         LIST '<' TYPE '>' IDENTIFIER '(' ')' ';' {
+                } 
+                | LIST '<' IDENTIFIER '>' IDENTIFIER '(' ')' ';' {
+                } 
+                | SET '<' TYPE '>' IDENTIFIER '(' ')' ';' {
+                }
+                | SET '<' IDENTIFIER '>' IDENTIFIER '(' ')' ';' {
+                }
+                | MAP '<' TYPE ',' TYPE '>' IDENTIFIER '(' ')' ';' {
+                }
+                | MAP '<' TYPE ',' IDENTIFIER '>' IDENTIFIER '(' ')' ';' {
+                }
+                | MAP '<' IDENTIFIER ',' TYPE '>' IDENTIFIER '(' ')' ';' {
+                }
+                | MAP '<' IDENTIFIER ',' IDENTIFIER '>' IDENTIFIER '(' ')' ';' {
+                }
+                | TYPE IDENTIFIER '(' ')' ';' {
+                }
+                | IDENTIFIER IDENTIFIER '(' ')' ';' {
+                }
+                | LIST '<' TYPE '>' IDENTIFIER '(' arguments ')' ';' {
+                } 
+                | LIST '<' IDENTIFIER '>' IDENTIFIER '(' arguments ')' ';' {
+                } 
+                | SET '<' TYPE '>' IDENTIFIER '(' arguments ')' ';' {
+                }
+                | SET '<' IDENTIFIER '>' IDENTIFIER '(' arguments ')' ';' {
+                }
+                | MAP '<' TYPE ',' TYPE '>' IDENTIFIER '(' arguments ')' ';' {
+                }
+                | MAP '<' TYPE ',' IDENTIFIER '>' IDENTIFIER '(' arguments ')' ';' {
+                }
+                | MAP '<' IDENTIFIER ',' TYPE '>' IDENTIFIER '(' arguments ')' ';' {
+                }
+                | MAP '<' IDENTIFIER ',' IDENTIFIER '>' IDENTIFIER '(' arguments ')' ';' {
+                }
+                | TYPE IDENTIFIER '(' arguments ')' ';' {
+                }
+                | IDENTIFIER IDENTIFIER '(' arguments ')' ';' {
+                }
+                ;
+
+arguments:      argument
+                | argument ',' arguments
+                ;
+
+argument:       LIST '<' TYPE '>' IDENTIFIER {
+                }
+                | LIST '<' IDENTIFIER '>' IDENTIFIER {
+                }
+                | SET '<' TYPE '>' IDENTIFIER {
+                }
+                | SET '<' IDENTIFIER '>' IDENTIFIER {
+                }
+                | MAP '<' TYPE ',' TYPE '>' IDENTIFIER {
+                }
+                | MAP '<' TYPE ',' IDENTIFIER '>' IDENTIFIER {
+                }
+                | MAP '<' IDENTIFIER ',' TYPE '>' IDENTIFIER {
+                }
+                | MAP '<' IDENTIFIER ',' IDENTIFIER '>' IDENTIFIER {
+                }
+                | TYPE IDENTIFIER {
+                }
+                | IDENTIFIER IDENTIFIER {
+                }
+                ;
 
 %%
 

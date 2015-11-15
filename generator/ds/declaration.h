@@ -46,10 +46,10 @@ namespace naeem {
         public:
           Declaration(std::string type = "", 
                       std::string variable = "",
-                      std::string idString = "")
+                      std::string ordString = "")
             : type_(type),
               variable_(variable) {
-              id_ = atoi(idString.substr(3, idString.size() - 4).c_str());
+              ord_ = atoi(ordString.substr(4, ordString.size() - 5).c_str());
           }
           virtual ~Declaration() {}
         public:
@@ -68,19 +68,19 @@ namespace naeem {
           inline virtual void SetVariable(std::string variable) {
             variable_ = variable;
           }
-          inline virtual uint32_t GetId() const {
-            return id_;
+          inline virtual uint32_t GetOrd() const {
+            return ord_;
           }
-          inline virtual void SetId(uint32_t id) {
-            id_ = id;
+          inline virtual void SetOrd(uint32_t ord) {
+            ord_ = ord;
           }
           inline virtual void Display() {
-            std::cout << variable_ << ": " << type_ << " with id(" << id_ << ")";
+            std::cout << variable_ << ": " << type_ << " with ORD(" << ord_ << ")";
           }
         protected:
           std::string type_;
           std::string variable_;
-          uint32_t id_;
+          uint32_t ord_;
         };
       }
     }

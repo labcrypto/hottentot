@@ -31,19 +31,22 @@
 extern "C" int yylex();
 %}
 %%
-id\([1-9][0-9]*\) {
-  // fprintf(stdout, "ID seen.\n");
+ord\([1-9][0-9]*\) {
+  fprintf(stdout, "ORD seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
-  return ID;
+  return ORD;
 }
 stateless {
+  fprintf(stdout, "STATELESS seen.\n");
   return STATELESS;
 }
 stateful {
+  fprintf(stdout, "STATEFUL seen.\n");
   return STATEFUL;
 }
 service {
+  fprintf(stdout, "SERVICE seen.\n");
   if (currentService == NULL) {
     currentService = new ::naeem::hottentot::generator::ds::Service();
     currentModule->AddService(currentService);
@@ -54,43 +57,43 @@ service {
   return SERVICE;
 }
 list {
-  // fprintf(stdout, "LIST seen.\n");
+  fprintf(stdout, "LIST seen.\n");
   return LIST;
 }
 set {
-  // fprintf(stdout, "SET seen.\n");
+  fprintf(stdout, "SET seen.\n");
   return SET;
 }
 map {
-  // fprintf(stdout, "MAP seen.\n");
+  fprintf(stdout, "MAP seen.\n");
   return MAP;
 }
 int {
-  // fprintf(stdout, "INT seen.\n");
+  fprintf(stdout, "INT seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 double {
-  // fprintf(stdout, "DOUBLE seen.\n");
+  fprintf(stdout, "DOUBLE seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 string {
-  // fprintf(stdout, "STRING seen.\n");
+  fprintf(stdout, "STRING seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 bool {
-  // fprintf(stdout, "BOOL seen.\n");
+  fprintf(stdout, "BOOL seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 module {
-  // fprintf(stdout, "MODULE seen.\n");
+  fprintf(stdout, "MODULE seen.\n");
   if (currentHot == NULL) {
     currentHot = new ::naeem::hottentot::generator::ds::Hot();
     // fprintf(stdout, ">>> GENERATOR: Hot object created.\n");
@@ -110,7 +113,7 @@ module {
   return MODULE;
 }
 struct {
-  // fprintf(stdout, "STRUCT seen.\n");
+  fprintf(stdout, "STRUCT seen.\n");
   if (currentStruct == NULL) {
     currentStruct = new ::naeem::hottentot::generator::ds::Struct();
     // fprintf(stdout, ">>> GENERATOR: Struct object created.\n");
@@ -123,13 +126,13 @@ struct {
   return STRUCT;
 }
 [a-zA-Z]([a-zA-Z0-9])* {
-  // fprintf(stdout, "IDENTIFIER seen.\n");
+  fprintf(stdout, "IDENTIFIER seen.\n");
   yylval.string = (char *)malloc(yyleng); 
   sprintf(yylval.string, "%s", yytext);
   return IDENTIFIER;
 }
-[\{\}\;\.><,] { 
-  // fprintf(stdout, "'%c' seen.\n", *yytext);
+[\{\}\;\.><,()] { 
+  fprintf(stdout, "'%c' seen.\n", *yytext);
   return *yytext; 
 }
 [ \t\r\n] ;
