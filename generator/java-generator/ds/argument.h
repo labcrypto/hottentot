@@ -11,6 +11,7 @@ using namespace std;
 class Argument {
 public:
     string type_;
+    string name_;
 };
 
 
