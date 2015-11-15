@@ -23,9 +23,11 @@
 
 %{
 #include <stdio.h>
+
 #include "shared.h"
-#include "module.h"
 #include "y.tab.h"
+
+
 extern "C" int yylex();
 %}
 %%
@@ -73,9 +75,15 @@ bool {
 }
 module {
   fprintf(stdout, "MODULE seen.\n");
+  if (currentHot == NULL) {
+    currentHot = new ::naeem::hottentot::generator::ds::Hot();
+    fprintf(stdout, ">>> GENERATOR: Hot object created.\n");
+  }
   if (currentModule == NULL) {
-    currentModule = new ::naeem::hottentot::generator::Module();
+    currentModule = new ::naeem::hottentot::generator::ds::Module();
     fprintf(stdout, ">>> GENERATOR: Module object created.\n");
+    currentHot->AddModule(currentModule);
+    fprintf(stdout, ">>> GENERATOR: Module object has been added to hot.\n");
   } else {
     fprintf(stdout, "SYNTAX ERROR: Modules can't be nested.\n");
     exit(1);

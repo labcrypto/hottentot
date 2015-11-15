@@ -25,7 +25,7 @@
 #define _NAEEM_HOTTENTOT_GENERATOR__DS__SET_DECLARATION_H_
 
 #include "declaration.h"
-#include <../string_helper.h>
+#include "../string_helper.h"
 
 
 namespace naeem {
@@ -37,13 +37,13 @@ namespace naeem {
           SetDeclaration(std::string type = "", 
                          std::string variable = "",
                          uint32_t id = 0)
-            : Declaration(StringHelper::trim(type), variable, id) {
+            : Declaration(::naeem::hottentot::generator::StringHelper::trim(type), variable, id) {
               setType_ = type_.substr(4, type_.size() - 5);
           }
           virtual ~SetDeclaration() {}
         public:
           inline virtual std::string GetSetType() const {
-            return listType_;
+            return setType_;
           }
           inline virtual void SetSetType(std::string setType) {
             setType_ = setType;

@@ -37,7 +37,9 @@ namespace naeem {
           Struct() {}
           virtual ~Struct() {}
         public:
-          virtual void AddDeclaration(Declaration *);
+          inline virtual void AddDeclaration(Declaration *declaration) {
+            declarations_.push_back(declaration);
+          }
         private:
           std::vector<Declaration*> declarations_;
         };

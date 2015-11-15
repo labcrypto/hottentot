@@ -25,7 +25,7 @@
 #define _NAEEM_HOTTENTOT_GENERATOR__DS__MAP_DECLARATION_H_
 
 #include "declaration.h"
-#include <../string_helper.h>
+#include "../string_helper.h"
 
 
 namespace naeem {
@@ -39,9 +39,11 @@ namespace naeem {
                          uint32_t id = 0)
             : Declaration(StringHelper::trim(type), variable, id) {
               size_t index = type_.find(",");
-              std::string temp = StringHelper::trim(type_.substr(0, index));
+              std::string temp0 = type_.substr(0, index);
+              std::string temp = ::naeem::hottentot::generator::StringHelper::trim(temp0);
               keyType_ = temp.substr(4, temp.size() - 5);
-              temp = StringHelper::trim(type_.substr(index + 1, type_.size() - index));
+              temp0 = type_.substr(index + 1, type_.size() - index);
+              temp = ::naeem::hottentot::generator::StringHelper::trim(temp0);
               valueType_ = temp.substr(0, temp.size() - 1);
           }
           virtual ~MapDeclaration() {}

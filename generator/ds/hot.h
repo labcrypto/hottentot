@@ -37,7 +37,9 @@ namespace naeem {
           Hot() {}
           virtual ~Hot() {}
         public:
-          virtual void AddModule(Module *);
+          inline virtual void AddModule(Module *module) {
+            modules_.push_back(module);
+          }
         private:
           std::vector<Module*> modules_;
         };

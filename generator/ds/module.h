@@ -32,12 +32,14 @@ namespace naeem {
     namespace generator {
       namespace ds {
         class Struct;
-        class Hot {
+        class Module {
         public:
           Module() {}
           virtual ~Module() {}
         public:
-          virtual void AddStruct(Struct *);
+          inline virtual void AddStruct(Struct *struc) {
+            structs_.push_back(struc);
+          }
         private:
           std::vector<Struct*> structs_;
         };
