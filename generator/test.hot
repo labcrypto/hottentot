@@ -15,15 +15,17 @@ module ir.ntnaeem.services {
     map<string, Phone> phones ord(3);
   };
   stateless service PhoneManager {
-    map<Person, Phone> GetPhonebook();
+    map<Person, list<Phone>> GetPhonebook();
     void AddEntry(Person person, Phone phone, date d);
   };
 };
 module org.apache.tests {
   stateless service ApacheLicenseManager {
-    
+    set<License> GetThem();
+    map<list<Person>, string> GetMap(list<string> names, set<map<list<int>, string>> s);
   };
-  struct Test {
-    int x ord(1);
+  struct License {
+    int version ord(1);
+    map<int, list<string>> l ord(2);
   };
 };

@@ -21,14 +21,51 @@
  *  SOFTWARE.
  */
 
- #include "shared.h"
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__ARGUMENT_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__DS__ARGUMENT_H_
 
- #ifndef NULL
- #define NULL 0
- #endif
+#include <vector>
+#include <string>
+#include <stdint.h>
+#include <iostream>
+#include <stdlib.h>
 
-::naeem::hottentot::generator::ds::Hot *currentHot = NULL;
-::naeem::hottentot::generator::ds::Module *currentModule = NULL;
-::naeem::hottentot::generator::ds::Struct *currentStruct = NULL;
-::naeem::hottentot::generator::ds::Service *currentService = NULL;
-std::stack<std::string> stack;
+
+namespace naeem {
+  namespace hottentot {
+    namespace generator {
+      namespace ds {
+        class Argument {
+        public:
+          Argument(std::string type = "", 
+                   std::string variable = "")
+            : type_(type),
+              variable_(variable) {
+          }
+          virtual ~Argument() {}
+        public:
+          inline virtual std::string GetType() const {
+            return type_;
+          }
+          inline virtual void SetType(std::string type) {
+            type_ = type;
+          }
+          inline virtual std::string GetVariable() const {
+            return variable_;
+          }
+          inline virtual void SetVariable(std::string variable) {
+            variable_ = variable;
+          }
+          inline virtual void Display() {
+            std::cout << variable_ << ": " << type_;
+          }
+        protected:
+          std::string type_;
+          std::string variable_;
+        };
+      }
+    }
+  }
+}
+
+#endif

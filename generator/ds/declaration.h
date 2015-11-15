@@ -37,13 +37,6 @@ namespace naeem {
       namespace ds {
         class Declaration {
         public:
-          enum DeclarationType {
-            NonGeneric,
-            List,
-            Set,
-            Map
-          };
-        public:
           Declaration(std::string type = "", 
                       std::string variable = "",
                       std::string ordString = "")
@@ -53,9 +46,6 @@ namespace naeem {
           }
           virtual ~Declaration() {}
         public:
-          inline virtual DeclarationType GetDeclarationType() const {
-            return NonGeneric;
-          }
           inline virtual std::string GetType() const {
             return type_;
           }

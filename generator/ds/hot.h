@@ -31,9 +31,7 @@
 #include "module.h"
 #include "struct.h"
 #include "service.h"
-#include "list_declaration.h"
-#include "set_declaration.h"
-#include "map_declaration.h"
+#include "declaration.h"
 
 
 namespace naeem {

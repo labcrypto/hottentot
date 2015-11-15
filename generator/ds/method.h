@@ -21,41 +21,42 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__SET_DECLARATION_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__DS__SET_DECLARATION_H_
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__METHOD_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__DS__METHOD_H_
 
-#include "declaration.h"
-#include "../string_helper.h"
+#include <vector>
 
 
 namespace naeem {
   namespace hottentot {
     namespace generator {
       namespace ds {
-        class SetDeclaration : public Declaration {
+        class Argument;
+        class Method {
+        friend class Hot;
         public:
-          SetDeclaration(std::string type = "", 
-                         std::string variable = "",
-                         std::string ordString = "")
-            : Declaration("", variable, ordString) {
-              setType_ = type;
-          }
-          virtual ~SetDeclaration() {}
+          Method() {}
+          virtual ~Method() {}
         public:
-          inline virtual DeclarationType GetDeclarationType() const {
-            return Set;
+          inline virtual void AddArgument(Argument *argument) {
+            arguments_.push_back(argument);
           }
-          inline virtual std::string GetSetType() const {
-            return setType_;
+          inline virtual std::string GetReturnType() const {
+            return returnType_;
           }
-          inline virtual void SetSetType(std::string setType) {
-            setType_ = setType;
+          inline virtual void SetReturnType(std::string returnType) {
+            returnType_ = returnType;
           }
-          inline virtual void Display() {
-            std::cout << variable_ << ": SET<" << setType_ << "> with ORD(" << ord_ << ")";
+          inline virtual std::string GetName() const {
+            return name_;
           }
-        protected:
-          std::string setType_;
+          inline void SetName(std::string name) {
+            name_ = name;
+          }
+        private:
+          std::string returnType_;
+          std::string name_;
+          std::vector<Argument*> arguments_;
         };
       }
     }

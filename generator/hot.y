@@ -24,13 +24,15 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include <sstream>
+#include <string.h>
+#include <stack>
 
-#include "shared.h"
 #include "ds/hot.h"
-#include "ds/list_declaration.h"
-#include "ds/set_declaration.h"
-#include "ds/map_declaration.h"
+#include "ds/declaration.h"
 #include "ds/service.h"
+#include "ds/method.h"
+#include "ds/argument.h"
 
 
 void yyerror(char *);
@@ -39,6 +41,13 @@ extern "C" {
   int yylex(void);
 }
 
+std::string lastType;
+std::stack<std::string> stack;
+::naeem::hottentot::generator::ds::Hot *currentHot;
+::naeem::hottentot::generator::ds::Module *currentModule;
+::naeem::hottentot::generator::ds::Struct *currentStruct;
+::naeem::hottentot::generator::ds::Service *currentService;
+::naeem::hottentot::generator::ds::Method *currentMethod;
 
 %}
 %union {
@@ -46,9 +55,9 @@ extern "C" {
 }
 %token MODULE
 %token STRUCT
-%token LIST
-%token SET
-%token MAP
+%token <string> LIST
+%token <string> SET
+%token <string> MAP
 %token STATELESS
 %token STATEFUL
 %token SERVICE
@@ -56,6 +65,7 @@ extern "C" {
 %token <string> IDENTIFIER
 %token <string> TYPE
 %start hot
+%type<string> type
 %%
 
 hot:            modules { 
@@ -69,7 +79,24 @@ modules:        modules module
                 |
                 ;
 
-module:         MODULE package '{' module_body '}' ';' {
+module:         {
+                  if (currentHot == NULL) {
+                    currentHot = new ::naeem::hottentot::generator::ds::Hot();
+                    // fprintf(stdout, ">>> GENERATOR: Hot object created.\n");
+                  }
+                  if (currentModule == NULL) {
+                    currentModule = new ::naeem::hottentot::generator::ds::Module();
+                    // fprintf(stdout, ">>> GENERATOR: Module object created.\n");
+                    currentHot->AddModule(currentModule);
+                    // fprintf(stdout, ">>> GENERATOR: Module object has been added to hot.\n");
+                    while (!stack.empty()) {
+                      stack.pop();
+                    }
+                  } else {
+                    fprintf(stdout, "SYNTAX ERROR: Modules can't be nested.\n");
+                    exit(1);
+                  }
+                } MODULE package '{' module_body '}' ';' {
                   // printf("Module parsed.\n");
                   std::string package = "";
                   while (!stack.empty()) {
@@ -99,68 +126,58 @@ items:          items item
                 |
                 ;
 
-item:           STRUCT IDENTIFIER '{' struct_body '}' ';' {
-                  // printf("Struct seen: %s\n", $2);
-                  currentStruct->SetName($2);
+item:           {
+                  if (currentStruct == NULL) {
+                    currentStruct = new ::naeem::hottentot::generator::ds::Struct();
+                    // fprintf(stdout, ">>> GENERATOR: Struct object created.\n");
+                    currentModule->AddStruct(currentStruct);
+                    // fprintf(stdout, ">>> GENERATOR: Struct object has been added to model.\n");
+                  } else {
+                    fprintf(stdout, "SYNTAX ERROR: Structs can't be nested.\n");
+                    exit(1);
+                  }
+                } STRUCT IDENTIFIER '{' struct_body '}' ';' {
+                  // printf("Struct seen: %s\n", $3);
+                  currentStruct->SetName($3);
                   currentStruct = NULL;
                 }
-                | STATELESS SERVICE IDENTIFIER '{' service_body '}' ';' {
-                  // printf("Stateless service seen: %s\n", $3);
-                  currentService->SetName($3);
+                | {
+                    if (currentService == NULL) {
+                      currentService = new ::naeem::hottentot::generator::ds::Service();
+                      currentModule->AddService(currentService);
+                    } else {
+                      fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
+                      exit(1);
+                    } 
+                  } STATELESS SERVICE IDENTIFIER '{' service_body '}' ';' {
+                  // printf("Stateless service seen: %s\n", $4);
+                  currentService->SetName($4);
                   currentService->SetServiceType("stateless");
                   currentService = NULL;
                 }
-                | STATEFUL SERVICE IDENTIFIER '{' service_body '}' ';' {
-                  // printf("Stateful service seen: %s\n", $3);
-                  currentService->SetName($3);
+                | {
+                    if (currentService == NULL) {
+                      currentService = new ::naeem::hottentot::generator::ds::Service();
+                      currentModule->AddService(currentService);
+                    } else {
+                      fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
+                      exit(1);
+                    } 
+                  } STATEFUL SERVICE IDENTIFIER '{' service_body '}' ';' {
+                  // printf("Stateful service seen: %s\n", $4);
+                  currentService->SetName($4);
                   currentService->SetServiceType("stateful");
                   currentService = NULL;
                 }
 
 struct_body:    declarations;
 
-declarations:   declarations declaration
-                |
+declarations:   declaration
+                | declarations declaration
                 ;
 
-declaration:    LIST '<' TYPE '>' IDENTIFIER ORD ';' {
+declaration:    type IDENTIFIER ORD ';' {
                   // printf("Declaration3 seen:    LIST<%s> %s %s\n", $3, $5, $6);
-                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::ListDeclaration($3, $5, $6));
-                }
-                | LIST '<' IDENTIFIER '>' IDENTIFIER ORD ';' {
-                  // printf("Declaration4 seen:    LIST<%s> %s %s\n", $3, $5, $6);
-                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::ListDeclaration($3, $5, $6));
-                }
-                | SET '<' TYPE '>' IDENTIFIER ORD ';' {
-                  // printf("Declaration5 seen:    SET<%s> %s %s\n", $3, $5, $6);
-                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::SetDeclaration($3, $5, $6));
-                }
-                | SET '<' IDENTIFIER '>' IDENTIFIER ORD ';' {
-                  // printf("Declaration6 seen:    SET<%s> %s %s\n", $3, $5, $6);
-                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::SetDeclaration($3, $5, $6));
-                }
-                | MAP '<' TYPE ','  TYPE '>' IDENTIFIER ORD ';' {
-                  // printf("Declaration7 seen:    MAP<%s, %s> %s %s\n", $3, $5, $7, $8);
-                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::MapDeclaration($3, $5, $7, $8));
-                }
-                | MAP '<' TYPE ','  IDENTIFIER '>' IDENTIFIER ORD ';' {
-                  // printf("Declaration7 seen:    MAP<%s, %s> %s %s\n", $3, $5, $7, $8);
-                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::MapDeclaration($3, $5, $7, $8));
-                }
-                | MAP '<' IDENTIFIER ','  TYPE '>' IDENTIFIER ORD ';' {
-                  // printf("Declaration8 seen:    MAP<%s, %s> %s %s\n", $3, $5, $7, $8);
-                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::MapDeclaration($3, $5, $7, $8));
-                }
-                | MAP '<' IDENTIFIER ','  IDENTIFIER '>' IDENTIFIER ORD ';' {
-                  // printf("Declaration8 seen:    MAP<%s, %s> %s %s\n", $3, $5, $7, $8);
-                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::MapDeclaration($3, $5, $7, $8));
-                }
-                | TYPE IDENTIFIER ORD ';' {
-                  // printf("Declaration seen:    %s %s %s\n", $1, $2, $3);
-                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::Declaration($1, $2, $3));
-                }
-                | IDENTIFIER IDENTIFIER ORD ';' {
-                  // printf("Declaration2 seen:    %s %s %s\n", $1, $2, $3);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::Declaration($1, $2, $3));
                 }
                 ;
@@ -172,71 +189,58 @@ methods:        methods method
                 |
                 ;
 
-method:         LIST '<' TYPE '>' IDENTIFIER '(' ')' ';' {
-                } 
-                | LIST '<' IDENTIFIER '>' IDENTIFIER '(' ')' ';' {
-                } 
-                | SET '<' TYPE '>' IDENTIFIER '(' ')' ';' {
-                }
-                | SET '<' IDENTIFIER '>' IDENTIFIER '(' ')' ';' {
-                }
-                | MAP '<' TYPE ',' TYPE '>' IDENTIFIER '(' ')' ';' {
-                }
-                | MAP '<' TYPE ',' IDENTIFIER '>' IDENTIFIER '(' ')' ';' {
-                }
-                | MAP '<' IDENTIFIER ',' TYPE '>' IDENTIFIER '(' ')' ';' {
-                }
-                | MAP '<' IDENTIFIER ',' IDENTIFIER '>' IDENTIFIER '(' ')' ';' {
-                }
-                | TYPE IDENTIFIER '(' ')' ';' {
-                }
-                | IDENTIFIER IDENTIFIER '(' ')' ';' {
-                }
-                | LIST '<' TYPE '>' IDENTIFIER '(' arguments ')' ';' {
-                } 
-                | LIST '<' IDENTIFIER '>' IDENTIFIER '(' arguments ')' ';' {
-                } 
-                | SET '<' TYPE '>' IDENTIFIER '(' arguments ')' ';' {
-                }
-                | SET '<' IDENTIFIER '>' IDENTIFIER '(' arguments ')' ';' {
-                }
-                | MAP '<' TYPE ',' TYPE '>' IDENTIFIER '(' arguments ')' ';' {
-                }
-                | MAP '<' TYPE ',' IDENTIFIER '>' IDENTIFIER '(' arguments ')' ';' {
-                }
-                | MAP '<' IDENTIFIER ',' TYPE '>' IDENTIFIER '(' arguments ')' ';' {
-                }
-                | MAP '<' IDENTIFIER ',' IDENTIFIER '>' IDENTIFIER '(' arguments ')' ';' {
-                }
-                | TYPE IDENTIFIER '(' arguments ')' ';' {
-                }
-                | IDENTIFIER IDENTIFIER '(' arguments ')' ';' {
+method:         {
+                  if (currentMethod == NULL) {
+                    currentMethod = new ::naeem::hottentot::generator::ds::Method();
+                  }
+                } type IDENTIFIER '(' arguments ')' ';' {
+                  currentMethod->SetReturnType($2);
+                  currentMethod->SetName($3);
+                  currentMethod = NULL;
                 }
                 ;
 
 arguments:      argument
-                | argument ',' arguments
+                | arguments ',' argument
+                |
                 ;
 
-argument:       LIST '<' TYPE '>' IDENTIFIER {
+argument:       type IDENTIFIER {
+                  currentMethod->AddArgument(new ::naeem::hottentot::generator::ds::Argument($1, $2));
+                  printf("Argument has been added.\n");
                 }
-                | LIST '<' IDENTIFIER '>' IDENTIFIER {
+                ;
+
+type:           LIST '<' type '>' {
+                  $$ = (char*)malloc(strlen($3) + 10);
+                  strcat($$, $1);
+                  strcat($$, "<");
+                  strcat($$, $3);
+                  strcat($$, ">");
+                }               
+                | SET '<' type '>' {
+                  $$ = (char*)malloc(strlen($3) + 10);
+                  strcat($$, $1);
+                  strcat($$, "<");
+                  strcat($$, $3);
+                  strcat($$, ">");
+                }                
+                | MAP '<' type ',' type '>' {
+                  $$ = (char*)malloc(strlen($3) + 10);
+                  strcat($$, $1);
+                  strcat($$, "<");
+                  strcat($$, $3);
+                  strcat($$, ",");
+                  strcat($$, $5);
+                  strcat($$, ">");
+                }                
+                | TYPE  {
+                  $$ = (char *)malloc(strlen($1) + 1);
+                  strcat($$, $1);
                 }
-                | SET '<' TYPE '>' IDENTIFIER {
-                }
-                | SET '<' IDENTIFIER '>' IDENTIFIER {
-                }
-                | MAP '<' TYPE ',' TYPE '>' IDENTIFIER {
-                }
-                | MAP '<' TYPE ',' IDENTIFIER '>' IDENTIFIER {
-                }
-                | MAP '<' IDENTIFIER ',' TYPE '>' IDENTIFIER {
-                }
-                | MAP '<' IDENTIFIER ',' IDENTIFIER '>' IDENTIFIER {
-                }
-                | TYPE IDENTIFIER {
-                }
-                | IDENTIFIER IDENTIFIER {
+                | IDENTIFIER {
+                  $$ = (char *)malloc(strlen($1) + 1);
+                  strcat($$, $1);
                 }
                 ;
 

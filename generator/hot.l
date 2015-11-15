@@ -24,7 +24,6 @@
 %{
 #include <stdio.h>
 
-#include "shared.h"
 #include "y.tab.h"
 
 
@@ -47,25 +46,24 @@ stateful {
 }
 service {
   fprintf(stdout, "SERVICE seen.\n");
-  if (currentService == NULL) {
-    currentService = new ::naeem::hottentot::generator::ds::Service();
-    currentModule->AddService(currentService);
-  } else {
-    fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
-    exit(1);
-  }
   return SERVICE;
 }
 list {
   fprintf(stdout, "LIST seen.\n");
+  yylval.string = (char *)malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
   return LIST;
 }
 set {
   fprintf(stdout, "SET seen.\n");
+  yylval.string = (char *)malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
   return SET;
 }
 map {
   fprintf(stdout, "MAP seen.\n");
+  yylval.string = (char *)malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
   return MAP;
 }
 int {
@@ -92,37 +90,18 @@ bool {
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
+date {
+  fprintf(stdout, "DATE seen.\n");
+  yylval.string = (char *)malloc(yyleng); 
+  sprintf(yylval.string, "%s", yytext);
+  return TYPE;
+}
 module {
   fprintf(stdout, "MODULE seen.\n");
-  if (currentHot == NULL) {
-    currentHot = new ::naeem::hottentot::generator::ds::Hot();
-    // fprintf(stdout, ">>> GENERATOR: Hot object created.\n");
-  }
-  if (currentModule == NULL) {
-    currentModule = new ::naeem::hottentot::generator::ds::Module();
-    // fprintf(stdout, ">>> GENERATOR: Module object created.\n");
-    currentHot->AddModule(currentModule);
-    // fprintf(stdout, ">>> GENERATOR: Module object has been added to hot.\n");
-    while (!stack.empty()) {
-      stack.pop();
-    }
-  } else {
-    fprintf(stdout, "SYNTAX ERROR: Modules can't be nested.\n");
-    exit(1);
-  }
   return MODULE;
 }
 struct {
   fprintf(stdout, "STRUCT seen.\n");
-  if (currentStruct == NULL) {
-    currentStruct = new ::naeem::hottentot::generator::ds::Struct();
-    // fprintf(stdout, ">>> GENERATOR: Struct object created.\n");
-    currentModule->AddStruct(currentStruct);
-    // fprintf(stdout, ">>> GENERATOR: Struct object has been added to model.\n");
-  } else {
-    fprintf(stdout, "SYNTAX ERROR: Structs can't be nested.\n");
-    exit(1);
-  }
   return STRUCT;
 }
 [a-zA-Z]([a-zA-Z0-9])* {
