@@ -1,7 +1,7 @@
-package ir.naeem.hottentot.generated.proxy;
+package ir.ntnaeem.hottentot.generated;
 
 
-import ir.naeem.hottentot.generated.AuthenticationService;
+import ir.ntnaeem.hottentot.generated.AuthenticationService;
 
 public class AuthenticationServiceProxyBuilder {
 

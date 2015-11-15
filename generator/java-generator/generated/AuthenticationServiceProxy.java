@@ -1,4 +1,4 @@
-package ir.naeem.hottentot.generated;
+package ir.ntnaeem.hottentot.generated;
 
 import ir.ntnaeem.hottentot.runtime.Argument;
 import ir.ntnaeem.hottentot.runtime.*;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class AuthenticationServiceProxy extends AbstractAuthenticationService implements Proxy {
 	
-    private String host;
+	private String host;
 	private int port;
 
 	public AuthenticationServiceProxy(String host, int port) {
@@ -25,14 +25,14 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
 		byte[] serializedCredential = credential.serialize();
 
 		//make request
-		Request request = nee Request();
+		Request request = new Request();
 		request.setServiceId((byte) 1);
 		request.setMethodId((byte) 1);
 		request.setArgumentCount((byte) 1);
 		request.setType(Request.RequestType.InvokeStateless);
-		Argument arg0new Argument();
+		Argument arg0 = new Argument();
 		arg0.setDataLength(credential.serialize().length);
-		arg.setData(credential.serialize());
+		arg0.setData(credential.serialize());
 		request.addArgument(arg0);
 		int dataLength = 0;
 		//calculate data length for every argument
@@ -61,7 +61,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
 		Protocol protocol = ProtocolFactory.create();
 		byte[] serializedRequest = protocol.serializeRequest(request);
 		//send request
-		cpClient.write(serializedRequest);
+		tcpClient.write(serializedRequest);
 		//read response from server
 		byte[] buffer = new byte[256];
 		while (!protocol.IsResponseComplete()) {
@@ -82,8 +82,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
 		return token;
 	}
 
-    }
-    public void destroy() {
-        //TODO
-    }
+	public void destroy() {
+        	//TODO
+	}
 }
