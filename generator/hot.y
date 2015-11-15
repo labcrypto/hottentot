@@ -26,6 +26,7 @@
 #include <stdlib.h>
 
 #include "shared.h"
+#include "ds/hot.h"
 
 
 void yyerror(char *);
@@ -52,6 +53,8 @@ extern "C" {
 
 hot:            modules { 
                   printf("HOT parsed.\n"); 
+                  printf("======================\n");
+                  currentHot->Display();
                 }
                 ;
 
@@ -61,6 +64,7 @@ modules:        modules module
 
 module:         MODULE package '{' module_body '}' ';' {
                   printf("Module parsed.\n");
+                  currentModule = NULL;
                 }
                 ;
 
@@ -82,6 +86,7 @@ structs:        structs struct
 
 struct:         STRUCT IDENTIFIER '{' struct_body '}' ';' {
                   printf("Struct seen: %s\n", $2);
+                  currentStruct = NULL;
                 }
 
 struct_body:    declarations;

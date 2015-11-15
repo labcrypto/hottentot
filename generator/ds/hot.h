@@ -25,6 +25,10 @@
 #define _NAEEM_HOTTENTOT_GENERATOR__DS__HOT_H_
 
 #include <vector>
+#include <iostream>
+#include <stdint.h>
+
+#include "module.h"
 
 
 namespace naeem {
@@ -39,6 +43,18 @@ namespace naeem {
         public:
           inline virtual void AddModule(Module *module) {
             modules_.push_back(module);
+          }
+          inline virtual void Display() {
+            std::cout << "HOT {\n";
+            for (uint32_t i = 0; i < modules_.size(); i++) {
+              std::cout << "   MODULE {\n";
+              for (uint32_t j = 0; j < modules_[i]->structs_.size(); j++) {
+                std::cout << "      STRUCT {\n";
+                std::cout << "      }\n";
+              }
+              std::cout << "   }\n";
+            }
+            std::cout << "}\n";
           }
         private:
           std::vector<Module*> modules_;
