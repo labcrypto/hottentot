@@ -27,4 +27,6 @@
  #define NULL 0
  #endif
 
-::naeem::hottentot::generator::Module *currentModule = NULL;
+::naeem::hottentot::generator::ds::Hot *currentHot = NULL;
+::naeem::hottentot::generator::ds::Module *currentModule = NULL;
+::naeem::hottentot::generator::ds::Struct *currentStruct = NULL;

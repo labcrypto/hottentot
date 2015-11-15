@@ -20,20 +20,32 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
- 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__SHARED_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__SHARED_H_
 
-#include "ds/hot.h"
-#include "ds/module.h"
-#include "ds/struct.h"
-#include "ds/list_declaration.h"
-#include "ds/set_declaration.h"
-#include "ds/map_declaration.h"
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__HOT_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__DS__HOT_H_
+
+#include <vector>
 
 
-extern ::naeem::hottentot::generator::ds::Hot *currentHot;
-extern ::naeem::hottentot::generator::ds::Module *currentModule;
-extern ::naeem::hottentot::generator::ds::Struct *currentStruct;
+namespace naeem {
+  namespace hottentot {
+    namespace generator {
+      namespace ds {
+        class Module;
+        class Hot {
+        public:
+          Hot() {}
+          virtual ~Hot() {}
+        public:
+          inline virtual void AddModule(Module *module) {
+            modules_.push_back(module);
+          }
+        private:
+          std::vector<Module*> modules_;
+        };
+      }
+    }
+  }
+}
 
 #endif
