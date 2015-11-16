@@ -26,5 +26,6 @@ all:
 	g++ -c y.tab.c
 	flex hot.l
 	g++ -c lex.yy.c
-	g++ y.tab.o lex.yy.o -lfl -ll -o hot-parser.out
+	g++ -c cc/cc_generator.cc -o cc_generator.o
+	g++ y.tab.o lex.yy.o cc_generator.o -lfl -ll -o hot-parser.out
 	./hot-parser.out test.hot

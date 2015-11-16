@@ -34,6 +34,8 @@
 #include "ds/method.h"
 #include "ds/argument.h"
 
+#include "cc/cc_generator.h"
+
 
 void yyerror(char *);
 
@@ -262,5 +264,10 @@ int main(int argc, char **argv) {
   }
   yyparse();
   currentHot->Display();
+  ::naeem::hottentot::generator::Generator *generator = new 
+    ::naeem::hottentot::generator::cc::CCGenerator();
+  generator->Generate(currentHot);
+  delete generator;
+  delete currentHot;
   return 0;
 }
