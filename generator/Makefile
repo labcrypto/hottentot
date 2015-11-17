@@ -21,11 +21,15 @@
 #  SOFTWARE.
 #
 
-all:
+compile:
 	yacc -d hot.y
 	g++ -c y.tab.c
 	flex hot.l
 	g++ -c lex.yy.c
 	g++ -c cc/cc_generator.cc -o cc_generator.o
-	g++ y.tab.o lex.yy.o cc_generator.o -lfl -ll -o hot
-	./hot --java --cc test.hot test1.hot test2.hot
+	g++ -c java/java_generator.cc -o java_generator.o
+	g++ y.tab.o lex.yy.o cc_generator.o java_generator.o -lfl -ll -o hot
+java: compile
+	./hot --java --out gen test.hot
+cc: compile
+	./hot --cc --out gen test.hot

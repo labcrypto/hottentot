@@ -23,7 +23,7 @@
 
 #include <iostream>
 
-#include "cc_generator.h"
+#include "java_generator.h"
 
 #include "../ds/hot.h"
 
@@ -31,11 +31,11 @@
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace cc {
+      namespace java {
         void
-        CCGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot) {
+        JavaGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot) {
           // TODO
-          std::cout << "C++ Generation done." << std::endl;
+          std::cout << "Java Generation done." << std::endl;
         }
       }
     }

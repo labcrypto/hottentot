@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__CC_GENERATOR_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__CC_GENERATOR_H_
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__JAVA_GENERATOR_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__JAVA_GENERATOR_H_
 
 #include "../generator.h"
 
@@ -30,11 +30,11 @@
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace cc {
-        class CCGenerator : public ::naeem::hottentot::generator::Generator {
+      namespace java {
+        class JavaGenerator : public ::naeem::hottentot::generator::Generator {
         public:
-          CCGenerator() {}
-          virtual ~CCGenerator() {}
+          JavaGenerator() {}
+          virtual ~JavaGenerator() {}
         public:
           virtual void Generate(::naeem::hottentot::generator::ds::Hot *);
         };

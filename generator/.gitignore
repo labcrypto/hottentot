@@ -3,3 +3,4 @@ y.tab.h
 y.tab.c
 *.out
 *.o
+gen

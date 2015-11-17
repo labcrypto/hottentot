@@ -37,6 +37,7 @@
 #include "ds/argument.h"
 
 #include "cc/cc_generator.h"
+#include "java/java_generator.h"
 
 
 void yyerror(char *);
@@ -294,11 +295,11 @@ int main(int argc, char **argv) {
   if (!isJava && !isCC) {
     isCC = true;
   }
-  std::cout << "Num: " << numOfHots << std::endl;
+  /*std::cout << "Num: " << numOfHots << std::endl;
   std::cout << "Is Java: " << isJava << std::endl;
   std::cout << "Is CC: " << isCC << std::endl;
   std::cout << "Out: " << (outputDir == 0 ? "NOT SET" : outputDir) << std::endl;
-  std::cout << "Hot files: \n";
+  std::cout << "Hot files: \n";*/
   for (uint16_t i = 0; i < numOfHots; i++) {
     yyin = fopen(hots[i],"r+");
     if (!yyin) {
@@ -316,14 +317,13 @@ int main(int argc, char **argv) {
       currentHot = NULL;
     }
     if (isJava) {
-      /*::naeem::hottentot::generator::Generator *generator = new 
-        ::naeem::hottentot::generator::cc::CCGenerator();
+      ::naeem::hottentot::generator::Generator *generator = new 
+        ::naeem::hottentot::generator::java::JavaGenerator();
       generator->Generate(currentHot);
       delete generator;
       delete currentHot;
-      currentHot = NULL;*/
+      currentHot = NULL;
     }
-    std::cout << hots[i] << std::endl;
   }
   return 0;
 }
