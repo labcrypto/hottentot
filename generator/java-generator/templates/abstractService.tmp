@@ -1,4 +1,4 @@
-package [%BASE_PACKAGE_NAME%].service;
+package [%BASE_PACKAGE_NAME%];
 
 import [%BASE_PACKAGE_NAME%].[%SERVICE_NAME%]RequestHandler;
 import [%BASE_PACKAGE_NAME%].AuthenticationService;

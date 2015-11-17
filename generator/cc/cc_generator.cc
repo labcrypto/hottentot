@@ -20,18 +20,25 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
- 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__SHARED_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__SHARED_H_
+
+#include <iostream>
+
+#include "cc_generator.h"
+
+#include "../ds/hot.h"
+
 
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      class Module;
+      namespace cc {
+        void
+        CCGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
+                              ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
+          // TODO
+          std::cout << "C++ Generation done." << std::endl;
+        }
+      }
     }
   }
 }
-
-extern ::naeem::hottentot::generator::Module *currentModule;
-
-#endif

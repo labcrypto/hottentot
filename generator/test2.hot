@@ -1,0 +1,12 @@
+module ir.ntnaeem.hottentot.examples {
+  struct Response {
+    double value ord(1);
+  };
+  struct Request {
+    double value1 ord(1);
+    double value2 ord(2);
+  };
+  stateless service Calculator {
+    Response Add(Request request);
+  };
+};

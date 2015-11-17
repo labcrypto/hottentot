@@ -3,7 +3,7 @@ package ir.ntnaeem.hottentot.server;
 
 import ir.ntnaeem.hottentot.generated.Credential;
 import ir.ntnaeem.hottentot.generated.Token;
-import ir.ntnaeem.hottentot.generated.service.AbstractAuthenticationService;
+import ir.ntnaeem.hottentot.generated.AbstractAuthenticationService;
 
 
 public class AuthenticationImpl extends AbstractAuthenticationService{

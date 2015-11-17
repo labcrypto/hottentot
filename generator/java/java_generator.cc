@@ -21,29 +21,24 @@
  *  SOFTWARE.
  */
 
-package ir.ntnaeem.hottentot.client;
+#include <iostream>
+
+#include "java_generator.h"
+
+#include "../ds/hot.h"
 
 
-import ir.ntnaeem.hottentot.generated.AuthenticationService;
-import ir.ntnaeem.hottentot.generated.Credential;
-import ir.ntnaeem.hottentot.generated.Token;
-import ir.ntnaeem.hottentot.generated.AuthenticationServiceProxyBuilder;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
-
-public class Main {
-    public static void main(String[] args) {
-        AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8000);
-        Credential credential = new Credential();
-        credential.setUsername("test");
-        credential.setPassword("12345");
-        try {
-            Token token = proxy.authenticate(credential);
-            System.out.println(token.getValue());
-        }catch (Exception e) {
-            e.printStackTrace();
+namespace naeem {
+  namespace hottentot {
+    namespace generator {
+      namespace java {
+        void
+        JavaGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
+                                ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
+          // TODO
+          std::cout << "Java Generation done." << std::endl;
         }
-        AuthenticationServiceProxyBuilder.destroy();
+      }
     }
+  }
 }

@@ -1,13 +1,14 @@
-package ir.naeem.hottentot.generated;
+package ir.ntnaeem.hottentot.generated;
 
 public class Token {
-	private string value;
-	public void setValue(string value) {
-		this.value = value
+	private String value;
+	public void setValue(String value) {
+		this.value = value;
 	}
-	public string getValue() {
-		return value
-	}	
+	public String getValue() {
+		return value;
+	}
+	
 	public byte[] serialize() {
 		//TODO(ali)
 		//fake implementation

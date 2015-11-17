@@ -1,4 +1,4 @@
-package ir.naeem.hottentot.generated;
+package ir.ntnaeem.hottentot.generated;
 
 
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;

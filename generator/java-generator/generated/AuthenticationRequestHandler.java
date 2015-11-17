@@ -1,11 +1,7 @@
-package ir.naeem.hottentot.generated;
+package ir.ntnaeem.hottentot.generated;
 
-
-import ir.naeem.hottentot.generated.AbstractAuthenticationService;
 import ir.ntnaeem.hottentot.runtime.*;
-
 import java.util.List;
-
 
 public class AuthenticationRequestHandler extends RequestHandler {
     public AuthenticationRequestHandler(Service service) {
@@ -18,14 +14,14 @@ public class AuthenticationRequestHandler extends RequestHandler {
 
 	if(methodId == 1){
 		List <Argument> args = request.getArgs();
-		Argument arg0 = args.get(0)
+		Argument arg0 = args.get(0);
 		byte[] serializedCredential = arg0.getData();
 		Credential credential = new Credential();
-		credential.deserialize(serializedCredential)
+		credential.deserialize(serializedCredential);
 		Token token = null;
 		Response response = new Response();
 		try{
-			token = authenticationImpl.authenticate();
+			token = authenticationImpl.authenticate(credential);
 			byte[] serializedToken = token.serialize();
 			response.setStatusCode((byte) 100);
 			response.setData(serializedToken);

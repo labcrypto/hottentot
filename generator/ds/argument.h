@@ -21,29 +21,51 @@
  *  SOFTWARE.
  */
 
-package ir.ntnaeem.hottentot.client;
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__ARGUMENT_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__DS__ARGUMENT_H_
+
+#include <vector>
+#include <string>
+#include <stdint.h>
+#include <iostream>
+#include <stdlib.h>
 
 
-import ir.ntnaeem.hottentot.generated.AuthenticationService;
-import ir.ntnaeem.hottentot.generated.Credential;
-import ir.ntnaeem.hottentot.generated.Token;
-import ir.ntnaeem.hottentot.generated.AuthenticationServiceProxyBuilder;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
-
-public class Main {
-    public static void main(String[] args) {
-        AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8000);
-        Credential credential = new Credential();
-        credential.setUsername("test");
-        credential.setPassword("12345");
-        try {
-            Token token = proxy.authenticate(credential);
-            System.out.println(token.getValue());
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        AuthenticationServiceProxyBuilder.destroy();
+namespace naeem {
+  namespace hottentot {
+    namespace generator {
+      namespace ds {
+        class Argument {
+        public:
+          Argument(std::string type = "", 
+                   std::string variable = "")
+            : type_(type),
+              variable_(variable) {
+          }
+          virtual ~Argument() {}
+        public:
+          inline virtual std::string GetType() const {
+            return type_;
+          }
+          inline virtual void SetType(std::string type) {
+            type_ = type;
+          }
+          inline virtual std::string GetVariable() const {
+            return variable_;
+          }
+          inline virtual void SetVariable(std::string variable) {
+            variable_ = variable;
+          }
+          inline virtual void Display() {
+            std::cout << variable_ << ": " << type_;
+          }
+        protected:
+          std::string type_;
+          std::string variable_;
+        };
+      }
     }
+  }
 }
+
+#endif

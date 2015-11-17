@@ -21,10 +21,43 @@
  *  SOFTWARE.
  */
 
- #include "shared.h"
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__GENERATOR_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__GENERATOR_H_
 
- #ifndef NULL
- #define NULL 0
- #endif
+#include <vector>
+#include <string>
+#include <stdint.h>
+#include <iostream>
+#include <stdlib.h>
 
-::naeem::hottentot::generator::Module *currentModule = NULL;
+
+namespace naeem {
+  namespace hottentot {
+    namespace generator {
+      namespace ds {
+        class Hot;
+      }
+      class GenerationConfig {
+      public:
+        inline std::string GetOutDir() const {
+          return outDir_;
+        }
+        inline void SetOutDir(std::string outDir) {
+          outDir_ = outDir;
+        }
+      private:
+        std::string outDir_;
+      };
+      class Generator {
+      public:
+        Generator() {}
+        virtual ~Generator() {}
+      public:
+        virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
+                              GenerationConfig &) = 0;
+      };
+    }
+  }
+}
+
+#endif

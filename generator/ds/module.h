@@ -21,29 +21,44 @@
  *  SOFTWARE.
  */
 
-package ir.ntnaeem.hottentot.client;
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__MODULE_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__DS__MODULE_H_
+
+#include <vector>
 
 
-import ir.ntnaeem.hottentot.generated.AuthenticationService;
-import ir.ntnaeem.hottentot.generated.Credential;
-import ir.ntnaeem.hottentot.generated.Token;
-import ir.ntnaeem.hottentot.generated.AuthenticationServiceProxyBuilder;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
-
-public class Main {
-    public static void main(String[] args) {
-        AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8000);
-        Credential credential = new Credential();
-        credential.setUsername("test");
-        credential.setPassword("12345");
-        try {
-            Token token = proxy.authenticate(credential);
-            System.out.println(token.getValue());
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        AuthenticationServiceProxyBuilder.destroy();
+namespace naeem {
+  namespace hottentot {
+    namespace generator {
+      namespace ds {
+        class Struct;
+        class Service;
+        class Module {
+        friend class Hot;
+        public:
+          Module() {}
+          virtual ~Module() {}
+        public:
+          inline virtual void AddStruct(Struct *struc) {
+            structs_.push_back(struc);
+          }
+          inline virtual void AddService(Service *service) {
+            services_.push_back(service);
+          }
+          inline virtual std::string GetPackage() const {
+            return package_;
+          }
+          inline void SetPackage(std::string package) {
+            package_ = package;
+          }
+        private:
+          std::string package_;
+          std::vector<Struct*> structs_;
+          std::vector<Service*> services_;
+        };
+      }
     }
+  }
 }
+
+#endif

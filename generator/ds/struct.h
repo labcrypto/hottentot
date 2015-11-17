@@ -20,16 +20,38 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
- 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__MODULE_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__MODULE_H_
+
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__STRUCT_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__DS__STRUCT_H_
+
+#include <vector>
+
 
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      class Module {
-
-      };
+      namespace ds {
+        class Declaration;
+        class Struct {
+        friend class Hot;
+        public:
+          Struct() {}
+          virtual ~Struct() {}
+        public:
+          inline virtual void AddDeclaration(Declaration *declaration) {
+            declarations_.push_back(declaration);
+          }
+          inline virtual std::string GetName() const {
+            return name_;
+          }
+          inline virtual void SetName(std::string name) {
+            name_ = name;
+          }
+        private:
+          std::string name_;
+          std::vector<Declaration*> declarations_;
+        };
+      }
     }
   }
 }
