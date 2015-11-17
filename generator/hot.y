@@ -27,6 +27,8 @@
 #include <sstream>
 #include <string.h>
 #include <stack>
+#include <stdint.h>
+#include <iostream>
 
 #include "ds/hot.h"
 #include "ds/declaration.h"
@@ -257,17 +259,71 @@ int yywrap(void) {
 extern FILE *yyin;
 
 int main(int argc, char **argv) {
-  yyin = fopen(argv[1],"r+");
-  if (!yyin) {
-    printf("ERROR: File can't be opened.\n");
-    return 1;
+  bool isJava = false;
+  bool isCC = false;
+  bool hotsBegun = false;
+  char *outputDir = 0;
+  char **hots = 0;
+  uint16_t numOfHots = 0;
+  for (uint16_t i = 1; i < argc;) {
+    if (strcmp(argv[i], "--java") == 0) {
+      if (hotsBegun) {
+        fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
+        exit(1);
+      }
+      isJava = true;
+      i++;
+    } else if (strcmp(argv[i], "--cc") == 0) {
+      if (hotsBegun) {
+        fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
+        exit(1);
+      }
+      isCC = true;
+      i++;
+    } else if (strcmp(argv[i], "--out") == 0) {
+      outputDir = argv[i + 1];
+      i += 2;
+    } else {
+      if (hots == 0) {
+        hotsBegun = true;
+        hots = new char*[argc - i];
+      }
+      hots[numOfHots++] = argv[i++];
+    }
   }
-  yyparse();
-  currentHot->Display();
-  ::naeem::hottentot::generator::Generator *generator = new 
-    ::naeem::hottentot::generator::cc::CCGenerator();
-  generator->Generate(currentHot);
-  delete generator;
-  delete currentHot;
+  if (!isJava && !isCC) {
+    isCC = true;
+  }
+  std::cout << "Num: " << numOfHots << std::endl;
+  std::cout << "Is Java: " << isJava << std::endl;
+  std::cout << "Is CC: " << isCC << std::endl;
+  std::cout << "Out: " << (outputDir == 0 ? "NOT SET" : outputDir) << std::endl;
+  std::cout << "Hot files: \n";
+  for (uint16_t i = 0; i < numOfHots; i++) {
+    yyin = fopen(hots[i],"r+");
+    if (!yyin) {
+      printf("ERROR: File can't be opened.\n");
+      return 1;
+    }
+    yyparse();
+    currentHot->Display();
+    if (isCC) {
+      ::naeem::hottentot::generator::Generator *generator = new 
+        ::naeem::hottentot::generator::cc::CCGenerator();
+      generator->Generate(currentHot);
+      delete generator;
+      delete currentHot;
+      currentHot = NULL;
+    }
+    if (isJava) {
+      /*::naeem::hottentot::generator::Generator *generator = new 
+        ::naeem::hottentot::generator::cc::CCGenerator();
+      generator->Generate(currentHot);
+      delete generator;
+      delete currentHot;
+      currentHot = NULL;*/
+    }
+    std::cout << hots[i] << std::endl;
+  }
   return 0;
 }
