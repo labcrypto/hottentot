@@ -54,7 +54,7 @@ namespace naeem {
         virtual ~Generator() {}
       public:
         virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
-                              GenerationConfig *) = 0;
+                              GenerationConfig &) = 0;
       };
     }
   }

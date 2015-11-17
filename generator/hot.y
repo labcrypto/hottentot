@@ -308,22 +308,20 @@ int main(int argc, char **argv) {
     }
     yyparse();
     currentHot->Display();
+    ::naeem::hottentot::generator::GenerationConfig generationConfig;
+    generationConfig.SetOutDir(outputDir);
+    ::naeem::hottentot::generator::Generator *generator = 0;
     if (isCC) {
-      ::naeem::hottentot::generator::Generator *generator = new 
-        ::naeem::hottentot::generator::cc::CCGenerator();
-      generator->Generate(currentHot);
-      delete generator;
-      delete currentHot;
-      currentHot = NULL;
+      generator = new ::naeem::hottentot::generator::cc::CCGenerator();
+      generator->Generate(currentHot, generationConfig);
     }
     if (isJava) {
-      ::naeem::hottentot::generator::Generator *generator = new 
-        ::naeem::hottentot::generator::java::JavaGenerator();
-      generator->Generate(currentHot);
-      delete generator;
-      delete currentHot;
-      currentHot = NULL;
+      generator = new ::naeem::hottentot::generator::java::JavaGenerator();
+      generator->Generate(currentHot, generationConfig);
     }
+    delete generator;
+    delete currentHot;
+    currentHot = NULL;
   }
   return 0;
 }

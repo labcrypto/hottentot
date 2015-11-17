@@ -34,7 +34,7 @@ namespace naeem {
       namespace java {
         void
         JavaGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
-                                ::naeem::hottentot::generator::GenerationConfig *generationConfig) {
+                                ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
           // TODO
           std::cout << "Java Generation done." << std::endl;
         }
