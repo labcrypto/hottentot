@@ -30,11 +30,15 @@
 namespace naeem {
   namespace hottentot {
     namespace generator {
+      namespace java {
+          class JavaGenerator;
+      };
       namespace ds {
         class Struct;
         class Service;
         class Module {
         friend class Hot;
+        friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
           Module() {}
           virtual ~Module() {}
@@ -44,9 +48,6 @@ namespace naeem {
           }
           inline virtual void AddService(Service *service) {
             services_.push_back(service);
-          }
-          inline virtual std::string GetPackage() const {
-            return package_;
           }
           inline void SetPackage(std::string package) {
             package_ = package;

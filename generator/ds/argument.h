@@ -34,8 +34,14 @@
 namespace naeem {
   namespace hottentot {
     namespace generator {
+      namespace java {
+          class JavaGenerator;
+      };
       namespace ds {
         class Argument {
+
+        friend class ::naeem::hottentot::generator::java::JavaGenerator;
+
         public:
           Argument(std::string type = "", 
                    std::string variable = "")

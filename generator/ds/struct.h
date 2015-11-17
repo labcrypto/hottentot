@@ -30,10 +30,14 @@
 namespace naeem {
   namespace hottentot {
     namespace generator {
+      namespace java {
+          class JavaGenerator;
+      };
       namespace ds {
         class Declaration;
         class Struct {
         friend class Hot;
+        friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
           Struct() {}
           virtual ~Struct() {}
@@ -41,6 +45,7 @@ namespace naeem {
           inline virtual void AddDeclaration(Declaration *declaration) {
             declarations_.push_back(declaration);
           }
+
           inline virtual std::string GetName() const {
             return name_;
           }

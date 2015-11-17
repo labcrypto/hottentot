@@ -20,49 +20,24 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__GENERATOR_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__GENERATOR_H_
-
-#include <vector>
-#include <string>
-#include <stdint.h>
+#include "java_generator.h"
 #include <iostream>
-#include <stdlib.h>
+#include <fstream>
+#include <sstream>
+#include "../ds/hot.h"
 
 
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace java{
-        class JavaGenerator;
-      };
-      namespace ds {
-        class Hot;
+      namespace java {
+		void
+		JavaGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
+				        ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
+		  // TODO
+		  std::cout << "Java Generation done." << std::endl;
+		}
       }
-      class GenerationConfig {
-
-      friend class ::naeem::hottentot::generator::java::JavaGenerator;
-      public:
-        inline std::string GetOutDir() const {
-          return outDir_;
-        }
-        inline void SetOutDir(std::string outDir) {
-          outDir_ = outDir;
-        }
-      private:
-        std::string outDir_;
-      };
-      class Generator {
-      public:
-        Generator() {}
-        virtual ~Generator() {}
-      public:
-        virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
-                              GenerationConfig &) = 0;
-      };
     }
   }
 }
-
-#endif

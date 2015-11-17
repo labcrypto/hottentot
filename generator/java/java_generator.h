@@ -25,7 +25,12 @@
 #define _NAEEM_HOTTENTOT_GENERATOR__JAVA__JAVA_GENERATOR_H_
 
 #include "../generator.h"
-
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <fstream>
+#include "../ds/module.h"
 
 namespace naeem {
   namespace hottentot {
@@ -38,6 +43,27 @@ namespace naeem {
         public:
           virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
                                 ::naeem::hottentot::generator::GenerationConfig &);
+
+          void FakeInsert();
+          void GenerateStructs(::naeem::hottentot::generator::ds::Module*);
+          void ReadTemplateFiles();
+          void GenerateAbstractService(::naeem::hottentot::generator::ds::Module*);
+          void GenerateServiceInterface(::naeem::hottentot::generator::ds::Module*);
+          void GenerateServiceProxyBuilder(::naeem::hottentot::generator::ds::Module*);
+          void GenerateRequestHandler(::naeem::hottentot::generator::ds::Module*);
+          void GenerateServiceProxy(::naeem::hottentot::generator::ds::Module*);
+          
+        private:
+          std::ofstream os;
+          std::ifstream is;
+          std::vector<naeem::hottentot::generator::ds::Module*> modules_;
+          std::string structTmpStr_;
+          std::string abstractServiceTmpStr_;
+          std::string serviceTmpStr_;
+          std::string serviceProxyBuilderTmpStr_;
+          std::string requestHandlerTmpStr_;
+          std::string serviceProxyTmpStr_;
+          std::string outDir_;
         };
       }
     }

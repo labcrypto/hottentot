@@ -32,16 +32,24 @@
 namespace naeem {
   namespace hottentot {
     namespace generator {
+      namespace java {
+          class JavaGenerator;
+      };
       namespace ds {
         class Argument;
         class Method {
         friend class Hot;
+        friend class ::naeem::hottentot::generator::java::JavaGenerator;
+        
         public:
           Method() {}
           virtual ~Method() {}
         public:
           inline virtual void AddArgument(Argument *argument) {
             arguments_.push_back(argument);
+          }
+          inline virtual std::vector<Argument*> GetArguments() {
+            return arguments_;
           }
           inline virtual std::string GetReturnType() const {
             return returnType_;

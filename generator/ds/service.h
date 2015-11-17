@@ -34,10 +34,15 @@
 namespace naeem {
   namespace hottentot {
     namespace generator {
+      namespace java {
+          class JavaGenerator;
+      };
+
       namespace ds {
         class Method;
         class Service {
         friend class Hot;
+        friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
           enum ServiceType {
             Stateless,
@@ -54,11 +59,12 @@ namespace naeem {
           inline virtual void AddMethod(Method *method) {
             methods_.push_back(method);
           }
-          inline virtual ServiceType GetServiceType() const {
-            return serviceType_;
-          }
+          
           inline virtual void SetServiceType(ServiceType serviceType) {
             serviceType_ = serviceType;
+          }
+          inline virtual ServiceType GetServiceType() {
+            return serviceType_;
           }
           inline virtual void SetServiceType(std::string serviceTypeString) {
             if (serviceTypeString == "stateless") {
