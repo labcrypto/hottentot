@@ -36,7 +36,8 @@ namespace naeem {
           CCGenerator() {}
           virtual ~CCGenerator() {}
         public:
-          virtual void Generate(::naeem::hottentot::generator::ds::Hot *);
+          virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
+                                ::naeem::hottentot::generator::GenerationConfig *);
         };
       }
     }

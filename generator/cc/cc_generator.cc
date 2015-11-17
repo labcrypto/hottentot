@@ -33,7 +33,8 @@ namespace naeem {
     namespace generator {
       namespace cc {
         void
-        CCGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot) {
+        CCGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
+                              ::naeem::hottentot::generator::GenerationConfig *generationConfig) {
           // TODO
           std::cout << "C++ Generation done." << std::endl;
         }

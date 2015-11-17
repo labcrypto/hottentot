@@ -37,12 +37,24 @@ namespace naeem {
       namespace ds {
         class Hot;
       }
+      class GenerationConfig {
+      public:
+        inline std::string GetOutDir() const {
+          return outDir_;
+        }
+        inline void SetOutDir(std::string outDir) {
+          outDir_ = outDir;
+        }
+      private:
+        std::string outDir_;
+      };
       class Generator {
       public:
         Generator() {}
         virtual ~Generator() {}
       public:
-        virtual void Generate(::naeem::hottentot::generator::ds::Hot *) = 0;
+        virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
+                              GenerationConfig *) = 0;
       };
     }
   }
