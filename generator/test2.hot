@@ -1,12 +1,12 @@
-module ir.ntnaeem.hottentot.examples {
-  struct Response {
-    double value ord(1);
+module ir.ntnaeem.hottentot.generated {
+  struct Token {
+    string value ord(1);
   };
-  struct Request {
-    double value1 ord(1);
-    double value2 ord(2);
+  struct Credential {
+    string username ord(1);
+    string password ord(2);
   };
-  stateless service Calculator {
-    Response Add(Request request);
+  stateless service Authentication{
+    Token authenticate(Credential credential);
   };
 };

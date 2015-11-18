@@ -30,6 +30,6 @@ compile:
 	g++ -c java/java_generator.cc -o java_generator.o
 	g++ y.tab.o lex.yy.o cc_generator.o java_generator.o -lfl -ll -o hot
 java: compile
-	./hot --java --out gen test.hot
+	./hot --java --out gen test2.hot
 cc: compile
-	./hot --cc --out gen test.hot
+	./hot --cc --out gen test2.hot
