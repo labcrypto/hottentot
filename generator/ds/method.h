@@ -25,7 +25,8 @@
 #define _NAEEM_HOTTENTOT_GENERATOR__DS__METHOD_H_
 
 #include <vector>
-
+#include <iostream>
+#include <stdint.h>
 #include "argument.h"
 
 
@@ -77,6 +78,7 @@ namespace naeem {
           std::string returnType_;
           std::string name_;
           std::vector<Argument*> arguments_;
+          std::uint32_t id_ = 1;
         };
       }
     }

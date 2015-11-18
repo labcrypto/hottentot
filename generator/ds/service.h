@@ -86,6 +86,7 @@ namespace naeem {
           ServiceType serviceType_;
           std::string name_;
           std::vector<Method*> methods_;
+          std::uint32_t id_ = 1;
         };
       }
     }
