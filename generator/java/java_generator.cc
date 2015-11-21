@@ -134,7 +134,6 @@ namespace naeem {
 		JavaGenerator::GenerateStructs(::naeem::hottentot::generator::ds::Module *pModule) {
 		    //loop on structs in everey module
 		    //cout << structTmpStr << endl << "-----" << endl;
-
 		     for (int i = 0; i < pModule->structs_.size(); i++) {
 		         ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(i);
 				 std::string path = outDir_ + "/" +  pStruct->name_.c_str() + ".java";
@@ -147,7 +146,11 @@ namespace naeem {
 		         std::string getterSetterStr;
 		         
 		         for (int i = 0; i < pStruct->declarations_.size(); i++) {
+		         	//TODO change string to string
 		             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(i);
+		             if (declarationPtr->type_.compare("string") == 0){
+		             	declarationPtr->type_[0] = 'S';
+		             }
 		             std::string declarationName = declarationPtr->variable_;
 		             std::string capitalizedDeclarationName = declarationPtr->variable_;
 		             capitalizedDeclarationName[0] -= 32;
@@ -322,7 +325,7 @@ namespace naeem {
 		                pArg = pMethod->arguments_.at(i);
 		                std::stringstream ssI;
 		                ssI << i;
-		                methodConditionStr += "\t\tArgument arg" + ssI.str() + " = arguments_.get(" + ssI.str() + ");\n";
+		                methodConditionStr += "\t\tArgument arg" + ssI.str() + " = args.get(" + ssI.str() + ");\n";
 		                methodConditionStr += "\t\tbyte[] serialized" + pArg->type_;
 		                methodConditionStr += " = arg" + ssI.str() + ".getData();\n";
 		                methodConditionStr += "\t\t" + pArg->type_ + " " + pArg->variable_ + " = new " + pArg->type_ + "();\n";
