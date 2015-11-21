@@ -1,4 +1,4 @@
-module ir.ntnaeem.hottentot.generated {
+module example.generated {
   struct Token {
     string value ord(1);
   };
