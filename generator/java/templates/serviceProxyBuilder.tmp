@@ -1,0 +1,12 @@
+package [%BASE_PACKAGE_NAME%];
+
+public class [%SERVICE_NAME%]ServiceProxyBuilder {
+
+	public static [%SERVICE_NAME%]Service create(String host, int port) {
+		return new [%SERVICE_NAME%]ServiceProxy(host,port);
+	}
+
+    	public static void destroy() {
+        	//TODO
+    	}
+}

@@ -1,0 +1,7 @@
+package [%BASE_PACKAGE_NAME%];
+
+import ir.ntnaeem.hottentot.runtime.Service;
+
+public interface [%SERVICE_NAME%]Service extends Service {
+[%SERVICE_METHODS%]
+}

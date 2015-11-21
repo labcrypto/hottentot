@@ -74,14 +74,14 @@ namespace naeem {
 //			    fwrite(str.c_str() , sizeof(char), str.length(),f);
 //			    fclose(f);
 
-		    is.open("/home/developer/projects/hottentot-git/generator/java-generator/templates/struct.tmp", std::ios::in);
+		    is.open("/home/developer/projects/hottentot-git/generator/java/templates/struct.tmp", std::ios::in);
 		    //TODO use buffer reader
 		    char c;
 		    while ((c = is.get()) != -1) {
 		        structTmpStr_ += c;
 		    }
 		    is.close();
-		    is.open("/home/developer/projects/hottentot-git/generator/java-generator/templates/abstractService.tmp", std::ios::in);
+		    is.open("/home/developer/projects/hottentot-git/generator/java/templates/abstractService.tmp", std::ios::in);
 		    //TODO use buffer reader
 		    while ((c = is.get()) != -1) {
 		        abstractServiceTmpStr_ += c;
@@ -89,14 +89,14 @@ namespace naeem {
 		    is.close();
 
 		    //service interface
-		    is.open("/home/developer/projects/hottentot-git/generator/java-generator/templates/service.tmp", std::ios::in);
+		    is.open("/home/developer/projects/hottentot-git/generator/java/templates/service.tmp", std::ios::in);
 		    //TODO use buffer reader
 		    while ((c = is.get()) != -1) {
 		        serviceTmpStr_ += c;
 		    }
 		    is.close();
 		    //service proxy
-		    is.open("/home/developer/projects/hottentot-git/generator/java-generator/templates/serviceProxy.tmp",
+		    is.open("/home/developer/projects/hottentot-git/generator/java/templates/serviceProxy.tmp",
 		            std::ios::in);
 		    //TODO use buffer reader
 		    while ((c = is.get()) != -1) {
@@ -105,7 +105,7 @@ namespace naeem {
 		    is.close();
 
 		    //service proxy builder
-		    is.open("/home/developer/projects/hottentot-git/generator/java-generator/templates/serviceProxyBuilder.tmp",
+		    is.open("/home/developer/projects/hottentot-git/generator/java/templates/serviceProxyBuilder.tmp",
 		            std::ios::in);
 		    //TODO use buffer reader
 		    while ((c = is.get()) != -1) {
@@ -114,7 +114,7 @@ namespace naeem {
 		    is.close();
 
 		    //request handler
-		    is.open("/home/developer/projects/hottentot-git/generator/java-generator/templates/requestHandler.tmp",
+		    is.open("/home/developer/projects/hottentot-git/generator/java/templates/requestHandler.tmp",
 		            std::ios::in);
 		    //TODO use buffer reader
 		    while ((c = is.get()) != -1) {
@@ -140,8 +140,12 @@ namespace naeem {
 		         os.open(path.c_str()  , std::ios::trunc);
 		         std::string basePackageName = pModule->package_;
 		         std::string replacableStructTmpStr = structTmpStr_;
-		         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
-		         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%STRUCT_NAME%]"), 15, pStruct->name_);
+		         while(replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos){
+		         	replacableStructTmpStr.replace(replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);	
+		         }
+		         while(replacableStructTmpStr.find("[%STRUCT_NAME%]") != std::string::npos){
+		         	replacableStructTmpStr.replace(replacableStructTmpStr.find("[%STRUCT_NAME%]"), 15 , pStruct->name_);	
+		         }
 		         std::string declarationStr;
 		         std::string getterSetterStr;
 		         
@@ -181,20 +185,14 @@ namespace naeem {
 		        std::string path = outDir_ + "/Abstract" + pService->name_.c_str() + "Service.java";
 		        os.open(path.c_str() , std::ios::trunc);
 		        replacableAbstractServiceTmpStr = abstractServiceTmpStr_;
-		        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
-		                                                basePackageName);
-		        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
-		                                                basePackageName);
-		        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
-		                                                basePackageName);
-		        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16,
-		                                                pService->name_);
-		        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16,
-		                                                pService->name_);
-		        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16,
-		                                                pService->name_);
-		        replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16,
-		                                                pService->name_);
+
+
+		        while(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos){
+		         	replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);	
+		        }
+		        while(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]") != std::string::npos){
+		         	replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16 , pService->name_);	
+		        }
 		        std::stringstream ssID;
 		        //TODO get service ID from hot parser
 		        //ssID << pService->id_;
@@ -218,15 +216,19 @@ namespace naeem {
 		        //std::cout << outDir_;
 		        std::string path = outDir_ + "/" + pService->name_.c_str() + "Service.java";
 		 
-		        os.open( path.c_str(), std::ios::trunc);
-		        replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
-		        replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%SERVICE_NAME%]"), 16, pService->name_);
+		        //os.open( path.c_str(), std::ios::trunc);
+		        while(replacableServiceTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos){
+		         	replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);	
+		        }
+		        while(replacableServiceTmpStr.find("[%SERVICE_NAME%]") != std::string::npos){
+		         	replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%SERVICE_NAME%]"), 16 , pService->name_);	
+		        }
 		        std::string serviceMethodsStr;
 		        //loop for service methods
 		        ::naeem::hottentot::generator::ds::Method *pMethod;
 		        for (int i = 0; i < pService->methods_.size(); i++) {
 		            pMethod = pService->methods_.at(i);
-		            serviceMethodsStr += "\tpublic " + pMethod->returnType_ + " " + pMethod->name_ + "(";
+		            serviceMethodsStr += "\t" + pMethod->returnType_ + " " + pMethod->name_ + "(";
 		            //loop on methods arguments
 		            ::naeem::hottentot::generator::ds::Argument *pArg;
 		            for (int i = 0; i < pMethod->arguments_.size(); i++) {
@@ -238,7 +240,7 @@ namespace naeem {
 		            }
 		            serviceMethodsStr += ") throws Exception;";
 		        };
-		        replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%SERVICE_METHODS%]"), 19, serviceMethodsStr);
+		        //replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%SERVICE_METHODS%]"), 19, serviceMethodsStr);
 		        os.write(replacableServiceTmpStr.c_str(), replacableServiceTmpStr.size());
 		        os.close();
 
@@ -259,20 +261,12 @@ namespace naeem {
 		        std::string path = outDir_ + "/" +  pService->name_.c_str() + "ServiceProxyBuilder.java";
 		        os.open(path.c_str() , std::ios::trunc);
 		        replacableServiceProxyBuilderTmpStr = serviceProxyBuilderTmpStr_;
-		        replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]"),
-		                                                    21,
-		                                                    basePackageName);
-		        replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]"),
-		                                                    21,
-		                                                    basePackageName);
-		        replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]"), 16,
-		                                                    pService->name_);
-		        replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]"), 16,
-		                                                    pService->name_);
-		        replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]"), 16,
-		                                                    pService->name_);
-		        replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]"), 16,
-		                                                    pService->name_);
+		        while(replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos){
+		         	replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);	
+		        }
+		        while(replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]") != std::string::npos){
+		         	replacableServiceProxyBuilderTmpStr.replace(replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]"), 16 , pService->name_);	
+		        }
 		        os.write(replacableServiceProxyBuilderTmpStr.c_str(), replacableServiceProxyBuilderTmpStr.size());
 		        os.close();
 		    }
@@ -293,17 +287,14 @@ namespace naeem {
 		        std::string lowerCaseServiceName = pService->name_;
 		        lowerCaseServiceName[0] += 32;
 		        replacableRequestHandlerTmpStr = requestHandlerTmpStr_;
-		        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
-		                                               basePackageName);
+		       
 
-		        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16,
-		                                               serviceName);
-		        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16,
-		                                               serviceName);
-		        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16,
-		                                               serviceName);
-		        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16,
-		                                               serviceName);
+		        while(replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos){
+		         	replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);	
+		        }
+		        while(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]") != std::string::npos){
+		         	replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16 , pService->name_);	
+		        }
 		        replacableRequestHandlerTmpStr.replace(replacableRequestHandlerTmpStr.find("[%SERVICE_NAME_LOWERCASE%]"), 26,
 		                                               lowerCaseServiceName);
 
@@ -400,18 +391,12 @@ namespace naeem {
 		        std::string path = outDir_ + "/" + pService->name_.c_str() + "ServiceProxy.java";
 		        os.open(path.c_str() , std::ios::trunc);
 		        pService = pModule->services_.at(i);
-		        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]"),
-		                                             16,
-		                                             pService->name_);
-		        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]"),
-		                                             16,
-		                                             pService->name_);
-		        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]"),
-		                                             16,
-		                                             pService->name_);
-		        replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"),
-		                                             21,
-		                                             basePackageName);
+		        while(replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]") != std::string::npos){
+		         	replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);	
+		        }
+		        while(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]") != std::string::npos){
+		         	replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]"), 16 , pService->name_);	
+		        }
 
 		        //loop on service methods
 		        ::naeem::hottentot::generator::ds::Method *pMethod;
