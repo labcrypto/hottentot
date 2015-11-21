@@ -78,7 +78,7 @@ namespace naeem {
           std::string returnType_;
           std::string name_;
           std::vector<Argument*> arguments_;
-          std::uint32_t id_ = 1;
+          uint32_t id_;
         };
       }
     }
