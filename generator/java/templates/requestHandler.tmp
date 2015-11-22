@@ -8,13 +8,11 @@ public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
         super(service);
     }
     @Override
-    public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException {
+    public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
         byte methodId = request.getMethodId();
         [%SERVICE_NAME%]Service [%SERVICE_NAME_LOWERCASE%]Impl = (Abstract[%SERVICE_NAME%]Service) service;
 
 	[%METHOD_CONDITIONS%]
-        
-        //TODO throw exception
-        return null;
+        throw new MethodNotSupportException("method id is incorrect");
     }
 }

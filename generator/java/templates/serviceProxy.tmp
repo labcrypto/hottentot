@@ -1,15 +1,17 @@
 package [%BASE_PACKAGE_NAME%];
 
 import ir.ntnaeem.hottentot.runtime.Argument;
-import ir.ntnaeem.hottentot.runtime.*;
+import ir.ntnaeem.hottentot.runtime.Proxy;
+import ir.ntnaeem.hottentot.runtime.Request;
+import ir.ntnaeem.hottentot.runtime.Response;
+import ir.ntnaeem.hottentot.runtime.TcpClient;
+import ir.ntnaeem.hottentot.runtime.exception.HottentotRuntimeException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
-import ir.ntnaeem.hottentot.runtime.Proxy;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
-import java.util.Arrays;
 
 public class [%SERVICE_NAME%]ServiceProxy extends Abstract[%SERVICE_NAME%]Service implements Proxy {
 	

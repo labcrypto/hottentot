@@ -238,7 +238,7 @@ namespace naeem {
 		                    serviceMethodsStr += ",";
 		                }
 		            }
-		            serviceMethodsStr += ") throws TcpClientConnectException , TcpClientReadException , TcpClientWriteException;";
+		            serviceMethodsStr += ");";
 		        };
 		        //replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%SERVICE_METHODS%]"), 19, serviceMethodsStr);
 		        os.write(replacableServiceTmpStr.c_str(), replacableServiceTmpStr.size());
