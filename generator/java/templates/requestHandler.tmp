@@ -20,7 +20,7 @@ public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
         byte methodId = request.getMethodId();
         [%SERVICE_NAME%]Service [%SERVICE_NAME_LOWERCASE%]Impl = (Abstract[%SERVICE_NAME%]Service) service;
 
-	[%METHOD_CONDITIONS%]
+	    [%METHOD_CONDITIONS%]
         throw new MethodNotSupportException("method id is incorrect");
     }
 }
