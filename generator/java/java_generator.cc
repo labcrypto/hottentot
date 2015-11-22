@@ -238,7 +238,7 @@ namespace naeem {
 		                    serviceMethodsStr += ",";
 		                }
 		            }
-		            serviceMethodsStr += ") throws Exception;";
+		            serviceMethodsStr += ") throws TcpClientConnectException , TcpClientReadException , TcpClientWriteException;";
 		        };
 		        //replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%SERVICE_METHODS%]"), 19, serviceMethodsStr);
 		        os.write(replacableServiceTmpStr.c_str(), replacableServiceTmpStr.size());
@@ -324,9 +324,9 @@ namespace naeem {
 		            }
 		            methodConditionStr += "\t\t" + pMethod->returnType_ + " " + lowerCaseReturnType + " = null;\n";
 		            methodConditionStr += "\t\tResponse response = new Response();\n";
-		            methodConditionStr += "\t\ttry{\n";
+		            //methodConditionStr += "\t\ttry{\n";
 		            methodConditionStr +=
-		                    "\t\t\t" + lowerCaseReturnType + " = " + lowerCaseServiceName + "Impl." + pMethod->name_ + "(";
+		                    "\t\t" + lowerCaseReturnType + " = " + lowerCaseServiceName + "Impl." + pMethod->name_ + "(";
 		            for (int i = 0; i < pMethod->arguments_.size(); i++) {
 		                pArg = pMethod->arguments_.at(i);
 		                methodConditionStr += pArg->variable_;
@@ -336,13 +336,13 @@ namespace naeem {
 		            }
 		            methodConditionStr += ");\n";
 		            methodConditionStr +=
-		                    "\t\t\tbyte[] serialized" + pMethod->returnType_ + " = " + lowerCaseReturnType + ".serialize();\n";
-		            methodConditionStr += "\t\t\tresponse.setStatusCode((byte) 100);\n";
-		            methodConditionStr += "\t\t\tresponse.setData(serialized" + pMethod->returnType_ + ");\n";
-		            methodConditionStr += "\t\t\tresponse.setLength(serialized" + pMethod->returnType_ + ".length + 1);\n";
-		            methodConditionStr += "\t\t} catch (Exception e) {\n";
-		            methodConditionStr += "\t\t\te.printStackTrace();\n";
-		            methodConditionStr += "\t\t}\n";
+		                    "\t\tbyte[] serialized" + pMethod->returnType_ + " = " + lowerCaseReturnType + ".serialize();\n";
+		            methodConditionStr += "\t\tresponse.setStatusCode((byte) 100);\n";
+		            methodConditionStr += "\t\tresponse.setData(serialized" + pMethod->returnType_ + ");\n";
+		            methodConditionStr += "\t\tresponse.setLength(serialized" + pMethod->returnType_ + ".length + 1);\n";
+		            //methodConditionStr += "\t\t} catch (Exception e) {\n";
+		            methodConditionStr += "\t\te.printStackTrace();\n";
+		            //methodConditionStr += "\t\t}\n";
 		            methodConditionStr += "\t\treturn response;\n";
 		            methodConditionStr += "\t}";
 

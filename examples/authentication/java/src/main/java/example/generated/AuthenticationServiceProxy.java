@@ -20,7 +20,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
 		this.host = host;
 		this.port = port;
 	}
-	public Token authenticate(Credential credential) throws Exception { 
+	public Token authenticate(Credential credential) throws TcpClientConnectException, TcpClientWriteException, TcpClientReadException {
 		//serialize credential
 		byte[] serializedCredential = credential.serialize();
 
