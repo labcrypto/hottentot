@@ -1,6 +1,14 @@
 package [%BASE_PACKAGE_NAME%];
 
-import ir.ntnaeem.hottentot.runtime.*;
+import ir.ntnaeem.hottentot.runtime.Argument;
+import ir.ntnaeem.hottentot.runtime.Request;
+import ir.ntnaeem.hottentot.runtime.RequestHandler;
+import ir.ntnaeem.hottentot.runtime.Response;
+import ir.ntnaeem.hottentot.runtime.Service;
+import ir.ntnaeem.hottentot.runtime.exception.MethodNotSupportException;
+import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
+import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
+import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
 import java.util.List;
 
 public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
