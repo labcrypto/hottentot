@@ -24,6 +24,7 @@
 #include "java_generator.h"
 #include "../ds/hot.h"
 #include <stdint.h>
+ #include <sys/stat.h>
 
 namespace naeem {
   namespace hottentot {
@@ -47,14 +48,16 @@ namespace naeem {
 		void
 		JavaGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
 				        ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
-		  	
-		  	// TODO
-			//FakeInsert();
+
 			outDir_ = generationConfig.outDir_;
-			
+			struct stat st = {0};
+	        if(stat(outDir_.c_str(),&st) != 0){
+	                mkdir(outDir_.c_str(),0777);
+	        }
 			MakeStringsFromByteArrays();
 		    //ReadTemplateFiles();
-		    outDir_ = "/home/developer/Desktop/generated";
+		    
+		    //outDir_ = "/home/developer/Desktop/generated";
 
 		     //::naeem::hottentot::generator::ds::Struct *pStruct;
 		     modules_ = hot->modules_;
