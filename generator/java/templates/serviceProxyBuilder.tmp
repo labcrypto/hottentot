@@ -6,7 +6,7 @@ public class [%SERVICE_NAME%]ServiceProxyBuilder {
 		return new [%SERVICE_NAME%]ServiceProxy(host,port);
 	}
 
-    	public static void destroy() {
-        	//TODO
-    	}
+	public static void destroy() {
+    	//TODO
+	}
 }
