@@ -1,6 +1,31 @@
+/*  The MIT License (MIT)
+ *
+ *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTAB_STRILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE.
+ */
 package ir.ntnaeem.hottentot.runtime;
 
 
+import ir.ntnaeem.hottentot.runtime.exception.HottentotRuntimeException;
+import ir.ntnaeem.hottentot.runtime.exception.ProtocolProcessException;
+import ir.ntnaeem.hottentot.runtime.exception.TcpServerReadException;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.RequestCallbackFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
@@ -28,19 +53,12 @@ public class DefaultTcpServer implements TcpServer {
     }
 
     public void bindAndStart() throws IOException {
-        //TODO write a multi thread approach
-        //open ir.ntnaeem.hottentot.server socket
-        //accept socket
-
         ServerSocket serverSocket = new ServerSocket(port);
-
         class ClientHandler implements Runnable, ResponseCallback {
             private Socket clientSocket;
-
             public ClientHandler(Socket clientSocket) {
                 this.clientSocket = clientSocket;
             }
-
             public void run() {
                 //receive data
                 byte[] buffer = new byte[256];
@@ -63,15 +81,29 @@ public class DefaultTcpServer implements TcpServer {
                 protocol.setResponseCallback(this);
                 if (numReadBytes < 256) {
                     readDataChunk = Arrays.copyOf(buffer, numReadBytes);
-                    protocol.processDataForRequest(readDataChunk);
+                    try {
+                        protocol.processDataForRequest(readDataChunk);
+                    } catch (ProtocolProcessException e) {
+                        throw new HottentotRuntimeException(e);
+                    }
                 } else {
-                    protocol.processDataForRequest(buffer);
+                    try {
+                        protocol.processDataForRequest(buffer);
+                    } catch (ProtocolProcessException e) {
+                        throw new HottentotRuntimeException(e);
+                    }
                 }
             }
 
-            public void onResponse(byte[] serializedResponse) throws IOException {
-                OutputStream os = clientSocket.getOutputStream();
-                os.write(serializedResponse , 0 ,serializedResponse.length);
+            public void onResponse(byte[] serializedResponse) throws TcpServerReadException{
+                OutputStream os = null;
+                try {
+                    os = clientSocket.getOutputStream();
+                    os.write(serializedResponse, 0, serializedResponse.length);
+                }
+                catch (IOException e) {
+                    throw new TcpServerReadException();
+                }
             }
         }
         while (true) {

@@ -1,4 +1,4 @@
-package ir.ntnaeem.hottentot.generated;
+package example.generatedBackup;
 
 public class Credential {
 	private String username;
@@ -24,6 +24,7 @@ public class Credential {
 	public void deserialize(byte[] serializedToken) {
 		//TODO(ali)
 		//fake implementation
-		setValue("test-token");
+		setUsername("test-token");
+		setPassword("test-token");
 	}
 }

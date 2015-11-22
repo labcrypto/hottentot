@@ -1,3 +1,26 @@
+/*  The MIT License (MIT)
+ *
+ *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTAB_STRILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE.
+ */
+
 package ir.ntnaeem.hottentot.runtime.protocol;
 
 import ir.ntnaeem.hottentot.runtime.*;
@@ -42,8 +65,8 @@ public class ProtocolV1 implements Protocol {
                     } else {
                         data[dStateCounter] = b;
                         //TODO use logger
-                        System.out.println("request has been read ... ");
-                        System.out.println("request data : " +Arrays.toString(data));
+                        //System.out.println("request has been read ... ");
+                        //System.out.println("request data : " +Arrays.toString(data));
                         //
                         Response response = null;
                         try {
@@ -99,7 +122,6 @@ public class ProtocolV1 implements Protocol {
         }
 
         public void process(byte[] dataChunk) {
-            System.out.println("data chunk : "+Arrays.toString(dataChunk));
             for (byte b : dataChunk) {
                 if (currentState == 0) {
                     if ((b & 0x80) == 0) {
@@ -221,12 +243,10 @@ public class ProtocolV1 implements Protocol {
             for (byte b : byteArrayFromArgLength) {
                 serializedRequest[counter++] = b;
             }
-            System.out.println(counter);
             for (byte b : arg.getData()) {
                 serializedRequest[counter++] = b;
             }
         }
-        System.out.println("s request : " + Arrays.toString(serializedRequest));
         return serializedRequest;
     }
 
@@ -234,20 +254,7 @@ public class ProtocolV1 implements Protocol {
         //tested :)
         int counter = 0;
         Request request = new Request();
-//        byte firstByte = serializedRequest[0];
-//        if (((int) firstByte & 0x80) == 0) {
-//            request.setLength(serializedRequest[0]);
-//            counter++;
-//        } else {
-//            int numOfByteForLength = (int) firstByte & 0x0f;
-//            int requestLength = 0;
-//            for (int i = numOfByteForLength; i > 0; i--) {
-//                counter++;
-//                requestLength += (int) pow(256, (numOfByteForLength - 1)) * serializedRequest[i];
-//            }
-//            request.setLength(requestLength);
-//        }
-        System.out.println(Arrays.toString(serializedRequestBody));
+        //System.out.println(Arrays.toString(serializedRequestBody));
         request.setLength(serializedRequestBody.length);
         request.setServiceId(serializedRequestBody[counter++]);
         request.setMethodId(serializedRequestBody[counter++]);
@@ -262,7 +269,6 @@ public class ProtocolV1 implements Protocol {
         }
         counter++;
         request.setArgumentCount(serializedRequestBody[counter++]);
-        System.out.println(counter);
         //make arguments
         byte firstByte;
         while (counter < serializedRequestBody.length) {
@@ -331,7 +337,6 @@ public class ProtocolV1 implements Protocol {
     public byte[] serializeResponse(Response response) {
         //tested ! :)
         int counter = 0;
-        System.out.println(response);
         byte[] byteArrayFromSerializedResponseLength = getByteArrayFromIntegerDataLength(response.getLength());
         byte[] serializedResponse = new byte[response.getLength() + byteArrayFromSerializedResponseLength.length];
         for (byte b : byteArrayFromSerializedResponseLength) {
@@ -350,7 +355,6 @@ public class ProtocolV1 implements Protocol {
     }
 
     public void processDataForRequest(byte[] dataChunk) throws ProtocolProcessException {
-        System.out.println(Arrays.toString(dataChunk));
         requestProcessor.process(dataChunk);
     }
 

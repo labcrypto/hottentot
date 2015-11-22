@@ -29,6 +29,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+ #include <stdint.h>
 #include <fstream>
 #include "../ds/module.h"
 
@@ -38,7 +39,7 @@ namespace naeem {
       namespace java {
         class JavaGenerator : public ::naeem::hottentot::generator::Generator {
         public:
-          JavaGenerator() {}
+          JavaGenerator();
           virtual ~JavaGenerator();
         public:
           virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
@@ -65,6 +66,8 @@ namespace naeem {
           std::string requestHandlerTmpStr_;
           std::string serviceProxyTmpStr_;
           std::string outDir_;
+          static const uint32_t TAB_SPACE_NUMBER = 4;
+          std::string TAB_STR;
         };
       }
     }

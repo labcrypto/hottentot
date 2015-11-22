@@ -6,7 +6,7 @@ public class AuthenticationServiceProxyBuilder {
 		return new AuthenticationServiceProxy(host,port);
 	}
 
-    	public static void destroy() {
-        	//TODO
-    	}
+	public static void destroy() {
+    	//TODO
+	}
 }

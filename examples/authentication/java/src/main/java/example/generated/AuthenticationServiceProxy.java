@@ -22,80 +22,80 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
 		this.host = host;
 		this.port = port;
 	}
-	public Token authenticate(Credential credential) {
-		//serialize credential
-		byte[] serializedCredential = credential.serialize();
+	public Token authenticate(Credential credential) { 
+        //serialize credential
+        byte[] serializedCredential = credential.serialize();
 
-		//make request
-		Request request = new Request();
-		request.setServiceId((byte) 1);
-		request.setMethodId((byte) 1);
-		request.setArgumentCount((byte) 1);
-		request.setType(Request.RequestType.InvokeStateless);
-		Argument arg0 = new Argument();
-		arg0.setDataLength(credential.serialize().length);
-		arg0.setData(credential.serialize());
-		request.addArgument(arg0);
-		int dataLength = 0;
-		//calculate data length for every argument
-		//calculate credentialDataLength
-		int credentialDataLength= serializedCredential.length;
-		int credentialDataLengthByteArrayLength = 1;
-		if (credentialDataLength >= 0x80) {
-			if (credentialDataLength <= 0xff) {
-				//ex 0x81 0xff
-				credentialDataLengthByteArrayLength = 2;
-			} else if (credentialDataLength <= 0xffff) {
-				//ex 0x82 0xff 0xff
-				credentialDataLengthByteArrayLength = 3;
-			} else if (credentialDataLength <= 0xffffff) {
-				//ex 0x83 0xff 0xff 0xff
-				credentialDataLengthByteArrayLength = 4;
-			}
-		}
-		dataLength += credentialDataLength + credentialDataLengthByteArrayLength;
-		//
-		request.setLength(4 + dataLength);
-		//connect to server
-		TcpClient tcpClient = TcpClientFactory.create();
-		try {
-			tcpClient.connect(host, port);
-		} catch (TcpClientConnectException e) {
-			throw new HottentotRuntimeException(e);
-		}
-		//serialize request according to HTNP
-		Protocol protocol = ProtocolFactory.create();
-		byte[] serializedRequest = protocol.serializeRequest(request);
-		//send request
-		try {
-			tcpClient.write(serializedRequest);
-		} catch (TcpClientWriteException e) {
-			throw new HottentotRuntimeException(e);
-		}
-		//read response from server
-		byte[] buffer = new byte[256];
-		while (!protocol.IsResponseComplete()) {
-			byte[] dataChunkRead = new byte[0];
-			try {
-				dataChunkRead = tcpClient.read();
-			} catch (TcpClientReadException e) {
-				throw new HottentotRuntimeException(e);
-			}
-			protocol.processDataForResponse(dataChunkRead);
-		}
-		//deserialize token part of response
-		Response response = protocol.getResponse();
-		//close everything
-		//deserialize Tokenpart from response
-		Token token= null;
-		if (response.getStatusCode() == -1) {
-			//throw exception
-		} else {
-			token= new Token();
-			token.deserialize(response.getData());
-		}
-		return token;
-	}
+        //make request
+        Request request = new Request();
+        request.setServiceId((byte) 1);
+        request.setMethodId((byte) 1);
+        request.setArgumentCount((byte) 1);
+        request.setType(Request.RequestType.InvokeStateless);
+        Argument arg0 = new Argument();
+        arg0.setDataLength(credential.serialize().length);
+        arg0.setData(credential.serialize());
+        request.addArgument(arg0);
+        int dataLength = 0;
+        //calculate data length for every argument
+        //calulate credentialDataLength
+        int credentialDataLength= serializedCredential.length;
+        int credentialDataLengthByteArrayLength = 1;
+        if (credentialDataLength >= 0x80) {
+            if (credentialDataLength <= 0xff) {
+                //ex 0x81 0xff
+                credentialDataLengthByteArrayLength = 2;
+            } else if (credentialDataLength <= 0xffff) {
+                //ex 0x82 0xff 0xff
+                credentialDataLengthByteArrayLength = 3;
+            } else if (credentialDataLength <= 0xffffff) {
+                //ex 0x83 0xff 0xff 0xff
+                credentialDataLengthByteArrayLength = 4;
+            }
+        }
+        dataLength += credentialDataLength + credentialDataLengthByteArrayLength;
+        //
+        request.setLength(4 + dataLength);
+        //connect to server
+        TcpClient tcpClient = TcpClientFactory.create();
+        try{
+            tcpClient.connect(host, port);
+        } catch (TcpClientConnectException e) {
+            throw new HottentotRuntimeException(e);
+        }
+        //serialize request according to HTNP
+        Protocol protocol = ProtocolFactory.create();
+        byte[] serializedRequest = protocol.serializeRequest(request);
+        //send request
+        try {
+            tcpClient.write(serializedRequest);
+        } catch (TcpClientWriteException e) {
+            throw new HottentotRuntimeException(e);
+        }
+        //read response from server
+        byte[] buffer = new byte[256];
+        while (!protocol.IsResponseComplete()) {
+            byte[] dataChunkRead;
+            try {
+                dataChunkRead = tcpClient.read();
+            } catch (TcpClientReadException e) {
+                throw new HottentotRuntimeException(e);
+            }
+            protocol.processDataForResponse(dataChunkRead);
+        }
+        //deserialize token part of response
+        Response response = protocol.getResponse();
+        //close everything
+        //deserialize Tokenpart from response
+        Token token= null;
+        if (response.getStatusCode() == -1) {
+            //
+        } else {
+            token= new Token();
+            token.deserialize(response.getData());
+        }
+        return token;
+    }
 
 	public void destroy() {
         	//TODO
