@@ -34,13 +34,7 @@ public class Main {
         Credential credential = new Credential();
         credential.setUsername("test");
         credential.setPassword("12345");
-
-        Token token = null;
-        try {
-            token = proxy.authenticate(credential);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Token token = proxy.authenticate(credential);
         System.out.println(token.getValue());
         AuthenticationServiceProxyBuilder.destroy();
     }

@@ -2,8 +2,6 @@ package ir.ntnaeem.hottentot.runtime.protocol;
 
 import ir.ntnaeem.hottentot.runtime.*;
 import ir.ntnaeem.hottentot.runtime.exception.*;
-
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
@@ -59,13 +57,13 @@ public class ProtocolV1 implements Protocol {
                         } catch (MethodNotSupportException e) {
                             throw new ProtocolProcessException(e);
                         }
-
-
+                        try {
                             responseCallback.onResponse(serializeResponse(response));
-
+                        } catch (TcpServerReadException e) {
+                            throw new ProtocolProcessException(e);
+                        }
                         //reset states
                         resetStates();
-
                     }
                 } else if (currentState == 1) {
                     if (lStateCounter < lStateLength) {
