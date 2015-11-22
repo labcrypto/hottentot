@@ -7,5 +7,5 @@ import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
 import ir.ntnaeem.hottentot.runtime.Service;
 
 public interface AuthenticationService extends Service {
-	public Token authenticate(Credential credential) throws Exception;
+	Token authenticate(Credential credential) throws TcpClientConnectException , TcpClientReadException , TcpClientWriteException;
 }
