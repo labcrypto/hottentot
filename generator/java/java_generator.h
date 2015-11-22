@@ -39,7 +39,7 @@ namespace naeem {
         class JavaGenerator : public ::naeem::hottentot::generator::Generator {
         public:
           JavaGenerator() {}
-          virtual ~JavaGenerator() {}
+          virtual ~JavaGenerator();
         public:
           virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
                                 ::naeem::hottentot::generator::GenerationConfig &);
@@ -52,11 +52,12 @@ namespace naeem {
           void GenerateServiceProxyBuilder(::naeem::hottentot::generator::ds::Module*);
           void GenerateRequestHandler(::naeem::hottentot::generator::ds::Module*);
           void GenerateServiceProxy(::naeem::hottentot::generator::ds::Module*);
+          void MakeStringsFromByteArrays();
           
         private:
           std::ofstream os;
           std::ifstream is;
-          std::vector<naeem::hottentot::generator::ds::Module*> modules_;
+          std::vector<naeem::hottentot::generator::ds::Module*>  modules_;
           std::string structTmpStr_;
           std::string abstractServiceTmpStr_;
           std::string serviceTmpStr_;
