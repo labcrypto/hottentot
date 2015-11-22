@@ -1,4 +1,4 @@
-package ir.ntnaeem.hottentot.generated;
+package example.generatedBackup;
 
 public class Token {
 	private String value;

@@ -1,9 +1,6 @@
-package ir.ntnaeem.hottentot.generated;
+package example.generatedBackup;
 
-import ir.ntnaeem.hottentot.generated.AuthenticationRequestHandler;
-import ir.ntnaeem.hottentot.generated.AuthenticationService;
 import ir.ntnaeem.hottentot.runtime.RequestHandler;
-
 
 public abstract class AbstractAuthenticationService implements AuthenticationService {	
 	public RequestHandler makeRequestHandler() {

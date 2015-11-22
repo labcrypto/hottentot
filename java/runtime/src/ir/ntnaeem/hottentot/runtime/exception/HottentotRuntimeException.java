@@ -13,7 +13,7 @@
  *  copies or substantial portions of the Software.
  *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTAB_STRILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
@@ -21,28 +21,15 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__JAVA__JAVA_GENERATOR_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__JAVA__JAVA_GENERATOR_H_
+package ir.ntnaeem.hottentot.runtime.exception;
 
-#include "../generator.h"
-
-
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace java {
-        class JavaGenerator : public ::naeem::hottentot::generator::Generator {
-        public:
-          JavaGenerator() {}
-          virtual ~JavaGenerator() {}
-        public:
-          virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
-                                ::naeem::hottentot::generator::GenerationConfig &);
-
-        };
-      }
+public class HottentotRuntimeException  extends RuntimeException{
+    public HottentotRuntimeException(Throwable cause) {
+        super(cause);
     }
-  }
+    public HottentotRuntimeException() {
+    }
+    public HottentotRuntimeException(String message) {
+        super(message);
+    }
 }
-
-#endif

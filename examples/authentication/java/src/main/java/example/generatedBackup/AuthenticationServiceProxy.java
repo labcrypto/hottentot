@@ -1,15 +1,17 @@
-package ir.ntnaeem.hottentot.generated;
+package example.generatedBackup;
 
 import ir.ntnaeem.hottentot.runtime.Argument;
-import ir.ntnaeem.hottentot.runtime.*;
+import ir.ntnaeem.hottentot.runtime.Proxy;
+import ir.ntnaeem.hottentot.runtime.Request;
+import ir.ntnaeem.hottentot.runtime.Response;
+import ir.ntnaeem.hottentot.runtime.TcpClient;
+import ir.ntnaeem.hottentot.runtime.exception.HottentotRuntimeException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
-import ir.ntnaeem.hottentot.runtime.Proxy;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
-import java.util.Arrays;
 
 public class AuthenticationServiceProxy extends AbstractAuthenticationService implements Proxy {
 	
@@ -20,7 +22,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
 		this.host = host;
 		this.port = port;
 	}
-	public Token authenticate(Credential credential) throws Exception { 
+	public Token authenticate(Credential credential) {
 		//serialize credential
 		byte[] serializedCredential = credential.serialize();
 
@@ -36,7 +38,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
 		request.addArgument(arg0);
 		int dataLength = 0;
 		//calculate data length for every argument
-		//calulate credentialDataLength
+		//calculate credentialDataLength
 		int credentialDataLength= serializedCredential.length;
 		int credentialDataLengthByteArrayLength = 1;
 		if (credentialDataLength >= 0x80) {
@@ -56,25 +58,38 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
 		request.setLength(4 + dataLength);
 		//connect to server
 		TcpClient tcpClient = TcpClientFactory.create();
-		tcpClient.connect(host, port);
+		try {
+			tcpClient.connect(host, port);
+		} catch (TcpClientConnectException e) {
+			throw new HottentotRuntimeException(e);
+		}
 		//serialize request according to HTNP
 		Protocol protocol = ProtocolFactory.create();
 		byte[] serializedRequest = protocol.serializeRequest(request);
 		//send request
-		tcpClient.write(serializedRequest);
+		try {
+			tcpClient.write(serializedRequest);
+		} catch (TcpClientWriteException e) {
+			throw new HottentotRuntimeException(e);
+		}
 		//read response from server
 		byte[] buffer = new byte[256];
 		while (!protocol.IsResponseComplete()) {
-			byte[] dataChunkRead = tcpClient.read();
+			byte[] dataChunkRead;
+			try {
+				dataChunkRead = tcpClient.read();
+			} catch (TcpClientReadException e) {
+				throw new HottentotRuntimeException(e);
+			}
 			protocol.processDataForResponse(dataChunkRead);
 		}
 		//deserialize token part of response
 		Response response = protocol.getResponse();
 		//close everything
-		//deserialize Tokenpart from response
+		//deserialize Token part from response
 		Token token= null;
 		if (response.getStatusCode() == -1) {
-			//throw exception
+			//
 		} else {
 			token= new Token();
 			token.deserialize(response.getData());
