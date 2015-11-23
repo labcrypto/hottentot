@@ -25,12 +25,12 @@ package [%BASE_PACKAGE_NAME%];
 
 public class [%STRUCT_NAME%] {
 [%MEMBERS%]	
-	public byte[] serialize() {
+    public byte[] serialize() {
 [%SERIALIZE_METHOD_BODY%]
-	}
-	public void deserialize(byte[] serializedToken) {
-		//TODO(ali)
-		//fake implementation
-		setValue("test-token");
-	}
+    }
+    public void deserialize(byte[] serializedToken) {
+	//TODO(ali)
+	//fake implementation
+	setValue("test-token");
+    }
 }
