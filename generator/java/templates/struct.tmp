@@ -26,9 +26,7 @@ package [%BASE_PACKAGE_NAME%];
 public class [%STRUCT_NAME%] {
 [%MEMBERS%]	
 	public byte[] serialize() {
-		//TODO(ali)
-		//fake implementation
-		return new byte[]{ 97 };
+[%SERIALIZE_METHOD_BODY%]
 	}
 	public void deserialize(byte[] serializedToken) {
 		//TODO(ali)

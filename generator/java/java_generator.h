@@ -54,6 +54,10 @@ namespace naeem {
           void GenerateRequestHandler(::naeem::hottentot::generator::ds::Module*);
           void GenerateServiceProxy(::naeem::hottentot::generator::ds::Module*);
           void MakeStringsFromByteArrays();
+          std::string Capitalize(std::string);
+          std::string ConvertType(std::string);
+          
+
           
         private:
           std::ofstream os;
