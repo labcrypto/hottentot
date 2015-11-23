@@ -572,16 +572,15 @@ namespace naeem {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(
                                     i);
                             std::string capitalizedDeclarationName = Capitalize(declarationPtr->variable_);
-                            serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
+                            serializeMethodStr += TAB_STR + TAB_STR + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
                             declarationJavaType = ConvertType(declarationPtr->type_);
                             capitalizedDeclarationJavaType = Capitalize(declarationJavaType);
                             std::cout << declarationJavaType;
                             //
                             serializeMethodStr += capitalizedDeclarationJavaType + "(";
-                            serializeMethodStr += declarationPtr->variable_;
-                            serializeMethodStr += capitalizedDeclarationJavaType + ");\n";
+                            serializeMethodStr += declarationPtr->variable_ + ");\n";
                         }
-                        serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "byte[] output = new byte[";
+                        serializeMethodStr += TAB_STR + TAB_STR + "byte[] output = new byte[";
                         for (int i = 0; i < pStruct->declarations_.size(); i++) {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(
                                     i);
@@ -594,20 +593,20 @@ namespace naeem {
                             }
                         }
 
-                        serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "int counter = 0;\n";
-                        serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "//use a loop for every property\n";
+                        serializeMethodStr += TAB_STR + TAB_STR + "int counter = 0;\n";
+                        serializeMethodStr += TAB_STR + TAB_STR + "//use a loop for every property\n";
                         for (int i = 0; i < pStruct->declarations_.size(); i++) {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(
                                     i);
                             declarationJavaType = ConvertType(declarationPtr->type_);
                             capitalizedDeclarationJavaType = Capitalize(declarationJavaType);
-                            serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "for (int i = 0; i < serialized" +
+                            serializeMethodStr += TAB_STR + TAB_STR + "for (int i = 0; i < serialized" +
                                                   capitalizedDeclarationJavaType + ".length; i++) {\n";
-                            serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + TAB_STR + "output[counter++] = serialized" +
+                            serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "output[counter++] = serialized" +
                                                   capitalizedDeclarationJavaType + "[i];\n";
-                            serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "}\n";
+                            serializeMethodStr += TAB_STR + TAB_STR + "}\n";
                         }
-                        serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "return output;";
+                        serializeMethodStr += TAB_STR + TAB_STR + "return output;";
                         //
                         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%SERIALIZE_METHOD_BODY%]"), 25,
                                                        serializeMethodStr);
