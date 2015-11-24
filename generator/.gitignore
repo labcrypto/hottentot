@@ -4,3 +4,4 @@ y.tab.c
 *.out
 *.o
 gen
+hot
