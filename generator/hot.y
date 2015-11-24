@@ -308,6 +308,7 @@ int main(int argc, char **argv) {
       outputDir = argv[i + 1];
       i += 2;
     } else {
+      // TODO(kamran) File names do not start with --. Consider this.
       if (hots == 0) {
         hotsBegun = true;
         hots = new char*[argc - i];
