@@ -52,7 +52,7 @@ namespace naeem {
           Hot() {}
           virtual ~Hot() {}
         public:
-          inline virtual void AddModule(Module *module) {
+          inline void AddModule(Module *module) {
             modules_.push_back(module);
           }
          

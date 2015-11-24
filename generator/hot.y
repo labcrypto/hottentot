@@ -145,7 +145,7 @@ item:           {
                 }
                 | {
                     if (currentService == NULL) {
-                      currentService = new ::naeem::hottentot::generator::ds::Service();
+                      currentService = new ::naeem::hottentot::generator::ds::Service("stateless", "", currentModule);
                       currentModule->AddService(currentService);
                     } else {
                       fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
@@ -159,7 +159,7 @@ item:           {
                 }
                 | {
                     if (currentService == NULL) {
-                      currentService = new ::naeem::hottentot::generator::ds::Service();
+                      currentService = new ::naeem::hottentot::generator::ds::Service("stateful", "",currentModule);
                       currentModule->AddService(currentService);
                     } else {
                       fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
@@ -193,7 +193,7 @@ methods:        methods method
 
 method:         {
                   if (currentMethod == NULL) {
-                    currentMethod = new ::naeem::hottentot::generator::ds::Method();
+                    currentMethod = new ::naeem::hottentot::generator::ds::Method(currentService);
                     currentService->AddMethod(currentMethod);
                   }
                 } type IDENTIFIER '(' arguments ')' ';' {

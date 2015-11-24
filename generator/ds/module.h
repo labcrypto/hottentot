@@ -26,6 +26,8 @@
 
 #include <vector>
 
+#include "service.h"
+
 
 namespace naeem {
   namespace hottentot {
@@ -43,14 +45,17 @@ namespace naeem {
           Module() {}
           virtual ~Module() {}
         public:
-          inline virtual void AddStruct(Struct *struc) {
+          inline void AddStruct(Struct *struc) {
             structs_.push_back(struc);
           }
-          inline virtual void AddService(Service *service) {
+          inline void AddService(Service *service) {
             services_.push_back(service);
           }
           inline void SetPackage(std::string package) {
             package_ = package;
+          }
+          inline std::string GetPackage() const {
+            return package_;
           }
         private:
           std::string package_;

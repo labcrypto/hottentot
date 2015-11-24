@@ -53,22 +53,22 @@ namespace naeem {
           }
           virtual ~Declaration() {}
         public:
-          inline virtual std::string GetType() const {
+          inline std::string GetType() const {
             return type_;
           }
-          inline virtual void SetType(std::string type) {
+          inline void SetType(std::string type) {
             type_ = type;
           }
-          inline virtual std::string GetVariable() const {
+          inline std::string GetVariable() const {
             return variable_;
           }
-          inline virtual void SetVariable(std::string variable) {
+          inline void SetVariable(std::string variable) {
             variable_ = variable;
           }
-          inline virtual uint32_t GetOrd() const {
+          inline uint32_t GetOrd() const {
             return ord_;
           }
-          inline virtual void SetOrd(uint32_t ord) {
+          inline void SetOrd(uint32_t ord) {
             ord_ = ord;
           }
           inline virtual void Display() {

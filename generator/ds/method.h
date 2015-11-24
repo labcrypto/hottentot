@@ -24,9 +24,10 @@
 #ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__METHOD_H_
 #define _NAEEM_HOTTENTOT_GENERATOR__DS__METHOD_H_
 
+#include <stdint.h>
 #include <vector>
 #include <iostream>
-#include <stdint.h>
+
 #include "argument.h"
 
 
@@ -38,32 +39,36 @@ namespace naeem {
       };
       namespace ds {
         class Argument;
+        class Service;
         class Method {
         friend class Hot;
         friend class ::naeem::hottentot::generator::java::JavaGenerator;
         
         public:
-          Method() {}
+          Method(Service *service) 
+            : service_(service) {
+          }
           virtual ~Method() {}
         public:
-          inline virtual void AddArgument(Argument *argument) {
+          inline void AddArgument(Argument *argument) {
             arguments_.push_back(argument);
           }
-          inline virtual std::vector<Argument*> GetArguments() {
+          inline std::vector<Argument*> GetArguments() {
             return arguments_;
           }
-          inline virtual std::string GetReturnType() const {
+          inline std::string GetReturnType() const {
             return returnType_;
           }
-          inline virtual void SetReturnType(std::string returnType) {
+          inline void SetReturnType(std::string returnType) {
             returnType_ = returnType;
           }
-          inline virtual std::string GetName() const {
+          inline std::string GetName() const {
             return name_;
           }
           inline void SetName(std::string name) {
             name_ = name;
           }
+          
           inline virtual void Display() {
             std::cout << name_ <<  "(";
             std::string del = "";
@@ -74,11 +79,13 @@ namespace naeem {
             }
             std::cout << "): " << returnType_;
           }
+          virtual std::string GetFQName() const;
+          virtual uint32_t GetHash() const;
         private:
           std::string returnType_;
           std::string name_;
           std::vector<Argument*> arguments_;
-          uint32_t id_;
+          Service *service_;
         };
       }
     }

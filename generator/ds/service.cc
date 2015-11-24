@@ -21,57 +21,27 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__ARGUMENT_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__DS__ARGUMENT_H_
+#include <sstream>
 
-#include <vector>
-#include <string>
-#include <stdint.h>
-#include <iostream>
-#include <stdlib.h>
+#include "service.h"
+#include "module.h"
 
 
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace java {
-          class JavaGenerator;
-      };
       namespace ds {
-        class Argument {
-
-        friend class ::naeem::hottentot::generator::java::JavaGenerator;
-
-        public:
-          Argument(std::string type = "", 
-                   std::string variable = "")
-            : type_(type),
-              variable_(variable) {
-          }
-          virtual ~Argument() {}
-        public:
-          inline std::string GetType() const {
-            return type_;
-          }
-          inline void SetType(std::string type) {
-            type_ = type;
-          }
-          inline std::string GetVariable() const {
-            return variable_;
-          }
-          inline void SetVariable(std::string variable) {
-            variable_ = variable;
-          }
-          inline virtual void Display() {
-            std::cout << variable_ << ": " << type_;
-          }
-        protected:
-          std::string type_;
-          std::string variable_;
-        };
+        std::string 
+        Service::GetFQName() const {
+          std::stringstream ss;
+          ss << module_->GetPackage() << "." << name_;
+          return ss.str();
+        }
+        uint32_t 
+        Service::GetHash() const {
+          return 1000;
+        }
       }
     }
   }
 }
-
-#endif

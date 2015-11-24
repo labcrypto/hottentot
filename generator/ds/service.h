@@ -24,11 +24,11 @@
 #ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__SERVICE_H_
 #define _NAEEM_HOTTENTOT_GENERATOR__DS__SERVICE_H_
 
+#include <stdint.h>
+#include <stdlib.h>
 #include <vector>
 #include <string>
 #include <iostream>
-#include <stdint.h>
-#include <stdlib.h>
 
 
 namespace naeem {
@@ -37,8 +37,8 @@ namespace naeem {
       namespace java {
           class JavaGenerator;
       };
-
       namespace ds {
+        class Module;
         class Method;
         class Service {
         friend class Hot;
@@ -49,24 +49,26 @@ namespace naeem {
             Stateful
           };
         public:
-          Service(std::string serviceTypeString = "stateless",
-                  std::string name = "") 
-            : name_(name) {
+          Service(std::string serviceTypeString,
+                  std::string name,
+                  Module *module) 
+            : name_(name),
+              module_(module) {
             SetServiceType(serviceTypeString);
           }
           virtual ~Service() {}
         public:
-          inline virtual void AddMethod(Method *method) {
+          inline void AddMethod(Method *method) {
             methods_.push_back(method);
           }
           
-          inline virtual void SetServiceType(ServiceType serviceType) {
+          inline void SetServiceType(ServiceType serviceType) {
             serviceType_ = serviceType;
           }
-          inline virtual ServiceType GetServiceType() {
+          inline ServiceType GetServiceType() {
             return serviceType_;
           }
-          inline virtual void SetServiceType(std::string serviceTypeString) {
+          inline void SetServiceType(std::string serviceTypeString) {
             if (serviceTypeString == "stateless") {
               serviceType_ = Stateless;
             } else if (serviceTypeString == "stateful") {
@@ -76,17 +78,19 @@ namespace naeem {
               exit(1);
             }
           }
-          inline virtual std::string GetName() const {
+          inline std::string GetName() const {
             return name_;
           }
-          inline virtual void SetName(std::string name) {
+          inline void SetName(std::string name) {
             name_ = name;
           }
+          virtual std::string GetFQName() const;
+          virtual uint32_t GetHash() const;
         private:
           ServiceType serviceType_;
           std::string name_;
           std::vector<Method*> methods_;
-          uint32_t id_;
+          Module *module_;
         };
       }
     }
