@@ -262,6 +262,8 @@ extern FILE *yyin;
 int main(int argc, char **argv) {
   bool isJava = false;
   bool isCC = false;
+  bool isSpaceUsedForIndentation = true;
+  uint8_t numberOfSpacesUsedForIndentation = 2;
   bool hotsBegun = false;
   char *outputDir = 0;
   char **hots = 0;
@@ -281,6 +283,23 @@ int main(int argc, char **argv) {
       }
       isCC = true;
       i++;
+    } else if (strcmp(argv[i], "--indent-with-spaces") == 0) {
+      if (hotsBegun) {
+        fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
+        exit(1);
+      }
+      isSpaceUsedForIndentation = true;
+      i++;
+    } else if (strcmp(argv[i], "--indent-with-tabs") == 0) {
+      if (hotsBegun) {
+        fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
+        exit(1);
+      }
+      isSpaceUsedForIndentation = false;
+      i++;
+    } else if (strcmp(argv[i], "--number-of-spaces-for-indentation") == 0) {
+      numberOfSpacesUsedForIndentation = atoi(argv[i + 1]);
+      i += 2;
     } else if (strcmp(argv[i], "--out") == 0) {
       outputDir = argv[i + 1];
       i += 2;
@@ -313,6 +332,8 @@ int main(int argc, char **argv) {
     currentHot->Display();
     ::naeem::hottentot::generator::GenerationConfig generationConfig;
     generationConfig.SetOutDir(outputDir);
+    generationConfig.SetSpacesUsedInsteadOfTabsForIndentation(isSpaceUsedForIndentation);
+    generationConfig.SetNumberOfSpacesUsedForIndentation(numberOfSpacesUsedForIndentation);
     ::naeem::hottentot::generator::Generator *generator = 0;
     if (isCC) {
       generator = new ::naeem::hottentot::generator::cc::CCGenerator();
