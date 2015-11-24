@@ -77,7 +77,7 @@ namespace naeem {
               arguments_[i]->Display();
               del = ",";
             }
-            std::cout << "): " << returnType_;
+            std::cout << "): " << returnType_ << " => '" << GetFQName() << "', Hash: '" << GetHash() << "'";
           }
           virtual std::string GetFQName() const;
           virtual uint32_t GetHash() const;

@@ -26,6 +26,8 @@
 #include "service.h"
 #include "module.h"
 
+#include "../dep/fasthash.h"
+ 
 
 namespace naeem {
   namespace hottentot {

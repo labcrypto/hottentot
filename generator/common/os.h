@@ -24,9 +24,9 @@ namespace naeem {
         class Os {
         public:
           static inline void MakeDir(std::string pathString) {
-            std::string tPathString = StringHelper::trim(pathString);
+            std::string tPathString = StringHelper::Trim(pathString);
             #ifdef _WIN32
-              std::string adjPathString = StringHelper::replace(tPathString, "/", "\\");
+              std::string adjPathString = StringHelper::Replace(tPathString, "/", "\\");
               std::size_t index = adjPathString.find("/");
               while (index != std::string::npos) {
                 if (index > 0) {
@@ -42,7 +42,7 @@ namespace naeem {
               mbstowcs(wpath, path, strlen(path) + 1);
               CreateDirectory(wpath, NULL);
             #else
-              std::string adjPathString = StringHelper::replace(tPathString, "\\", "/");
+              std::string adjPathString = StringHelper::Replace(tPathString, "\\", "/");
               std::size_t index = adjPathString.find("/");
               while (index != std::string::npos) {
                 if (index > 0) {

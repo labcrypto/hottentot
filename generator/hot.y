@@ -295,6 +295,9 @@ int main(int argc, char **argv) {
   if (!isJava && !isCC) {
     isCC = true;
   }
+  if (outputDir == 0) {
+    outputDir = "gen";
+  }
   /*std::cout << "Num: " << numOfHots << std::endl;
   std::cout << "Is Java: " << isJava << std::endl;
   std::cout << "Is CC: " << isCC << std::endl;

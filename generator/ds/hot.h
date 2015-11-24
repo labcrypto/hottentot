@@ -74,7 +74,10 @@ namespace naeem {
               for (uint32_t j = 0; j < modules_[i]->services_.size(); j++) {
                 std::cout << "      ";
                 std::cout << (modules_[i]->services_[j]->GetServiceType() == ::naeem::hottentot::generator::ds::Service::Stateless ? "STATELESS" : "STATEFUL");
-                std::cout << " SERVICE " <<  modules_[i]->services_[j]->GetName() << " {\n";
+                std::cout << " SERVICE " <<  modules_[i]->services_[j]->GetName() << std::endl;
+                std::cout << "      FQName: '" << modules_[i]->services_[j]->GetFQName() << "'" << std::endl;
+                std::cout << "      Hash: '" << modules_[i]->services_[j]->GetHash() << "'";
+                std::cout << " {\n";
                 for (uint32_t k = 0; k < modules_[i]->services_[j]->methods_.size(); k++) {
                   std::cout << "         ";
                   modules_[i]->services_[j]->methods_[k]->Display();

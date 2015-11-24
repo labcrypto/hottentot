@@ -37,6 +37,12 @@ namespace naeem {
         Method::GetFQName() const {
           std::stringstream ss;
           ss << service_->GetFQName() << "." << name_;
+          ss << "(";
+          for (uint32_t i = 0; i < arguments_.size(); i++) {
+            ss << arguments_[i]->GetVariable() << ":" << arguments_[i]->GetType();
+          }
+          ss << "):";
+          ss << returnType_;
           return ss.str();
         }
         uint32_t 
