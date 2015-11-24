@@ -259,6 +259,11 @@ int yywrap(void) {
 
 extern FILE *yyin;
 
+void printHelpMessageAndExit() {
+  fprintf(stderr, "Usage: hot [--java] [--cc] [--indent-with-spaces = TRUE] [--indent-with-tabs] [--number-of-spaces-used-for-indentation NUMBER_OF_SPACES_USED_FOR_INDENTATION = 2] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
+  exit(1);
+}
+
 int main(int argc, char **argv) {
   bool isJava = false;
   bool isCC = false;
@@ -271,15 +276,13 @@ int main(int argc, char **argv) {
   for (uint16_t i = 1; i < argc;) {
     if (strcmp(argv[i], "--java") == 0) {
       if (hotsBegun) {
-        fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
-        exit(1);
+        printHelpMessageAndExit();
       }
       isJava = true;
       i++;
     } else if (strcmp(argv[i], "--cc") == 0) {
       if (hotsBegun) {
-        fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
-        exit(1);
+        printHelpMessageAndExit();
       }
       isCC = true;
       i++;
@@ -292,12 +295,13 @@ int main(int argc, char **argv) {
       i++;
     } else if (strcmp(argv[i], "--indent-with-tabs") == 0) {
       if (hotsBegun) {
-        fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
-        exit(1);
+        printHelpMessageAndExit();
       }
       isSpaceUsedForIndentation = false;
       i++;
-    } else if (strcmp(argv[i], "--number-of-spaces-for-indentation") == 0) {
+    } else if (strcmp(argv[i], "--help") == 0) {
+      printHelpMessageAndExit();
+    } else if (strcmp(argv[i], "--number-of-spaces-used-for-indentation") == 0) {
       numberOfSpacesUsedForIndentation = atoi(argv[i + 1]);
       i += 2;
     } else if (strcmp(argv[i], "--out") == 0) {
