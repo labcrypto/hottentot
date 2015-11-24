@@ -39,23 +39,24 @@
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace java{
-          class JavaGenerator;
+      namespace java {
+        class JavaGenerator;
       };
-
+      namespace cc {
+        class CCGenerator;
+      };
       namespace ds {
         class Module;
         class Hot {
-        
-        friend class ::naeem::hottentot::generator::java::JavaGenerator;
+          friend class ::naeem::hottentot::generator::cc::CCGenerator;
+          friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
           Hot() {}
           virtual ~Hot() {}
         public:
           inline void AddModule(Module *module) {
             modules_.push_back(module);
-          }
-         
+          }         
           inline virtual void Display() {
             std::cout << "HOT {\n";
             for (uint32_t i = 0; i < modules_.size(); i++) {

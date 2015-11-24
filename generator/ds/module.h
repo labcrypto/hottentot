@@ -33,14 +33,18 @@ namespace naeem {
   namespace hottentot {
     namespace generator {
       namespace java {
-          class JavaGenerator;
+        class JavaGenerator;
+      };
+      namespace cc {
+        class CCGenerator;
       };
       namespace ds {
         class Struct;
         class Service;
         class Module {
-        friend class Hot;
-        friend class ::naeem::hottentot::generator::java::JavaGenerator;
+          friend class Hot;
+          friend class ::naeem::hottentot::generator::cc::CCGenerator;
+          friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
           Module() {}
           virtual ~Module() {}

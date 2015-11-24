@@ -24,10 +24,13 @@
 #ifndef _NAEEM_HOTTENTOT_GENERATOR__COMMON__STRING_HELPER_H_
 #define _NAEEM_HOTTENTOT_GENERATOR__COMMON__STRING_HELPER_H_
 
+#include <string>
 #include <algorithm>
 #include <functional> 
 #include <cctype>
 #include <locale>
+#include <sstream>
+#include <vector>
 
 
 namespace naeem {
@@ -36,32 +39,99 @@ namespace naeem {
       namespace common {
         class StringHelper {
         public:
-          static inline std::string &LeftTrim(std::string &s) {
+          static inline std::string& LeftTrim(std::string &s) {
             s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
             return s;
           }
-          static inline std::string &RightTrim(std::string &s) {
+          static inline std::string& RightTrim(std::string &s) {
             s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
             return s;
           }
-          static inline std::string &Trim(std::string &s) {
+          static inline std::string& Trim(std::string &s) {
             return LeftTrim(RightTrim(s));
           }
-          static inline std::string Replace(std::string &s,
-                                              const std::string &toReplace,
-                                              const std::string &replaceWith) {
+          static inline std::string Replace(std::string s,
+                                            const std::string toReplace,
+                                            const std::string replaceWith) {
             std::string result = s;
-            std::size_t index = s.find(toReplace);
+            std::size_t index = result.find(toReplace);
             while (index != std::string::npos) {
               result = result.replace(index, toReplace.length(), replaceWith);
+              index = result.find(toReplace);
             }
             return result;
           }
-          static inline std::string MakeCamelCaseFirstCapital(std::string str) {
-            return str;
+          static inline std::vector<std::string> Split(std::string str, 
+                                                       char separator) {
+            std::vector<std::string> tokens;
+            std::istringstream f(str);
+            std::string s;    
+            while (getline(f, s, separator)) {
+              tokens.push_back(s);
+            }
+            return tokens;
           }
-          static inline std::string MakeCamelCaseFirstSmall(std::string str) {
-            return str;
+          static inline std::string MakeLowerCase(std::string str) {
+            std::string result(str);
+            std::transform(str.begin(), str.end(), result.begin(), ::tolower);
+            return result;
+          }
+          static inline std::string MakeUpperCase(std::string str) {
+            std::string result(str);
+            std::transform(str.begin(), str.end(), result.begin(), ::toupper);
+            return result;
+          }
+          static inline std::string MakeFirstCapital(std::string str) {
+            std::string result = str;
+            result[0] = std::toupper(result[0]);
+            return result;
+          }
+          static inline std::string MakeCamelCase(std::vector<std::string> strs, 
+                                                  bool firstCapital = true) {
+            std::stringstream ss;
+            for (uint32_t i = 0; i < strs.size(); i++) {
+              if (i == 0 && !firstCapital) {
+                ss << MakeLowerCase(strs[i]);
+              } else {
+                ss << MakeFirstCapital(MakeLowerCase(strs[i]));
+              }
+            }
+            return ss.str();
+          }
+          static inline std::string MakeSnakeCase(std::vector<std::string> strs) {
+            std::stringstream ss;
+            std::string del = "";
+            for (uint32_t i = 0; i < strs.size(); i++) {
+              ss << del << MakeLowerCase(strs[i]);
+              del = "_";
+            }
+            return ss.str();
+          }
+          static inline std::string MakeScreamingSnakeCase(std::vector<std::string> strs) {
+            std::stringstream ss;
+            std::string del = "";
+            for (uint32_t i = 0; i < strs.size(); i++) {
+              ss << del << MakeUpperCase(strs[i]);
+              del = "_";
+            }
+            return ss.str();
+          }
+          
+          static inline std::string MakeCamelCaseFirstCapital(std::string str, 
+                                                              char del = ' ') {
+            return MakeCamelCase(Split(str, del));
+          }
+          static inline std::string MakeCamelCaseFirstSmall(std::string str, 
+                                                            char del = ' ') {
+            return MakeCamelCase(Split(str, del), false);
+          }
+          static inline std::string MakeSnakeCase(std::string str, 
+                                                  char del = ' ') {
+            return MakeSnakeCase(Split(str, del));
+          }
+          static inline std::string MakeScreamingSnakeCase(std::string str, 
+                                                           char del = ' ') {
+            return MakeScreamingSnakeCase(Split(str, del));
           }
         };
       }

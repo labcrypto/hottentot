@@ -34,15 +34,16 @@
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace java{
-          class JavaGenerator;
+      namespace java {
+        class JavaGenerator;
+      };
+      namespace cc {
+        class CCGenerator;
       };
       namespace ds {
         class Declaration {
-
-        friend class ::naeem::hottentot::generator::java::JavaGenerator;
-
-
+          friend class ::naeem::hottentot::generator::cc::CCGenerator;
+          friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
           Declaration(std::string type = "", 
                       std::string variable = "",

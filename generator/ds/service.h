@@ -35,14 +35,18 @@ namespace naeem {
   namespace hottentot {
     namespace generator {
       namespace java {
-          class JavaGenerator;
+        class JavaGenerator;
+      };
+      namespace cc {
+        class CCGenerator;
       };
       namespace ds {
         class Module;
         class Method;
         class Service {
-        friend class Hot;
-        friend class ::naeem::hottentot::generator::java::JavaGenerator;
+          friend class Hot;
+          friend class ::naeem::hottentot::generator::cc::CCGenerator;
+          friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
           enum ServiceType {
             Stateless,
