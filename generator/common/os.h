@@ -9,6 +9,11 @@
 #include <unistd.h>
 #endif
 
+#include <string>
+#include <fstream>
+#include <streambuf>
+#include <stdexcept>
+
 #include "string_helper.h"
 
 
@@ -57,7 +62,15 @@ namespace naeem {
             #endif
           }
           static inline void ReadFile(std::string path, std::string &content) {
-            
+            std::ifstream t(path.c_str());
+            if (t.fail()) {
+              throw std::runtime_error("File couldn't be opened.");
+            }
+            t.seekg(0, std::ios::end);   
+            content.reserve(t.tellg());
+            t.seekg(0, std::ios::beg);
+            content.assign((std::istreambuf_iterator<char>(t)),
+                            std::istreambuf_iterator<char>());
           }
         };
       }

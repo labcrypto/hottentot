@@ -36,8 +36,16 @@ namespace naeem {
         void
         CCGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
                               ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
+          std::string proxyTemplate;
+          std::string proxyMethodTemplate;
+          std::string proxyMethodArgumentSerializationTemplate;
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc.template", proxyTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_method.template", proxyMethodTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_method_argument_serialization.template", proxyMethodArgumentSerializationTemplate);
           ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir());
-          
+          std::cout << proxyTemplate << std::endl;
+          std::cout << proxyMethodTemplate << std::endl;
+          std::cout << proxyMethodArgumentSerializationTemplate << std::endl;
           std::cout << "C++ Generation done." << std::endl;
         }
       }
