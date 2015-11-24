@@ -62,11 +62,11 @@ namespace naeem {
               std::cout << "   MODULE " << modules_[i]->package_ << " {\n";
               for (uint32_t j = 0; j < modules_[i]->structs_.size(); j++) {
                 std::cout << "      STRUCT " <<  modules_[i]->structs_[j]->GetName() << " {\n";
-                for (uint32_t k = 0; k < modules_[i]->structs_[j]->declarations_.size(); k++) {
+                /*for (uint32_t k = 0; k < modules_[i]->structs_[j]->declarations_.size(); k++) {
                   std::cout << "         ";
                   modules_[i]->structs_[j]->declarations_[k]->Display();
                   std::cout << std::endl;
-                }
+                }*/
                 std::cout << "      }\n";
               }
               for (uint32_t j = 0; j < modules_[i]->services_.size(); j++) {
