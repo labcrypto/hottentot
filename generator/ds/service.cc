@@ -39,7 +39,8 @@ namespace naeem {
         }
         uint32_t 
         Service::GetHash() const {
-          return 1000;
+          std::string fqName = GetFQName();
+          return fasthash32(fqName.c_str(), fqName.size(), 0);
         }
       }
     }

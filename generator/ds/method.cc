@@ -26,6 +26,8 @@
 #include "method.h"
 #include "service.h"
 
+#include "../dep/fasthash.h"
+
 
 namespace naeem {
   namespace hottentot {
@@ -39,7 +41,8 @@ namespace naeem {
         }
         uint32_t 
         Method::GetHash() const {
-          return 1000;
+          std::string fqName = GetFQName();
+          return fasthash32(fqName.c_str(), fqName.size(), 0);
         }
       }
     }
