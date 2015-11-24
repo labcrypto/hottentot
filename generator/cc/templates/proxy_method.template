@@ -7,7 +7,7 @@
   ::naeem::hottentot::runtime::Request request;
   request.SetServiceId([[[SERVICE_HASH]]]);
   request.SetMethodId([[[METHOD_HASH]]]);
-  request.SetArgumentCount([[[ARGUMENTS]]]);
+  // request.SetArgumentCount([[[ARGUMENTS]]]);
   request.SetType(::naeem::hottentot::runtime::Request::InvokeStateless);
   /*
    * Serialize arguments
