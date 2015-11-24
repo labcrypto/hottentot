@@ -25,6 +25,7 @@
 #include "../ds/hot.h"
 #include <stdint.h>
 #include <sys/stat.h>
+#include <sstream>
 
 namespace naeem {
     namespace hottentot {
@@ -32,17 +33,19 @@ namespace naeem {
             namespace java {
 
                 JavaGenerator::~JavaGenerator() {
-                    for (int i = 0; i < modules_.size(); i++) {
-                        ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
-                        for (int j = 0; j < pModule->structs_.size(); j++) {
-                            ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(j);
-                            for (int k = 0; k < pStruct->declarations_.size(); k++) {
-                                delete pStruct->declarations_.at(k);
-                            }
-                            delete pStruct;
-                        }
-                        delete pModule;
-                    }
+                    //TODO change vector to map 
+
+                    // for (int i = 0; i < modules_.size(); i++) {
+                    //     ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
+                    //     for (int j = 0; j < pModule->structs_.size(); j++) {
+                    //         ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(j);
+                    //         for (int k = 0; k < pStruct->declarations_.size(); k++) {
+                    //             delete pStruct->declarations_.at(k);
+                    //         }
+                    //         delete pStruct;
+                    //     }
+                    //     delete pModule;
+                    // }
                 }
 
                 JavaGenerator::JavaGenerator() {
@@ -74,7 +77,6 @@ namespace naeem {
                         GenerateServiceProxy(pModule);
 
                     }
-                    //std::cout << hot->GetModules().at(0)->GetMethod()-> << std::endl;
                     std::cout << "Java Generation done." << std::endl;
                 }
 
@@ -97,6 +99,24 @@ namespace naeem {
 					    javaType = "long";
 					}
 					return javaType;
+                }
+
+                uint32_t
+                JavaGenerator::GetTypeLength(std::string type){
+                    
+                    if (type.compare("int8") == 0 ||
+                        type.compare("uint8") == 0) {
+                        return 1;
+                    } else if (type.compare("int16") == 0 ||
+                               type.compare("uint16") == 0) {
+                        return 2;
+                    } else if (type.compare("int32") == 0 ||
+                               type.compare("uint32") == 0) {
+                        return 4;
+                    } else if (type.compare("int64") == 0 ||
+                               type.compare("uint64") == 0) {
+                        return 8;
+                    }
                 }
 
 
@@ -540,25 +560,24 @@ namespace naeem {
                         std::string capitalizedDeclarationJavaType;
 
 
-
-                        for (int i = 0; i < pStruct->declarations_.size(); i++) {
-                            //TODO change string to string
-                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(
-                                    i);
-
+                        for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+                             = pStruct->declarations_.begin();
+                             it != pStruct->declarations_.end();
+                             ++it) {
+                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                             declarationJavaType = ConvertType(declarationPtr->type_);
-                            declarationJavaType  = ConvertType(declarationPtr->type_);
+                            capitalizedDeclarationJavaType  = Capitalize(declarationJavaType);
                             std::string declarationName = declarationPtr->variable_;
                             std::string capitalizedDeclarationName = Capitalize(declarationPtr->variable_);
                             declarationStr +=
-                                    TAB_STR + "private " + declarationPtr->type_ + " " + declarationName + ";\n";
+                                    TAB_STR + "private " + declarationJavaType + " " + declarationName + ";\n";
                             getterSetterStr += TAB_STR + "public void set" + capitalizedDeclarationName + "(" +
-                                               declarationPtr->type_ + " " + declarationName + ") {\n";
+                                               declarationJavaType + " " + declarationName + ") {\n";
                             getterSetterStr +=
                                     TAB_STR + TAB_STR + "this." + declarationName + " = " + declarationName + ";\n";
                             getterSetterStr += TAB_STR + "}\n";
                             getterSetterStr +=
-                                    TAB_STR + "public " + declarationPtr->type_ + " get" + capitalizedDeclarationName +
+                                    TAB_STR + "public " + declarationJavaType + " get" + capitalizedDeclarationName +
                                     "() {\n";
                             getterSetterStr += TAB_STR + TAB_STR + "return " + declarationPtr->variable_ + ";\n";
                             getterSetterStr += TAB_STR + "}\n";
@@ -568,25 +587,28 @@ namespace naeem {
 
                         //serilize method
                         std::string serializeMethodStr;
-                        for (int i = 0; i < pStruct->declarations_.size(); i++) {
-                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(
-                                    i);
+                        for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+                             = pStruct->declarations_.begin();
+                             it != pStruct->declarations_.end();
+                             ++it) {
+                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                             std::string capitalizedDeclarationName = Capitalize(declarationPtr->variable_);
                             serializeMethodStr += TAB_STR + TAB_STR + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
                             declarationJavaType = ConvertType(declarationPtr->type_);
                             capitalizedDeclarationJavaType = Capitalize(declarationJavaType);
-                            std::cout << declarationJavaType;
-                            //
-                            serializeMethodStr += capitalizedDeclarationJavaType + "(";
+                            std::string capitalizedDeclarationType  = Capitalize(declarationPtr->type_);
+                            serializeMethodStr += capitalizedDeclarationType + "(";
                             serializeMethodStr += declarationPtr->variable_ + ");\n";
                         }
                         serializeMethodStr += TAB_STR + TAB_STR + "byte[] output = new byte[";
-                        for (int i = 0; i < pStruct->declarations_.size(); i++) {
-                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(
-                                    i);
+                        for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+                             = pStruct->declarations_.begin();
+                             it != pStruct->declarations_.end();
+                             ++it) {
+                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                             std::string capitalizedDeclarationName = Capitalize(declarationPtr->variable_.c_str());
                             serializeMethodStr += "serialized" + capitalizedDeclarationName + ".length";
-                            if (i == pStruct->declarations_.size() - 1) {
+                            if (it->first == pStruct->declarations_.size()) {
                                 serializeMethodStr += "];\n";
                             } else {
                                 serializeMethodStr += " + ";
@@ -595,15 +617,18 @@ namespace naeem {
 
                         serializeMethodStr += TAB_STR + TAB_STR + "int counter = 0;\n";
                         serializeMethodStr += TAB_STR + TAB_STR + "//use a loop for every property\n";
-                        for (int i = 0; i < pStruct->declarations_.size(); i++) {
-                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(
-                                    i);
+                        for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+                             = pStruct->declarations_.begin();
+                             it != pStruct->declarations_.end();
+                             ++it) {
+                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                             declarationJavaType = ConvertType(declarationPtr->type_);
                             capitalizedDeclarationJavaType = Capitalize(declarationJavaType);
+                            std::string capitalizedDeclarationName = Capitalize(declarationPtr->variable_);
                             serializeMethodStr += TAB_STR + TAB_STR + "for (int i = 0; i < serialized" +
-                                                  capitalizedDeclarationJavaType + ".length; i++) {\n";
+                                                  capitalizedDeclarationName + ".length; i++) {\n";
                             serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "output[counter++] = serialized" +
-                                                  capitalizedDeclarationJavaType + "[i];\n";
+                                                  capitalizedDeclarationName + "[i];\n";
                             serializeMethodStr += TAB_STR + TAB_STR + "}\n";
                         }
                         serializeMethodStr += TAB_STR + TAB_STR + "return output;";
@@ -611,18 +636,92 @@ namespace naeem {
                         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%SERIALIZE_METHOD_BODY%]"), 25,
                                                        serializeMethodStr);
                         // sample code
-                        //       byte[] serializedId = PDTSerializer.getInt16(id);
-                        //       byte[] serializedValue = PDTSerializer.getString(value);
-                        //       byte[] output = new byte[serializedId.length + serializedValue.length];
-                        //       int counter = 0;
-                        //       //use a loop for every property
-                        //       for (int i = 0; i < serializedId.length; i++) {
-                        //           output[counter++] = serializedId[i];
-                        //       }
-                        //       for (int i = 0; i < serializedValue.length; i++) {
-                        //           output[counter++] = serializedValue[i];
-                        //       }
-                        //       return output;
+                              // byte[] serializedId = PDTSerializer.getInt16(id);
+                              // byte[] serializedValue = PDTSerializer.getString(value);
+                              // byte[] output = new byte[serializedId.length + serializedValue.length];
+                              // int counter = 0;
+                              // //use a loop for every property
+                              // for (int i = 0; i < serializedId.length; i++) {
+                              //     output[counter++] = serializedId[i];
+                              // }
+                              // for (int i = 0; i < serializedValue.length; i++) {
+                              //     output[counter++] = serializedValue[i];
+                              // }
+                              // return output;
+
+
+                        // deserialize method
+                        std::string deserializeMethodStr;
+                        deserializeMethodStr += TAB_STR + TAB_STR + "int counter = 0;\n";
+                        deserializeMethodStr += TAB_STR + TAB_STR + "int dataLength = 0;\n";
+                        deserializeMethodStr += TAB_STR + TAB_STR + "int numbersOfBytesForDataLength;\n";
+                        deserializeMethodStr += TAB_STR + TAB_STR + "//do for every property\n";
+                        for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+                             = pStruct->declarations_.begin();
+                             it != pStruct->declarations_.end();
+                             ++it) {
+                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
+                            declarationJavaType = ConvertType(declarationPtr->type_);
+                            std::string capitalizedDeclarationType = Capitalize(declarationPtr->type_);
+                            std::string capitalizedDeclarationName = Capitalize(declarationPtr->variable_);
+                            deserializeMethodStr += TAB_STR + TAB_STR + "//" + declarationPtr->variable_ + " : " + declarationJavaType + "\n";
+                            if(declarationJavaType.compare("String") == 0) {
+                                deserializeMethodStr += TAB_STR + TAB_STR + "dataLength = 0;\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "if(serializedByteArray[counter] < 0x80){\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "dataLength = serializedByteArray[counter++];\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "}else{\n";             
+                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + TAB_STR + "dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "}\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "}\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[dataLength];\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "System.arraycopy(serializedByteArray,counter," + declarationPtr->variable_.c_str() + "ByteArray,0,dataLength);\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "counter += dataLength;\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
+                            }else {
+                                uint32_t dataLength = GetTypeLength(declarationPtr->type_.c_str());
+                                capitalizedDeclarationJavaType = Capitalize(declarationJavaType);
+                                std::stringstream dataLengthStr;
+                                dataLengthStr << dataLength;
+                                deserializeMethodStr += TAB_STR + TAB_STR + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[" + dataLengthStr.str() + "];";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "for(int i = 0 ; i < " + dataLengthStr.str() + " ; i++){\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + declarationPtr->variable_.c_str() + "ByteArray[i] = serializedByteArray[counter++];\n";            
+                                deserializeMethodStr += TAB_STR + TAB_STR + "}\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
+                            }
+                        }
+                        
+                        replacableStructTmpStr.replace(replacableStructTmpStr.find("[%DESERIALIZE_METHOD_BODY%]"),27,
+                                                        deserializeMethodStr);
+
+
+                        //deserialize sample code 
+                        /*
+                        int counter = 0;
+                        //do for every property
+                        //value : string
+                        int dataLength = 0 ;
+                        int numbersOfBytesForDataLength;
+                        if(serializedToken[counter] < 0x80){
+                            dataLength = serializedToken[counter++];
+                        }else{
+                            numbersOfBytesForDataLength = serializedToken[counter++] & 0x0f;
+                            for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+                                dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedToken[counter++];
+                            }
+                        }
+                        byte[] valueByteArray = new byte[dataLength];
+                        System.arraycopy(serializedToken,counter,valueByteArray,0,dataLength);
+                        counter += dataLength;
+                        setValue(PDTDeserializer.getString(valueByteArray));
+                        //id : int16
+                        byte[] idByteArray = new byte[2];
+                        for(int i = 0 ; i < 2 ; i++){
+                            idByteArray[i] = serializedToken[counter++];
+                        }
+                        setId(PDTDeserializer.getInt16(idByteArray));
+                        */
                         os.write(replacableStructTmpStr.c_str(), replacableStructTmpStr.size());
                         os.close();
                     }

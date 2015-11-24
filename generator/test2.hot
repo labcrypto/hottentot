@@ -1,7 +1,7 @@
 module example.generated {
   struct Token {
+    int16 id ord(2);
     string value ord(1);
-    int id ord(2);
   };
   struct Credential {
     string username ord(1);

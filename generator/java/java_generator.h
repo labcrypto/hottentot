@@ -29,8 +29,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
- #include <stdint.h>
+#include <stdint.h>
 #include <fstream>
+#include <map>
 #include "../ds/module.h"
 
 namespace naeem {
@@ -56,6 +57,7 @@ namespace naeem {
           void MakeStringsFromByteArrays();
           std::string Capitalize(std::string);
           std::string ConvertType(std::string);
+          uint32_t GetTypeLength(std::string);
           
 
           
