@@ -28,7 +28,8 @@ compile:
 	g++ -c lex.yy.c
 	g++ -c cc/cc_generator.cc -o cc_generator.o
 	g++ -c java/java_generator.cc -o java_generator.o
-	g++ y.tab.o lex.yy.o cc_generator.o java_generator.o -lfl -ll -o hot
+	g++ -c dep/fasthash.cc -o fasthash.o
+	g++ y.tab.o lex.yy.o cc_generator.o java_generator.o fasthash.o -lfl -ll -o hot
 java: compile
 	./hot --java --out ../examples/authentication/java/src/main/java/example/generated test2.hot
 	#./hot --java --out /home/developer/Desktop/gen test2.hot
