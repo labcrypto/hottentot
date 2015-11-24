@@ -23,6 +23,8 @@
 
 package [%BASE_PACKAGE_NAME%];
 
+import ir.ntnaeem.hottentot.runtime.helper.PDTSerializer;
+
 public class [%STRUCT_NAME%] {
 [%MEMBERS%]	
     public byte[] serialize() {

@@ -547,18 +547,20 @@ namespace naeem {
                                     i);
 
                             declarationJavaType = ConvertType(declarationPtr->type_);
-                            declarationJavaType  = ConvertType(declarationPtr->type_);
+                            //std::cout << "type : " << declarationPtr->type_ << std::endl;
+                            //std::cout << "java type : " << declarationJavaType << std::endl;
+                            capitalizedDeclarationJavaType  = Capitalize(declarationJavaType);
                             std::string declarationName = declarationPtr->variable_;
                             std::string capitalizedDeclarationName = Capitalize(declarationPtr->variable_);
                             declarationStr +=
-                                    TAB_STR + "private " + declarationPtr->type_ + " " + declarationName + ";\n";
+                                    TAB_STR + "private " + declarationJavaType + " " + declarationName + ";\n";
                             getterSetterStr += TAB_STR + "public void set" + capitalizedDeclarationName + "(" +
-                                               declarationPtr->type_ + " " + declarationName + ") {\n";
+                                               declarationJavaType + " " + declarationName + ") {\n";
                             getterSetterStr +=
                                     TAB_STR + TAB_STR + "this." + declarationName + " = " + declarationName + ";\n";
                             getterSetterStr += TAB_STR + "}\n";
                             getterSetterStr +=
-                                    TAB_STR + "public " + declarationPtr->type_ + " get" + capitalizedDeclarationName +
+                                    TAB_STR + "public " + declarationJavaType + " get" + capitalizedDeclarationName +
                                     "() {\n";
                             getterSetterStr += TAB_STR + TAB_STR + "return " + declarationPtr->variable_ + ";\n";
                             getterSetterStr += TAB_STR + "}\n";
@@ -571,13 +573,15 @@ namespace naeem {
                         for (int i = 0; i < pStruct->declarations_.size(); i++) {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(
                                     i);
+
+
                             std::string capitalizedDeclarationName = Capitalize(declarationPtr->variable_);
                             serializeMethodStr += TAB_STR + TAB_STR + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
                             declarationJavaType = ConvertType(declarationPtr->type_);
+                            std::cout << "capitalizedDeclarationName : " + capitalizedDeclarationName << std::endl;
                             capitalizedDeclarationJavaType = Capitalize(declarationJavaType);
-                            std::cout << declarationJavaType;
-                            //
-                            serializeMethodStr += capitalizedDeclarationJavaType + "(";
+                            std::string capitalizedDeclarationType  = Capitalize(declarationPtr->type_);
+                            serializeMethodStr += capitalizedDeclarationType + "(";
                             serializeMethodStr += declarationPtr->variable_ + ");\n";
                         }
                         serializeMethodStr += TAB_STR + TAB_STR + "byte[] output = new byte[";
@@ -600,10 +604,11 @@ namespace naeem {
                                     i);
                             declarationJavaType = ConvertType(declarationPtr->type_);
                             capitalizedDeclarationJavaType = Capitalize(declarationJavaType);
+                            std::string capitalizedDeclarationName = Capitalize(declarationPtr->variable_);
                             serializeMethodStr += TAB_STR + TAB_STR + "for (int i = 0; i < serialized" +
-                                                  capitalizedDeclarationJavaType + ".length; i++) {\n";
+                                                  capitalizedDeclarationName + ".length; i++) {\n";
                             serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "output[counter++] = serialized" +
-                                                  capitalizedDeclarationJavaType + "[i];\n";
+                                                  capitalizedDeclarationName + "[i];\n";
                             serializeMethodStr += TAB_STR + TAB_STR + "}\n";
                         }
                         serializeMethodStr += TAB_STR + TAB_STR + "return output;";
