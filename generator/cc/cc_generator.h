@@ -39,7 +39,10 @@ namespace naeem {
           virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
                                 ::naeem::hottentot::generator::GenerationConfig &);
         protected:
-          virtual void GenerateProxy(::naeem::hottentot::generator::ds::Service *);
+          virtual void GenerateProxy(::naeem::hottentot::generator::ds::Service *,
+                                     ::naeem::hottentot::generator::GenerationConfig &);
+          virtual void GenerateProxyBuilder(::naeem::hottentot::generator::ds::Service *,
+                                            ::naeem::hottentot::generator::GenerationConfig &);
         };
       }
     }

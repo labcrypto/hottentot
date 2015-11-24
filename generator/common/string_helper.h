@@ -71,6 +71,18 @@ namespace naeem {
             }
             return tokens;
           }
+          static inline std::vector<std::string> ExplodeCamelCase(std::string str) {
+            std::vector<std::string> tokens;
+            uint32_t startIndex = 0;
+            for (uint32_t i = 0; i < str.size(); i++) {
+              if (i > 0 && str[i] >= 'A' && str[i] <= 'Z') {
+                tokens.push_back(str.substr(startIndex, i - startIndex));
+                startIndex = i;
+              }
+            }
+            tokens.push_back(str.substr(startIndex, str.size() - startIndex));
+            return tokens;
+          }
           static inline std::string MakeLowerCase(std::string str) {
             std::string result(str);
             std::transform(str.begin(), str.end(), result.begin(), ::tolower);
@@ -131,6 +143,24 @@ namespace naeem {
           static inline std::string MakeScreamingSnakeCase(std::string str, 
                                                            char del = ' ') {
             return MakeScreamingSnakeCase(Split(str, del));
+          }
+          static inline std::string MakeCamelCaseFirstCapitalFromSnakeCase(std::string str) {
+            return MakeCamelCase(Split(str, '_'));
+          }
+          static inline std::string MakeCamelCaseFirstCapitalFromScreamingSnakeCase(std::string str) {
+            return MakeCamelCase(Split(str, '_'));
+          }
+          static inline std::string MakeSnakeCaseFromCamelCase(std::string str) {
+            return MakeSnakeCase(ExplodeCamelCase(str));
+          }
+          static inline std::string MakeSnakeCaseFromScreamingSnakeCase(std::string str) {
+            return MakeSnakeCase(Split(str, '_'));
+          }
+          static inline std::string MakeScreamingSnakeCaseFromCamelCase(std::string str) {
+            return MakeScreamingSnakeCase(ExplodeCamelCase(str));
+          }
+          static inline std::string MakeScreamingSnakeCaseFromSnakeCase(std::string str) {
+            return MakeScreamingSnakeCase(Split(str, '_'));
           }
         };
       }

@@ -22,6 +22,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 
 #include "cc_generator.h"
 
@@ -44,12 +45,6 @@ namespace naeem {
         void
         CCGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
                               ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
-          std::string proxyTemplate;
-          std::string proxyMethodTemplate;
-          std::string proxyMethodArgumentSerializationTemplate;
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc.template", proxyTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_method.template", proxyMethodTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_method_argument_serialization.template", proxyMethodArgumentSerializationTemplate);
           ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir() + "/proxy");
           ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir() + "/service");
           for (uint32_t moduleCounter = 0; 
@@ -58,17 +53,65 @@ namespace naeem {
             for (uint32_t serviceCounter = 0; 
                  serviceCounter < hot->modules_[moduleCounter]->services_.size();
                  serviceCounter++) {
-              GenerateProxy(hot->modules_[moduleCounter]->services_[serviceCounter]);
+              GenerateProxy(hot->modules_[moduleCounter]->services_[serviceCounter],
+                            generationConfig);
+              GenerateProxyBuilder(hot->modules_[moduleCounter]->services_[serviceCounter],
+                                   generationConfig);
             }
           }
           std::cout << "C++ Generation done." << std::endl;
         }
         void
-        CCGenerator::GenerateProxy(::naeem::hottentot::generator::ds::Service *service) {
+        CCGenerator::GenerateProxy(::naeem::hottentot::generator::ds::Service *service,
+                                   ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
+          std::string proxyTemplate;
+          std::string proxyMethodTemplate;
+          std::string proxyMethodArgumentSerializationTemplate;
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc.template", proxyTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_method.template", proxyMethodTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_method_argument_serialization.template", proxyMethodArgumentSerializationTemplate);
           std::string serviceNameCamelCaseFirstCapital = 
           ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
             service->GetName()) + "Service";
+          std::string serviceSnakeCase = 
+            ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
+              serviceNameCamelCaseFirstCapital);
+          std::string serviceProxyHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceSnakeCase + "_proxy.h";
+          std::string serviceProxyCCFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceSnakeCase + "_proxy.cc";
           std::cout << serviceNameCamelCaseFirstCapital << std::endl;
+          std::cout << serviceSnakeCase << std::endl;
+          std::fstream f;
+          f.open(serviceProxyHeaderFilePath.c_str(), std::fstream::out | std::fstream::binary);
+          f.close();
+          std::fstream f2;
+          f2.open(serviceProxyCCFilePath.c_str(), std::fstream::out | std::fstream::binary);
+          f2.close();
+        }
+        void
+        CCGenerator::GenerateProxyBuilder(::naeem::hottentot::generator::ds::Service *service,
+                                          ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
+          std::string proxyTemplate;
+          std::string proxyMethodTemplate;
+          std::string proxyMethodArgumentSerializationTemplate;
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc.template", proxyTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_method.template", proxyMethodTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_method_argument_serialization.template", proxyMethodArgumentSerializationTemplate);
+          std::string serviceNameCamelCaseFirstCapital = 
+          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
+            service->GetName()) + "Service";
+          std::string serviceSnakeCase = 
+            ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
+              serviceNameCamelCaseFirstCapital);
+          std::string serviceProxyBuilderHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceSnakeCase + "_proxy_builder.h";
+          std::string serviceProxyBuilderCCFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceSnakeCase + "_proxy_builder.cc";
+          std::cout << serviceNameCamelCaseFirstCapital << std::endl;
+          std::cout << serviceSnakeCase << std::endl;
+          std::fstream f;
+          f.open(serviceProxyBuilderHeaderFilePath.c_str(), std::fstream::out | std::fstream::binary);
+          f.close();
+          std::fstream f2;
+          f2.open(serviceProxyBuilderCCFilePath.c_str(), std::fstream::out | std::fstream::binary);
+          f2.close();
         }
       }
     }
