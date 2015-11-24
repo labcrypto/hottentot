@@ -58,10 +58,17 @@ namespace naeem {
             for (uint32_t serviceCounter = 0; 
                  serviceCounter < hot->modules_[moduleCounter]->services_.size();
                  serviceCounter++) {
-
+              GenerateProxy(hot->modules_[moduleCounter]->services_[serviceCounter]);
             }
           }
           std::cout << "C++ Generation done." << std::endl;
+        }
+        void
+        CCGenerator::GenerateProxy(::naeem::hottentot::generator::ds::Service *service) {
+          std::string serviceNameCamelCaseFirstCapital = 
+          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
+            service->GetName()) + "Service";
+          std::cout << serviceNameCamelCaseFirstCapital << std::endl;
         }
       }
     }

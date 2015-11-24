@@ -38,6 +38,8 @@ namespace naeem {
         public:
           virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
                                 ::naeem::hottentot::generator::GenerationConfig &);
+        protected:
+          virtual void GenerateProxy(::naeem::hottentot::generator::ds::Service *);
         };
       }
     }

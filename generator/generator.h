@@ -39,6 +39,11 @@ namespace naeem {
       };
       namespace ds {
         class Hot;
+        class Service;
+        class Method;
+        class Module;
+        class Argument;
+        class Declaration;
       }
       class GenerationConfig {
 
