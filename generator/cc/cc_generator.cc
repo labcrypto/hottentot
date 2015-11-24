@@ -50,13 +50,17 @@ namespace naeem {
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc.template", proxyTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_method.template", proxyMethodTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_method_argument_serialization.template", proxyMethodArgumentSerializationTemplate);
-          std::cout << hot->modules_[0]->GetPackage() << std::endl;
-          std::cout << ::naeem::hottentot::generator::common::StringHelper::Replace(hot->modules_[0]->GetPackage(), ".", "/") << std::endl;
-          std::cout << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(hot->modules_[0]->GetPackage(), '.') << std::endl;
-          std::cout << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(hot->modules_[0]->GetPackage(), '.') << std::endl;
-          std::cout << ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCase(hot->modules_[0]->GetPackage(), '.') << std::endl;
-          std::cout << ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(hot->modules_[0]->GetPackage(), '.') << std::endl;
-          ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir());
+          ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir() + "/proxy");
+          ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir() + "/service");
+          for (uint32_t moduleCounter = 0; 
+               moduleCounter < hot->modules_.size(); 
+               moduleCounter++) {
+            for (uint32_t serviceCounter = 0; 
+                 serviceCounter < hot->modules_[moduleCounter]->services_.size();
+                 serviceCounter++) {
+
+            }
+          }
           std::cout << "C++ Generation done." << std::endl;
         }
       }

@@ -116,7 +116,6 @@ namespace naeem {
             }
             return ss.str();
           }
-          
           static inline std::string MakeCamelCaseFirstCapital(std::string str, 
                                                               char del = ' ') {
             return MakeCamelCase(Split(str, del));

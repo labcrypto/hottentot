@@ -38,8 +38,10 @@ namespace naeem {
           std::stringstream ss;
           ss << service_->GetFQName() << "." << name_;
           ss << "(";
+          std::string del = "";
           for (uint32_t i = 0; i < arguments_.size(); i++) {
-            ss << arguments_[i]->GetVariable() << ":" << arguments_[i]->GetType();
+            ss << del << ":" << arguments_[i]->GetType();
+            del = ",";
           }
           ss << "):";
           ss << returnType_;
