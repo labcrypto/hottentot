@@ -463,7 +463,7 @@ namespace naeem {
 
                     //TODO use buffer reading
 //			    char buffer[100];
-//			    FILE* f = fopen("/home/developer/Desktop/templates/struct.tmp","rb");
+//			    FILE* f = fopen("/home/developer/Desktop/templates/struct.template","rb");
 //				std::string str;
 //			    while(true){
 //			        unsigned int r = fread(buffer , sizeof(char), 10 ,f);
@@ -474,18 +474,18 @@ namespace naeem {
 //			    }
 //
 //			    fclose(f);
-//			    f = fopen("/home/developer/Desktop/templates/new.tmp","wb");
+//			    f = fopen("/home/developer/Desktop/templates/new.template","wb");
 //			    fwrite(str.c_str() , sizeof(char), str.length(),f);
 //			    fclose(f);
 
-                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/struct.tmp", std::ios::in);
+                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/struct.template", std::ios::in);
                     //TODO use buffer reader
                     char c;
                     while ((c = is.get()) != -1) {
                         structTmpStr_ += c;
                     }
                     is.close();
-                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/abstractService.tmp",
+                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/abstractService.template",
                             std::ios::in);
                     //TODO use buffer reader
                     while ((c = is.get()) != -1) {
@@ -494,7 +494,7 @@ namespace naeem {
                     is.close();
 
                     //service interface
-                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/service.tmp",
+                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/service.template",
                             std::ios::in);
                     //TODO use buffer reader
                     while ((c = is.get()) != -1) {
@@ -502,7 +502,7 @@ namespace naeem {
                     }
                     is.close();
                     //service proxy
-                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/serviceProxy.tmp",
+                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/serviceProxy.template",
                             std::ios::in);
                     while ((c = is.get()) != -1) {
                         serviceProxyTmpStr_ += c;
@@ -510,7 +510,7 @@ namespace naeem {
                     is.close();
 
                     //service proxy builder
-                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/serviceProxyBuilder.tmp",
+                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/serviceProxyBuilder.template",
                             std::ios::in);
                     //TODO use buffer reader
                     while ((c = is.get()) != -1) {
@@ -519,7 +519,7 @@ namespace naeem {
                     is.close();
 
                     //request handler
-                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/requestHandler.tmp",
+                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/requestHandler.template",
                             std::ios::in);
                     //TODO use buffer reader
                     while ((c = is.get()) != -1) {
@@ -733,7 +733,7 @@ namespace naeem {
                     ::naeem::hottentot::generator::ds::Service *pService;
                     std::string replacableAbstractServiceTmpStr;
                     for (int i = 0; i < pModule->services_.size(); i++) {
-                        //write abstractService.tmp
+                        //write abstractService.template
                         std::string basePackageName = pModule->package_;
                         pService = pModule->services_.at(i);
                         std::string path = outDir_ + "/Abstract" + pService->name_.c_str() + "Service.java";
@@ -765,7 +765,7 @@ namespace naeem {
                     ::naeem::hottentot::generator::ds::Service *pService;
                     std::string replacableServiceTmpStr;
                     for (int i = 0; i < pModule->services_.size(); i++) {
-                        //write abstractService.tmp
+                        //write abstractService.template
                         std::string basePackageName = pModule->package_;
                         pService = pModule->services_.at(i);
                         //write service interface
@@ -811,7 +811,7 @@ namespace naeem {
                     ::naeem::hottentot::generator::ds::Service *pService;
                     std::string replacableServiceProxyBuilderTmpStr;
                     for (int i = 0; i < pModule->services_.size(); i++) {
-                        //write abstractService.tmp
+                        //write abstractService.template
                         std::string basePackageName = pModule->package_;
                         pService = pModule->services_.at(i);
                         std::string replacableServiceProxyBuilderTmpStr;
