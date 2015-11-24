@@ -267,7 +267,7 @@ void printHelpMessageAndExit() {
 int main(int argc, char **argv) {
   bool isJava = false;
   bool isCC = false;
-  bool isSpaceUsedForIndentation = true;
+  bool isSpacesUsedForIndentation = true;
   uint8_t numberOfSpacesUsedForIndentation = 2;
   bool hotsBegun = false;
   char *outputDir = 0;
@@ -291,13 +291,13 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
         exit(1);
       }
-      isSpaceUsedForIndentation = true;
+      isSpacesUsedForIndentation = true;
       i++;
     } else if (strcmp(argv[i], "--indent-with-tabs") == 0) {
       if (hotsBegun) {
         printHelpMessageAndExit();
       }
-      isSpaceUsedForIndentation = false;
+      isSpacesUsedForIndentation = false;
       i++;
     } else if (strcmp(argv[i], "--help") == 0) {
       printHelpMessageAndExit();
@@ -308,7 +308,7 @@ int main(int argc, char **argv) {
       outputDir = argv[i + 1];
       i += 2;
     } else {
-      // TODO(kamran) File names do not start with --. Consider this.
+      // TODO(kamran) File names do not start with '--'. Consider this here.
       if (hots == 0) {
         hotsBegun = true;
         hots = new char*[argc - i];
@@ -322,11 +322,6 @@ int main(int argc, char **argv) {
   if (outputDir == 0) {
     outputDir = "gen";
   }
-  /*std::cout << "Num: " << numOfHots << std::endl;
-  std::cout << "Is Java: " << isJava << std::endl;
-  std::cout << "Is CC: " << isCC << std::endl;
-  std::cout << "Out: " << (outputDir == 0 ? "NOT SET" : outputDir) << std::endl;
-  std::cout << "Hot files: \n";*/
   for (uint16_t i = 0; i < numOfHots; i++) {
     yyin = fopen(hots[i],"r+");
     if (!yyin) {
@@ -337,7 +332,7 @@ int main(int argc, char **argv) {
     currentHot->Display();
     ::naeem::hottentot::generator::GenerationConfig generationConfig;
     generationConfig.SetOutDir(outputDir);
-    generationConfig.SetSpacesUsedInsteadOfTabsForIndentation(isSpaceUsedForIndentation);
+    generationConfig.SetSpacesUsedInsteadOfTabsForIndentation(isSpacesUsedForIndentation);
     generationConfig.SetNumberOfSpacesUsedForIndentation(numberOfSpacesUsedForIndentation);
     ::naeem::hottentot::generator::Generator *generator = 0;
     if (isCC) {
