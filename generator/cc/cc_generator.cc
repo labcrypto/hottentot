@@ -37,7 +37,7 @@ namespace naeem {
         CCGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
                               ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
           ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir());
-          // TODO
+          
           std::cout << "C++ Generation done." << std::endl;
         }
       }

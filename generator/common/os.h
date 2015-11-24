@@ -56,6 +56,9 @@ namespace naeem {
               }
             #endif
           }
+          static inline void ReadFile(std::string path, std::string &content) {
+            
+          }
         };
       }
     }

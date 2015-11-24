@@ -69,9 +69,6 @@ namespace naeem {
                   it->second->Display();
                   std::cout << std::endl;
                 }
-                /*for (uint32_t k = 0; k < modules_[i]->structs_[j]->declarations_.size(); k++) {
-                  
-                }*/
                 std::cout << "      }\n";
               }
               for (uint32_t j = 0; j < modules_[i]->services_.size(); j++) {
