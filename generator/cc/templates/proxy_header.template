@@ -1,0 +1,26 @@
+#ifndef [[[HEADER_GUARD]]]
+#define [[[HEADER_GUARD]]]
+
+#include <stdint.h>
+#include <string>
+
+#include <naeem/hottentot/runtime/proxy/proxy.h>
+
+#include "../[[[SNAKE_CASE_SERVICE_NAME]]].h"
+
+
+[[[NAMESPACES_START]]]
+[[[STRUCT_CLASS_FORWARD_DECLARATIONS]]]
+namespace proxy {
+  class [[[CAMEL_CASE_FP_SERVICE_NAME]]]Proxy : public [[[NAMESPACE]]]::[[[CAMEL_CASE_FP_SERVICE_NAME]]], 
+                                   public ::naeem::hottentot::runtime::proxy::Proxy {
+  public:
+    [[[CAMEL_CASE_FP_SERVICE_NAME]]]Proxy(std::string host, uint32_t port) 
+      : ::naeem::hottentot::runtime::proxy::Proxy(host, port) {}
+    virtual ~[[[CAMEL_CASE_FP_SERVICE_NAME]]]Proxy() {}
+  public:
+    [[[METHOD_DEFS]]]
+  };
+[[[NAMESPACES_END]]]
+
+#endif

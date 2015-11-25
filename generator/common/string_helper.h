@@ -71,6 +71,16 @@ namespace naeem {
             }
             return tokens;
           }
+          static inline std::string Concat(std::vector<std::string> strs, 
+                                           std::string separator) {
+            std::string result;
+            std::string del = "";
+            for (uint32_t i = 0; i < strs.size(); i++) {
+              result += del + strs[i];
+              del = separator;
+            }
+            return result;
+          }
           static inline std::vector<std::string> ExplodeCamelCase(std::string str) {
             std::vector<std::string> tokens;
             uint32_t startIndex = 0;
