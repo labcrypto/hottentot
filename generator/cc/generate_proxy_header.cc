@@ -37,6 +37,8 @@
 
 #include "../common/os.h"
 #include "../common/string_helper.h"
+#include "../common/datetime_helper.h"
+
 
 namespace naeem {
   namespace hottentot {
@@ -46,6 +48,7 @@ namespace naeem {
         CCGenerator::GenerateProxyHeader(::naeem::hottentot::generator::ds::Service *service,
                                          ::naeem::hottentot::generator::GenerationConfig &generationConfig,
                                          std::map<std::string, std::string> &templates) {
+          std::string indent = generationConfig.GetIndentString();
           /*
            * Making needed variables and assigning values to them
            */
@@ -70,7 +73,7 @@ namespace naeem {
               ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
           }
           std::string namespacesEnd = "";
-          for (uint32_t i = 0; i < packageTokens.size(); i++) {
+          for (int32_t i = packageTokens.size() - 1; i >= 0; i--) {
             namespacesEnd += "} // END OF NAMESPACE " + packageTokens[i] + "\r\n";
           }
           std::string structClassForwardDeclarations = "";
@@ -81,18 +84,22 @@ namespace naeem {
           namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
           structClassForwardDeclarations = ::naeem::hottentot::generator::common::StringHelper::Trim(structClassForwardDeclarations);
           std::string methodDefs = "";
+          std::string methodIndent = "";
           for (uint32_t i = 0; i < service->methods_.size(); i++) {
             ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
-            methodDefs += TypeHelper::GetCCType(method->GetReturnType()) + (TypeHelper::IsUDT(method->GetReturnType()) ? "*" : "") + " " + method->GetName() + "(";
+            methodDefs += methodIndent + TypeHelper::GetCCType(method->GetReturnType()) + (TypeHelper::IsUDT(method->GetReturnType()) ? "*" : "") + " " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
             std::string sep = "";
             for (uint32_t j = 0; j < method->arguments_.size(); j++) {
               methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " " + (TypeHelper::IsUDT(method->arguments_[j]->GetType()) ? "*" : "") + method->arguments_[j]->GetVariable();
               sep = ", ";
             }
             methodDefs += ");\r\n";
+            methodIndent = indent + indent;
           }
           methodDefs = ::naeem::hottentot::generator::common::StringHelper::Trim(methodDefs);
           std::map<std::string, std::string> params;
+          params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
+          params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + "_proxy.h"));
           params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
           params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
           params.insert(std::pair<std::string, std::string>("STRUCT_CLASS_FORWARD_DECLARATIONS", structClassForwardDeclarations));
@@ -105,8 +112,9 @@ namespace naeem {
                   service->module_->GetPackage(), '.'), "::")));
           params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FP_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
           params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", serviceNameSnakeCase));
-          params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME",serviceNameScreamingSnakeCase));
-          params.insert(std::pair<std::string, std::string>("METHOD_DEFS",methodDefs));
+          params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME", serviceNameScreamingSnakeCase));
+          params.insert(std::pair<std::string, std::string>("METHOD_DEFS", methodDefs));
+          params.insert(std::pair<std::string, std::string>("INDENT", indent));
           std::string proxyHeaderTemplate = templates["proxy_header"];
           for (std::map<std::string, std::string>::iterator it = params.begin();
                it != params.end();
@@ -123,9 +131,6 @@ namespace naeem {
           f.open(serviceProxyHeaderFilePath.c_str(), std::fstream::out | std::fstream::binary);
           f << proxyHeaderTemplate;
           f.close();
-          std::fstream f2;
-          f2.open(serviceProxyCCFilePath.c_str(), std::fstream::out | std::fstream::binary);
-          f2.close();
         }
       }
     }

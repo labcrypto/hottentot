@@ -70,6 +70,16 @@ namespace naeem {
         inline void SetNumberOfSpacesUsedForIndentation(uint8_t numberOfSpacesUsedForIndentation) {
           numberOfSpacesUsedForIndentation_ = numberOfSpacesUsedForIndentation;
         }
+        inline std::string GetIndentString() {
+          if (spacesUsedInsteadOfTabsForIndentation_) {
+            std::string indent = "";
+            for (uint8_t i = 0; i < numberOfSpacesUsedForIndentation_; i++) {
+              indent += " ";
+            }
+            return indent;
+          }
+          return "\t";
+        }
       private:
         bool spacesUsedInsteadOfTabsForIndentation_;
         uint8_t numberOfSpacesUsedForIndentation_;
