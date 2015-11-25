@@ -40,7 +40,7 @@ compile:
 	    method.o \
 	    -lfl -ll -o hot
 java: compile
-	./hot --java --out ../examples/authentication/java/src/main/java/example/generated test2.hot
-	#./hot --java --out /home/developer/Desktop/gen test2.hot
+	#./hot --java --out ../examples/authentication/java/src/main/java/example/generated test3.hot
+	./hot --java --out /home/developer/Desktop/gen test3.hot
 cc: compile
 	./hot --cc --indent-with-spaces --number-of-spaces-used-for-indentation 2 --out gen test2.hot

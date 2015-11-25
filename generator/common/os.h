@@ -72,6 +72,15 @@ namespace naeem {
             content.assign((std::istreambuf_iterator<char>(t)),
                             std::istreambuf_iterator<char>());
           }
+          static inline void WriteFile(std::string path , std::string &content){
+            std::ofstream os;
+            os.open(path.c_str() , std::ios::trunc);
+            if (os.fail()) {
+              throw std::runtime_error("File couldn't be opened.");
+            }
+            os.write(content.c_str() , content.size());
+            os.close();
+          }
         };
       }
     }

@@ -31,6 +31,7 @@
 #include <locale>
 #include <sstream>
 #include <vector>
+#include <stdexcept>
 
 
 namespace naeem {
@@ -60,6 +61,21 @@ namespace naeem {
               index = result.find(toReplace);
             }
             return result;
+          }
+          static inline void Replace(std::string &s,
+                                            const std::string toReplace,
+                                            const std::string replaceWith,
+                                            uint32_t functionStatus) {
+            if(functionStatus == 1){
+              //std::string result = s;
+              std::size_t index = s.find(toReplace);
+              while (index != std::string::npos) {
+                s.replace(index, toReplace.length(), replaceWith);
+                index = s.find(toReplace);
+              }
+            }else{
+              throw std::runtime_error("StringHelper::Replace : function status is not suppoerted.");
+            }
           }
           static inline std::vector<std::string> Split(std::string str, 
                                                        char separator) {

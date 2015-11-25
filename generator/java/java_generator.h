@@ -55,7 +55,6 @@ namespace naeem {
           void GenerateRequestHandler(::naeem::hottentot::generator::ds::Module*);
           void GenerateServiceProxy(::naeem::hottentot::generator::ds::Module*);
           void MakeStringsFromByteArrays();
-          std::string Capitalize(std::string);
           std::string ConvertType(std::string);
           uint32_t GetTypeLength(std::string);
           
@@ -63,7 +62,6 @@ namespace naeem {
           
         private:
           std::ofstream os;
-          std::ifstream is;
           std::vector<naeem::hottentot::generator::ds::Module*>  modules_;
           std::string structTmpStr_;
           std::string abstractServiceTmpStr_;
