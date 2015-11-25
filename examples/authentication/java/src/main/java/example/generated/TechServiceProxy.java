@@ -21,7 +21,7 @@
  *  SOFTWARE.
  */
 
-package example.generated;
+package ir.ntnaeem.hottentot.examples.tech;
 
 import ir.ntnaeem.hottentot.runtime.Argument;
 import ir.ntnaeem.hottentot.runtime.Proxy;
@@ -36,18 +36,18 @@ import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 
-public class AuthenticationServiceProxy extends AbstractAuthenticationService implements Proxy {
+public class TechServiceProxy extends AbstractTechService implements Proxy {
 	
 	private String host;
 	private int port;
 
-	public AuthenticationServiceProxy(String host, int port) {
+	public TechServiceProxy(String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
-	public Token authenticate(Credential credential) { 
-        //serialize credential
-        byte[] serializedCredential = credential.serialize();
+	public void report(string message) { 
+        //serialize message
+        byte[] serializedstring = message.serialize();
 
         //make request
         Request request = new Request();
@@ -56,27 +56,27 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
         request.setArgumentCount((byte) 1);
         request.setType(Request.RequestType.InvokeStateless);
         Argument arg0 = new Argument();
-        arg0.setDataLength(credential.serialize().length);
-        arg0.setData(credential.serialize());
+        arg0.setDataLength(message.serialize().length);
+        arg0.setData(message.serialize());
         request.addArgument(arg0);
         int dataLength = 0;
         //calculate data length for every argument
-        //calulate credentialDataLength
-        int credentialDataLength= serializedCredential.length;
-        int credentialDataLengthByteArrayLength = 1;
-        if (credentialDataLength >= 0x80) {
-            if (credentialDataLength <= 0xff) {
+        //calulate messageDataLength
+        int messageDataLength= serializedstring.length;
+        int messageDataLengthByteArrayLength = 1;
+        if (messageDataLength >= 0x80) {
+            if (messageDataLength <= 0xff) {
                 //ex 0x81 0xff
-                credentialDataLengthByteArrayLength = 2;
-            } else if (credentialDataLength <= 0xffff) {
+                messageDataLengthByteArrayLength = 2;
+            } else if (messageDataLength <= 0xffff) {
                 //ex 0x82 0xff 0xff
-                credentialDataLengthByteArrayLength = 3;
-            } else if (credentialDataLength <= 0xffffff) {
+                messageDataLengthByteArrayLength = 3;
+            } else if (messageDataLength <= 0xffffff) {
                 //ex 0x83 0xff 0xff 0xff
-                credentialDataLengthByteArrayLength = 4;
+                messageDataLengthByteArrayLength = 4;
             }
         }
-        dataLength += credentialDataLength + credentialDataLengthByteArrayLength;
+        dataLength += messageDataLength + messageDataLengthByteArrayLength;
         //
         request.setLength(4 + dataLength);
         //connect to server
@@ -109,15 +109,67 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
         //deserialize token part of response
         Response response = protocol.getResponse();
         //close everything
-        //deserialize Tokenpart from response
-        Token token= null;
+        //deserialize voidpart from response
+        void –oid= null;
         if (response.getStatusCode() == -1) {
             //
         } else {
-            token= new Token();
-            token.deserialize(response.getData());
+            –oid= new void();
+            –oid.deserialize(response.getData());
         }
-        return token;
+        return –oid;
+    }
+public int16 getSerial() { 
+
+        //make request
+        Request request = new Request();
+        request.setServiceId((byte) 1);
+        request.setMethodId((byte) 1);
+        request.setArgumentCount((byte) 0);
+        request.setType(Request.RequestType.InvokeStateless);
+        int dataLength = 0;
+        //calculate data length for every argument
+        //
+        request.setLength(4 + dataLength);
+        //connect to server
+        TcpClient tcpClient = TcpClientFactory.create();
+        try{
+            tcpClient.connect(host, port);
+        } catch (TcpClientConnectException e) {
+            throw new HottentotRuntimeException(e);
+        }
+        //serialize request according to HTNP
+        Protocol protocol = ProtocolFactory.create();
+        byte[] serializedRequest = protocol.serializeRequest(request);
+        //send request
+        try {
+            tcpClient.write(serializedRequest);
+        } catch (TcpClientWriteException e) {
+            throw new HottentotRuntimeException(e);
+        }
+        //read response from server
+        byte[] buffer = new byte[256];
+        while (!protocol.IsResponseComplete()) {
+            byte[] dataChunkRead;
+            try {
+                dataChunkRead = tcpClient.read();
+            } catch (TcpClientReadException e) {
+                throw new HottentotRuntimeException(e);
+            }
+            protocol.processDataForResponse(dataChunkRead);
+        }
+        //deserialize token part of response
+        Response response = protocol.getResponse();
+        //close everything
+        //deserialize int16part from response
+        int16 ‰nt16= null;
+        if (response.getStatusCode() == -1) {
+            //
+        } else {
+            ‰nt16= new int16();
+            ‰nt16.deserialize(response.getData());
+        }
+        return ‰nt16;
     }
 
 	public void destroy() {

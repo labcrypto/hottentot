@@ -54,16 +54,12 @@ namespace naeem {
           void GenerateServiceProxyBuilder(::naeem::hottentot::generator::ds::Module*);
           void GenerateRequestHandler(::naeem::hottentot::generator::ds::Module*);
           void GenerateServiceProxy(::naeem::hottentot::generator::ds::Module*);
-          void MakeStringsFromByteArrays();
-          std::string Capitalize(std::string);
+          void MakeTabStr(::naeem::hottentot::generator::GenerationConfig &);
           std::string ConvertType(std::string);
           uint32_t GetTypeLength(std::string);
           
-
-          
         private:
           std::ofstream os;
-          std::ifstream is;
           std::vector<naeem::hottentot::generator::ds::Module*>  modules_;
           std::string structTmpStr_;
           std::string abstractServiceTmpStr_;
@@ -73,7 +69,7 @@ namespace naeem {
           std::string serviceProxyTmpStr_;
           std::string outDir_;
           static const uint32_t TAB_SPACE_NUMBER = 4;
-          std::string TAB_STR;
+          std::string TAB_STR_;
         };
       }
     }

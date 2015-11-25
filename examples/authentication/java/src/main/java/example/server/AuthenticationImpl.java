@@ -23,14 +23,14 @@
 
 package example.server;
 
-import example.generated.AbstractAuthenticationService;
-import example.generated.Credential;
-import example.generated.Token;
+import example.generatedBackup.AbstractAuthenticationService;
+import example.generatedBackup.Credential;
+import example.generatedBackup.Token;
 
 public class AuthenticationImpl extends AbstractAuthenticationService {
     public Token authenticate(Credential credential){
         Token token = new Token();
-        token.setValue("test");
+        token.setValue("uu-token");
         return token;
     }
 }

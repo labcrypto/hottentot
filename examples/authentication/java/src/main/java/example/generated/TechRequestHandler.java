@@ -21,7 +21,7 @@
  *  SOFTWARE.
  */
 
-package [%BASE_PACKAGE_NAME%];
+package ir.ntnaeem.hottentot.examples.tech;
 
 import ir.ntnaeem.hottentot.runtime.Argument;
 import ir.ntnaeem.hottentot.runtime.Request;
@@ -34,16 +34,40 @@ import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
 import java.util.List;
 
-public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
-    public [%SERVICE_NAME%]RequestHandler(Service service) {
+public class TechRequestHandler extends RequestHandler {
+    public TechRequestHandler(Service service) {
         super(service);
     }
     @Override
     public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
         byte methodId = request.getMethodId();
-        [%SERVICE_NAME%]Service [%SERVICE_NAME_LOWERCASE%]Impl = (Abstract[%SERVICE_NAME%]Service) service;
+        TechService techImpl = (AbstractTechService) service;
 
-        [%METHOD_CONDITIONS%]
+	    if(methodId == 1){
+            List <Argument> args = request.getArgs();
+            Argument arg0 = args.get(0);
+            byte[] serializedstring = arg0.getData();
+            string message = new string();
+            message.deserialize(serializedstring);
+            void –oid = null;
+            Response response = new Response();
+            –oid = techImpl.report(message);
+            byte[] serializedvoid = –oid.serialize();
+            response.setStatusCode((byte) 100);
+            response.setData(serializedvoid);
+            response.setLength(serializedvoid.length + 1);
+            return response;
+        }if(methodId == 1){
+            List <Argument> args = request.getArgs();
+            int16 ‰nt16 = null;
+            Response response = new Response();
+            ‰nt16 = techImpl.getSerial();
+            byte[] serializedint16 = ‰nt16.serialize();
+            response.setStatusCode((byte) 100);
+            response.setData(serializedint16);
+            response.setLength(serializedint16.length + 1);
+            return response;
+        }
         throw new MethodNotSupportException("method id is incorrect");
     }
 }

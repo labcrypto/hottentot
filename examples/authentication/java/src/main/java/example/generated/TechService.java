@@ -21,29 +21,10 @@
  *  SOFTWARE.
  */
 
-package [%BASE_PACKAGE_NAME%];
+package ir.ntnaeem.hottentot.examples.tech;
 
-import ir.ntnaeem.hottentot.runtime.Argument;
-import ir.ntnaeem.hottentot.runtime.Request;
-import ir.ntnaeem.hottentot.runtime.RequestHandler;
-import ir.ntnaeem.hottentot.runtime.Response;
 import ir.ntnaeem.hottentot.runtime.Service;
-import ir.ntnaeem.hottentot.runtime.exception.MethodNotSupportException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
-import java.util.List;
 
-public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
-    public [%SERVICE_NAME%]RequestHandler(Service service) {
-        super(service);
-    }
-    @Override
-    public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
-        byte methodId = request.getMethodId();
-        [%SERVICE_NAME%]Service [%SERVICE_NAME_LOWERCASE%]Impl = (Abstract[%SERVICE_NAME%]Service) service;
-
-        [%METHOD_CONDITIONS%]
-        throw new MethodNotSupportException("method id is incorrect");
-    }
+public interface TechService extends Service {
+    void report(string message);    int16 getSerial();
 }

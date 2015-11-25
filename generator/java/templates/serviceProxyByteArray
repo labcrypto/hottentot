@@ -24,26 +24,29 @@
 package [%BASE_PACKAGE_NAME%];
 
 import ir.ntnaeem.hottentot.runtime.Argument;
+import ir.ntnaeem.hottentot.runtime.Proxy;
 import ir.ntnaeem.hottentot.runtime.Request;
-import ir.ntnaeem.hottentot.runtime.RequestHandler;
 import ir.ntnaeem.hottentot.runtime.Response;
-import ir.ntnaeem.hottentot.runtime.Service;
-import ir.ntnaeem.hottentot.runtime.exception.MethodNotSupportException;
+import ir.ntnaeem.hottentot.runtime.TcpClient;
+import ir.ntnaeem.hottentot.runtime.exception.HottentotRuntimeException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
-import java.util.List;
+import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
+import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
+import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 
-public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
-    public [%SERVICE_NAME%]RequestHandler(Service service) {
-        super(service);
-    }
-    @Override
-    public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
-        byte methodId = request.getMethodId();
-        [%SERVICE_NAME%]Service [%SERVICE_NAME_LOWERCASE%]Impl = (Abstract[%SERVICE_NAME%]Service) service;
+public class [%SERVICE_NAME%]ServiceProxy extends Abstract[%SERVICE_NAME%]Service implements Proxy {
+	
+	private String host;
+	private int port;
 
-        [%METHOD_CONDITIONS%]
-        throw new MethodNotSupportException("method id is incorrect");
-    }
+	public [%SERVICE_NAME%]ServiceProxy(String host, int port) {
+		this.host = host;
+		this.port = port;
+	}
+	[%METHODS%]
+	public void destroy() {
+        	//TODO
+	}
 }

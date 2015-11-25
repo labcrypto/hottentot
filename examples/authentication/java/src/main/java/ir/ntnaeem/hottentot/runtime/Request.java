@@ -38,8 +38,8 @@ public class Request {
 
 
     private RequestType type;
-    private byte methodId;
-    private byte serviceId;
+    private int methodId;
+    private int serviceId;
     private byte argumentCount;
     private int length;
 
@@ -62,7 +62,7 @@ public class Request {
         this.type = type;
     }
 
-    public byte getMethodId() {
+    public int getMethodId() {
         return methodId;
     }
 
@@ -70,7 +70,7 @@ public class Request {
         this.methodId = methodId;
     }
 
-    public byte getServiceId() {
+    public int getServiceId() {
         return serviceId;
     }
 

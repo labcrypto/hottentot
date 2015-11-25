@@ -36,47 +36,69 @@ import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 
-public class AuthenticationServiceProxy extends AbstractAuthenticationService implements Proxy {
+public class CalculatorServiceProxy extends AbstractCalculatorService implements Proxy {
 	
 	private String host;
 	private int port;
 
-	public AuthenticationServiceProxy(String host, int port) {
+	public CalculatorServiceProxy(String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
-	public Token authenticate(Credential credential) { 
-        //serialize credential
-        byte[] serializedCredential = credential.serialize();
+	public uint32 add(uint32 a,,uint32 b) { 
+        //serialize b
+        byte[] serializeduint32 = b.serialize();
+        //serialize b
+        byte[] serializeduint32 = b.serialize();
 
         //make request
         Request request = new Request();
         request.setServiceId((byte) 1);
         request.setMethodId((byte) 1);
-        request.setArgumentCount((byte) 1);
+        request.setArgumentCount((byte) 2);
         request.setType(Request.RequestType.InvokeStateless);
         Argument arg0 = new Argument();
-        arg0.setDataLength(credential.serialize().length);
-        arg0.setData(credential.serialize());
+        arg0.setDataLength(a,.serialize().length);
+        arg0.setData(a,.serialize());
         request.addArgument(arg0);
+        Argument arg1 = new Argument();
+        arg1.setDataLength(b.serialize().length);
+        arg1.setData(b.serialize());
+        request.addArgument(arg1);
         int dataLength = 0;
         //calculate data length for every argument
-        //calulate credentialDataLength
-        int credentialDataLength= serializedCredential.length;
-        int credentialDataLengthByteArrayLength = 1;
-        if (credentialDataLength >= 0x80) {
-            if (credentialDataLength <= 0xff) {
+        //calulate a,DataLength
+        int a,DataLength= serializeduint32.length;
+        int a,DataLengthByteArrayLength = 1;
+        if (a,DataLength >= 0x80) {
+            if (a,DataLength <= 0xff) {
                 //ex 0x81 0xff
-                credentialDataLengthByteArrayLength = 2;
-            } else if (credentialDataLength <= 0xffff) {
+                a,DataLengthByteArrayLength = 2;
+            } else if (a,DataLength <= 0xffff) {
                 //ex 0x82 0xff 0xff
-                credentialDataLengthByteArrayLength = 3;
-            } else if (credentialDataLength <= 0xffffff) {
+                a,DataLengthByteArrayLength = 3;
+            } else if (a,DataLength <= 0xffffff) {
                 //ex 0x83 0xff 0xff 0xff
-                credentialDataLengthByteArrayLength = 4;
+                a,DataLengthByteArrayLength = 4;
             }
         }
-        dataLength += credentialDataLength + credentialDataLengthByteArrayLength;
+        dataLength += a,DataLength + a,DataLengthByteArrayLength;
+        //calulate bDataLength
+        int bDataLength= serializeduint32.length;
+        int bDataLengthByteArrayLength = 1;
+        if (bDataLength >= 0x80) {
+            if (bDataLength <= 0xff) {
+                //ex 0x81 0xff
+                bDataLengthByteArrayLength = 2;
+            } else if (bDataLength <= 0xffff) {
+                //ex 0x82 0xff 0xff
+                bDataLengthByteArrayLength = 3;
+            } else if (bDataLength <= 0xffffff) {
+                //ex 0x83 0xff 0xff 0xff
+                bDataLengthByteArrayLength = 4;
+            }
+        }
+        dataLength += bDataLength + bDataLengthByteArrayLength;
         //
         request.setLength(4 + dataLength);
         //connect to server
@@ -109,15 +131,15 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
         //deserialize token part of response
         Response response = protocol.getResponse();
         //close everything
-        //deserialize Tokenpart from response
-        Token token= null;
+        //deserialize uint32part from response
+        uint32 品nt32= null;
         if (response.getStatusCode() == -1) {
             //
         } else {
-            token= new Token();
-            token.deserialize(response.getData());
+            品nt32= new uint32();
+            品nt32.deserialize(response.getData());
         }
-        return token;
+        return 品nt32;
     }
 
 	public void destroy() {
