@@ -31,11 +31,9 @@
 #include <locale>
 #include <sstream>
 #include <vector>
-<<<<<<< HEAD
 #include <stdexcept>
-=======
 #include <stdint.h>
->>>>>>> 07f3acf559e98f31ea157128f89f09b4fda4c226
+
 
 
 namespace naeem {
