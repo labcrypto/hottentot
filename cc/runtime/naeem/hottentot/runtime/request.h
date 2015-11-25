@@ -76,6 +76,7 @@ namespace naeem {
           argument.data_ = data;
           argument.dataLength_ = dataLength;
           args_.push_back(argument);
+          argumentCount_++;
         }
         inline unsigned char* GetArgumentData(uint8_t index) {
           return args_[index].data_;

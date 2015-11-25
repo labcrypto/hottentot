@@ -34,15 +34,16 @@
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace java{
-          class JavaGenerator;
+      namespace java {
+        class JavaGenerator;
+      };
+      namespace cc {
+        class CCGenerator;
       };
       namespace ds {
         class Declaration {
-
-        friend class ::naeem::hottentot::generator::java::JavaGenerator;
-
-
+          friend class ::naeem::hottentot::generator::cc::CCGenerator;
+          friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
           Declaration(std::string type = "", 
                       std::string variable = "",
@@ -53,22 +54,22 @@ namespace naeem {
           }
           virtual ~Declaration() {}
         public:
-          inline virtual std::string GetType() const {
+          inline std::string GetType() const {
             return type_;
           }
-          inline virtual void SetType(std::string type) {
+          inline void SetType(std::string type) {
             type_ = type;
           }
-          inline virtual std::string GetVariable() const {
+          inline std::string GetVariable() const {
             return variable_;
           }
-          inline virtual void SetVariable(std::string variable) {
+          inline void SetVariable(std::string variable) {
             variable_ = variable;
           }
-          inline virtual uint32_t GetOrd() const {
+          inline uint32_t GetOrd() const {
             return ord_;
           }
-          inline virtual void SetOrd(uint32_t ord) {
+          inline void SetOrd(uint32_t ord) {
             ord_ = ord;
           }
           inline virtual void Display() {

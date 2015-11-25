@@ -20,35 +20,31 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
+
+#include <sstream>
+
+#include "service.h"
+#include "module.h"
+
+#include "../dep/fasthash.h"
  
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__STRING_HELPER_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__STRING_HELPER_H_
-
-#include <algorithm>
-#include <functional> 
-#include <cctype>
-#include <locale>
-
 
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      class StringHelper {
-      public:
-        static inline std::string &ltrim(std::string &s) {
-          s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
-          return s;
+      namespace ds {
+        std::string 
+        Service::GetFQName() const {
+          std::stringstream ss;
+          ss << module_->GetPackage() << "." << name_;
+          return ss.str();
         }
-        static inline std::string &rtrim(std::string &s) {
-          s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
-          return s;
+        uint32_t 
+        Service::GetHash() const {
+          std::string fqName = GetFQName();
+          return fasthash32(fqName.c_str(), fqName.size(), 0);
         }
-        static inline std::string &trim(std::string &s) {
-          return ltrim(rtrim(s));
-        }
-      };
+      }
     }
   }
 }
-
-#endif

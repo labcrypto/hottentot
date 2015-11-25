@@ -34,15 +34,23 @@
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace java{
+      namespace java {
         class JavaGenerator;
       };
+      namespace cc {
+        class CCGenerator;
+      }
       namespace ds {
         class Hot;
+        class Service;
+        class Method;
+        class Module;
+        class Argument;
+        class Declaration;
       }
       class GenerationConfig {
-
-      friend class ::naeem::hottentot::generator::java::JavaGenerator;
+        friend class ::naeem::hottentot::generator::cc::CCGenerator;
+        friend class ::naeem::hottentot::generator::java::JavaGenerator;
       public:
         inline std::string GetOutDir() const {
           return outDir_;
@@ -50,7 +58,21 @@ namespace naeem {
         inline void SetOutDir(std::string outDir) {
           outDir_ = outDir;
         }
+        inline bool IsSpacesUsedInsteadOfTabsForIndentation() const {
+          return spacesUsedInsteadOfTabsForIndentation_;
+        }
+        inline void SetSpacesUsedInsteadOfTabsForIndentation(bool spacesUsedInsteadOfTabsForIndentation) {
+          spacesUsedInsteadOfTabsForIndentation_ = spacesUsedInsteadOfTabsForIndentation;
+        }
+        inline uint8_t GetNumberOfSpacesUsedForIndentation() const {
+          return numberOfSpacesUsedForIndentation_;
+        }
+        inline void SetNumberOfSpacesUsedForIndentation(uint8_t numberOfSpacesUsedForIndentation) {
+          numberOfSpacesUsedForIndentation_ = numberOfSpacesUsedForIndentation;
+        }
       private:
+        bool spacesUsedInsteadOfTabsForIndentation_;
+        uint8_t numberOfSpacesUsedForIndentation_;
         std::string outDir_;
       };
       class Generator {

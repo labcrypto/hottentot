@@ -25,6 +25,9 @@
 #include "../ds/hot.h"
 #include <stdint.h>
 #include <sys/stat.h>
+#include <sstream>
+#include "../common/string_helper.h"
+#include "../common/os.h" 
 
 namespace naeem {
     namespace hottentot {
@@ -32,17 +35,19 @@ namespace naeem {
             namespace java {
 
                 JavaGenerator::~JavaGenerator() {
-                    for (int i = 0; i < modules_.size(); i++) {
-                        ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
-                        for (int j = 0; j < pModule->structs_.size(); j++) {
-                            ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(j);
-                            for (int k = 0; k < pStruct->declarations_.size(); k++) {
-                                delete pStruct->declarations_.at(k);
-                            }
-                            delete pStruct;
-                        }
-                        delete pModule;
-                    }
+                    //TODO change vector to map 
+
+                    // for (int i = 0; i < modules_.size(); i++) {
+                    //     ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
+                    //     for (int j = 0; j < pModule->structs_.size(); j++) {
+                    //         ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(j);
+                    //         for (int k = 0; k < pStruct->declarations_.size(); k++) {
+                    //             delete pStruct->declarations_.at(k);
+                    //         }
+                    //         delete pStruct;
+                    //     }
+                    //     delete pModule;
+                    // }
                 }
 
                 JavaGenerator::JavaGenerator() {
@@ -74,7 +79,6 @@ namespace naeem {
                         GenerateServiceProxy(pModule);
 
                     }
-                    //std::cout << hot->GetModules().at(0)->GetMethod()-> << std::endl;
                     std::cout << "Java Generation done." << std::endl;
                 }
 
@@ -99,17 +103,22 @@ namespace naeem {
 					return javaType;
                 }
 
-
-                std::string
-                JavaGenerator::Capitalize(std::string str){
-                	if(str[0] == 'S'){
-                		return str;
-                	}
-                	std::string outputStr = str;
-					outputStr[0] -= 32;
-					return outputStr;
+                uint32_t
+                JavaGenerator::GetTypeLength(std::string type){
+                    if (type.compare("int8") == 0 ||
+                        type.compare("uint8") == 0) {
+                        return 1;
+                    } else if (type.compare("int16") == 0 ||
+                               type.compare("uint16") == 0) {
+                        return 2;
+                    } else if (type.compare("int32") == 0 ||
+                               type.compare("uint32") == 0) {
+                        return 4;
+                    } else if (type.compare("int64") == 0 ||
+                               type.compare("uint64") == 0) {
+                        return 8;
+                    }
                 }
-
 
                 void
                 JavaGenerator::MakeStringsFromByteArrays() {
@@ -439,73 +448,12 @@ namespace naeem {
 
                 void
                 JavaGenerator::ReadTemplateFiles() {
-                    //using the ds to write .hot file
-
-                    //TODO use buffer reading
-//			    char buffer[100];
-//			    FILE* f = fopen("/home/developer/Desktop/templates/struct.tmp","rb");
-//				std::string str;
-//			    while(true){
-//			        unsigned int r = fread(buffer , sizeof(char), 10 ,f);
-//			        str += reinterpret_cast< char const* >(buffer);
-//			        if(r == 0){
-//			            break;
-//			        }
-//			    }
-//
-//			    fclose(f);
-//			    f = fopen("/home/developer/Desktop/templates/new.tmp","wb");
-//			    fwrite(str.c_str() , sizeof(char), str.length(),f);
-//			    fclose(f);
-
-                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/struct.tmp", std::ios::in);
-                    //TODO use buffer reader
-                    char c;
-                    while ((c = is.get()) != -1) {
-                        structTmpStr_ += c;
-                    }
-                    is.close();
-                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/abstractService.tmp",
-                            std::ios::in);
-                    //TODO use buffer reader
-                    while ((c = is.get()) != -1) {
-                        abstractServiceTmpStr_ += c;
-                    }
-                    is.close();
-
-                    //service interface
-                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/service.tmp",
-                            std::ios::in);
-                    //TODO use buffer reader
-                    while ((c = is.get()) != -1) {
-                        serviceTmpStr_ += c;
-                    }
-                    is.close();
-                    //service proxy
-                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/serviceProxy.tmp",
-                            std::ios::in);
-                    while ((c = is.get()) != -1) {
-                        serviceProxyTmpStr_ += c;
-                    }
-                    is.close();
-
-                    //service proxy builder
-                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/serviceProxyBuilder.tmp",
-                            std::ios::in);
-                    //TODO use buffer reader
-                    while ((c = is.get()) != -1) {
-                        serviceProxyBuilderTmpStr_ += c;
-                    }
-                    is.close();
-
-                    //request handler
-                    is.open("/home/developer/projects/hottentot-git/generator/java/templates/requestHandler.tmp",
-                            std::ios::in);
-                    //TODO use buffer reader
-                    while ((c = is.get()) != -1) {
-                        requestHandlerTmpStr_ += c;
-                    }
-                    is.close();
+                    ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/struct.template",structTmpStr_);
+                    ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/abstractService.template",abstractServiceTmpStr_);
+                    ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/service.template",serviceTmpStr_);
+                    ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/serviceProxy.template",serviceProxyTmpStr_);
+                    ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/serviceProxyBuilder.template",serviceProxyBuilderTmpStr_);
+                    ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/requestHandler.template",requestHandlerTmpStr_);
 //			std::cout << "---------------" << std::endl;
 //			std::cout << structTmpStr_;
 //			std::cout << abstractServiceTmpStr_;
@@ -518,47 +466,44 @@ namespace naeem {
                 void
                 JavaGenerator::GenerateStructs(::naeem::hottentot::generator::ds::Module *pModule) {
                     //loop on structs in everey module
-                    //cout << structTmpStr << endl << "-----" << endl;
                     for (int i = 0; i < pModule->structs_.size(); i++) {
                         ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(i);
-                        std::string path = outDir_ + "/" + pStruct->name_.c_str() + ".java";
-                        os.open(path.c_str(), std::ios::trunc);
                         std::string basePackageName = pModule->package_;
                         std::string replacableStructTmpStr = structTmpStr_;
-                        while (replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
-                            replacableStructTmpStr.replace(replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
-                                                           basePackageName);
-                        }
-                        while (replacableStructTmpStr.find("[%STRUCT_NAME%]") != std::string::npos) {
-                            replacableStructTmpStr.replace(replacableStructTmpStr.find("[%STRUCT_NAME%]"), 15,
-                                                           pStruct->name_);
-                        }
+
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableStructTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableStructTmpStr , "[%STRUCT_NAME%]" , pStruct->name_ , 1);
+                        // while (replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
+                        //     replacableStructTmpStr.replace(replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
+                        //                                    basePackageName);
+                        // }
+                        // while (replacableStructTmpStr.find("[%STRUCT_NAME%]") != std::string::npos) {
+                        //     replacableStructTmpStr.replace(replacableStructTmpStr.find("[%STRUCT_NAME%]"), 15,
+                        //                                    pStruct->name_);
+                        // }
                         std::string declarationStr;
                         std::string getterSetterStr;
-
                         std::string declarationJavaType;
                         std::string capitalizedDeclarationJavaType;
 
-
-
-                        for (int i = 0; i < pStruct->declarations_.size(); i++) {
-                            //TODO change string to string
-                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(
-                                    i);
-
+                        for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+                             = pStruct->declarations_.begin();
+                             it != pStruct->declarations_.end();
+                             ++it) {
+                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                             declarationJavaType = ConvertType(declarationPtr->type_);
-                            declarationJavaType  = ConvertType(declarationPtr->type_);
+                            capitalizedDeclarationJavaType  = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationJavaType);
                             std::string declarationName = declarationPtr->variable_;
-                            std::string capitalizedDeclarationName = Capitalize(declarationPtr->variable_);
+                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_);
                             declarationStr +=
-                                    TAB_STR + "private " + declarationPtr->type_ + " " + declarationName + ";\n";
+                                    TAB_STR + "private " + declarationJavaType + " " + declarationName + ";\n";
                             getterSetterStr += TAB_STR + "public void set" + capitalizedDeclarationName + "(" +
-                                               declarationPtr->type_ + " " + declarationName + ") {\n";
+                                               declarationJavaType + " " + declarationName + ") {\n";
                             getterSetterStr +=
                                     TAB_STR + TAB_STR + "this." + declarationName + " = " + declarationName + ";\n";
                             getterSetterStr += TAB_STR + "}\n";
                             getterSetterStr +=
-                                    TAB_STR + "public " + declarationPtr->type_ + " get" + capitalizedDeclarationName +
+                                    TAB_STR + "public " + declarationJavaType + " get" + capitalizedDeclarationName +
                                     "() {\n";
                             getterSetterStr += TAB_STR + TAB_STR + "return " + declarationPtr->variable_ + ";\n";
                             getterSetterStr += TAB_STR + "}\n";
@@ -568,25 +513,28 @@ namespace naeem {
 
                         //serilize method
                         std::string serializeMethodStr;
-                        for (int i = 0; i < pStruct->declarations_.size(); i++) {
-                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(
-                                    i);
-                            std::string capitalizedDeclarationName = Capitalize(declarationPtr->variable_);
+                        for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+                             = pStruct->declarations_.begin();
+                             it != pStruct->declarations_.end();
+                             ++it) {
+                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
+                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_);
                             serializeMethodStr += TAB_STR + TAB_STR + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
                             declarationJavaType = ConvertType(declarationPtr->type_);
-                            capitalizedDeclarationJavaType = Capitalize(declarationJavaType);
-                            std::cout << declarationJavaType;
-                            //
-                            serializeMethodStr += capitalizedDeclarationJavaType + "(";
+                            capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationJavaType);
+                            std::string capitalizedDeclarationType  = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->type_);
+                            serializeMethodStr += capitalizedDeclarationType + "(";
                             serializeMethodStr += declarationPtr->variable_ + ");\n";
                         }
                         serializeMethodStr += TAB_STR + TAB_STR + "byte[] output = new byte[";
-                        for (int i = 0; i < pStruct->declarations_.size(); i++) {
-                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(
-                                    i);
-                            std::string capitalizedDeclarationName = Capitalize(declarationPtr->variable_.c_str());
+                        for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+                             = pStruct->declarations_.begin();
+                             it != pStruct->declarations_.end();
+                             ++it) {
+                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
+                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_.c_str());
                             serializeMethodStr += "serialized" + capitalizedDeclarationName + ".length";
-                            if (i == pStruct->declarations_.size() - 1) {
+                            if (it->first == pStruct->declarations_.size()) {
                                 serializeMethodStr += "];\n";
                             } else {
                                 serializeMethodStr += " + ";
@@ -595,15 +543,18 @@ namespace naeem {
 
                         serializeMethodStr += TAB_STR + TAB_STR + "int counter = 0;\n";
                         serializeMethodStr += TAB_STR + TAB_STR + "//use a loop for every property\n";
-                        for (int i = 0; i < pStruct->declarations_.size(); i++) {
-                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = pStruct->declarations_.at(
-                                    i);
+                        for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+                             = pStruct->declarations_.begin();
+                             it != pStruct->declarations_.end();
+                             ++it) {
+                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                             declarationJavaType = ConvertType(declarationPtr->type_);
-                            capitalizedDeclarationJavaType = Capitalize(declarationJavaType);
+                            capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationJavaType);
+                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_);
                             serializeMethodStr += TAB_STR + TAB_STR + "for (int i = 0; i < serialized" +
-                                                  capitalizedDeclarationJavaType + ".length; i++) {\n";
+                                                  capitalizedDeclarationName + ".length; i++) {\n";
                             serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "output[counter++] = serialized" +
-                                                  capitalizedDeclarationJavaType + "[i];\n";
+                                                  capitalizedDeclarationName + "[i];\n";
                             serializeMethodStr += TAB_STR + TAB_STR + "}\n";
                         }
                         serializeMethodStr += TAB_STR + TAB_STR + "return output;";
@@ -611,20 +562,93 @@ namespace naeem {
                         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%SERIALIZE_METHOD_BODY%]"), 25,
                                                        serializeMethodStr);
                         // sample code
-                        //       byte[] serializedId = PDTSerializer.getInt16(id);
-                        //       byte[] serializedValue = PDTSerializer.getString(value);
-                        //       byte[] output = new byte[serializedId.length + serializedValue.length];
-                        //       int counter = 0;
-                        //       //use a loop for every property
-                        //       for (int i = 0; i < serializedId.length; i++) {
-                        //           output[counter++] = serializedId[i];
-                        //       }
-                        //       for (int i = 0; i < serializedValue.length; i++) {
-                        //           output[counter++] = serializedValue[i];
-                        //       }
-                        //       return output;
-                        os.write(replacableStructTmpStr.c_str(), replacableStructTmpStr.size());
-                        os.close();
+                              // byte[] serializedId = PDTSerializer.getInt16(id);
+                              // byte[] serializedValue = PDTSerializer.getString(value);
+                              // byte[] output = new byte[serializedId.length + serializedValue.length];
+                              // int counter = 0;
+                              // //use a loop for every property
+                              // for (int i = 0; i < serializedId.length; i++) {
+                              //     output[counter++] = serializedId[i];
+                              // }
+                              // for (int i = 0; i < serializedValue.length; i++) {
+                              //     output[counter++] = serializedValue[i];
+                              // }
+                              // return output;
+
+
+                        // deserialize method
+                        std::string deserializeMethodStr;
+                        deserializeMethodStr += TAB_STR + TAB_STR + "int counter = 0;\n";
+                        deserializeMethodStr += TAB_STR + TAB_STR + "int dataLength = 0;\n";
+                        deserializeMethodStr += TAB_STR + TAB_STR + "int numbersOfBytesForDataLength;\n";
+                        deserializeMethodStr += TAB_STR + TAB_STR + "//do for every property\n";
+                        for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+                             = pStruct->declarations_.begin();
+                             it != pStruct->declarations_.end();
+                             ++it) {
+                            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
+                            declarationJavaType = ConvertType(declarationPtr->type_);
+                            std::string capitalizedDeclarationType = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->type_);
+                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_);
+                            deserializeMethodStr += TAB_STR + TAB_STR + "//" + declarationPtr->variable_ + " : " + declarationJavaType + "\n";
+                            if(declarationJavaType.compare("String") == 0) {
+                                deserializeMethodStr += TAB_STR + TAB_STR + "dataLength = 0;\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "if(serializedByteArray[counter] < 0x80){\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "dataLength = serializedByteArray[counter++];\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "}else{\n";             
+                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + TAB_STR + "dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "}\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "}\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[dataLength];\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "System.arraycopy(serializedByteArray,counter," + declarationPtr->variable_.c_str() + "ByteArray,0,dataLength);\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "counter += dataLength;\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
+                            }else {
+                                uint32_t dataLength = GetTypeLength(declarationPtr->type_.c_str());
+                                capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationJavaType);
+                                std::stringstream dataLengthStr;
+                                dataLengthStr << dataLength;
+                                deserializeMethodStr += TAB_STR + TAB_STR + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[" + dataLengthStr.str() + "];";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "for(int i = 0 ; i < " + dataLengthStr.str() + " ; i++){\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + declarationPtr->variable_.c_str() + "ByteArray[i] = serializedByteArray[counter++];\n";            
+                                deserializeMethodStr += TAB_STR + TAB_STR + "}\n";
+                                deserializeMethodStr += TAB_STR + TAB_STR + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
+                            }
+                        }
+                        
+                        replacableStructTmpStr.replace(replacableStructTmpStr.find("[%DESERIALIZE_METHOD_BODY%]"),27,
+                                                        deserializeMethodStr);
+
+                        //deserialize sample code 
+                        /*
+                        int counter = 0;
+                        //do for every property
+                        //value : string
+                        int dataLength = 0 ;
+                        int numbersOfBytesForDataLength;
+                        if(serializedToken[counter] < 0x80){
+                            dataLength = serializedToken[counter++];
+                        }else{
+                            numbersOfBytesForDataLength = serializedToken[counter++] & 0x0f;
+                            for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+                                dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedToken[counter++];
+                            }
+                        }
+                        byte[] valueByteArray = new byte[dataLength];
+                        System.arraycopy(serializedToken,counter,valueByteArray,0,dataLength);
+                        counter += dataLength;
+                        setValue(PDTDeserializer.getString(valueByteArray));
+                        //id : int16
+                        byte[] idByteArray = new byte[2];
+                        for(int i = 0 ; i < 2 ; i++){
+                            idByteArray[i] = serializedToken[counter++];
+                        }
+                        setId(PDTDeserializer.getInt16(idByteArray));
+                        */
+                        std::string path = outDir_ + "/" + pStruct->name_.c_str() + ".java";
+                        ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableStructTmpStr);
                     }
                 }
 
@@ -634,26 +658,18 @@ namespace naeem {
                     ::naeem::hottentot::generator::ds::Service *pService;
                     std::string replacableAbstractServiceTmpStr;
                     for (int i = 0; i < pModule->services_.size(); i++) {
-                        //write abstractService.tmp
+                        //write abstractService.template
                         std::string basePackageName = pModule->package_;
                         pService = pModule->services_.at(i);
                         std::string path = outDir_ + "/Abstract" + pService->name_.c_str() + "Service.java";
                         os.open(path.c_str(), std::ios::trunc);
                         replacableAbstractServiceTmpStr = abstractServiceTmpStr_;
 
-
-                        while (replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
-                            replacableAbstractServiceTmpStr.replace(
-                                    replacableAbstractServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
-                        }
-                        while (replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]") != std::string::npos) {
-                            replacableAbstractServiceTmpStr.replace(
-                                    replacableAbstractServiceTmpStr.find("[%SERVICE_NAME%]"), 16, pService->name_);
-                        }
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableAbstractServiceTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableAbstractServiceTmpStr , "[%SERVICE_NAME%]" , pService->name_ , 1);
+                        //get service ID from hot parser
                         std::stringstream ssID;
-                        //TODO get service ID from hot parser
-                        //ssID << pService->id_;
-                        ssID << "1";
+                        ssID << pService->GetHash();
                         replacableAbstractServiceTmpStr.replace(replacableAbstractServiceTmpStr.find("[%SERVICE_ID%]"),
                                                                 14, ssID.str());
                         os.write(replacableAbstractServiceTmpStr.c_str(), replacableAbstractServiceTmpStr.size());
@@ -666,22 +682,23 @@ namespace naeem {
                     ::naeem::hottentot::generator::ds::Service *pService;
                     std::string replacableServiceTmpStr;
                     for (int i = 0; i < pModule->services_.size(); i++) {
-                        //write abstractService.tmp
+                        //write abstractService.template
                         std::string basePackageName = pModule->package_;
                         pService = pModule->services_.at(i);
                         //write service interface
                         std::string replacableServiceTmpStr = serviceTmpStr_;
                         //std::cout << outDir_;
-                        std::string path = outDir_ + "/" + pService->name_.c_str() + "Service.java";
-                        os.open(path.c_str(), std::ios::trunc);
-                        while (replacableServiceTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
-                            replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
-                                                            basePackageName);
-                        }
-                        while (replacableServiceTmpStr.find("[%SERVICE_NAME%]") != std::string::npos) {
-                            replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%SERVICE_NAME%]"), 16,
-                                                            pService->name_);
-                        }
+                        
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceTmpStr , "[%SERVICE_NAME%]" , pService->name_ , 1);
+                        // while (replacableServiceTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
+                        //     replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
+                        //                                     basePackageName);
+                        // }
+                        // while (replacableServiceTmpStr.find("[%SERVICE_NAME%]") != std::string::npos) {
+                        //     replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%SERVICE_NAME%]"), 16,
+                        //                                     pService->name_);
+                        // }
                         std::string serviceMethodsStr;
                         //loop for service methods
                         ::naeem::hottentot::generator::ds::Method *pMethod;
@@ -701,9 +718,10 @@ namespace naeem {
                         };
                         replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%SERVICE_METHODS%]"), 19,
                                                         serviceMethodsStr);
-                        os.write(replacableServiceTmpStr.c_str(), replacableServiceTmpStr.size());
-                        os.close();
 
+
+                        std::string path = outDir_ + "/" + pService->name_.c_str() + "Service.java";
+                        ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableServiceTmpStr);
                     }
                 }
 
@@ -712,26 +730,26 @@ namespace naeem {
                     ::naeem::hottentot::generator::ds::Service *pService;
                     std::string replacableServiceProxyBuilderTmpStr;
                     for (int i = 0; i < pModule->services_.size(); i++) {
-                        //write abstractService.tmp
+                        //write abstractService.template
                         std::string basePackageName = pModule->package_;
                         pService = pModule->services_.at(i);
                         std::string replacableServiceProxyBuilderTmpStr;
                         //write service proxy builder
-                        std::string path = outDir_ + "/" + pService->name_.c_str() + "ServiceProxyBuilder.java";
-                        os.open(path.c_str(), std::ios::trunc);
                         replacableServiceProxyBuilderTmpStr = serviceProxyBuilderTmpStr_;
-                        while (replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
-                            replacableServiceProxyBuilderTmpStr.replace(
-                                    replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
-                                    basePackageName);
-                        }
-                        while (replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]") != std::string::npos) {
-                            replacableServiceProxyBuilderTmpStr.replace(
-                                    replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]"), 16, pService->name_);
-                        }
-                        os.write(replacableServiceProxyBuilderTmpStr.c_str(),
-                                 replacableServiceProxyBuilderTmpStr.size());
-                        os.close();
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyBuilderTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyBuilderTmpStr , "[%SERVICE_NAME%]" , pService->name_ , 1);
+                        // while (replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
+                        //     replacableServiceProxyBuilderTmpStr.replace(
+                        //             replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
+                        //             basePackageName);
+                        // }
+                        // while (replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]") != std::string::npos) {
+                        //     replacableServiceProxyBuilderTmpStr.replace(
+                        //             replacableServiceProxyBuilderTmpStr.find("[%SERVICE_NAME%]"), 16, pService->name_);
+                        // }
+
+                        std::string path = outDir_ + "/" + pService->name_.c_str() + "ServiceProxyBuilder.java";
+                        ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableServiceProxyBuilderTmpStr);
                     }
                 }
 
@@ -743,25 +761,24 @@ namespace naeem {
                     for (int i = 0; i < pModule->services_.size(); i++) {
                         std::string basePackageName = pModule->package_;
                         pService = pModule->services_.at(i);
-                        std::string path = outDir_ + "/" + pService->name_.c_str() + "RequestHandler.java";
-                        os.open(path.c_str());
                         std::string serviceName = pService->name_;
                         std::string lowerCaseServiceName = pService->name_;
                         lowerCaseServiceName[0] += 32;
                         replacableRequestHandlerTmpStr = requestHandlerTmpStr_;
 
 
-                        while (replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
-                            replacableRequestHandlerTmpStr.replace(
-                                    replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
-                        }
-                        while (replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]") != std::string::npos) {
-                            replacableRequestHandlerTmpStr.replace(
-                                    replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16, pService->name_);
-                        }
-                        replacableRequestHandlerTmpStr.replace(
-                                replacableRequestHandlerTmpStr.find("[%SERVICE_NAME_LOWERCASE%]"), 26,
-                                lowerCaseServiceName);
+
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableRequestHandlerTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
+                        // while (replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
+                        //     replacableRequestHandlerTmpStr.replace(
+                        //             replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
+                        // }
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableRequestHandlerTmpStr,"[%SERVICE_NAME%]" , pService->name_ , 1);
+                        // while (replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]") != std::string::npos) {
+                        //     replacableRequestHandlerTmpStr.replace(
+                        //             replacableRequestHandlerTmpStr.find("[%SERVICE_NAME%]"), 16, pService->name_);
+                        // }
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableRequestHandlerTmpStr,"[%SERVICE_NAME_LOWERCASE%]" , lowerCaseServiceName , 1);
 
                         ::naeem::hottentot::generator::ds::Method *pMethod;
                         std::string methodConditionStr;
@@ -770,10 +787,9 @@ namespace naeem {
                             pMethod = pService->methods_.at(i);
                             std::string lowerCaseReturnType = pMethod->returnType_;
                             lowerCaseReturnType[0] += 32;
+                            //get hashed mehod id
                             std::stringstream ssID;
-                            //TODO(alisharifi) make method id by hashing
-                            //ssID << pMethod->id_;
-                            ssID << 1;
+                            ssID << pMethod->GetHash();
                             methodConditionStr += "if(methodId == " + ssID.str() + "){\n";
                             methodConditionStr +=
                                     TAB_STR + TAB_STR + TAB_STR + "List <Argument> args = request.getArgs();\n";
@@ -826,8 +842,9 @@ namespace naeem {
                         replacableRequestHandlerTmpStr.replace(
                                 replacableRequestHandlerTmpStr.find("[%METHOD_CONDITIONS%]"), 21,
                                 methodConditionStr);
-                        os.write(replacableRequestHandlerTmpStr.c_str(), replacableRequestHandlerTmpStr.size());
-                        os.close();
+
+                        std::string path = outDir_ + "/" + pService->name_.c_str() + "RequestHandler.java";
+                        ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableRequestHandlerTmpStr);
                     }
                 }
 
@@ -838,17 +855,18 @@ namespace naeem {
                     for (int i = 0; i < pModule->services_.size(); i++) {
                         std::string replacableServiceProxyStrTmp = serviceProxyTmpStr_;
                         pService = pModule->services_.at(i);
-                        std::string path = outDir_ + "/" + pService->name_.c_str() + "ServiceProxy.java";
-                        os.open(path.c_str(), std::ios::trunc);
                         pService = pModule->services_.at(i);
-                        while (replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
-                            replacableServiceProxyStrTmp.replace(
-                                    replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
-                        }
-                        while (replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]") != std::string::npos) {
-                            replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]"),
-                                                                 16, pService->name_);
-                        }
+
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp,"[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp,"[%SERVICE_NAME%]" , pService->name_ , 1);
+                        // while (replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
+                        //     replacableServiceProxyStrTmp.replace(
+                        //             replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
+                        // }
+                        // while (replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]") != std::string::npos) {
+                        //     replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]"),
+                        //                                          16, pService->name_);
+                        // }
 
                         //loop on service methods
                         ::naeem::hottentot::generator::ds::Method *pMethod;
@@ -876,22 +894,17 @@ namespace naeem {
                             methodsStr += TAB_STR + TAB_STR + "//make request\n";
                             methodsStr += TAB_STR + TAB_STR + "Request request = new Request();\n";
                             std::stringstream serviceId;
-                            //TODO(alisharifi) make service id by hashing
-                            //serviceId << pService->id_;
-                            serviceId << "1";
-                            methodsStr += TAB_STR + TAB_STR + "request.setServiceId((byte) " + serviceId.str() + ");\n";
+                            serviceId << pService->GetHash();
+                            methodsStr += TAB_STR + TAB_STR + "request.setServiceId(" + serviceId.str() + ");\n";
                             std::stringstream methodId;
-                            //TODO(alisharifi) make method id by hashing
-                            //methodId << pMethod->id_;
-                            methodId << "1";
-                            methodsStr += TAB_STR + TAB_STR + "request.setMethodId((byte) " + methodId.str() + ");\n";
+                            methodId << pMethod->GetHash();
+                            methodsStr += TAB_STR + TAB_STR + "request.setMethodId(" + methodId.str() + ");\n";
                             std::stringstream argSize;
                             argSize << pMethod->arguments_.size();
                             methodsStr +=
                                     TAB_STR + TAB_STR + "request.setArgumentCount((byte) " + argSize.str() + ");\n";
                             methodsStr += TAB_STR + TAB_STR + "request.setType(Request.RequestType.";
 
-                            //std::cout << pService->serviceType_;
                             if (pService->serviceType_ == 0) {
                                 methodsStr += "InvokeStateless";
                             } else if (pService->serviceType_ == 1) {
@@ -998,8 +1011,10 @@ namespace naeem {
                         }
                         replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%METHODS%]"), 11,
                                                              methodsStr);
-                        os.write(replacableServiceProxyStrTmp.c_str(), replacableServiceProxyStrTmp.size());
-                        os.close();
+                        
+
+                        std::string path = outDir_ + "/" + pService->name_.c_str() + "ServiceProxy.java";
+                        ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableServiceProxyStrTmp);
                     }
                 }
             }

@@ -21,16 +21,19 @@
  *  SOFTWARE.
  */
 
-package example.server;
+package [%BASE_PACKAGE_NAME%];
 
-import example.generatedBackup.AbstractAuthenticationService;
-import example.generatedBackup.Credential;
-import example.generatedBackup.Token;
+import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
+import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
+import static java.lang.StrictMath.pow;
 
-public class AuthenticationImpl extends AbstractAuthenticationService {
-    public Token authenticate(Credential credential){
-        Token token = new Token();
-        token.setValue("uu-token");
-        return token;
+public class [%STRUCT_NAME%] {
+[%MEMBERS%]	
+    public byte[] serialize() {
+[%SERIALIZE_METHOD_BODY%]
+    }
+    
+    public void deserialize(byte[] serializedByteArray) {
+[%DESERIALIZE_METHOD_BODY%]
     }
 }

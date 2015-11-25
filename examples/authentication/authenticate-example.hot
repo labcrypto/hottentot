@@ -35,7 +35,7 @@ module naeem.hottentot.examples.auth {
     string value id(1);
     // User user id(2);
   }
-  service AuthenticateService stateless {
+  stateless service Authenticate {
     Token authenticate(Credential) id(1);
   }
 }

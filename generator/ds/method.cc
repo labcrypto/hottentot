@@ -13,7 +13,7 @@
  *  copies or substantial portions of the Software.
  *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTAB_STRILITY,
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
@@ -21,16 +21,38 @@
  *  SOFTWARE.
  */
 
-package example.server;
+#include <sstream>
 
-import example.generatedBackup.AbstractAuthenticationService;
-import example.generatedBackup.Credential;
-import example.generatedBackup.Token;
+#include "method.h"
+#include "service.h"
 
-public class AuthenticationImpl extends AbstractAuthenticationService {
-    public Token authenticate(Credential credential){
-        Token token = new Token();
-        token.setValue("uu-token");
-        return token;
+#include "../dep/fasthash.h"
+
+
+namespace naeem {
+  namespace hottentot {
+    namespace generator {
+      namespace ds {
+        std::string 
+        Method::GetFQName() const {
+          std::stringstream ss;
+          ss << service_->GetFQName() << "." << name_;
+          ss << "(";
+          std::string del = "";
+          for (uint32_t i = 0; i < arguments_.size(); i++) {
+            ss << del << ":" << arguments_[i]->GetType();
+            del = ",";
+          }
+          ss << "):";
+          ss << returnType_;
+          return ss.str();
+        }
+        uint32_t 
+        Method::GetHash() const {
+          std::string fqName = GetFQName();
+          return fasthash32(fqName.c_str(), fqName.size(), 0);
+        }
+      }
     }
+  }
 }
