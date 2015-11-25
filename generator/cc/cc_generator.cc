@@ -25,6 +25,7 @@
 #include <fstream>
 
 #include "cc_generator.h"
+#include "type_helper.h"
 
 #include "../ds/hot.h"
 #include "../ds/service.h"
@@ -123,6 +124,18 @@ namespace naeem {
           namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
           namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
           structClassForwardDeclarations = ::naeem::hottentot::generator::common::StringHelper::Trim(structClassForwardDeclarations);
+          std::string methodDefs = "";
+          for (uint32_t i = 0; i < service->methods_.size(); i++) {
+            ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
+            methodDefs += TypeHelper::GetCCType(method->GetReturnType()) + (TypeHelper::IsUDT(method->GetReturnType()) ? "*" : "") + " " + method->GetName() + "(";
+            std::string sep = "";
+            for (uint32_t j = 0; j < method->arguments_.size(); j++) {
+              methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " " + (TypeHelper::IsUDT(method->arguments_[j]->GetType()) ? "*" : "") + method->arguments_[j]->GetVariable();
+              sep = ", ";
+            }
+            methodDefs += ");\r\n";
+          }
+          methodDefs = ::naeem::hottentot::generator::common::StringHelper::Trim(methodDefs);
           std::map<std::string, std::string> params;
           params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
           params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
@@ -137,6 +150,7 @@ namespace naeem {
           params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FP_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
           params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", serviceNameSnakeCase));
           params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME",serviceNameScreamingSnakeCase));
+          params.insert(std::pair<std::string, std::string>("METHOD_DEFS",methodDefs));
           std::string proxyHeaderTemplate = templates["proxy_header"];
           for (std::map<std::string, std::string>::iterator it = params.begin();
                it != params.end();

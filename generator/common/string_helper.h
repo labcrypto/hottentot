@@ -31,6 +31,7 @@
 #include <locale>
 #include <sstream>
 #include <vector>
+#include <stdint.h>
 
 
 namespace naeem {
