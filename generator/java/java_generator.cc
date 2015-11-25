@@ -13,7 +13,7 @@
  *  copies or substantial portions of the Software.
  *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTAB_STRILITY,
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTAB_STR_ILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
@@ -28,6 +28,12 @@
 #include <sstream>
 #include "../common/string_helper.h"
 #include "../common/os.h" 
+#include "templates/byte_arrays/abstractService.h" 
+#include "templates/byte_arrays/requestHandler.h" 
+#include "templates/byte_arrays/service.h" 
+#include "templates/byte_arrays/serviceProxy.h" 
+#include "templates/byte_arrays/serviceProxyBuilder.h" 
+#include "templates/byte_arrays/struct.h" 
 
 namespace naeem {
     namespace hottentot {
@@ -50,24 +56,30 @@ namespace naeem {
                     // }
                 }
 
+
                 JavaGenerator::JavaGenerator() {
-                    for (int i = 0; i < TAB_SPACE_NUMBER; i++) {
-                        TAB_STR += " ";
-                    }
+                    
                     //MakeStringsFromByteArrays();
-                    ReadTemplateFiles();
+                    //ReadTemplateFiles();
+                }
+
+                void
+                JavaGenerator::MakeTabStr(::naeem::hottentot::generator::GenerationConfig &generationConfig){
+                    outDir_ = generationConfig.outDir_;
+                    if(generationConfig.IsSpacesUsedInsteadOfTabsForIndentation()) {
+                        for (int i = 0; i < generationConfig.GetNumberOfSpacesUsedForIndentation() ; i++) {
+                            TAB_STR_ += " ";
+                        }
+                    }else{
+                        TAB_STR_ = "\t";
+                    }
                 }
 
                 void
                 JavaGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
                                         ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
-
-                    outDir_ = generationConfig.outDir_;
-                    struct stat st = {0};
-                    if (stat(outDir_.c_str(), &st) != 0) {
-                        mkdir(outDir_.c_str(), 0777);
-                    }
-
+                    MakeTabStr(generationConfig);
+                    ::naeem::hottentot::generator::common::Os::MakeDir(outDir_.c_str());
                     modules_ = hot->modules_;
                     for (int i = 0; i < modules_.size(); i++) {
                         ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
@@ -77,7 +89,6 @@ namespace naeem {
                         GenerateRequestHandler(pModule);
                         GenerateServiceProxyBuilder(pModule);
                         GenerateServiceProxy(pModule);
-
                     }
                     std::cout << "Java Generation done." << std::endl;
                 }
@@ -121,332 +132,6 @@ namespace naeem {
                 }
 
                 void
-                JavaGenerator::MakeStringsFromByteArrays() {
-                    //service proxy
-                    unsigned char serviceProxyByteArray[] = {
-                            0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x20, 0x5b, 0x25, 0x42, 0x41,
-                            0x53, 0x45, 0x5f, 0x50, 0x41, 0x43, 0x4b, 0x41, 0x47, 0x45, 0x5f, 0x4e,
-                            0x41, 0x4d, 0x45, 0x25, 0x5d, 0x3b, 0x0a, 0x0a, 0x69, 0x6d, 0x70, 0x6f,
-                            0x72, 0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65,
-                            0x6d, 0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e,
-                            0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x41, 0x72, 0x67, 0x75,
-                            0x6d, 0x65, 0x6e, 0x74, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72, 0x74,
-                            0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d, 0x2e,
-                            0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72, 0x75,
-                            0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x50, 0x72, 0x6f, 0x78, 0x79, 0x3b,
-                            0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e,
-                            0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d, 0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65,
-                            0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65,
-                            0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x3b, 0x0a, 0x69, 0x6d,
-                            0x70, 0x6f, 0x72, 0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61,
-                            0x65, 0x65, 0x6d, 0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f,
-                            0x74, 0x2e, 0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x52, 0x65,
-                            0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f,
-                            0x72, 0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65,
-                            0x6d, 0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e,
-                            0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x54, 0x63, 0x70, 0x43,
-                            0x6c, 0x69, 0x65, 0x6e, 0x74, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72,
-                            0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d,
-                            0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72,
-                            0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x65, 0x78, 0x63, 0x65, 0x70,
-                            0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x48, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74,
-                            0x6f, 0x74, 0x52, 0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x45, 0x78, 0x63,
-                            0x65, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f,
-                            0x72, 0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65,
-                            0x6d, 0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e,
-                            0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x65, 0x78, 0x63, 0x65,
-                            0x70, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x54, 0x63, 0x70, 0x43, 0x6c, 0x69,
-                            0x65, 0x6e, 0x74, 0x43, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x45, 0x78,
-                            0x63, 0x65, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x3b, 0x0a, 0x69, 0x6d, 0x70,
-                            0x6f, 0x72, 0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65,
-                            0x65, 0x6d, 0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74,
-                            0x2e, 0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x65, 0x78, 0x63,
-                            0x65, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x54, 0x63, 0x70, 0x43, 0x6c,
-                            0x69, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x61, 0x64, 0x45, 0x78, 0x63, 0x65,
-                            0x70, 0x74, 0x69, 0x6f, 0x6e, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72,
-                            0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d,
-                            0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72,
-                            0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x65, 0x78, 0x63, 0x65, 0x70,
-                            0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x54, 0x63, 0x70, 0x43, 0x6c, 0x69, 0x65,
-                            0x6e, 0x74, 0x57, 0x72, 0x69, 0x74, 0x65, 0x45, 0x78, 0x63, 0x65, 0x70,
-                            0x74, 0x69, 0x6f, 0x6e, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72, 0x74,
-                            0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d, 0x2e,
-                            0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72, 0x75,
-                            0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x66, 0x61, 0x63, 0x74, 0x6f, 0x72,
-                            0x79, 0x2e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x46, 0x61,
-                            0x63, 0x74, 0x6f, 0x72, 0x79, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72,
-                            0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d,
-                            0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72,
-                            0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x66, 0x61, 0x63, 0x74, 0x6f,
-                            0x72, 0x79, 0x2e, 0x54, 0x63, 0x70, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74,
-                            0x46, 0x61, 0x63, 0x74, 0x6f, 0x72, 0x79, 0x3b, 0x0a, 0x69, 0x6d, 0x70,
-                            0x6f, 0x72, 0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65,
-                            0x65, 0x6d, 0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74,
-                            0x2e, 0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x70, 0x72, 0x6f,
-                            0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x2e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x63,
-                            0x6f, 0x6c, 0x3b, 0x0a, 0x0a, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x20,
-                            0x63, 0x6c, 0x61, 0x73, 0x73, 0x20, 0x5b, 0x25, 0x53, 0x45, 0x52, 0x56,
-                            0x49, 0x43, 0x45, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x25, 0x5d, 0x53, 0x65,
-                            0x72, 0x76, 0x69, 0x63, 0x65, 0x50, 0x72, 0x6f, 0x78, 0x79, 0x20, 0x65,
-                            0x78, 0x74, 0x65, 0x6e, 0x64, 0x73, 0x20, 0x41, 0x62, 0x73, 0x74, 0x72,
-                            0x61, 0x63, 0x74, 0x5b, 0x25, 0x53, 0x45, 0x52, 0x56, 0x49, 0x43, 0x45,
-                            0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x25, 0x5d, 0x53, 0x65, 0x72, 0x76, 0x69,
-                            0x63, 0x65, 0x20, 0x69, 0x6d, 0x70, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74,
-                            0x73, 0x20, 0x50, 0x72, 0x6f, 0x78, 0x79, 0x20, 0x7b, 0x0a, 0x09, 0x0a,
-                            0x09, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x20, 0x53, 0x74, 0x72,
-                            0x69, 0x6e, 0x67, 0x20, 0x68, 0x6f, 0x73, 0x74, 0x3b, 0x0a, 0x09, 0x70,
-                            0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x20, 0x69, 0x6e, 0x74, 0x20, 0x70,
-                            0x6f, 0x72, 0x74, 0x3b, 0x0a, 0x0a, 0x09, 0x70, 0x75, 0x62, 0x6c, 0x69,
-                            0x63, 0x20, 0x5b, 0x25, 0x53, 0x45, 0x52, 0x56, 0x49, 0x43, 0x45, 0x5f,
-                            0x4e, 0x41, 0x4d, 0x45, 0x25, 0x5d, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
-                            0x65, 0x50, 0x72, 0x6f, 0x78, 0x79, 0x28, 0x53, 0x74, 0x72, 0x69, 0x6e,
-                            0x67, 0x20, 0x68, 0x6f, 0x73, 0x74, 0x2c, 0x20, 0x69, 0x6e, 0x74, 0x20,
-                            0x70, 0x6f, 0x72, 0x74, 0x29, 0x20, 0x7b, 0x0a, 0x09, 0x09, 0x74, 0x68,
-                            0x69, 0x73, 0x2e, 0x68, 0x6f, 0x73, 0x74, 0x20, 0x3d, 0x20, 0x68, 0x6f,
-                            0x73, 0x74, 0x3b, 0x0a, 0x09, 0x09, 0x74, 0x68, 0x69, 0x73, 0x2e, 0x70,
-                            0x6f, 0x72, 0x74, 0x20, 0x3d, 0x20, 0x70, 0x6f, 0x72, 0x74, 0x3b, 0x0a,
-                            0x09, 0x7d, 0x0a, 0x09, 0x5b, 0x25, 0x4d, 0x45, 0x54, 0x48, 0x4f, 0x44,
-                            0x53, 0x25, 0x5d, 0x0a, 0x09, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x20,
-                            0x76, 0x6f, 0x69, 0x64, 0x20, 0x64, 0x65, 0x73, 0x74, 0x72, 0x6f, 0x79,
-                            0x28, 0x29, 0x20, 0x7b, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
-                            0x20, 0x09, 0x2f, 0x2f, 0x54, 0x4f, 0x44, 0x4f, 0x0a, 0x09, 0x7d, 0x0a,
-                            0x7d, 0x0a
-                    };
-                    uint32_t serviceProxyByteArrayLength = 1034;
-
-                    unsigned char absractServiceByteArray[] = {
-                            0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x20, 0x5b, 0x25, 0x42, 0x41,
-                            0x53, 0x45, 0x5f, 0x50, 0x41, 0x43, 0x4b, 0x41, 0x47, 0x45, 0x5f, 0x4e,
-                            0x41, 0x4d, 0x45, 0x25, 0x5d, 0x3b, 0x0a, 0x0a, 0x69, 0x6d, 0x70, 0x6f,
-                            0x72, 0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65,
-                            0x6d, 0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e,
-                            0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x52, 0x65, 0x71, 0x75,
-                            0x65, 0x73, 0x74, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x3b, 0x0a,
-                            0x0a, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x20, 0x61, 0x62, 0x73, 0x74,
-                            0x72, 0x61, 0x63, 0x74, 0x20, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x20, 0x41,
-                            0x62, 0x73, 0x74, 0x72, 0x61, 0x63, 0x74, 0x5b, 0x25, 0x53, 0x45, 0x52,
-                            0x56, 0x49, 0x43, 0x45, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x25, 0x5d, 0x53,
-                            0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x20, 0x69, 0x6d, 0x70, 0x6c, 0x65,
-                            0x6d, 0x65, 0x6e, 0x74, 0x73, 0x20, 0x5b, 0x25, 0x53, 0x45, 0x52, 0x56,
-                            0x49, 0x43, 0x45, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x25, 0x5d, 0x53, 0x65,
-                            0x72, 0x76, 0x69, 0x63, 0x65, 0x20, 0x7b, 0x09, 0x0a, 0x09, 0x70, 0x75,
-                            0x62, 0x6c, 0x69, 0x63, 0x20, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-                            0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x20, 0x6d, 0x61, 0x6b, 0x65,
-                            0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x48, 0x61, 0x6e, 0x64, 0x6c,
-                            0x65, 0x72, 0x28, 0x29, 0x20, 0x7b, 0x0a, 0x09, 0x09, 0x72, 0x65, 0x74,
-                            0x75, 0x72, 0x6e, 0x20, 0x6e, 0x65, 0x77, 0x20, 0x5b, 0x25, 0x53, 0x45,
-                            0x52, 0x56, 0x49, 0x43, 0x45, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x25, 0x5d,
-                            0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x48, 0x61, 0x6e, 0x64, 0x6c,
-                            0x65, 0x72, 0x28, 0x74, 0x68, 0x69, 0x73, 0x29, 0x3b, 0x0a, 0x09, 0x7d,
-                            0x0a, 0x09, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x20, 0x69, 0x6e, 0x74,
-                            0x20, 0x67, 0x65, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x49,
-                            0x64, 0x28, 0x29, 0x20, 0x7b, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
-                            0x20, 0x20, 0x09, 0x72, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x20, 0x5b, 0x25,
-                            0x53, 0x45, 0x52, 0x56, 0x49, 0x43, 0x45, 0x5f, 0x49, 0x44, 0x25, 0x5d,
-                            0x3b, 0x0a, 0x09, 0x7d, 0x0a, 0x7d, 0x0a
-                    };
-                    uint32_t absractServiceByteArrayLength = 343;
-
-                    unsigned char requestHandlerByteArray[] = {
-                            0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x20, 0x5b, 0x25, 0x42, 0x41,
-                            0x53, 0x45, 0x5f, 0x50, 0x41, 0x43, 0x4b, 0x41, 0x47, 0x45, 0x5f, 0x4e,
-                            0x41, 0x4d, 0x45, 0x25, 0x5d, 0x3b, 0x0a, 0x0a, 0x69, 0x6d, 0x70, 0x6f,
-                            0x72, 0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65,
-                            0x6d, 0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e,
-                            0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x41, 0x72, 0x67, 0x75,
-                            0x6d, 0x65, 0x6e, 0x74, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72, 0x74,
-                            0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d, 0x2e,
-                            0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72, 0x75,
-                            0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-                            0x74, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x20, 0x69, 0x72,
-                            0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d, 0x2e, 0x68, 0x6f, 0x74,
-                            0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72, 0x75, 0x6e, 0x74, 0x69,
-                            0x6d, 0x65, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x48, 0x61,
-                            0x6e, 0x64, 0x6c, 0x65, 0x72, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72,
-                            0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d,
-                            0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72,
-                            0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f,
-                            0x6e, 0x73, 0x65, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x20,
-                            0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d, 0x2e, 0x68,
-                            0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72, 0x75, 0x6e,
-                            0x74, 0x69, 0x6d, 0x65, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
-                            0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x20, 0x69, 0x72, 0x2e,
-                            0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d, 0x2e, 0x68, 0x6f, 0x74, 0x74,
-                            0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d,
-                            0x65, 0x2e, 0x65, 0x78, 0x63, 0x65, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x2e,
-                            0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x4e, 0x6f, 0x74, 0x53, 0x75, 0x70,
-                            0x70, 0x6f, 0x72, 0x74, 0x45, 0x78, 0x63, 0x65, 0x70, 0x74, 0x69, 0x6f,
-                            0x6e, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x20, 0x69, 0x72,
-                            0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d, 0x2e, 0x68, 0x6f, 0x74,
-                            0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72, 0x75, 0x6e, 0x74, 0x69,
-                            0x6d, 0x65, 0x2e, 0x65, 0x78, 0x63, 0x65, 0x70, 0x74, 0x69, 0x6f, 0x6e,
-                            0x2e, 0x54, 0x63, 0x70, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x43, 0x6f,
-                            0x6e, 0x6e, 0x65, 0x63, 0x74, 0x45, 0x78, 0x63, 0x65, 0x70, 0x74, 0x69,
-                            0x6f, 0x6e, 0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x20, 0x69,
-                            0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d, 0x2e, 0x68, 0x6f,
-                            0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72, 0x75, 0x6e, 0x74,
-                            0x69, 0x6d, 0x65, 0x2e, 0x65, 0x78, 0x63, 0x65, 0x70, 0x74, 0x69, 0x6f,
-                            0x6e, 0x2e, 0x54, 0x63, 0x70, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x52,
-                            0x65, 0x61, 0x64, 0x45, 0x78, 0x63, 0x65, 0x70, 0x74, 0x69, 0x6f, 0x6e,
-                            0x3b, 0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x20, 0x69, 0x72, 0x2e,
-                            0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65, 0x6d, 0x2e, 0x68, 0x6f, 0x74, 0x74,
-                            0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e, 0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d,
-                            0x65, 0x2e, 0x65, 0x78, 0x63, 0x65, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x2e,
-                            0x54, 0x63, 0x70, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x57, 0x72, 0x69,
-                            0x74, 0x65, 0x45, 0x78, 0x63, 0x65, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x3b,
-                            0x0a, 0x69, 0x6d, 0x70, 0x6f, 0x72, 0x74, 0x20, 0x6a, 0x61, 0x76, 0x61,
-                            0x2e, 0x75, 0x74, 0x69, 0x6c, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x3b, 0x0a,
-                            0x0a, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x20, 0x63, 0x6c, 0x61, 0x73,
-                            0x73, 0x20, 0x5b, 0x25, 0x53, 0x45, 0x52, 0x56, 0x49, 0x43, 0x45, 0x5f,
-                            0x4e, 0x41, 0x4d, 0x45, 0x25, 0x5d, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-                            0x74, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x20, 0x65, 0x78, 0x74,
-                            0x65, 0x6e, 0x64, 0x73, 0x20, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-                            0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x20, 0x7b, 0x0a, 0x20, 0x20,
-                            0x20, 0x20, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x20, 0x5b, 0x25, 0x53,
-                            0x45, 0x52, 0x56, 0x49, 0x43, 0x45, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x25,
-                            0x5d, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x48, 0x61, 0x6e, 0x64,
-                            0x6c, 0x65, 0x72, 0x28, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x20,
-                            0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x29, 0x20, 0x7b, 0x0a, 0x20,
-                            0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x73, 0x75, 0x70, 0x65, 0x72,
-                            0x28, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x29, 0x3b, 0x0a, 0x20,
-                            0x20, 0x20, 0x20, 0x7d, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x40, 0x4f, 0x76,
-                            0x65, 0x72, 0x72, 0x69, 0x64, 0x65, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x70,
-                            0x75, 0x62, 0x6c, 0x69, 0x63, 0x20, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-                            0x73, 0x65, 0x20, 0x68, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x52, 0x65, 0x71,
-                            0x75, 0x65, 0x73, 0x74, 0x28, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-                            0x20, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x29, 0x20, 0x74, 0x68,
-                            0x72, 0x6f, 0x77, 0x73, 0x20, 0x54, 0x63, 0x70, 0x43, 0x6c, 0x69, 0x65,
-                            0x6e, 0x74, 0x57, 0x72, 0x69, 0x74, 0x65, 0x45, 0x78, 0x63, 0x65, 0x70,
-                            0x74, 0x69, 0x6f, 0x6e, 0x2c, 0x20, 0x54, 0x63, 0x70, 0x43, 0x6c, 0x69,
-                            0x65, 0x6e, 0x74, 0x52, 0x65, 0x61, 0x64, 0x45, 0x78, 0x63, 0x65, 0x70,
-                            0x74, 0x69, 0x6f, 0x6e, 0x2c, 0x20, 0x54, 0x63, 0x70, 0x43, 0x6c, 0x69,
-                            0x65, 0x6e, 0x74, 0x43, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x45, 0x78,
-                            0x63, 0x65, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x2c, 0x20, 0x4d, 0x65, 0x74,
-                            0x68, 0x6f, 0x64, 0x4e, 0x6f, 0x74, 0x53, 0x75, 0x70, 0x70, 0x6f, 0x72,
-                            0x74, 0x45, 0x78, 0x63, 0x65, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x7b,
-                            0x0a, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x62, 0x79, 0x74,
-                            0x65, 0x20, 0x6d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x49, 0x64, 0x20, 0x3d,
-                            0x20, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x2e, 0x67, 0x65, 0x74,
-                            0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x49, 0x64, 0x28, 0x29, 0x3b, 0x0a,
-                            0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x5b, 0x25, 0x53, 0x45,
-                            0x52, 0x56, 0x49, 0x43, 0x45, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x25, 0x5d,
-                            0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x20, 0x5b, 0x25, 0x53, 0x45,
-                            0x52, 0x56, 0x49, 0x43, 0x45, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x5f, 0x4c,
-                            0x4f, 0x57, 0x45, 0x52, 0x43, 0x41, 0x53, 0x45, 0x25, 0x5d, 0x49, 0x6d,
-                            0x70, 0x6c, 0x20, 0x3d, 0x20, 0x28, 0x41, 0x62, 0x73, 0x74, 0x72, 0x61,
-                            0x63, 0x74, 0x5b, 0x25, 0x53, 0x45, 0x52, 0x56, 0x49, 0x43, 0x45, 0x5f,
-                            0x4e, 0x41, 0x4d, 0x45, 0x25, 0x5d, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
-                            0x65, 0x29, 0x20, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x3b, 0x0a,
-                            0x0a, 0x09, 0x5b, 0x25, 0x4d, 0x45, 0x54, 0x48, 0x4f, 0x44, 0x5f, 0x43,
-                            0x4f, 0x4e, 0x44, 0x49, 0x54, 0x49, 0x4f, 0x4e, 0x53, 0x25, 0x5d, 0x0a,
-                            0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x74, 0x68, 0x72, 0x6f,
-                            0x77, 0x20, 0x6e, 0x65, 0x77, 0x20, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64,
-                            0x4e, 0x6f, 0x74, 0x53, 0x75, 0x70, 0x70, 0x6f, 0x72, 0x74, 0x45, 0x78,
-                            0x63, 0x65, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x28, 0x22, 0x6d, 0x65, 0x74,
-                            0x68, 0x6f, 0x64, 0x20, 0x69, 0x64, 0x20, 0x69, 0x73, 0x20, 0x69, 0x6e,
-                            0x63, 0x6f, 0x72, 0x72, 0x65, 0x63, 0x74, 0x22, 0x29, 0x3b, 0x0a, 0x20,
-                            0x20, 0x20, 0x20, 0x7d, 0x0a, 0x7d, 0x0a
-                    };
-                    uint32_t requestHandlerByteArrayLength = 1171;
-
-                    unsigned char serviceByteArray[] = {
-                            0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x20, 0x5b, 0x25, 0x42, 0x41,
-                            0x53, 0x45, 0x5f, 0x50, 0x41, 0x43, 0x4b, 0x41, 0x47, 0x45, 0x5f, 0x4e,
-                            0x41, 0x4d, 0x45, 0x25, 0x5d, 0x3b, 0x0a, 0x0a, 0x69, 0x6d, 0x70, 0x6f,
-                            0x72, 0x74, 0x20, 0x69, 0x72, 0x2e, 0x6e, 0x74, 0x6e, 0x61, 0x65, 0x65,
-                            0x6d, 0x2e, 0x68, 0x6f, 0x74, 0x74, 0x65, 0x6e, 0x74, 0x6f, 0x74, 0x2e,
-                            0x72, 0x75, 0x6e, 0x74, 0x69, 0x6d, 0x65, 0x2e, 0x53, 0x65, 0x72, 0x76,
-                            0x69, 0x63, 0x65, 0x3b, 0x0a, 0x0a, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63,
-                            0x20, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x66, 0x61, 0x63, 0x65, 0x20, 0x5b,
-                            0x25, 0x53, 0x45, 0x52, 0x56, 0x49, 0x43, 0x45, 0x5f, 0x4e, 0x41, 0x4d,
-                            0x45, 0x25, 0x5d, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x20, 0x65,
-                            0x78, 0x74, 0x65, 0x6e, 0x64, 0x73, 0x20, 0x53, 0x65, 0x72, 0x76, 0x69,
-                            0x63, 0x65, 0x20, 0x7b, 0x0a, 0x5b, 0x25, 0x53, 0x45, 0x52, 0x56, 0x49,
-                            0x43, 0x45, 0x5f, 0x4d, 0x45, 0x54, 0x48, 0x4f, 0x44, 0x53, 0x25, 0x5d,
-                            0x0a, 0x7d, 0x0a
-                    };
-                    uint32_t serviceByteArrayLength = 159;
-
-                    unsigned char serviceProxyBuilderByteArray[] = {
-                            0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x20, 0x5b, 0x25, 0x42, 0x41,
-                            0x53, 0x45, 0x5f, 0x50, 0x41, 0x43, 0x4b, 0x41, 0x47, 0x45, 0x5f, 0x4e,
-                            0x41, 0x4d, 0x45, 0x25, 0x5d, 0x3b, 0x0a, 0x0a, 0x70, 0x75, 0x62, 0x6c,
-                            0x69, 0x63, 0x20, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x20, 0x5b, 0x25, 0x53,
-                            0x45, 0x52, 0x56, 0x49, 0x43, 0x45, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x25,
-                            0x5d, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x50, 0x72, 0x6f, 0x78,
-                            0x79, 0x42, 0x75, 0x69, 0x6c, 0x64, 0x65, 0x72, 0x20, 0x7b, 0x0a, 0x0a,
-                            0x09, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x20, 0x73, 0x74, 0x61, 0x74,
-                            0x69, 0x63, 0x20, 0x5b, 0x25, 0x53, 0x45, 0x52, 0x56, 0x49, 0x43, 0x45,
-                            0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x25, 0x5d, 0x53, 0x65, 0x72, 0x76, 0x69,
-                            0x63, 0x65, 0x20, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x28, 0x53, 0x74,
-                            0x72, 0x69, 0x6e, 0x67, 0x20, 0x68, 0x6f, 0x73, 0x74, 0x2c, 0x20, 0x69,
-                            0x6e, 0x74, 0x20, 0x70, 0x6f, 0x72, 0x74, 0x29, 0x20, 0x7b, 0x0a, 0x09,
-                            0x09, 0x72, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x20, 0x6e, 0x65, 0x77, 0x20,
-                            0x5b, 0x25, 0x53, 0x45, 0x52, 0x56, 0x49, 0x43, 0x45, 0x5f, 0x4e, 0x41,
-                            0x4d, 0x45, 0x25, 0x5d, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x50,
-                            0x72, 0x6f, 0x78, 0x79, 0x28, 0x68, 0x6f, 0x73, 0x74, 0x2c, 0x70, 0x6f,
-                            0x72, 0x74, 0x29, 0x3b, 0x0a, 0x09, 0x7d, 0x0a, 0x0a, 0x20, 0x20, 0x20,
-                            0x20, 0x09, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x20, 0x73, 0x74, 0x61,
-                            0x74, 0x69, 0x63, 0x20, 0x76, 0x6f, 0x69, 0x64, 0x20, 0x64, 0x65, 0x73,
-                            0x74, 0x72, 0x6f, 0x79, 0x28, 0x29, 0x20, 0x7b, 0x0a, 0x20, 0x20, 0x20,
-                            0x20, 0x20, 0x20, 0x20, 0x20, 0x09, 0x2f, 0x2f, 0x54, 0x4f, 0x44, 0x4f,
-                            0x0a, 0x20, 0x20, 0x20, 0x20, 0x09, 0x7d, 0x0a, 0x7d, 0x0a
-                    };
-                    uint32_t serviceProxyBuilderByteArrayLength = 274;
-
-                    unsigned char structByteArray[] = {
-                            0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x20, 0x5b, 0x25, 0x42, 0x41,
-                            0x53, 0x45, 0x5f, 0x50, 0x41, 0x43, 0x4b, 0x41, 0x47, 0x45, 0x5f, 0x4e,
-                            0x41, 0x4d, 0x45, 0x25, 0x5d, 0x3b, 0x0a, 0x0a, 0x70, 0x75, 0x62, 0x6c,
-                            0x69, 0x63, 0x20, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x20, 0x5b, 0x25, 0x53,
-                            0x54, 0x52, 0x55, 0x43, 0x54, 0x5f, 0x4e, 0x41, 0x4d, 0x45, 0x25, 0x5d,
-                            0x20, 0x7b, 0x0a, 0x5b, 0x25, 0x4d, 0x45, 0x4d, 0x42, 0x45, 0x52, 0x53,
-                            0x25, 0x5d, 0x09, 0x0a, 0x09, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x20,
-                            0x62, 0x79, 0x74, 0x65, 0x5b, 0x5d, 0x20, 0x73, 0x65, 0x72, 0x69, 0x61,
-                            0x6c, 0x69, 0x7a, 0x65, 0x28, 0x29, 0x20, 0x7b, 0x0a, 0x09, 0x09, 0x2f,
-                            0x2f, 0x54, 0x4f, 0x44, 0x4f, 0x28, 0x61, 0x6c, 0x69, 0x29, 0x0a, 0x09,
-                            0x09, 0x2f, 0x2f, 0x66, 0x61, 0x6b, 0x65, 0x20, 0x69, 0x6d, 0x70, 0x6c,
-                            0x65, 0x6d, 0x65, 0x6e, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x0a, 0x09,
-                            0x09, 0x72, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x20, 0x6e, 0x65, 0x77, 0x20,
-                            0x62, 0x79, 0x74, 0x65, 0x5b, 0x5d, 0x7b, 0x20, 0x39, 0x37, 0x20, 0x7d,
-                            0x3b, 0x0a, 0x09, 0x7d, 0x0a, 0x09, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63,
-                            0x20, 0x76, 0x6f, 0x69, 0x64, 0x20, 0x64, 0x65, 0x73, 0x65, 0x72, 0x69,
-                            0x61, 0x6c, 0x69, 0x7a, 0x65, 0x28, 0x62, 0x79, 0x74, 0x65, 0x5b, 0x5d,
-                            0x20, 0x73, 0x65, 0x72, 0x69, 0x61, 0x6c, 0x69, 0x7a, 0x65, 0x64, 0x54,
-                            0x6f, 0x6b, 0x65, 0x6e, 0x29, 0x20, 0x7b, 0x0a, 0x09, 0x09, 0x2f, 0x2f,
-                            0x54, 0x4f, 0x44, 0x4f, 0x28, 0x61, 0x6c, 0x69, 0x29, 0x0a, 0x09, 0x09,
-                            0x2f, 0x2f, 0x66, 0x61, 0x6b, 0x65, 0x20, 0x69, 0x6d, 0x70, 0x6c, 0x65,
-                            0x6d, 0x65, 0x6e, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x0a, 0x09, 0x09,
-                            0x73, 0x65, 0x74, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x28, 0x22, 0x74, 0x65,
-                            0x73, 0x74, 0x2d, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x29, 0x3b, 0x0a,
-                            0x09, 0x7d, 0x0a, 0x7d, 0x0a
-                    };
-                    uint32_t structByteArrayLength = 293;
-                    //
-                    std::string serviceProxyTmpStr(reinterpret_cast<char const *>(serviceProxyByteArray),
-                                                   serviceProxyByteArrayLength);
-                    serviceProxyTmpStr_ = serviceProxyTmpStr;
-
-                    std::string abstractServiceTmpStr(reinterpret_cast<char const *>(absractServiceByteArray),
-                                                      absractServiceByteArrayLength);
-                    abstractServiceTmpStr_ = abstractServiceTmpStr;
-
-                    std::string requestHandlerTmpStr(reinterpret_cast<char const *>(requestHandlerByteArray),
-                                                     requestHandlerByteArrayLength);
-                    requestHandlerTmpStr_ = requestHandlerTmpStr;
-
-                    std::string serviceTmpStr(reinterpret_cast<char const *>(serviceByteArray), serviceByteArrayLength);
-                    serviceTmpStr_ = serviceTmpStr;
-
-                    std::string serviceProxyBuilderTmpStr(reinterpret_cast<char const *>(serviceProxyBuilderByteArray),
-                                                          serviceProxyBuilderByteArrayLength);
-                    serviceProxyBuilderTmpStr_ = serviceProxyBuilderTmpStr;
-
-                    std::string structTmpStr(reinterpret_cast<char const *>(structByteArray), structByteArrayLength);
-                    structTmpStr_ = structTmpStr;
-                }
-
-                void
                 JavaGenerator::ReadTemplateFiles() {
                     ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/struct.template",structTmpStr_);
                     ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/abstractService.template",abstractServiceTmpStr_);
@@ -456,8 +141,7 @@ namespace naeem {
                     ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/requestHandler.template",requestHandlerTmpStr_);
 //			std::cout << "---------------" << std::endl;
 //			std::cout << structTmpStr_;
-//			std::cout << abstractServiceTmpStr_;
-//			std::cout << serviceTmpStr_;
+//			std::cout << abstractServiceTmpStr_`//			std::cout << serviceTmpStr_;
 //			std::cout << serviceProxyBuilderTmpStr_;
 //			std::cout << serviceProxyTmpStr_;
 //			std::cout << requestHandlerTmpStr_;
@@ -469,7 +153,7 @@ namespace naeem {
                     for (int i = 0; i < pModule->structs_.size(); i++) {
                         ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(i);
                         std::string basePackageName = pModule->package_;
-                        std::string replacableStructTmpStr = structTmpStr_;
+                        std::string replacableStructTmpStr = structTmpStr;
 
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableStructTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableStructTmpStr , "[%STRUCT_NAME%]" , pStruct->name_ , 1);
@@ -496,17 +180,17 @@ namespace naeem {
                             std::string declarationName = declarationPtr->variable_;
                             std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_);
                             declarationStr +=
-                                    TAB_STR + "private " + declarationJavaType + " " + declarationName + ";\n";
-                            getterSetterStr += TAB_STR + "public void set" + capitalizedDeclarationName + "(" +
+                                    TAB_STR_ + "private " + declarationJavaType + " " + declarationName + ";\n";
+                            getterSetterStr += TAB_STR_ + "public void set" + capitalizedDeclarationName + "(" +
                                                declarationJavaType + " " + declarationName + ") {\n";
                             getterSetterStr +=
-                                    TAB_STR + TAB_STR + "this." + declarationName + " = " + declarationName + ";\n";
-                            getterSetterStr += TAB_STR + "}\n";
+                                    TAB_STR_ + TAB_STR_ + "this." + declarationName + " = " + declarationName + ";\n";
+                            getterSetterStr += TAB_STR_ + "}\n";
                             getterSetterStr +=
-                                    TAB_STR + "public " + declarationJavaType + " get" + capitalizedDeclarationName +
+                                    TAB_STR_ + "public " + declarationJavaType + " get" + capitalizedDeclarationName +
                                     "() {\n";
-                            getterSetterStr += TAB_STR + TAB_STR + "return " + declarationPtr->variable_ + ";\n";
-                            getterSetterStr += TAB_STR + "}\n";
+                            getterSetterStr += TAB_STR_ + TAB_STR_ + "return " + declarationPtr->variable_ + ";\n";
+                            getterSetterStr += TAB_STR_ + "}\n";
                         }
                         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%MEMBERS%]"), 11,
                                                        declarationStr + getterSetterStr);
@@ -519,14 +203,14 @@ namespace naeem {
                              ++it) {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                             std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_);
-                            serializeMethodStr += TAB_STR + TAB_STR + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
+                            serializeMethodStr += TAB_STR_ + TAB_STR_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
                             declarationJavaType = ConvertType(declarationPtr->type_);
                             capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationJavaType);
                             std::string capitalizedDeclarationType  = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->type_);
                             serializeMethodStr += capitalizedDeclarationType + "(";
                             serializeMethodStr += declarationPtr->variable_ + ");\n";
                         }
-                        serializeMethodStr += TAB_STR + TAB_STR + "byte[] output = new byte[";
+                        serializeMethodStr += TAB_STR_ + TAB_STR_ + "byte[] output = new byte[";
                         for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
                              = pStruct->declarations_.begin();
                              it != pStruct->declarations_.end();
@@ -541,8 +225,8 @@ namespace naeem {
                             }
                         }
 
-                        serializeMethodStr += TAB_STR + TAB_STR + "int counter = 0;\n";
-                        serializeMethodStr += TAB_STR + TAB_STR + "//use a loop for every property\n";
+                        serializeMethodStr += TAB_STR_ + TAB_STR_ + "int counter = 0;\n";
+                        serializeMethodStr += TAB_STR_ + TAB_STR_ + "//use a loop for every property\n";
                         for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
                              = pStruct->declarations_.begin();
                              it != pStruct->declarations_.end();
@@ -551,13 +235,13 @@ namespace naeem {
                             declarationJavaType = ConvertType(declarationPtr->type_);
                             capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationJavaType);
                             std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_);
-                            serializeMethodStr += TAB_STR + TAB_STR + "for (int i = 0; i < serialized" +
+                            serializeMethodStr += TAB_STR_ + TAB_STR_ + "for (int i = 0; i < serialized" +
                                                   capitalizedDeclarationName + ".length; i++) {\n";
-                            serializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "output[counter++] = serialized" +
+                            serializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "output[counter++] = serialized" +
                                                   capitalizedDeclarationName + "[i];\n";
-                            serializeMethodStr += TAB_STR + TAB_STR + "}\n";
+                            serializeMethodStr += TAB_STR_ + TAB_STR_ + "}\n";
                         }
-                        serializeMethodStr += TAB_STR + TAB_STR + "return output;";
+                        serializeMethodStr += TAB_STR_ + TAB_STR_ + "return output;";
                         //
                         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%SERIALIZE_METHOD_BODY%]"), 25,
                                                        serializeMethodStr);
@@ -578,10 +262,10 @@ namespace naeem {
 
                         // deserialize method
                         std::string deserializeMethodStr;
-                        deserializeMethodStr += TAB_STR + TAB_STR + "int counter = 0;\n";
-                        deserializeMethodStr += TAB_STR + TAB_STR + "int dataLength = 0;\n";
-                        deserializeMethodStr += TAB_STR + TAB_STR + "int numbersOfBytesForDataLength;\n";
-                        deserializeMethodStr += TAB_STR + TAB_STR + "//do for every property\n";
+                        deserializeMethodStr += TAB_STR_ + TAB_STR_ + "int counter = 0;\n";
+                        deserializeMethodStr += TAB_STR_ + TAB_STR_ + "int dataLength = 0;\n";
+                        deserializeMethodStr += TAB_STR_ + TAB_STR_ + "int numbersOfBytesForDataLength;\n";
+                        deserializeMethodStr += TAB_STR_ + TAB_STR_ + "//do for every property\n";
                         for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
                              = pStruct->declarations_.begin();
                              it != pStruct->declarations_.end();
@@ -590,31 +274,31 @@ namespace naeem {
                             declarationJavaType = ConvertType(declarationPtr->type_);
                             std::string capitalizedDeclarationType = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->type_);
                             std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_);
-                            deserializeMethodStr += TAB_STR + TAB_STR + "//" + declarationPtr->variable_ + " : " + declarationJavaType + "\n";
+                            deserializeMethodStr += TAB_STR_ + TAB_STR_ + "//" + declarationPtr->variable_ + " : " + declarationJavaType + "\n";
                             if(declarationJavaType.compare("String") == 0) {
-                                deserializeMethodStr += TAB_STR + TAB_STR + "dataLength = 0;\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + "if(serializedByteArray[counter] < 0x80){\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "dataLength = serializedByteArray[counter++];\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + "}else{\n";             
-                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + TAB_STR + "dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + "}\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + "}\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[dataLength];\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + "System.arraycopy(serializedByteArray,counter," + declarationPtr->variable_.c_str() + "ByteArray,0,dataLength);\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + "counter += dataLength;\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "dataLength = 0;\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "if(serializedByteArray[counter] < 0x80){\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "dataLength = serializedByteArray[counter++];\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "}else{\n";             
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "}\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "}\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[dataLength];\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "System.arraycopy(serializedByteArray,counter," + declarationPtr->variable_.c_str() + "ByteArray,0,dataLength);\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "counter += dataLength;\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
                             }else {
                                 uint32_t dataLength = GetTypeLength(declarationPtr->type_.c_str());
                                 capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationJavaType);
                                 std::stringstream dataLengthStr;
                                 dataLengthStr << dataLength;
-                                deserializeMethodStr += TAB_STR + TAB_STR + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[" + dataLengthStr.str() + "];";
-                                deserializeMethodStr += TAB_STR + TAB_STR + "for(int i = 0 ; i < " + dataLengthStr.str() + " ; i++){\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + TAB_STR + declarationPtr->variable_.c_str() + "ByteArray[i] = serializedByteArray[counter++];\n";            
-                                deserializeMethodStr += TAB_STR + TAB_STR + "}\n";
-                                deserializeMethodStr += TAB_STR + TAB_STR + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[" + dataLengthStr.str() + "];";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "for(int i = 0 ; i < " + dataLengthStr.str() + " ; i++){\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + declarationPtr->variable_.c_str() + "ByteArray[i] = serializedByteArray[counter++];\n";            
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "}\n";
+                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
                             }
                         }
                         
@@ -663,7 +347,7 @@ namespace naeem {
                         pService = pModule->services_.at(i);
                         std::string path = outDir_ + "/Abstract" + pService->name_.c_str() + "Service.java";
                         os.open(path.c_str(), std::ios::trunc);
-                        replacableAbstractServiceTmpStr = abstractServiceTmpStr_;
+                        replacableAbstractServiceTmpStr = abstractServiceTmpStr;
 
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableAbstractServiceTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableAbstractServiceTmpStr , "[%SERVICE_NAME%]" , pService->name_ , 1);
@@ -686,7 +370,7 @@ namespace naeem {
                         std::string basePackageName = pModule->package_;
                         pService = pModule->services_.at(i);
                         //write service interface
-                        std::string replacableServiceTmpStr = serviceTmpStr_;
+                        std::string replacableServiceTmpStr = serviceTmpStr;
                         //std::cout << outDir_;
                         
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
@@ -704,7 +388,7 @@ namespace naeem {
                         ::naeem::hottentot::generator::ds::Method *pMethod;
                         for (int i = 0; i < pService->methods_.size(); i++) {
                             pMethod = pService->methods_.at(i);
-                            serviceMethodsStr += TAB_STR + "" + pMethod->returnType_ + " " + pMethod->name_ + "(";
+                            serviceMethodsStr += TAB_STR_ + "" + pMethod->returnType_ + " " + pMethod->name_ + "(";
                             //loop on methods arguments
                             ::naeem::hottentot::generator::ds::Argument *pArg;
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
@@ -735,7 +419,7 @@ namespace naeem {
                         pService = pModule->services_.at(i);
                         std::string replacableServiceProxyBuilderTmpStr;
                         //write service proxy builder
-                        replacableServiceProxyBuilderTmpStr = serviceProxyBuilderTmpStr_;
+                        replacableServiceProxyBuilderTmpStr = serviceProxyBuilderTmpStr;
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyBuilderTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyBuilderTmpStr , "[%SERVICE_NAME%]" , pService->name_ , 1);
                         // while (replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
@@ -764,7 +448,7 @@ namespace naeem {
                         std::string serviceName = pService->name_;
                         std::string lowerCaseServiceName = pService->name_;
                         lowerCaseServiceName[0] += 32;
-                        replacableRequestHandlerTmpStr = requestHandlerTmpStr_;
+                        replacableRequestHandlerTmpStr = requestHandlerTmpStr;
 
 
 
@@ -792,31 +476,31 @@ namespace naeem {
                             ssID << pMethod->GetHash();
                             methodConditionStr += "if(methodId == " + ssID.str() + "){\n";
                             methodConditionStr +=
-                                    TAB_STR + TAB_STR + TAB_STR + "List <Argument> args = request.getArgs();\n";
+                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + "List <Argument> args = request.getArgs();\n";
                             ::naeem::hottentot::generator::ds::Argument *pArg;
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
                                 pArg = pMethod->arguments_.at(i);
                                 std::stringstream ssI;
                                 ssI << i;
                                 methodConditionStr +=
-                                        TAB_STR + TAB_STR + TAB_STR + "Argument arg" + ssI.str() + " = args.get(" +
+                                        TAB_STR_ + TAB_STR_ + TAB_STR_ + "Argument arg" + ssI.str() + " = args.get(" +
                                         ssI.str() + ");\n";
-                                methodConditionStr += TAB_STR + TAB_STR + TAB_STR + "byte[] serialized" + pArg->type_;
+                                methodConditionStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "byte[] serialized" + pArg->type_;
                                 methodConditionStr += " = arg" + ssI.str() + ".getData();\n";
                                 methodConditionStr +=
-                                        TAB_STR + TAB_STR + TAB_STR + pArg->type_ + " " + pArg->variable_ + " = new " +
+                                        TAB_STR_ + TAB_STR_ + TAB_STR_ + pArg->type_ + " " + pArg->variable_ + " = new " +
                                         pArg->type_ + "();\n";
                                 methodConditionStr +=
-                                        TAB_STR + TAB_STR + TAB_STR + pArg->variable_ + ".deserialize(serialized" +
+                                        TAB_STR_ + TAB_STR_ + TAB_STR_ + pArg->variable_ + ".deserialize(serialized" +
                                         pArg->type_ + ");\n";
                             }
                             methodConditionStr +=
-                                    TAB_STR + TAB_STR + TAB_STR + pMethod->returnType_ + " " + lowerCaseReturnType +
+                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + pMethod->returnType_ + " " + lowerCaseReturnType +
                                     " = null;\n";
-                            methodConditionStr += TAB_STR + TAB_STR + TAB_STR + "Response response = new Response();\n";
-                            //methodConditionStr += TAB_STR + TAB_STR + "try{\n";
+                            methodConditionStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "Response response = new Response();\n";
+                            //methodConditionStr += TAB_STR_ + TAB_STR_ + "try{\n";
                             methodConditionStr +=
-                                    TAB_STR + TAB_STR + TAB_STR + lowerCaseReturnType + " = " + lowerCaseServiceName +
+                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + lowerCaseReturnType + " = " + lowerCaseServiceName +
                                     "Impl." + pMethod->name_ + "(";
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
                                 pArg = pMethod->arguments_.at(i);
@@ -827,16 +511,16 @@ namespace naeem {
                             }
                             methodConditionStr += ");\n";
                             methodConditionStr +=
-                                    TAB_STR + TAB_STR + TAB_STR + "byte[] serialized" + pMethod->returnType_ + " = " +
+                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + "byte[] serialized" + pMethod->returnType_ + " = " +
                                     lowerCaseReturnType + ".serialize();\n";
-                            methodConditionStr += TAB_STR + TAB_STR + TAB_STR + "response.setStatusCode((byte) 100);\n";
+                            methodConditionStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "response.setStatusCode((byte) 100);\n";
                             methodConditionStr +=
-                                    TAB_STR + TAB_STR + TAB_STR + "response.setData(serialized" + pMethod->returnType_ +
+                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + "response.setData(serialized" + pMethod->returnType_ +
                                     ");\n";
-                            methodConditionStr += TAB_STR + TAB_STR + TAB_STR + "response.setLength(serialized" +
+                            methodConditionStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "response.setLength(serialized" +
                                                   pMethod->returnType_ + ".length + 1);\n";
-                            methodConditionStr += TAB_STR + TAB_STR + TAB_STR + "return response;\n";
-                            methodConditionStr += TAB_STR + TAB_STR + "}";
+                            methodConditionStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "return response;\n";
+                            methodConditionStr += TAB_STR_ + TAB_STR_ + "}";
 
                         }
                         replacableRequestHandlerTmpStr.replace(
@@ -853,21 +537,11 @@ namespace naeem {
                     ::naeem::hottentot::generator::ds::Service *pService;
                     std::string basePackageName = pModule->package_;
                     for (int i = 0; i < pModule->services_.size(); i++) {
-                        std::string replacableServiceProxyStrTmp = serviceProxyTmpStr_;
+                        std::string replacableServiceProxyStrTmp = serviceProxyTmpStr;
                         pService = pModule->services_.at(i);
                         pService = pModule->services_.at(i);
-
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp,"[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp,"[%SERVICE_NAME%]" , pService->name_ , 1);
-                        // while (replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
-                        //     replacableServiceProxyStrTmp.replace(
-                        //             replacableServiceProxyStrTmp.find("[%BASE_PACKAGE_NAME%]"), 21, basePackageName);
-                        // }
-                        // while (replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]") != std::string::npos) {
-                        //     replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%SERVICE_NAME%]"),
-                        //                                          16, pService->name_);
-                        // }
-
                         //loop on service methods
                         ::naeem::hottentot::generator::ds::Method *pMethod;
                         std::string methodsStr;
@@ -877,7 +551,6 @@ namespace naeem {
                             methodsStr += "public " + pMethod->returnType_ + " " + pMethod->name_ + "(";
                             ::naeem::hottentot::generator::ds::Argument *pArg;
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
-
                                 pArg = pMethod->arguments_.at(i);
                                 methodsStr += pArg->type_ + " " + pArg->variable_;
                                 if (i < pMethod->arguments_.size() - 1) {
@@ -886,24 +559,24 @@ namespace naeem {
                             }
                             methodsStr += ") { \n";
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
-                                methodsStr += TAB_STR + TAB_STR + "//serialize " + pArg->variable_ + "\n";
-                                methodsStr += TAB_STR + TAB_STR + "byte[] serialized" + pArg->type_ + " = " +
+                                methodsStr += TAB_STR_ + TAB_STR_ + "//serialize " + pArg->variable_ + "\n";
+                                methodsStr += TAB_STR_ + TAB_STR_ + "byte[] serialized" + pArg->type_ + " = " +
                                               pArg->variable_ + ".serialize();\n";
                             }
                             methodsStr += "\n";
-                            methodsStr += TAB_STR + TAB_STR + "//make request\n";
-                            methodsStr += TAB_STR + TAB_STR + "Request request = new Request();\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "//make request\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "Request request = new Request();\n";
                             std::stringstream serviceId;
                             serviceId << pService->GetHash();
-                            methodsStr += TAB_STR + TAB_STR + "request.setServiceId(" + serviceId.str() + ");\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "request.setServiceId(" + serviceId.str() + ");\n";
                             std::stringstream methodId;
                             methodId << pMethod->GetHash();
-                            methodsStr += TAB_STR + TAB_STR + "request.setMethodId(" + methodId.str() + ");\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "request.setMethodId(" + methodId.str() + ");\n";
                             std::stringstream argSize;
                             argSize << pMethod->arguments_.size();
                             methodsStr +=
-                                    TAB_STR + TAB_STR + "request.setArgumentCount((byte) " + argSize.str() + ");\n";
-                            methodsStr += TAB_STR + TAB_STR + "request.setType(Request.RequestType.";
+                                    TAB_STR_ + TAB_STR_ + "request.setArgumentCount((byte) " + argSize.str() + ");\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "request.setType(Request.RequestType.";
 
                             if (pService->serviceType_ == 0) {
                                 methodsStr += "InvokeStateless";
@@ -915,99 +588,99 @@ namespace naeem {
                                 std::stringstream ssI;
                                 pArg = pMethod->arguments_.at(i);
                                 ssI << i;
-                                methodsStr += TAB_STR + TAB_STR + "Argument arg" + ssI.str() + " = new Argument();\n";
-                                methodsStr += TAB_STR + TAB_STR + "arg" + ssI.str() + ".setDataLength(" +
+                                methodsStr += TAB_STR_ + TAB_STR_ + "Argument arg" + ssI.str() + " = new Argument();\n";
+                                methodsStr += TAB_STR_ + TAB_STR_ + "arg" + ssI.str() + ".setDataLength(" +
                                               pArg->variable_.c_str() + ".serialize().length);\n";
                                 methodsStr +=
-                                        TAB_STR + TAB_STR + "arg" + ssI.str() + ".setData(" + pArg->variable_.c_str() +
+                                        TAB_STR_ + TAB_STR_ + "arg" + ssI.str() + ".setData(" + pArg->variable_.c_str() +
                                         ".serialize());\n";
-                                methodsStr += TAB_STR + TAB_STR + "request.addArgument(arg" + ssI.str() + ");\n";
+                                methodsStr += TAB_STR_ + TAB_STR_ + "request.addArgument(arg" + ssI.str() + ");\n";
                             }
                             //calculate request length
-                            methodsStr += TAB_STR + TAB_STR + "int dataLength = 0;\n";
-                            methodsStr += TAB_STR + TAB_STR + "//calculate data length for every argument\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "int dataLength = 0;\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "//calculate data length for every argument\n";
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
                                 pArg = pMethod->arguments_.at(i);
                                 std::string argDataLengthVarName = pArg->variable_ + "DataLength";
                                 std::string argDataLengthByteArrayLengthVarName =
                                         pArg->variable_ + "DataLengthByteArrayLength";
-                                methodsStr += TAB_STR + TAB_STR + "//calulate " + argDataLengthVarName + "\n";
-                                methodsStr += TAB_STR + TAB_STR + "int " + argDataLengthVarName + "= serialized" +
+                                methodsStr += TAB_STR_ + TAB_STR_ + "//calulate " + argDataLengthVarName + "\n";
+                                methodsStr += TAB_STR_ + TAB_STR_ + "int " + argDataLengthVarName + "= serialized" +
                                               pArg->type_ + ".length;\n";
                                 methodsStr +=
-                                        TAB_STR + TAB_STR + "int " + argDataLengthByteArrayLengthVarName + " = 1;\n";
-                                methodsStr += TAB_STR + TAB_STR + "if (" + argDataLengthVarName + " >= 0x80) {\n";
+                                        TAB_STR_ + TAB_STR_ + "int " + argDataLengthByteArrayLengthVarName + " = 1;\n";
+                                methodsStr += TAB_STR_ + TAB_STR_ + "if (" + argDataLengthVarName + " >= 0x80) {\n";
                                 methodsStr +=
-                                        TAB_STR + TAB_STR + TAB_STR + "if (" + argDataLengthVarName + " <= 0xff) {\n";
-                                methodsStr += TAB_STR + TAB_STR + TAB_STR + TAB_STR + "//ex 0x81 0xff\n";
-                                methodsStr += TAB_STR + TAB_STR + TAB_STR + TAB_STR + "" +
+                                        TAB_STR_ + TAB_STR_ + TAB_STR_ + "if (" + argDataLengthVarName + " <= 0xff) {\n";
+                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "//ex 0x81 0xff\n";
+                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "" +
                                               argDataLengthByteArrayLengthVarName + " = 2;\n";
-                                methodsStr += TAB_STR + TAB_STR + TAB_STR + "} else if (" + argDataLengthVarName +
+                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "} else if (" + argDataLengthVarName +
                                               " <= 0xffff) {\n";
-                                methodsStr += TAB_STR + TAB_STR + TAB_STR + TAB_STR + "//ex 0x82 0xff 0xff\n";
-                                methodsStr += TAB_STR + TAB_STR + TAB_STR + TAB_STR + "" +
+                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "//ex 0x82 0xff 0xff\n";
+                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "" +
                                               argDataLengthByteArrayLengthVarName + " = 3;\n";
-                                methodsStr += TAB_STR + TAB_STR + TAB_STR + "} else if (" + argDataLengthVarName +
+                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "} else if (" + argDataLengthVarName +
                                               " <= 0xffffff) {\n";
-                                methodsStr += TAB_STR + TAB_STR + TAB_STR + TAB_STR + "//ex 0x83 0xff 0xff 0xff\n";
-                                methodsStr += TAB_STR + TAB_STR + TAB_STR + TAB_STR + "" +
+                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "//ex 0x83 0xff 0xff 0xff\n";
+                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "" +
                                               argDataLengthByteArrayLengthVarName + " = 4;\n";
-                                methodsStr += TAB_STR + TAB_STR + TAB_STR + "}\n";
-                                methodsStr += TAB_STR + TAB_STR + "}\n";
-                                methodsStr += TAB_STR + TAB_STR + "dataLength += " + argDataLengthVarName + " + " +
+                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "}\n";
+                                methodsStr += TAB_STR_ + TAB_STR_ + "}\n";
+                                methodsStr += TAB_STR_ + TAB_STR_ + "dataLength += " + argDataLengthVarName + " + " +
                                               argDataLengthByteArrayLengthVarName + ";\n";
                             }
-                            methodsStr += TAB_STR + TAB_STR + "//\n";
-                            methodsStr += TAB_STR + TAB_STR + "request.setLength(4 + dataLength);\n";
-                            methodsStr += TAB_STR + TAB_STR + "//connect to server\n";
-                            methodsStr += TAB_STR + TAB_STR + "TcpClient tcpClient = TcpClientFactory.create();\n";
-                            methodsStr += TAB_STR + TAB_STR + "try{\n";
-                            methodsStr += TAB_STR + TAB_STR + TAB_STR + "tcpClient.connect(host, port);\n";
-                            methodsStr += TAB_STR + TAB_STR + "} catch (TcpClientConnectException e) {\n";
-                            methodsStr += TAB_STR + TAB_STR + TAB_STR + "throw new HottentotRuntimeException(e);\n";
-                            methodsStr += TAB_STR + TAB_STR + "}\n";
-                            methodsStr += TAB_STR + TAB_STR + "//serialize request according to HTNP\n";
-                            methodsStr += TAB_STR + TAB_STR + "Protocol protocol = ProtocolFactory.create();\n";
-                            methodsStr += TAB_STR + TAB_STR +
+                            methodsStr += TAB_STR_ + TAB_STR_ + "//\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "request.setLength(4 + dataLength);\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "//connect to server\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "TcpClient tcpClient = TcpClientFactory.create();\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "try{\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "tcpClient.connect(host, port);\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "} catch (TcpClientConnectException e) {\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "throw new HottentotRuntimeException(e);\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "}\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "//serialize request according to HTNP\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "Protocol protocol = ProtocolFactory.create();\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ +
                                           "byte[] serializedRequest = protocol.serializeRequest(request);\n";
-                            methodsStr += TAB_STR + TAB_STR + "//send request\n";
-                            methodsStr += TAB_STR + TAB_STR + "try {\n";
-                            methodsStr += TAB_STR + TAB_STR + TAB_STR + "tcpClient.write(serializedRequest);\n";
-                            methodsStr += TAB_STR + TAB_STR + "} catch (TcpClientWriteException e) {\n";
-                            methodsStr += TAB_STR + TAB_STR + TAB_STR + "throw new HottentotRuntimeException(e);\n";
-                            methodsStr += TAB_STR + TAB_STR + "}\n";
-                            methodsStr += TAB_STR + TAB_STR + "//read response from server\n";
-                            methodsStr += TAB_STR + TAB_STR + "byte[] buffer = new byte[256];\n";
-                            methodsStr += TAB_STR + TAB_STR + "while (!protocol.IsResponseComplete()) {\n";
-                            methodsStr += TAB_STR + TAB_STR + TAB_STR + "byte[] dataChunkRead;\n";
-                            methodsStr += TAB_STR + TAB_STR + TAB_STR + "try {\n";
-                            methodsStr += TAB_STR + TAB_STR + TAB_STR + TAB_STR + "dataChunkRead = tcpClient.read();\n";
-                            methodsStr += TAB_STR + TAB_STR + TAB_STR + "} catch (TcpClientReadException e) {\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "//send request\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "try {\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "tcpClient.write(serializedRequest);\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "} catch (TcpClientWriteException e) {\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "throw new HottentotRuntimeException(e);\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "}\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "//read response from server\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "byte[] buffer = new byte[256];\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "while (!protocol.IsResponseComplete()) {\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "byte[] dataChunkRead;\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "try {\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "dataChunkRead = tcpClient.read();\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "} catch (TcpClientReadException e) {\n";
                             methodsStr +=
-                                    TAB_STR + TAB_STR + TAB_STR + TAB_STR + "throw new HottentotRuntimeException(e);\n";
-                            methodsStr += TAB_STR + TAB_STR + TAB_STR + "}\n";
+                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "throw new HottentotRuntimeException(e);\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "}\n";
                             methodsStr +=
-                                    TAB_STR + TAB_STR + TAB_STR + "protocol.processDataForResponse(dataChunkRead);\n";
-                            methodsStr += TAB_STR + TAB_STR + "}\n";
-                            methodsStr += TAB_STR + TAB_STR + "//deserialize token part of response\n";
-                            methodsStr += TAB_STR + TAB_STR + "Response response = protocol.getResponse();\n";
-                            methodsStr += TAB_STR + TAB_STR + "//close everything\n";
-                            methodsStr += TAB_STR + TAB_STR + "//deserialize " + pMethod->returnType_ +
+                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + "protocol.processDataForResponse(dataChunkRead);\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "}\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "//deserialize token part of response\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "Response response = protocol.getResponse();\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "//close everything\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "//deserialize " + pMethod->returnType_ +
                                           "part from response\n";
                             std::string lowerCaseReturnType = pMethod->returnType_;
                             lowerCaseReturnType[0] += 32;
-                            methodsStr += TAB_STR + TAB_STR + "" + pMethod->returnType_ + " " + lowerCaseReturnType +
+                            methodsStr += TAB_STR_ + TAB_STR_ + "" + pMethod->returnType_ + " " + lowerCaseReturnType +
                                           "= null;\n";
-                            methodsStr += TAB_STR + TAB_STR + "if (response.getStatusCode() == -1) {\n";
-                            methodsStr += TAB_STR + TAB_STR + TAB_STR + "//\n";
-                            methodsStr += TAB_STR + TAB_STR + "} else {\n";
-                            methodsStr += TAB_STR + TAB_STR + TAB_STR + "" + lowerCaseReturnType + "= new " +
+                            methodsStr += TAB_STR_ + TAB_STR_ + "if (response.getStatusCode() == -1) {\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "//\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "} else {\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "" + lowerCaseReturnType + "= new " +
                                           pMethod->returnType_ + "();\n";
-                            methodsStr += TAB_STR + TAB_STR + TAB_STR + "" + lowerCaseReturnType +
+                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "" + lowerCaseReturnType +
                                           ".deserialize(response.getData());\n";
-                            methodsStr += TAB_STR + TAB_STR + "}\n";
-                            methodsStr += TAB_STR + TAB_STR + "return " + lowerCaseReturnType + ";\n";
-                            methodsStr += TAB_STR + "}\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "}\n";
+                            methodsStr += TAB_STR_ + TAB_STR_ + "return " + lowerCaseReturnType + ";\n";
+                            methodsStr += TAB_STR_ + "}\n";
                         }
                         replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%METHODS%]"), 11,
                                                              methodsStr);
