@@ -41,12 +41,18 @@ namespace naeem {
           virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
                                 ::naeem::hottentot::generator::GenerationConfig &);
         protected:
-          virtual void GenerateProxy(::naeem::hottentot::generator::ds::Service *,
-                                     ::naeem::hottentot::generator::GenerationConfig &,
-                                     std::map<std::string, std::string> &);
-          virtual void GenerateProxyBuilder(::naeem::hottentot::generator::ds::Service *,
-                                            ::naeem::hottentot::generator::GenerationConfig &,
-                                            std::map<std::string, std::string> &);
+          virtual void GenerateProxyHeader(::naeem::hottentot::generator::ds::Service *,
+                                           ::naeem::hottentot::generator::GenerationConfig &,
+                                           std::map<std::string, std::string> &);
+          virtual void GenerateProxyCC(::naeem::hottentot::generator::ds::Service *,
+                                       ::naeem::hottentot::generator::GenerationConfig &,
+                                       std::map<std::string, std::string> &);
+          virtual void GenerateProxyBuilderHeader(::naeem::hottentot::generator::ds::Service *,
+                                                  ::naeem::hottentot::generator::GenerationConfig &,
+                                                  std::map<std::string, std::string> &);
+          virtual void GenerateProxyBuilderCC(::naeem::hottentot::generator::ds::Service *,
+                                              ::naeem::hottentot::generator::GenerationConfig &,
+                                              std::map<std::string, std::string> &);
         };
       }
     }

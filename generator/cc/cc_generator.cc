@@ -76,128 +76,21 @@ namespace naeem {
             for (uint32_t serviceCounter = 0; 
                  serviceCounter < hot->modules_[moduleCounter]->services_.size();
                  serviceCounter++) {
-              GenerateProxy(hot->modules_[moduleCounter]->services_[serviceCounter],
-                            generationConfig,
-                            templates);
-              GenerateProxyBuilder(hot->modules_[moduleCounter]->services_[serviceCounter],
-                                   generationConfig,
-                                   templates);
+              GenerateProxyHeader(hot->modules_[moduleCounter]->services_[serviceCounter],
+                                  generationConfig,
+                                  templates);
+              GenerateProxyCC(hot->modules_[moduleCounter]->services_[serviceCounter],
+                              generationConfig,
+                              templates);
+              GenerateProxyBuilderHeader(hot->modules_[moduleCounter]->services_[serviceCounter],
+                                         generationConfig,
+                                         templates);
+              GenerateProxyBuilderCC(hot->modules_[moduleCounter]->services_[serviceCounter],
+                                     generationConfig,
+                                     templates);
             }
           }
           std::cout << "C++ Generation done." << std::endl;
-        }
-        void
-        CCGenerator::GenerateProxy(::naeem::hottentot::generator::ds::Service *service,
-                                   ::naeem::hottentot::generator::GenerationConfig &generationConfig,
-                                   std::map<std::string, std::string> &templates) {
-          /*
-           * Making needed variables and assigning values to them
-           */
-          std::string serviceNameCamelCaseFirstCapital = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
-            service->GetName()) + "Service";
-          std::string serviceNameSnakeCase = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-              serviceNameCamelCaseFirstCapital);
-          std::string serviceNameScreamingSnakeCase =
-          ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
-          std::string serviceProxyHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy.h";
-          std::string serviceProxyCCFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy.cc";
-          /*
-           * Filling templates with real values
-           */
-          std::vector<std::string> packageTokens = ::naeem::hottentot::generator::common::StringHelper::Split(
-            service->module_->GetPackage(), '.');
-          std::string namespacesStart = "";
-          for (uint32_t i = 0; i < packageTokens.size(); i++) {
-            namespacesStart += "namespace " + 
-              ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
-          }
-          std::string namespacesEnd = "";
-          for (uint32_t i = 0; i < packageTokens.size(); i++) {
-            namespacesEnd += "} // END OF NAMESPACE " + packageTokens[i] + "\r\n";
-          }
-          std::string structClassForwardDeclarations = "";
-          for (uint32_t i = 0; i < service->module_->structs_.size(); i++) {
-            structClassForwardDeclarations += "class " + service->module_->structs_[i]->GetName() + ";\r\n";
-          }
-          namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
-          namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
-          structClassForwardDeclarations = ::naeem::hottentot::generator::common::StringHelper::Trim(structClassForwardDeclarations);
-          std::string methodDefs = "";
-          for (uint32_t i = 0; i < service->methods_.size(); i++) {
-            ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
-            methodDefs += TypeHelper::GetCCType(method->GetReturnType()) + (TypeHelper::IsUDT(method->GetReturnType()) ? "*" : "") + " " + method->GetName() + "(";
-            std::string sep = "";
-            for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-              methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " " + (TypeHelper::IsUDT(method->arguments_[j]->GetType()) ? "*" : "") + method->arguments_[j]->GetVariable();
-              sep = ", ";
-            }
-            methodDefs += ");\r\n";
-          }
-          methodDefs = ::naeem::hottentot::generator::common::StringHelper::Trim(methodDefs);
-          std::map<std::string, std::string> params;
-          params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
-          params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
-          params.insert(std::pair<std::string, std::string>("STRUCT_CLASS_FORWARD_DECLARATIONS", structClassForwardDeclarations));
-          params.insert(std::pair<std::string, std::string>("HEADER_GUARD", "_" +
-            ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
-              packageTokens) + "__PROXY__" + serviceNameScreamingSnakeCase + "_PROXY_H_"));
-          params.insert(std::pair<std::string, std::string>("NAMESPACE","::" + 
-            ::naeem::hottentot::generator::common::StringHelper::Concat( 
-              ::naeem::hottentot::generator::common::StringHelper::Split(
-                  service->module_->GetPackage(), '.'), "::")));
-          params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FP_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
-          params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", serviceNameSnakeCase));
-          params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME",serviceNameScreamingSnakeCase));
-          params.insert(std::pair<std::string, std::string>("METHOD_DEFS",methodDefs));
-          std::string proxyHeaderTemplate = templates["proxy_header"];
-          for (std::map<std::string, std::string>::iterator it = params.begin();
-               it != params.end();
-               ++it) {
-            proxyHeaderTemplate = 
-              ::naeem::hottentot::generator::common::StringHelper::Replace(proxyHeaderTemplate, 
-                                                                           "[[[" + it->first + "]]]", 
-                                                                           it->second);
-          }
-          /*
-           * Writing final results to files
-           */
-          std::fstream f;
-          f.open(serviceProxyHeaderFilePath.c_str(), std::fstream::out | std::fstream::binary);
-          f << proxyHeaderTemplate;
-          f.close();
-          std::fstream f2;
-          f2.open(serviceProxyCCFilePath.c_str(), std::fstream::out | std::fstream::binary);
-          f2.close();
-        }
-        void
-        CCGenerator::GenerateProxyBuilder(::naeem::hottentot::generator::ds::Service *service,
-                                          ::naeem::hottentot::generator::GenerationConfig &generationConfig,
-                                          std::map<std::string, std::string> &templates) {
-          /*
-           * Making needed variables and assigning values to them
-           */
-          std::string serviceNameCamelCaseFirstCapital = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
-            service->GetName()) + "Service";
-          std::string serviceNameSnakeCase = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-              serviceNameCamelCaseFirstCapital);
-          std::string serviceProxyBuilderHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy_builder.h";
-          std::string serviceProxyBuilderCCFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy_builder.cc";
-          /*
-           * Filling templates with real values
-           */
-          /*
-           * Writing final results to files
-           */
-          std::fstream f;
-          f.open(serviceProxyBuilderHeaderFilePath.c_str(), std::fstream::out | std::fstream::binary);
-          f.close();
-          std::fstream f2;
-          f2.open(serviceProxyBuilderCCFilePath.c_str(), std::fstream::out | std::fstream::binary);
-          f2.close();
         }
       }
     }
