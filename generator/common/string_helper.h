@@ -31,7 +31,11 @@
 #include <locale>
 #include <sstream>
 #include <vector>
+<<<<<<< HEAD
 #include <stdexcept>
+=======
+#include <stdint.h>
+>>>>>>> 07f3acf559e98f31ea157128f89f09b4fda4c226
 
 
 namespace naeem {
@@ -86,6 +90,16 @@ namespace naeem {
               tokens.push_back(s);
             }
             return tokens;
+          }
+          static inline std::string Concat(std::vector<std::string> strs, 
+                                           std::string separator) {
+            std::string result;
+            std::string del = "";
+            for (uint32_t i = 0; i < strs.size(); i++) {
+              result += del + strs[i];
+              del = separator;
+            }
+            return result;
           }
           static inline std::vector<std::string> ExplodeCamelCase(std::string str) {
             std::vector<std::string> tokens;

@@ -15,7 +15,7 @@
 #include <naeem/hottentot/runtime/proxy/proxy_runtime.h>
 #include <naeem/hottentot/runtime/proxy/tcp_client_factory.h>
 
-[[[INCLUDE_SERVICE_PROXY_H]]]
+#include "[[[SNAKE_CASE_SERVICE_PROXY_NAME]]]_proxy.h"
 [[[INCLUDE_STRUCT_HEADERS]]]
 
 
