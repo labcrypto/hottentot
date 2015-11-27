@@ -25,7 +25,6 @@
 #define _NAEEM_HOTTENTOT_EXAMPLES_AUTH__PROXY__AUTHENTICATE_SERVICE_PROXY_BUILDER_H_
 
 #include <stdint.h>
-
 #include <string>
 
 

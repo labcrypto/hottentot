@@ -1,2 +1,6 @@
-Declarations should be sorted according to their order.           [DONE]
-Ids of methods and services should be hashed in 32 bits.          [TODO]
+Declarations should be sorted according to their order.                               [DONE]
+Ids of methods and services should be hashed in 32 bits.                              [TODO]
+Option for choosing end-of-line character: \r\n for Windows, \n for Unix.             [TODO]
+Serialization and deserialization for primitive data types.                           [TODO]
+Producing each struct in its namespace directory.                                     [TODO]
+

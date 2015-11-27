@@ -185,7 +185,7 @@ namespace naeem {
           std::map<std::string, std::string> params;
           params.insert(std::pair<std::string, std::string>("RETURN_TYPE", TypeHelper::GetCCType(method->GetReturnType()) + (TypeHelper::IsUDT(method->GetReturnType()) ? "*" : "")));
           params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
-          params.insert(std::pair<std::string, std::string>("METHOD_NAME", method->GetName()));
+          params.insert(std::pair<std::string, std::string>("METHOD_NAME", ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName())));
           params.insert(std::pair<std::string, std::string>("ARGUMENTS", arguments));
           params.insert(std::pair<std::string, std::string>("ARGUMENTS_SERIALIZATION", argumentsSerialization));
           params.insert(std::pair<std::string, std::string>("RESPONSE_DESERIALIZATION", responseDeserialization));
