@@ -49,12 +49,14 @@ namespace naeem {
           /*
            * Reading all needed templates and stroing them in a map
            */
+          std::string proxyBuilderCCTemplate;
           std::string proxyBuilderHeaderTemplate;
           std::string proxyCCTemplate;
           std::string proxyCCMethodTemplate;
           std::string proxyCCMethodArgumentSerializationTemplate;
           std::string proxyCCResponseDeserialization;
           std::string proxyHeaderTemplate;
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_builder_cc.template", proxyBuilderCCTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_builder_header.template", proxyBuilderHeaderTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc.template", proxyCCTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method.template", proxyCCMethodTemplate);
@@ -62,6 +64,7 @@ namespace naeem {
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__response_deserialization.template", proxyCCResponseDeserialization);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_header.template", proxyHeaderTemplate);
           std::map<std::string, std::string> templates;
+          templates.insert(std::pair<std::string, std::string>("proxy_builder_cc",proxyBuilderCCTemplate));
           templates.insert(std::pair<std::string, std::string>("proxy_builder_header",proxyBuilderHeaderTemplate));
           templates.insert(std::pair<std::string, std::string>("proxy_cc",proxyCCTemplate));
           templates.insert(std::pair<std::string, std::string>("proxy_cc__method",proxyCCMethodTemplate));

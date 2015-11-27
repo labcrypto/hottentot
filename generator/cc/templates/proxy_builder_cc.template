@@ -12,13 +12,13 @@
 
 [[[NAMESPACES_START]]]
 namespace proxy {
-  AuthenticateService*
-  AuthenticateServiceProxyBuilder::Create(std::string host, uint32_t port) {
-    return new AuthenticateServiceProxy(host, port);
+  [[[CAMEL_CASE_FC_SERVICE_NAME]]]*
+  [[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Create(std::string host, uint32_t port) {
+    return new [[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy(host, port);
   }
   void
-  AuthenticateServiceProxyBuilder::Destroy(AuthenticateService *authenticateService) {
-    delete authenticateService;
+  [[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Destroy([[[CAMEL_CASE_FC_SERVICE_NAME]]] *service) {
+    delete service;
   }
 }
 [[[NAMESPACES_END]]]

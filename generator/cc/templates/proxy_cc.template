@@ -3,7 +3,7 @@
  * Date: [[[GENERATION_DATE]]]
  * Name: [[[FILENAME]]]
  * Description:
- *   This file contains the implementation of the proxy class.
+ *   This file contains implementation of the proxy class.
  ***************************************************************/
 
 #include <naeem/hottentot/runtime/logger.h>
