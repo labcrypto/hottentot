@@ -110,7 +110,7 @@ namespace naeem {
             ::naeem::hottentot::generator::common::StringHelper::Concat( 
               ::naeem::hottentot::generator::common::StringHelper::Split(
                   service->module_->GetPackage(), '.'), "::")));
-          params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FP_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
+          params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
           params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", serviceNameSnakeCase));
           params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME", serviceNameScreamingSnakeCase));
           params.insert(std::pair<std::string, std::string>("METHOD_DEFS", methodDefs));

@@ -25,6 +25,7 @@
 #define _NAEEM_HOTTENTOT_GENERATOR__CC__CC_GENERATOR_H_
 
 #include <map>
+#include <string>
  
 #include "../generator.h"
 
@@ -47,6 +48,14 @@ namespace naeem {
           virtual void GenerateProxyCC(::naeem::hottentot::generator::ds::Service *,
                                        ::naeem::hottentot::generator::GenerationConfig &,
                                        std::map<std::string, std::string> &);
+          virtual std::string GenerateProxyCCMethod(::naeem::hottentot::generator::ds::Service *,
+                                                    ::naeem::hottentot::generator::ds::Method *,
+                                                    ::naeem::hottentot::generator::GenerationConfig &,
+                                                    std::map<std::string, std::string> &);
+          virtual std::string GenerateProxyCCMethodArgumentSerialization(::naeem::hottentot::generator::ds::Service *,
+                                                                         ::naeem::hottentot::generator::ds::Method *,
+                                                                         ::naeem::hottentot::generator::GenerationConfig &,
+                                                                         std::map<std::string, std::string> &);
           virtual void GenerateProxyBuilderHeader(::naeem::hottentot::generator::ds::Service *,
                                                   ::naeem::hottentot::generator::GenerationConfig &,
                                                   std::map<std::string, std::string> &);

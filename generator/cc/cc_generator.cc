@@ -53,15 +53,15 @@ namespace naeem {
           std::string proxyCCTemplate;
           std::string proxyCCMethodTemplate;
           std::string proxyCCMethodArgumentSerializationTemplate;
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_header.template", proxyHeaderTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc.template", proxyCCTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_method.template", proxyCCMethodTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_method_argument_serialization.template", proxyCCMethodArgumentSerializationTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method.template", proxyCCMethodTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method_argument_serialization.template", proxyCCMethodArgumentSerializationTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_header.template", proxyHeaderTemplate);
           std::map<std::string, std::string> templates;
-          templates.insert(std::pair<std::string, std::string>("proxy_header",proxyHeaderTemplate));
           templates.insert(std::pair<std::string, std::string>("proxy_cc",proxyCCTemplate));
-          templates.insert(std::pair<std::string, std::string>("proxy_cc_method",proxyCCMethodTemplate));
-          templates.insert(std::pair<std::string, std::string>("proxy_cc_method_argument_serialization",proxyCCMethodArgumentSerializationTemplate));
+          templates.insert(std::pair<std::string, std::string>("proxy_cc__method",proxyCCMethodTemplate));
+          templates.insert(std::pair<std::string, std::string>("proxy_cc__method_argument_serialization",proxyCCMethodArgumentSerializationTemplate));
+          templates.insert(std::pair<std::string, std::string>("proxy_header",proxyHeaderTemplate));
           /*
            * Creating needed directories
            */

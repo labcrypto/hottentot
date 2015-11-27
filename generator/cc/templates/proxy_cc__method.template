@@ -1,5 +1,5 @@
 [[[RETURN_TYPE]]]*
-[[[SERIVCE_PROXY_CLASS_NAME]]]::[[[METHOD_NAME]]]([[[ARGUMENTS]]]) {
+[[[CAMEL_CASE_FC_SERIVCE_NAME]]]Proxy::[[[METHOD_NAME]]]([[[ARGUMENTS]]]) {
   /*
    * Make request object
    */
