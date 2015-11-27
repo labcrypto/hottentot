@@ -63,7 +63,7 @@ namespace naeem {
           std::string serviceProxyHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy.h";
           std::string serviceProxyCCFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy.cc";
           /*
-           * Filling templates with real values
+           * Making real values
            */
           std::vector<std::string> packageTokens = ::naeem::hottentot::generator::common::StringHelper::Split(
             service->module_->GetPackage(), '.');
@@ -97,6 +97,9 @@ namespace naeem {
             methodIndent = indent + indent;
           }
           methodDefs = ::naeem::hottentot::generator::common::StringHelper::Trim(methodDefs);
+          /*
+           * Filling templates with real values
+           */
           std::map<std::string, std::string> params;
           params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
           params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + "_proxy.h"));

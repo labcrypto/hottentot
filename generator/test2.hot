@@ -1,4 +1,4 @@
-module example.generated {
+module example.generated.abc.xyz {
   struct Token {
     int16 id ord(2);
     string value ord(1);

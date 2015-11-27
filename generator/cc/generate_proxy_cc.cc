@@ -63,14 +63,14 @@ namespace naeem {
           std::string serviceProxyHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy.h";
           std::string serviceProxyCCFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy.cc";
           /*
-           * Filling templates with real values
+           * Making real values
            */
           std::vector<std::string> packageTokens = ::naeem::hottentot::generator::common::StringHelper::Split(
             service->module_->GetPackage(), '.');
           std::string namespacesStart = "";
           for (uint32_t i = 0; i < packageTokens.size(); i++) {
             namespacesStart += "namespace " + 
-              ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n ";
+              ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
           }
           std::string namespacesEnd = "";
           for (int32_t i = packageTokens.size() - 1; i >= 0; i--) {
@@ -91,6 +91,9 @@ namespace naeem {
             methods += GenerateProxyCCMethod(service, method, generationConfig, templates) + "\r\n";
           }
           methods = ::naeem::hottentot::generator::common::StringHelper::Trim(methods);
+          /*
+           * Filling templates with real values
+           */
           std::map<std::string, std::string> params;
           params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
           params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + "_proxy.cc"));
@@ -133,15 +136,60 @@ namespace naeem {
                                            std::map<std::string, std::string> &templates) {
           std::string indent = generationConfig.GetIndentString();
           /*
-           * Making needed variables and assigning values to them
+           * Making real values
            */
           std::string serviceNameCamelCaseFirstCapital = 
             ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
               service->GetName()) + "Service";
+          std::string arguments = "";
+          std::string sep = "";
+          for (uint32_t j = 0; j < method->arguments_.size(); j++) {
+            arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " " + (TypeHelper::IsUDT(method->arguments_[j]->GetType()) ? "*" : "") + method->arguments_[j]->GetVariable();
+            sep = ", ";
+          }
+          std::string argumentsSerialization = "";
+          for (uint32_t j = 0; j < method->arguments_.size(); j++) {
+            if (TypeHelper::IsUDT(method->arguments_[j]->GetType())) {
+              std::string proxyCCMethodArgumentSerializationTemplate = templates["proxy_cc__method_argument_serialization"];
+              proxyCCMethodArgumentSerializationTemplate =
+                ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodArgumentSerializationTemplate,
+                                                                             "[[[INDENT]]]",
+                                                                             indent);
+              argumentsSerialization += proxyCCMethodArgumentSerializationTemplate + "\r\n";
+            } else {
+              argumentsSerialization += indent + indent + "// TODO(kamran) Serialization should be done for argument '" + method->arguments_[j]->GetVariable() + "'\r\n";
+            }
+            argumentsSerialization =
+              ::naeem::hottentot::generator::common::StringHelper::Replace(argumentsSerialization,
+                                                                           "[[[ARGUMENT_NAME]]]",
+                                                                           method->arguments_[j]->GetVariable());
+          }
+          std::string responseDeserialization = "";
+          if (TypeHelper::IsUDT(method->GetReturnType())) {
+            std::string proxyCCResponseDeserializationTemplate = templates["proxy_cc__response_deserialization"];
+            proxyCCResponseDeserializationTemplate =
+              ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCResponseDeserializationTemplate,
+                                                                           "[[[RETURN_TYPE]]]",
+                                                                           method->GetReturnType());
+            proxyCCResponseDeserializationTemplate =
+              ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCResponseDeserializationTemplate,
+                                                                           "[[[INDENT]]]",
+                                                                           indent);
+            responseDeserialization += proxyCCResponseDeserializationTemplate + "\r\n";
+          } else {
+            responseDeserialization = indent + indent + "TODO(kamran) Deserialization of response should be done.\r\n";
+          }
+          /*
+           * Filling templates with real values
+           */
           std::map<std::string, std::string> params;
-          params.insert(std::pair<std::string, std::string>("RETURN_TYPE", TypeHelper::GetCCType(method->GetReturnType())));
+          params.insert(std::pair<std::string, std::string>("RETURN_TYPE", TypeHelper::GetCCType(method->GetReturnType()) + (TypeHelper::IsUDT(method->GetReturnType()) ? "*" : "")));
           params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
           params.insert(std::pair<std::string, std::string>("METHOD_NAME", method->GetName()));
+          params.insert(std::pair<std::string, std::string>("ARGUMENTS", arguments));
+          params.insert(std::pair<std::string, std::string>("ARGUMENTS_SERIALIZATION", argumentsSerialization));
+          params.insert(std::pair<std::string, std::string>("RESPONSE_DESERIALIZATION", responseDeserialization));
+          params.insert(std::pair<std::string, std::string>("INDENT", indent));
           std::string proxyCCMethodTemplate = templates["proxy_cc__method"];
           for (std::map<std::string, std::string>::iterator it = params.begin();
                it != params.end();

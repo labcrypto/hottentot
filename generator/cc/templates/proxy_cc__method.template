@@ -1,90 +1,80 @@
-[[[RETURN_TYPE]]]*
-[[[CAMEL_CASE_FC_SERIVCE_NAME]]]Proxy::[[[METHOD_NAME]]]([[[ARGUMENTS]]]) {
-  /*
-   * Make request object
-   */
-  ::naeem::hottentot::runtime::Logger::GetOut() << "Making request object ..." << std::endl;
-  ::naeem::hottentot::runtime::Request request;
-  request.SetServiceId([[[SERVICE_HASH]]]);
-  request.SetMethodId([[[METHOD_HASH]]]);
-  // request.SetArgumentCount([[[ARGUMENTS]]]);
-  request.SetType(::naeem::hottentot::runtime::Request::InvokeStateless);
-  /*
-   * Serialize arguments
-   */
-  [[[ARGUMENTS_SERIALIZATION]]]
-  ::naeem::hottentot::runtime::Logger::GetOut() << "Request object is fill." << std::endl;
-  /*
-   * Connect to server
-   */
-  ::naeem::hottentot::runtime::Logger::GetOut() << "Connecting to server " << host_ << ":" << port_ << " ..." << std::endl;
-  ::naeem::hottentot::runtime::proxy::TcpClient *tcpClient = 
-    ::naeem::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_,
-                                                                                             port_);
-  tcpClient->Connect();
-  ::naeem::hottentot::runtime::Logger::GetOut() << "Connected." << std::endl;
-  /*
-   * Serialize request according to HOTP
-   */
-  ::naeem::hottentot::runtime::Protocol *protocol = 
-    new ::naeem::hottentot::runtime::ProtocolV1(tcpClient->GetRemoteSocketFD()); // TODO(kamran): Use factory.
-  uint32_t requestSerializedDataLength = 0;
-  ::naeem::hottentot::runtime::Logger::GetOut() << "Serializing request object ..." << std::endl;
-  unsigned char *requestSerializedData = protocol->SerializeRequest(request, 
-                                                                    &requestSerializedDataLength);
-  ::naeem::hottentot::runtime::Logger::GetOut() << "Request object is serialized." << std::endl;
-  /*
-   * Send request byte array
-   */
-  uint32_t sendLength = (requestSerializedDataLength > 127 ? 3 : 1) + requestSerializedDataLength;
-  unsigned char *sendData = new unsigned char[sendLength];
-  uint32_t c = 0;
-  if (requestSerializedDataLength > 127) {
-    sendData[c++] = 0x82;
-    sendData[c++] = requestSerializedDataLength / 256;
-    sendData[c++] = requestSerializedDataLength % 256;
-  } else {
-    sendData[c++] = requestSerializedDataLength;
-  }
-  for (uint32_t i = 0; i < requestSerializedDataLength; i++) {
-    sendData[c++] = requestSerializedData[i];
-  }
-  ::naeem::hottentot::runtime::Logger::GetOut() << "Writing " << sendLength << "  Bytes to socket ..." << std::endl;
-  ::naeem::hottentot::runtime::Utils::PrintArray("To Write", 
-                                                 sendData, 
-                                                 sendLength);
-  tcpClient->Write(sendData, 
-                   sendLength);
-  ::naeem::hottentot::runtime::Logger::GetOut() << "Written." << std::endl;
-  delete sendData;
-  delete requestSerializedData;
-  /*
-   * Read response from server
-   */
-  ::naeem::hottentot::runtime::Logger::GetOut() << "Waiting for response ..." << std::endl;
-  unsigned char buffer[256];
-  while (!protocol->IsResponseComplete()) {
-    int numOfReadBytes = tcpClient->Read(buffer, 256);
-    protocol->ProcessDataForResponse(buffer, numOfReadBytes);
-  }
-  /*
-   * Deserialize token
-   */
-  [[[RETURN_TYPE]]] *returnObject = new [[[RETURN_TYPE]]];
-  ::naeem::hottentot::runtime::Utils::PrintArray("Response", 
-                                                 protocol->GetResponse()->GetData(), 
-                                                 protocol->GetResponse()->GetDataLength());
-  returnObject->Deserialize(protocol->GetResponse()->GetData(), 
-                            protocol->GetResponse()->GetDataLength());
-  /*
-   * Finalization
-   */
-  tcpClient->Close();
-  delete serializedData;
-  delete protocol;
-  delete tcpClient;
-  /*
-   * Return the acquired token
-   */
-  return returnObject;
+[[[RETURN_TYPE]]]
+[[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy::[[[METHOD_NAME]]]([[[ARGUMENTS]]]) {
+[[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]] * Make request object
+[[[INDENT]]][[[INDENT]]] */
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Making request object ..." << std::endl;
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Request request;
+[[[INDENT]]][[[INDENT]]]request.SetServiceId([[[SERVICE_HASH]]]);
+[[[INDENT]]][[[INDENT]]]request.SetMethodId([[[METHOD_HASH]]]);
+[[[INDENT]]][[[INDENT]]]request.SetType(::naeem::hottentot::runtime::Request::InvokeStateless);
+[[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]] * Serialize arguments
+[[[INDENT]]][[[INDENT]]] */
+[[[INDENT]]][[[INDENT]]]uint32_t serializedDataLength = 0;
+[[[INDENT]]][[[INDENT]]]unsigned char *serializedData = 0;
+[[[ARGUMENTS_SERIALIZATION]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Request object is fill with serialized arguments." << std::endl;
+[[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]] * Connect to server
+[[[INDENT]]][[[INDENT]]] */
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Connecting to server " << host_ << ":" << port_ << " ..." << std::endl;
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::TcpClient *tcpClient = 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
+[[[INDENT]]][[[INDENT]]]tcpClient->Connect();
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Connected." << std::endl;
+[[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]] * Serialize request according to HOTP
+[[[INDENT]]][[[INDENT]]] */
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Protocol *protocol = 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]new ::naeem::hottentot::runtime::ProtocolV1(tcpClient->GetRemoteSocketFD()); // TODO(kamran): Use factory.
+[[[INDENT]]][[[INDENT]]]uint32_t requestSerializedDataLength = 0;
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Serializing request object ..." << std::endl;
+[[[INDENT]]][[[INDENT]]]unsigned char *requestSerializedData = protocol->SerializeRequest(request, &requestSerializedDataLength);
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Request object is serialized." << std::endl;
+[[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]] * Send request byte array
+[[[INDENT]]][[[INDENT]]] */
+[[[INDENT]]][[[INDENT]]]uint32_t sendLength = (requestSerializedDataLength > 127 ? 3 : 1) + requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]unsigned char *sendData = new unsigned char[sendLength];
+[[[INDENT]]][[[INDENT]]]uint32_t c = 0;
+[[[INDENT]]][[[INDENT]]]if (requestSerializedDataLength > 127) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = 0x82;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength / 256;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength % 256;
+[[[INDENT]]][[[INDENT]]]} else {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]}
+[[[INDENT]]][[[INDENT]]]for (uint32_t i = 0; i < requestSerializedDataLength; i++) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedData[i];
+[[[INDENT]]][[[INDENT]]]}
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Writing " << sendLength << "[[[INDENT]]][[[INDENT]]]Bytes to socket ..." << std::endl;
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
+[[[INDENT]]][[[INDENT]]]tcpClient->Write(sendData, 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]] sendLength);
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Written." << std::endl;
+[[[INDENT]]][[[INDENT]]]delete sendData;
+[[[INDENT]]][[[INDENT]]]delete requestSerializedData;
+[[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]] * Read response from server
+[[[INDENT]]][[[INDENT]]] */
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Waiting for response ..." << std::endl;
+[[[INDENT]]][[[INDENT]]]unsigned char buffer[256];
+[[[INDENT]]][[[INDENT]]]while (!protocol->IsResponseComplete()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]int numOfReadBytes = tcpClient->Read(buffer, 256);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]protocol->ProcessDataForResponse(buffer, numOfReadBytes);
+[[[INDENT]]][[[INDENT]]]}
+[[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]] * Response deserialization
+[[[INDENT]]][[[INDENT]]] */
+[[[RESPONSE_DESERIALIZATION]]][[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]] * Finalization
+[[[INDENT]]][[[INDENT]]] */
+[[[INDENT]]][[[INDENT]]]tcpClient->Close();
+[[[INDENT]]][[[INDENT]]]delete serializedData;
+[[[INDENT]]][[[INDENT]]]delete protocol;
+[[[INDENT]]][[[INDENT]]]delete tcpClient;
+[[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]] * Return the acquired token
+[[[INDENT]]][[[INDENT]]] */
+[[[INDENT]]][[[INDENT]]]return returnObject;
 }

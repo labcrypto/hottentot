@@ -1,6 +1,8 @@
-uint32_t serializedDataLength = 0;
-::naeem::hottentot::runtime::Logger::GetOut() << "Serializing argument [[CURRENT_ARGUMENT_NAME]] ..." << std::endl;
-unsigned char *serializedData = [[CURRENT_ARGUMENT_NAME]]->Serialize(&serializedDataLength);
-::naeem::hottentot::runtime::Logger::GetOut() << "[[CURRENT_ARGUMENT_NAME]] is serialized." << std::endl;
-request.AddArgument(serializedData, 
-                    serializedDataLength);
+[[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]] * Serialization of argument '[[[ARGUMENT_NAME]]]'
+[[[INDENT]]][[[INDENT]]] */
+[[[INDENT]]][[[INDENT]]]serializedDataLength = 0;
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Serializing argument [[[ARGUMENT_NAME]]] ..." << std::endl;
+[[[INDENT]]][[[INDENT]]]serializedData = [[[ARGUMENT_NAME]]]->Serialize(&serializedDataLength);
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "[[[ARGUMENT_NAME]]] is serialized." << std::endl;
+[[[INDENT]]][[[INDENT]]]request.AddArgument(serializedData, serializedDataLength);
