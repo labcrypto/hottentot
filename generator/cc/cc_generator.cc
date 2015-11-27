@@ -56,6 +56,9 @@ namespace naeem {
           std::string proxyCCMethodArgumentSerializationTemplate;
           std::string proxyCCResponseDeserialization;
           std::string proxyHeaderTemplate;
+          std::string serviceInterfaceTemplate;
+          std::string structHeaderTemplate;
+          std::string structCCTemplate;
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_builder_cc.template", proxyBuilderCCTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_builder_header.template", proxyBuilderHeaderTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc.template", proxyCCTemplate);
@@ -63,6 +66,9 @@ namespace naeem {
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method_argument_serialization.template", proxyCCMethodArgumentSerializationTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__response_deserialization.template", proxyCCResponseDeserialization);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_header.template", proxyHeaderTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_interface.template", serviceInterfaceTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_header.template", structHeaderTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_cc.template", structCCTemplate);
           std::map<std::string, std::string> templates;
           templates.insert(std::pair<std::string, std::string>("proxy_builder_cc",proxyBuilderCCTemplate));
           templates.insert(std::pair<std::string, std::string>("proxy_builder_header",proxyBuilderHeaderTemplate));
@@ -71,6 +77,9 @@ namespace naeem {
           templates.insert(std::pair<std::string, std::string>("proxy_cc__method_argument_serialization",proxyCCMethodArgumentSerializationTemplate));
           templates.insert(std::pair<std::string, std::string>("proxy_cc__response_deserialization",proxyCCResponseDeserialization));
           templates.insert(std::pair<std::string, std::string>("proxy_header",proxyHeaderTemplate));
+          templates.insert(std::pair<std::string, std::string>("service_interface",serviceInterfaceTemplate));
+          templates.insert(std::pair<std::string, std::string>("struct_header",structHeaderTemplate));
+          templates.insert(std::pair<std::string, std::string>("struct_cc",structCCTemplate));
           /*
            * Creating needed directories
            */
@@ -80,11 +89,24 @@ namespace naeem {
            * Proceed to generate files
            */
           for (uint32_t moduleCounter = 0; 
-               moduleCounter < hot->modules_.size(); 
+               moduleCounter < hot->modules_.size();
                moduleCounter++) {
-            for (uint32_t serviceCounter = 0; 
+            for (uint32_t structCounter = 0; 
+                 structCounter < hot->modules_[moduleCounter]->structs_.size();
+                 structCounter++) {
+              GenerateStructHeader(hot->modules_[moduleCounter]->structs_[structCounter],
+                                   generationConfig,
+                                   templates);
+              GenerateStructCC(hot->modules_[moduleCounter]->structs_[structCounter],
+                               generationConfig,
+                               templates);
+            }
+            for (uint32_t serviceCounter = 0;
                  serviceCounter < hot->modules_[moduleCounter]->services_.size();
                  serviceCounter++) {
+              GenerateServiceInterface(hot->modules_[moduleCounter]->services_[serviceCounter],
+                                       generationConfig,
+                                       templates);
               GenerateProxyHeader(hot->modules_[moduleCounter]->services_[serviceCounter],
                                   generationConfig,
                                   templates);

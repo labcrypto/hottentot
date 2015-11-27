@@ -21,54 +21,35 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__STRUCT_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__DS__STRUCT_H_
+#include <iostream>
+#include <fstream>
 
-#include <map>
+#include "cc_generator.h"
+#include "type_helper.h"
 
- #include "declaration.h"
+#include "../ds/hot.h"
+#include "../ds/service.h"
+#include "../ds/method.h"
+#include "../ds/module.h"
+#include "../ds/argument.h"
+#include "../ds/struct.h"
+#include "../ds/declaration.h"
+
+#include "../common/os.h"
+#include "../common/string_helper.h"
+#include "../common/datetime_helper.h"
 
 
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace java {
-        class JavaGenerator;
-      };
       namespace cc {
-        class CCGenerator;
-      };
-      namespace ds {
-        class Module;
-        class Struct {
-          friend class Hot;
-          friend class ::naeem::hottentot::generator::cc::CCGenerator;
-          friend class ::naeem::hottentot::generator::java::JavaGenerator;
-        public:
-          public:
-          Struct(Module *module) 
-            :  module_(module) {
-          }
-          virtual ~Struct() {}
-        public:
-          inline virtual void AddDeclaration(Declaration *declaration) {
-            declarations_.insert(std::pair<uint32_t, Declaration*>(declaration->GetOrd(), declaration));
-          }
-
-          inline virtual std::string GetName() const {
-            return name_;
-          }
-          inline virtual void SetName(std::string name) {
-            name_ = name;
-          }
-        private:
-          std::string name_;
-          std::map<uint32_t, Declaration*> declarations_;
-          Module *module_;
-        };
+        void
+        CCGenerator::GenerateStructCC(::naeem::hottentot::generator::ds::Struct *structt,
+                                        ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+                                        std::map<std::string, std::string> &templates) {
+        }
       }
     }
   }
 }
-
-#endif

@@ -43,6 +43,7 @@ namespace naeem {
       namespace ds {
         class Hot;
         class Service;
+        class Struct;
         class Method;
         class Module;
         class Argument;

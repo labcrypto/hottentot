@@ -130,7 +130,7 @@ items:          items item
 
 item:           {
                   if (currentStruct == NULL) {
-                    currentStruct = new ::naeem::hottentot::generator::ds::Struct();
+                    currentStruct = new ::naeem::hottentot::generator::ds::Struct(currentModule);
                     // fprintf(stdout, ">>> GENERATOR: Struct object created.\n");
                     currentModule->AddStruct(currentStruct);
                     // fprintf(stdout, ">>> GENERATOR: Struct object has been added to model.\n");
