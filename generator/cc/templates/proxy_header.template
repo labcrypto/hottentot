@@ -3,7 +3,7 @@
  * Date: [[[GENERATION_DATE]]]
  * Name: [[[FILENAME]]]
  * Description:
- *   This file contains the definitions of the proxy class.
+ *   This file contains definition of the proxy class.
  ***************************************************************/
 
 #ifndef [[[HEADER_GUARD]]]
@@ -29,6 +29,7 @@ namespace proxy {
 [[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]][[[METHOD_DEFS]]]
 [[[INDENT]]]};
+}
 [[[NAMESPACES_END]]]
 
 #endif
