@@ -26,10 +26,10 @@ package [%BASE_PACKAGE_NAME%];
 import ir.ntnaeem.hottentot.runtime.RequestHandler;
 
 public abstract class Abstract[%SERVICE_NAME%]Service implements [%SERVICE_NAME%]Service {	
-	public RequestHandler makeRequestHandler() {
-		return new [%SERVICE_NAME%]RequestHandler(this);
-	}
-	public int getServiceId() {
-        	return [%SERVICE_ID%];
-	}
+[%INDENT%]public RequestHandler makeRequestHandler() {
+[%INDENT%][%INDENT%]return new [%SERVICE_NAME%]RequestHandler(this);
+[%INDENT%]}
+[%INDENT%]public long getServiceId() {
+[%INDENT%][%INDENT%]return [%SERVICE_ID%]L;
+[%INDENT%]}
 }
