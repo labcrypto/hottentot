@@ -78,13 +78,32 @@ namespace naeem {
           namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
           namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
           std::string fields = "";
+          std::string gettersAndSetters = "";
           for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
                it != structt->declarations_.end();
                ++it) {
             fields += indent + indent +  TypeHelper::GetCCType(it->second->GetType());
             fields += (TypeHelper::IsUDT(it->second->GetType()) ? "*" : "");
-            fields += " " + it->second->GetVariable() + "_";
+            fields += " " + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
             fields += ";\r\n";
+            std::string getterAndSetterTemplate = templates["struct_header__getter_and_setter"];
+            getterAndSetterTemplate = 
+              ::naeem::hottentot::generator::common::StringHelper::Replace(getterAndSetterTemplate,
+                                                                           "[[[INDENT]]]",
+                                                                           indent);
+            getterAndSetterTemplate = 
+              ::naeem::hottentot::generator::common::StringHelper::Replace(getterAndSetterTemplate,
+                                                                           "[[[TYPE]]]",
+                                                                           TypeHelper::GetCCType(it->second->GetType()) + (TypeHelper::IsUDT(it->second->GetType()) ? "*" : ""));
+            getterAndSetterTemplate = 
+              ::naeem::hottentot::generator::common::StringHelper::Replace(getterAndSetterTemplate,
+                                                                           "[[[CAMEL_CASE_FC_FIELD]]]",
+                                                                           ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(it->second->GetVariable()));
+            getterAndSetterTemplate = 
+              ::naeem::hottentot::generator::common::StringHelper::Replace(getterAndSetterTemplate,
+                                                                           "[[[CAMEL_CASE_FS_FIELD]]]",
+                                                                           ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()));
+              gettersAndSetters += getterAndSetterTemplate + "\r\n";
           }
           /*
            * Filling templates with real values
@@ -94,6 +113,7 @@ namespace naeem {
           params.insert(std::pair<std::string, std::string>("FILENAME", structNameSnakeCase + ".h"));
           params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
           params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
+          params.insert(std::pair<std::string, std::string>("GETTERS_AND_SETTERS", gettersAndSetters));
           params.insert(std::pair<std::string, std::string>("HEADER_GUARD", "_" +
             ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
               packageTokens) + "__" + structNameScreamingSnakeCase + "_H_"));

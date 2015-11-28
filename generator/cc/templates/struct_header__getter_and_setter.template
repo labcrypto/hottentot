@@ -1,0 +1,6 @@
+[[[INDENT]]][[[INDENT]]]inline [[[TYPE]]] Get[[[CAMEL_CASE_FC_FIELD]]]() const {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]return [[[CAMEL_CASE_FS_FIELD]]]_;
+[[[INDENT]]][[[INDENT]]]}
+[[[INDENT]]][[[INDENT]]]inline void Set[[[CAMEL_CASE_FC_FIELD]]]([[[TYPE]]] [[[CAMEL_CASE_FS_FIELD]]]) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[CAMEL_CASE_FS_FIELD]]]_ = [[[CAMEL_CASE_FS_FIELD]]];
+[[[INDENT]]][[[INDENT]]]}
