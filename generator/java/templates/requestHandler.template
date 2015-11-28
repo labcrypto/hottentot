@@ -40,7 +40,7 @@ public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
     }
     @Override
     public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
-        byte methodId = request.getMethodId();
+        long methodId = request.getMethodId();
         [%SERVICE_NAME%]Service [%SERVICE_NAME_LOWERCASE%]Impl = (Abstract[%SERVICE_NAME%]Service) service;
 
         [%METHOD_CONDITIONS%]

@@ -69,7 +69,7 @@ namespace naeem {
           std::string serviceProxyTmpStr_;
           std::string outDir_;
           static const uint32_t TAB_SPACE_NUMBER = 4;
-          std::string TAB_STR_;
+          std::string indent_;
         };
       }
     }

@@ -23,17 +23,13 @@
 
 package [%BASE_PACKAGE_NAME%];
 
-import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
-import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
-import static java.lang.StrictMath.pow;
+public class [%SERVICE_NAME%]ServiceProxyBuilder {
 
-public class [%STRUCT_NAME%] {
-[%MEMBERS%]	
-    public byte[] serialize() {
-[%SERIALIZE_METHOD_BODY%]
-    }
-    
-    public void deserialize(byte[] serializedByteArray) {
-[%DESERIALIZE_METHOD_BODY%]
-    }
+[%INDENT%]public static [%SERVICE_NAME%]Service create(String host, int port) {
+[%INDENT%][%INDENT%]return new [%SERVICE_NAME%]ServiceProxy(host,port);
+[%INDENT%]}
+
+[%INDENT%]public static void destroy() {
+[%INDENT%][%INDENT%]//TODO
+[%INDENT%]}
 }

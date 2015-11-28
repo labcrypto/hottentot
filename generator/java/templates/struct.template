@@ -29,11 +29,11 @@ import static java.lang.StrictMath.pow;
 
 public class [%STRUCT_NAME%] {
 [%MEMBERS%]	
-    public byte[] serialize() {
+  public byte[] serialize() {
 [%SERIALIZE_METHOD_BODY%]
-    }
+  }
     
-    public void deserialize(byte[] serializedByteArray) {
+  public void deserialize(byte[] serializedByteArray) {
 [%DESERIALIZE_METHOD_BODY%]
-    }
+  }
 }

@@ -13,7 +13,7 @@
  *  copies or substantial portions of the Software.
  *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTAB_STR_ILITY,
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANindent_ILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
@@ -68,10 +68,10 @@ namespace naeem {
                     outDir_ = generationConfig.outDir_;
                     if(generationConfig.IsSpacesUsedInsteadOfTabsForIndentation()) {
                         for (int i = 0; i < generationConfig.GetNumberOfSpacesUsedForIndentation() ; i++) {
-                            TAB_STR_ += " ";
+                            indent_ += " ";
                         }
                     }else{
-                        TAB_STR_ = "\t";
+                        indent_ = "\t";
                     }
                 }
 
@@ -156,6 +156,7 @@ namespace naeem {
                         std::string replacableStructTmpStr = structTmpStr;
 
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableStructTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableStructTmpStr , "[%INDENT%]" , indent_ , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableStructTmpStr , "[%STRUCT_NAME%]" , pStruct->name_ , 1);
                         // while (replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
                         //     replacableStructTmpStr.replace(replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
@@ -176,21 +177,21 @@ namespace naeem {
                              ++it) {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                             declarationJavaType = ConvertType(declarationPtr->type_);
-                            capitalizedDeclarationJavaType  = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationJavaType);
+                            capitalizedDeclarationJavaType  = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
                             std::string declarationName = declarationPtr->variable_;
-                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_);
+                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
                             declarationStr +=
-                                    TAB_STR_ + "private " + declarationJavaType + " " + declarationName + ";\n";
-                            getterSetterStr += TAB_STR_ + "public void set" + capitalizedDeclarationName + "(" +
+                                    indent_ + "private " + declarationJavaType + " " + declarationName + ";\n";
+                            getterSetterStr += indent_ + "public void set" + capitalizedDeclarationName + "(" +
                                                declarationJavaType + " " + declarationName + ") {\n";
                             getterSetterStr +=
-                                    TAB_STR_ + TAB_STR_ + "this." + declarationName + " = " + declarationName + ";\n";
-                            getterSetterStr += TAB_STR_ + "}\n";
+                                    indent_ + indent_ + "this." + declarationName + " = " + declarationName + ";\n";
+                            getterSetterStr += indent_ + "}\n";
                             getterSetterStr +=
-                                    TAB_STR_ + "public " + declarationJavaType + " get" + capitalizedDeclarationName +
+                                    indent_ + "public " + declarationJavaType + " get" + capitalizedDeclarationName +
                                     "() {\n";
-                            getterSetterStr += TAB_STR_ + TAB_STR_ + "return " + declarationPtr->variable_ + ";\n";
-                            getterSetterStr += TAB_STR_ + "}\n";
+                            getterSetterStr += indent_ + indent_ + "return " + declarationPtr->variable_ + ";\n";
+                            getterSetterStr += indent_ + "}\n";
                         }
                         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%MEMBERS%]"), 11,
                                                        declarationStr + getterSetterStr);
@@ -202,21 +203,21 @@ namespace naeem {
                              it != pStruct->declarations_.end();
                              ++it) {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
-                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_);
-                            serializeMethodStr += TAB_STR_ + TAB_STR_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
+                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
+                            serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
                             declarationJavaType = ConvertType(declarationPtr->type_);
-                            capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationJavaType);
-                            std::string capitalizedDeclarationType  = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->type_);
+                            capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
+                            std::string capitalizedDeclarationType  = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->type_);
                             serializeMethodStr += capitalizedDeclarationType + "(";
                             serializeMethodStr += declarationPtr->variable_ + ");\n";
                         }
-                        serializeMethodStr += TAB_STR_ + TAB_STR_ + "byte[] output = new byte[";
+                        serializeMethodStr += indent_ + indent_ + "byte[] output = new byte[";
                         for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
                              = pStruct->declarations_.begin();
                              it != pStruct->declarations_.end();
                              ++it) {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
-                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_.c_str());
+                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_.c_str());
                             serializeMethodStr += "serialized" + capitalizedDeclarationName + ".length";
                             if (it->first == pStruct->declarations_.size()) {
                                 serializeMethodStr += "];\n";
@@ -225,23 +226,23 @@ namespace naeem {
                             }
                         }
 
-                        serializeMethodStr += TAB_STR_ + TAB_STR_ + "int counter = 0;\n";
-                        serializeMethodStr += TAB_STR_ + TAB_STR_ + "//use a loop for every property\n";
+                        serializeMethodStr += indent_ + indent_ + "int counter = 0;\n";
+                        serializeMethodStr += indent_ + indent_ + "//use a loop for every property\n";
                         for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
                              = pStruct->declarations_.begin();
                              it != pStruct->declarations_.end();
                              ++it) {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                             declarationJavaType = ConvertType(declarationPtr->type_);
-                            capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationJavaType);
-                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_);
-                            serializeMethodStr += TAB_STR_ + TAB_STR_ + "for (int i = 0; i < serialized" +
+                            capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
+                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
+                            serializeMethodStr += indent_ + indent_ + "for (int i = 0; i < serialized" +
                                                   capitalizedDeclarationName + ".length; i++) {\n";
-                            serializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "output[counter++] = serialized" +
+                            serializeMethodStr += indent_ + indent_ + indent_ + "output[counter++] = serialized" +
                                                   capitalizedDeclarationName + "[i];\n";
-                            serializeMethodStr += TAB_STR_ + TAB_STR_ + "}\n";
+                            serializeMethodStr += indent_ + indent_ + "}\n";
                         }
-                        serializeMethodStr += TAB_STR_ + TAB_STR_ + "return output;";
+                        serializeMethodStr += indent_ + indent_ + "return output;";
                         //
                         replacableStructTmpStr.replace(replacableStructTmpStr.find("[%SERIALIZE_METHOD_BODY%]"), 25,
                                                        serializeMethodStr);
@@ -262,43 +263,43 @@ namespace naeem {
 
                         // deserialize method
                         std::string deserializeMethodStr;
-                        deserializeMethodStr += TAB_STR_ + TAB_STR_ + "int counter = 0;\n";
-                        deserializeMethodStr += TAB_STR_ + TAB_STR_ + "int dataLength = 0;\n";
-                        deserializeMethodStr += TAB_STR_ + TAB_STR_ + "int numbersOfBytesForDataLength;\n";
-                        deserializeMethodStr += TAB_STR_ + TAB_STR_ + "//do for every property\n";
+                        deserializeMethodStr += indent_ + indent_ + "int counter = 0;\n";
+                        deserializeMethodStr += indent_ + indent_ + "int dataLength = 0;\n";
+                        deserializeMethodStr += indent_ + indent_ + "int numbersOfBytesForDataLength;\n";
+                        deserializeMethodStr += indent_ + indent_ + "//do for every property\n";
                         for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
                              = pStruct->declarations_.begin();
                              it != pStruct->declarations_.end();
                              ++it) {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                             declarationJavaType = ConvertType(declarationPtr->type_);
-                            std::string capitalizedDeclarationType = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->type_);
-                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationPtr->variable_);
-                            deserializeMethodStr += TAB_STR_ + TAB_STR_ + "//" + declarationPtr->variable_ + " : " + declarationJavaType + "\n";
+                            std::string capitalizedDeclarationType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->type_);
+                            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
+                            deserializeMethodStr += indent_ + indent_ + "//" + declarationPtr->variable_ + " : " + declarationJavaType + "\n";
                             if(declarationJavaType.compare("String") == 0) {
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "dataLength = 0;\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "if(serializedByteArray[counter] < 0x80){\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "dataLength = serializedByteArray[counter++];\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "}else{\n";             
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "}\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "}\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[dataLength];\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "System.arraycopy(serializedByteArray,counter," + declarationPtr->variable_.c_str() + "ByteArray,0,dataLength);\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "counter += dataLength;\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
+                                deserializeMethodStr += indent_ + indent_ + "dataLength = 0;\n";
+                                deserializeMethodStr += indent_ + indent_ + "if(serializedByteArray[counter] < 0x80){\n";
+                                deserializeMethodStr += indent_ + indent_ + indent_ + "dataLength = serializedByteArray[counter++];\n";
+                                deserializeMethodStr += indent_ + indent_ + "}else{\n";             
+                                deserializeMethodStr += indent_ + indent_ + indent_ + "numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;\n";
+                                deserializeMethodStr += indent_ + indent_ + indent_ + "for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){\n";
+                                deserializeMethodStr += indent_ + indent_ + indent_ + indent_ + "dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];\n";
+                                deserializeMethodStr += indent_ + indent_ + indent_ + "}\n";
+                                deserializeMethodStr += indent_ + indent_ + "}\n";
+                                deserializeMethodStr += indent_ + indent_ + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[dataLength];\n";
+                                deserializeMethodStr += indent_ + indent_ + "System.arraycopy(serializedByteArray,counter," + declarationPtr->variable_.c_str() + "ByteArray,0,dataLength);\n";
+                                deserializeMethodStr += indent_ + indent_ + "counter += dataLength;\n";
+                                deserializeMethodStr += indent_ + indent_ + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
                             }else {
                                 uint32_t dataLength = GetTypeLength(declarationPtr->type_.c_str());
-                                capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeUpperCase(declarationJavaType);
+                                capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
                                 std::stringstream dataLengthStr;
                                 dataLengthStr << dataLength;
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[" + dataLengthStr.str() + "];";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "for(int i = 0 ; i < " + dataLengthStr.str() + " ; i++){\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + declarationPtr->variable_.c_str() + "ByteArray[i] = serializedByteArray[counter++];\n";            
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "}\n";
-                                deserializeMethodStr += TAB_STR_ + TAB_STR_ + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
+                                deserializeMethodStr += indent_ + indent_ + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[" + dataLengthStr.str() + "];\n";
+                                deserializeMethodStr += indent_ + indent_ + "for(int i = 0 ; i < " + dataLengthStr.str() + " ; i++){\n";
+                                deserializeMethodStr += indent_ + indent_ + indent_ + declarationPtr->variable_.c_str() + "ByteArray[i] = serializedByteArray[counter++];\n";            
+                                deserializeMethodStr += indent_ + indent_ + "}\n";
+                                deserializeMethodStr += indent_ + indent_ + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
                             }
                         }
                         
@@ -388,7 +389,7 @@ namespace naeem {
                         ::naeem::hottentot::generator::ds::Method *pMethod;
                         for (int i = 0; i < pService->methods_.size(); i++) {
                             pMethod = pService->methods_.at(i);
-                            serviceMethodsStr += TAB_STR_ + "" + pMethod->returnType_ + " " + pMethod->name_ + "(";
+                            serviceMethodsStr += indent_ + "" + pMethod->returnType_ + " " + pMethod->name_ + "(";
                             //loop on methods arguments
                             ::naeem::hottentot::generator::ds::Argument *pArg;
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
@@ -476,31 +477,31 @@ namespace naeem {
                             ssID << pMethod->GetHash();
                             methodConditionStr += "if(methodId == " + ssID.str() + "){\n";
                             methodConditionStr +=
-                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + "List <Argument> args = request.getArgs();\n";
+                                    indent_ + indent_ + indent_ + "List <Argument> args = request.getArgs();\n";
                             ::naeem::hottentot::generator::ds::Argument *pArg;
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
                                 pArg = pMethod->arguments_.at(i);
                                 std::stringstream ssI;
                                 ssI << i;
                                 methodConditionStr +=
-                                        TAB_STR_ + TAB_STR_ + TAB_STR_ + "Argument arg" + ssI.str() + " = args.get(" +
+                                        indent_ + indent_ + indent_ + "Argument arg" + ssI.str() + " = args.get(" +
                                         ssI.str() + ");\n";
-                                methodConditionStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "byte[] serialized" + pArg->type_;
+                                methodConditionStr += indent_ + indent_ + indent_ + "byte[] serialized" + pArg->type_;
                                 methodConditionStr += " = arg" + ssI.str() + ".getData();\n";
                                 methodConditionStr +=
-                                        TAB_STR_ + TAB_STR_ + TAB_STR_ + pArg->type_ + " " + pArg->variable_ + " = new " +
+                                        indent_ + indent_ + indent_ + pArg->type_ + " " + pArg->variable_ + " = new " +
                                         pArg->type_ + "();\n";
                                 methodConditionStr +=
-                                        TAB_STR_ + TAB_STR_ + TAB_STR_ + pArg->variable_ + ".deserialize(serialized" +
+                                        indent_ + indent_ + indent_ + pArg->variable_ + ".deserialize(serialized" +
                                         pArg->type_ + ");\n";
                             }
                             methodConditionStr +=
-                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + pMethod->returnType_ + " " + lowerCaseReturnType +
+                                    indent_ + indent_ + indent_ + pMethod->returnType_ + " " + lowerCaseReturnType +
                                     " = null;\n";
-                            methodConditionStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "Response response = new Response();\n";
-                            //methodConditionStr += TAB_STR_ + TAB_STR_ + "try{\n";
+                            methodConditionStr += indent_ + indent_ + indent_ + "Response response = new Response();\n";
+                            //methodConditionStr += indent_ + indent_ + "try{\n";
                             methodConditionStr +=
-                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + lowerCaseReturnType + " = " + lowerCaseServiceName +
+                                    indent_ + indent_ + indent_ + lowerCaseReturnType + " = " + lowerCaseServiceName +
                                     "Impl." + pMethod->name_ + "(";
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
                                 pArg = pMethod->arguments_.at(i);
@@ -511,16 +512,16 @@ namespace naeem {
                             }
                             methodConditionStr += ");\n";
                             methodConditionStr +=
-                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + "byte[] serialized" + pMethod->returnType_ + " = " +
+                                    indent_ + indent_ + indent_ + "byte[] serialized" + pMethod->returnType_ + " = " +
                                     lowerCaseReturnType + ".serialize();\n";
-                            methodConditionStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "response.setStatusCode((byte) 100);\n";
+                            methodConditionStr += indent_ + indent_ + indent_ + "response.setStatusCode((byte) 100);\n";
                             methodConditionStr +=
-                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + "response.setData(serialized" + pMethod->returnType_ +
+                                    indent_ + indent_ + indent_ + "response.setData(serialized" + pMethod->returnType_ +
                                     ");\n";
-                            methodConditionStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "response.setLength(serialized" +
+                            methodConditionStr += indent_ + indent_ + indent_ + "response.setLength(serialized" +
                                                   pMethod->returnType_ + ".length + 1);\n";
-                            methodConditionStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "return response;\n";
-                            methodConditionStr += TAB_STR_ + TAB_STR_ + "}";
+                            methodConditionStr += indent_ + indent_ + indent_ + "return response;\n";
+                            methodConditionStr += indent_ + indent_ + "}";
 
                         }
                         replacableRequestHandlerTmpStr.replace(
@@ -559,24 +560,24 @@ namespace naeem {
                             }
                             methodsStr += ") { \n";
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
-                                methodsStr += TAB_STR_ + TAB_STR_ + "//serialize " + pArg->variable_ + "\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + "byte[] serialized" + pArg->type_ + " = " +
+                                methodsStr += indent_ + indent_ + "//serialize " + pArg->variable_ + "\n";
+                                methodsStr += indent_ + indent_ + "byte[] serialized" + pArg->type_ + " = " +
                                               pArg->variable_ + ".serialize();\n";
                             }
                             methodsStr += "\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "//make request\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "Request request = new Request();\n";
+                            methodsStr += indent_ + indent_ + "//make request\n";
+                            methodsStr += indent_ + indent_ + "Request request = new Request();\n";
                             std::stringstream serviceId;
                             serviceId << pService->GetHash();
-                            methodsStr += TAB_STR_ + TAB_STR_ + "request.setServiceId(" + serviceId.str() + ");\n";
+                            methodsStr += indent_ + indent_ + "request.setServiceId(" + serviceId.str() + ");\n";
                             std::stringstream methodId;
                             methodId << pMethod->GetHash();
-                            methodsStr += TAB_STR_ + TAB_STR_ + "request.setMethodId(" + methodId.str() + ");\n";
+                            methodsStr += indent_ + indent_ + "request.setMethodId(" + methodId.str() + ");\n";
                             std::stringstream argSize;
                             argSize << pMethod->arguments_.size();
                             methodsStr +=
-                                    TAB_STR_ + TAB_STR_ + "request.setArgumentCount((byte) " + argSize.str() + ");\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "request.setType(Request.RequestType.";
+                                    indent_ + indent_ + "request.setArgumentCount((byte) " + argSize.str() + ");\n";
+                            methodsStr += indent_ + indent_ + "request.setType(Request.RequestType.";
 
                             if (pService->serviceType_ == 0) {
                                 methodsStr += "InvokeStateless";
@@ -588,99 +589,99 @@ namespace naeem {
                                 std::stringstream ssI;
                                 pArg = pMethod->arguments_.at(i);
                                 ssI << i;
-                                methodsStr += TAB_STR_ + TAB_STR_ + "Argument arg" + ssI.str() + " = new Argument();\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + "arg" + ssI.str() + ".setDataLength(" +
+                                methodsStr += indent_ + indent_ + "Argument arg" + ssI.str() + " = new Argument();\n";
+                                methodsStr += indent_ + indent_ + "arg" + ssI.str() + ".setDataLength(" +
                                               pArg->variable_.c_str() + ".serialize().length);\n";
                                 methodsStr +=
-                                        TAB_STR_ + TAB_STR_ + "arg" + ssI.str() + ".setData(" + pArg->variable_.c_str() +
+                                        indent_ + indent_ + "arg" + ssI.str() + ".setData(" + pArg->variable_.c_str() +
                                         ".serialize());\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + "request.addArgument(arg" + ssI.str() + ");\n";
+                                methodsStr += indent_ + indent_ + "request.addArgument(arg" + ssI.str() + ");\n";
                             }
                             //calculate request length
-                            methodsStr += TAB_STR_ + TAB_STR_ + "int dataLength = 0;\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "//calculate data length for every argument\n";
+                            methodsStr += indent_ + indent_ + "int dataLength = 0;\n";
+                            methodsStr += indent_ + indent_ + "//calculate data length for every argument\n";
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
                                 pArg = pMethod->arguments_.at(i);
                                 std::string argDataLengthVarName = pArg->variable_ + "DataLength";
                                 std::string argDataLengthByteArrayLengthVarName =
                                         pArg->variable_ + "DataLengthByteArrayLength";
-                                methodsStr += TAB_STR_ + TAB_STR_ + "//calulate " + argDataLengthVarName + "\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + "int " + argDataLengthVarName + "= serialized" +
+                                methodsStr += indent_ + indent_ + "//calulate " + argDataLengthVarName + "\n";
+                                methodsStr += indent_ + indent_ + "int " + argDataLengthVarName + "= serialized" +
                                               pArg->type_ + ".length;\n";
                                 methodsStr +=
-                                        TAB_STR_ + TAB_STR_ + "int " + argDataLengthByteArrayLengthVarName + " = 1;\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + "if (" + argDataLengthVarName + " >= 0x80) {\n";
+                                        indent_ + indent_ + "int " + argDataLengthByteArrayLengthVarName + " = 1;\n";
+                                methodsStr += indent_ + indent_ + "if (" + argDataLengthVarName + " >= 0x80) {\n";
                                 methodsStr +=
-                                        TAB_STR_ + TAB_STR_ + TAB_STR_ + "if (" + argDataLengthVarName + " <= 0xff) {\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "//ex 0x81 0xff\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "" +
+                                        indent_ + indent_ + indent_ + "if (" + argDataLengthVarName + " <= 0xff) {\n";
+                                methodsStr += indent_ + indent_ + indent_ + indent_ + "//ex 0x81 0xff\n";
+                                methodsStr += indent_ + indent_ + indent_ + indent_ + "" +
                                               argDataLengthByteArrayLengthVarName + " = 2;\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "} else if (" + argDataLengthVarName +
+                                methodsStr += indent_ + indent_ + indent_ + "} else if (" + argDataLengthVarName +
                                               " <= 0xffff) {\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "//ex 0x82 0xff 0xff\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "" +
+                                methodsStr += indent_ + indent_ + indent_ + indent_ + "//ex 0x82 0xff 0xff\n";
+                                methodsStr += indent_ + indent_ + indent_ + indent_ + "" +
                                               argDataLengthByteArrayLengthVarName + " = 3;\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "} else if (" + argDataLengthVarName +
+                                methodsStr += indent_ + indent_ + indent_ + "} else if (" + argDataLengthVarName +
                                               " <= 0xffffff) {\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "//ex 0x83 0xff 0xff 0xff\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "" +
+                                methodsStr += indent_ + indent_ + indent_ + indent_ + "//ex 0x83 0xff 0xff 0xff\n";
+                                methodsStr += indent_ + indent_ + indent_ + indent_ + "" +
                                               argDataLengthByteArrayLengthVarName + " = 4;\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "}\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + "}\n";
-                                methodsStr += TAB_STR_ + TAB_STR_ + "dataLength += " + argDataLengthVarName + " + " +
+                                methodsStr += indent_ + indent_ + indent_ + "}\n";
+                                methodsStr += indent_ + indent_ + "}\n";
+                                methodsStr += indent_ + indent_ + "dataLength += " + argDataLengthVarName + " + " +
                                               argDataLengthByteArrayLengthVarName + ";\n";
                             }
-                            methodsStr += TAB_STR_ + TAB_STR_ + "//\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "request.setLength(4 + dataLength);\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "//connect to server\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "TcpClient tcpClient = TcpClientFactory.create();\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "try{\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "tcpClient.connect(host, port);\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "} catch (TcpClientConnectException e) {\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "throw new HottentotRuntimeException(e);\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "}\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "//serialize request according to HTNP\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "Protocol protocol = ProtocolFactory.create();\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ +
+                            methodsStr += indent_ + indent_ + "//\n";
+                            methodsStr += indent_ + indent_ + "request.setLength(4 + dataLength);\n";
+                            methodsStr += indent_ + indent_ + "//connect to server\n";
+                            methodsStr += indent_ + indent_ + "TcpClient tcpClient = TcpClientFactory.create();\n";
+                            methodsStr += indent_ + indent_ + "try{\n";
+                            methodsStr += indent_ + indent_ + indent_ + "tcpClient.connect(host, port);\n";
+                            methodsStr += indent_ + indent_ + "} catch (TcpClientConnectException e) {\n";
+                            methodsStr += indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
+                            methodsStr += indent_ + indent_ + "}\n";
+                            methodsStr += indent_ + indent_ + "//serialize request according to HTNP\n";
+                            methodsStr += indent_ + indent_ + "Protocol protocol = ProtocolFactory.create();\n";
+                            methodsStr += indent_ + indent_ +
                                           "byte[] serializedRequest = protocol.serializeRequest(request);\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "//send request\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "try {\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "tcpClient.write(serializedRequest);\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "} catch (TcpClientWriteException e) {\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "throw new HottentotRuntimeException(e);\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "}\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "//read response from server\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "byte[] buffer = new byte[256];\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "while (!protocol.IsResponseComplete()) {\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "byte[] dataChunkRead;\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "try {\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "dataChunkRead = tcpClient.read();\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "} catch (TcpClientReadException e) {\n";
+                            methodsStr += indent_ + indent_ + "//send request\n";
+                            methodsStr += indent_ + indent_ + "try {\n";
+                            methodsStr += indent_ + indent_ + indent_ + "tcpClient.write(serializedRequest);\n";
+                            methodsStr += indent_ + indent_ + "} catch (TcpClientWriteException e) {\n";
+                            methodsStr += indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
+                            methodsStr += indent_ + indent_ + "}\n";
+                            methodsStr += indent_ + indent_ + "//read response from server\n";
+                            methodsStr += indent_ + indent_ + "byte[] buffer = new byte[256];\n";
+                            methodsStr += indent_ + indent_ + "while (!protocol.IsResponseComplete()) {\n";
+                            methodsStr += indent_ + indent_ + indent_ + "byte[] dataChunkRead;\n";
+                            methodsStr += indent_ + indent_ + indent_ + "try {\n";
+                            methodsStr += indent_ + indent_ + indent_ + indent_ + "dataChunkRead = tcpClient.read();\n";
+                            methodsStr += indent_ + indent_ + indent_ + "} catch (TcpClientReadException e) {\n";
                             methodsStr +=
-                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + TAB_STR_ + "throw new HottentotRuntimeException(e);\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "}\n";
+                                    indent_ + indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
+                            methodsStr += indent_ + indent_ + indent_ + "}\n";
                             methodsStr +=
-                                    TAB_STR_ + TAB_STR_ + TAB_STR_ + "protocol.processDataForResponse(dataChunkRead);\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "}\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "//deserialize token part of response\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "Response response = protocol.getResponse();\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "//close everything\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "//deserialize " + pMethod->returnType_ +
+                                    indent_ + indent_ + indent_ + "protocol.processDataForResponse(dataChunkRead);\n";
+                            methodsStr += indent_ + indent_ + "}\n";
+                            methodsStr += indent_ + indent_ + "//deserialize token part of response\n";
+                            methodsStr += indent_ + indent_ + "Response response = protocol.getResponse();\n";
+                            methodsStr += indent_ + indent_ + "//close everything\n";
+                            methodsStr += indent_ + indent_ + "//deserialize " + pMethod->returnType_ +
                                           "part from response\n";
                             std::string lowerCaseReturnType = pMethod->returnType_;
                             lowerCaseReturnType[0] += 32;
-                            methodsStr += TAB_STR_ + TAB_STR_ + "" + pMethod->returnType_ + " " + lowerCaseReturnType +
+                            methodsStr += indent_ + indent_ + "" + pMethod->returnType_ + " " + lowerCaseReturnType +
                                           "= null;\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "if (response.getStatusCode() == -1) {\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "//\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "} else {\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "" + lowerCaseReturnType + "= new " +
+                            methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
+                            methodsStr += indent_ + indent_ + indent_ + "//\n";
+                            methodsStr += indent_ + indent_ + "} else {\n";
+                            methodsStr += indent_ + indent_ + indent_ + "" + lowerCaseReturnType + "= new " +
                                           pMethod->returnType_ + "();\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + TAB_STR_ + "" + lowerCaseReturnType +
+                            methodsStr += indent_ + indent_ + indent_ + "" + lowerCaseReturnType +
                                           ".deserialize(response.getData());\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "}\n";
-                            methodsStr += TAB_STR_ + TAB_STR_ + "return " + lowerCaseReturnType + ";\n";
-                            methodsStr += TAB_STR_ + "}\n";
+                            methodsStr += indent_ + indent_ + "}\n";
+                            methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
+                            methodsStr += indent_ + "}\n";
                         }
                         replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%METHODS%]"), 11,
                                                              methodsStr);
