@@ -22,15 +22,41 @@
 #
 
 compile:
+	./java/templates/byte_array_maker.sh
 	yacc -d hot.y
 	g++ -c y.tab.c
 	flex hot.l
 	g++ -c lex.yy.c
 	g++ -c cc/cc_generator.cc -o cc_generator.o
+	g++ -c cc/generate_service_interface.cc -o generate_service_interface.o
+	g++ -c cc/generate_proxy_header.cc -o generate_proxy_header.o
+	g++ -c cc/generate_proxy_cc.cc -o generate_proxy_cc.o
+	g++ -c cc/generate_proxy_builder_header.cc -o generate_proxy_builder_header.o
+	g++ -c cc/generate_proxy_builder_cc.cc -o generate_proxy_builder_cc.o
+	g++ -c cc/generate_struct_header.cc -o generate_struct_header.o
+	g++ -c cc/generate_struct_cc.cc -o generate_struct_cc.o
 	g++ -c java/java_generator.cc -o java_generator.o
-	g++ y.tab.o lex.yy.o cc_generator.o java_generator.o -lfl -ll -o hot
+	g++ -c dep/fasthash.cc -o fasthash.o
+	g++ -c ds/service.cc -o service.o
+	g++ -c ds/method.cc -o method.o
+	g++ y.tab.o \
+	    lex.yy.o \
+	    cc_generator.o \
+	    generate_service_interface.o \
+	    generate_proxy_header.o \
+	    generate_proxy_cc.o \
+	    generate_proxy_builder_header.o \
+	    generate_proxy_builder_cc.o \
+	    generate_struct_header.o \
+	    generate_struct_cc.o \
+	    java_generator.o \
+	    fasthash.o \
+	    service.o \
+	    method.o \
+	    -lfl -ll -o hot
+
 java: compile
-	#./hot --java --out ../examples/authentication/java/src/main/java/example/generated test2.hot
-	./hot --java --out /home/developer/Desktop/gen test2.hot
+	./hot --java --out ../examples/authentication/java/src/main/java/example/generated test3.hot
+        #./hot --java --out /home/developer/Desktop/gen test3.hot
 cc: compile
-	./hot --cc --out gen test2.hot
+	./hot --cc --indent-with-spaces --number-of-spaces-used-for-indentation 2 --out gen test2.hot

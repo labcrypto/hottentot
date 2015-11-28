@@ -35,13 +35,15 @@ namespace naeem {
   namespace hottentot {
     namespace generator {
       namespace java {
-          class JavaGenerator;
+        class JavaGenerator;
+      };
+      namespace cc {
+        class CCGenerator;
       };
       namespace ds {
         class Argument {
-
-        friend class ::naeem::hottentot::generator::java::JavaGenerator;
-
+          friend class ::naeem::hottentot::generator::cc::CCGenerator;
+          friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
           Argument(std::string type = "", 
                    std::string variable = "")
@@ -50,16 +52,16 @@ namespace naeem {
           }
           virtual ~Argument() {}
         public:
-          inline virtual std::string GetType() const {
+          inline std::string GetType() const {
             return type_;
           }
-          inline virtual void SetType(std::string type) {
+          inline void SetType(std::string type) {
             type_ = type;
           }
-          inline virtual std::string GetVariable() const {
+          inline std::string GetVariable() const {
             return variable_;
           }
-          inline virtual void SetVariable(std::string variable) {
+          inline void SetVariable(std::string variable) {
             variable_ = variable;
           }
           inline virtual void Display() {

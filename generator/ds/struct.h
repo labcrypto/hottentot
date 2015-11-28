@@ -24,26 +24,35 @@
 #ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__STRUCT_H_
 #define _NAEEM_HOTTENTOT_GENERATOR__DS__STRUCT_H_
 
-#include <vector>
+#include <map>
+
+ #include "declaration.h"
 
 
 namespace naeem {
   namespace hottentot {
     namespace generator {
       namespace java {
-          class JavaGenerator;
+        class JavaGenerator;
+      };
+      namespace cc {
+        class CCGenerator;
       };
       namespace ds {
-        class Declaration;
+        class Module;
         class Struct {
-        friend class Hot;
-        friend class ::naeem::hottentot::generator::java::JavaGenerator;
+          friend class Hot;
+          friend class ::naeem::hottentot::generator::cc::CCGenerator;
+          friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
-          Struct() {}
+          public:
+          Struct(Module *module) 
+            :  module_(module) {
+          }
           virtual ~Struct() {}
         public:
           inline virtual void AddDeclaration(Declaration *declaration) {
-            declarations_.push_back(declaration);
+            declarations_.insert(std::pair<uint32_t, Declaration*>(declaration->GetOrd(), declaration));
           }
 
           inline virtual std::string GetName() const {
@@ -54,7 +63,8 @@ namespace naeem {
           }
         private:
           std::string name_;
-          std::vector<Declaration*> declarations_;
+          std::map<uint32_t, Declaration*> declarations_;
+          Module *module_;
         };
       }
     }

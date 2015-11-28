@@ -23,13 +23,27 @@
 
 package [%BASE_PACKAGE_NAME%];
 
-public class [%SERVICE_NAME%]ServiceProxyBuilder {
+import ir.ntnaeem.hottentot.runtime.Argument;
+import ir.ntnaeem.hottentot.runtime.Request;
+import ir.ntnaeem.hottentot.runtime.RequestHandler;
+import ir.ntnaeem.hottentot.runtime.Response;
+import ir.ntnaeem.hottentot.runtime.Service;
+import ir.ntnaeem.hottentot.runtime.exception.MethodNotSupportException;
+import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
+import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
+import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
+import java.util.List;
 
-	public static [%SERVICE_NAME%]Service create(String host, int port) {
-		return new [%SERVICE_NAME%]ServiceProxy(host,port);
-	}
+public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
+    public [%SERVICE_NAME%]RequestHandler(Service service) {
+        super(service);
+    }
+    @Override
+    public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
+        byte methodId = request.getMethodId();
+        [%SERVICE_NAME%]Service [%SERVICE_NAME_LOWERCASE%]Impl = (Abstract[%SERVICE_NAME%]Service) service;
 
-	public static void destroy() {
-    	//TODO
-	}
+        [%METHOD_CONDITIONS%]
+        throw new MethodNotSupportException("method id is incorrect");
+    }
 }

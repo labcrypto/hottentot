@@ -23,16 +23,16 @@
 
 package example.client;
 
-import example.generated.Credential;
-import example.generated.AuthenticationService;
-import example.generated.Token;
-import example.generated.AuthenticationServiceProxyBuilder;
+import example.generatedBackup.Credential;
+import example.generatedBackup.AuthenticationService;
+import example.generatedBackup.Token;
+import example.generatedBackup.AuthenticationServiceProxyBuilder;
 
 public class Main {
     public static void main(String[] args) {
         AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8000);
         Credential credential = new Credential();
-        credential.setUsername("test");
+        credential.setUsername("zoro");
         credential.setPassword("12345");
         Token token = proxy.authenticate(credential);
         System.out.println(token.getValue());

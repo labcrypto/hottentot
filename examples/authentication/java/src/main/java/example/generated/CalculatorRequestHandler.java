@@ -21,7 +21,7 @@
  *  SOFTWARE.
  */
 
-package [%BASE_PACKAGE_NAME%];
+package example.generated;
 
 import ir.ntnaeem.hottentot.runtime.Argument;
 import ir.ntnaeem.hottentot.runtime.Request;
@@ -34,16 +34,34 @@ import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
 import java.util.List;
 
-public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
-    public [%SERVICE_NAME%]RequestHandler(Service service) {
+public class CalculatorRequestHandler extends RequestHandler {
+    public CalculatorRequestHandler(Service service) {
         super(service);
     }
     @Override
     public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
         byte methodId = request.getMethodId();
-        [%SERVICE_NAME%]Service [%SERVICE_NAME_LOWERCASE%]Impl = (Abstract[%SERVICE_NAME%]Service) service;
+        CalculatorService calculatorImpl = (AbstractCalculatorService) service;
 
-	    [%METHOD_CONDITIONS%]
+	    if(methodId == 1){
+            List <Argument> args = request.getArgs();
+            Argument arg0 = args.get(0);
+            byte[] serializeduint32 = arg0.getData();
+            uint32 a = new uint32();
+            a.deserialize(serializeduint32);
+            Argument arg1 = args.get(1);
+            byte[] serializeduint32 = arg1.getData();
+            uint32 b = new uint32();
+            b.deserialize(serializeduint32);
+            uint32 •int32 = null;
+            Response response = new Response();
+            •int32 = calculatorImpl.add(aa,b);
+            byte[] serializeduint32 = •int32.serialize();
+            response.setStatusCode((byte) 100);
+            response.setData(serializeduint32);
+            response.setLength(serializeduint32.length + 1);
+            return response;
+        }
         throw new MethodNotSupportException("method id is incorrect");
     }
 }

@@ -13,42 +13,27 @@
  *  copies or substantial portions of the Software.
  *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTAB_STRILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
- 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__STRING_HELPER_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__STRING_HELPER_H_
 
-#include <algorithm>
-#include <functional> 
-#include <cctype>
-#include <locale>
+package [%BASE_PACKAGE_NAME%];
 
+import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
+import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
+import static java.lang.StrictMath.pow;
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      class StringHelper {
-      public:
-        static inline std::string &ltrim(std::string &s) {
-          s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
-          return s;
-        }
-        static inline std::string &rtrim(std::string &s) {
-          s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
-          return s;
-        }
-        static inline std::string &trim(std::string &s) {
-          return ltrim(rtrim(s));
-        }
-      };
-    }
+public class [%STRUCT_NAME%] {
+[%MEMBERS%]	
+  public byte[] serialize() {
+[%SERIALIZE_METHOD_BODY%]
+  }
+    
+  public void deserialize(byte[] serializedByteArray) {
+[%DESERIALIZE_METHOD_BODY%]
   }
 }
-
-#endif

@@ -1,13 +1,22 @@
-module example.generated {
+module example.generated.abc.xyz {
   struct Token {
+    int16 id ord(2);
     string value ord(1);
-    int id ord(2);
   };
   struct Credential {
     string username ord(1);
     string password ord(2);
   };
-  stateless service Authentication{
+  stateless service Authentication {
     Token authenticate(Credential credential);
+  };
+  stateless service Calculator {
+    uint32 add(uint32 a, uint32 b);
+  };
+};
+module ir.ntnaeem.hottentot.examples.tech {
+  stateless service Tech {
+    void report(string message);
+    int16 getSerial();
   };
 };

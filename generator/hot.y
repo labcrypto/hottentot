@@ -130,7 +130,7 @@ items:          items item
 
 item:           {
                   if (currentStruct == NULL) {
-                    currentStruct = new ::naeem::hottentot::generator::ds::Struct();
+                    currentStruct = new ::naeem::hottentot::generator::ds::Struct(currentModule);
                     // fprintf(stdout, ">>> GENERATOR: Struct object created.\n");
                     currentModule->AddStruct(currentStruct);
                     // fprintf(stdout, ">>> GENERATOR: Struct object has been added to model.\n");
@@ -145,7 +145,7 @@ item:           {
                 }
                 | {
                     if (currentService == NULL) {
-                      currentService = new ::naeem::hottentot::generator::ds::Service();
+                      currentService = new ::naeem::hottentot::generator::ds::Service("stateless", "", currentModule);
                       currentModule->AddService(currentService);
                     } else {
                       fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
@@ -159,7 +159,7 @@ item:           {
                 }
                 | {
                     if (currentService == NULL) {
-                      currentService = new ::naeem::hottentot::generator::ds::Service();
+                      currentService = new ::naeem::hottentot::generator::ds::Service("stateful", "",currentModule);
                       currentModule->AddService(currentService);
                     } else {
                       fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
@@ -193,7 +193,7 @@ methods:        methods method
 
 method:         {
                   if (currentMethod == NULL) {
-                    currentMethod = new ::naeem::hottentot::generator::ds::Method();
+                    currentMethod = new ::naeem::hottentot::generator::ds::Method(currentService);
                     currentService->AddMethod(currentMethod);
                   }
                 } type IDENTIFIER '(' arguments ')' ';' {
@@ -259,9 +259,16 @@ int yywrap(void) {
 
 extern FILE *yyin;
 
+void printHelpMessageAndExit() {
+  fprintf(stderr, "Usage: hot [--java] [--cc] [--indent-with-spaces = TRUE] [--indent-with-tabs] [--number-of-spaces-used-for-indentation NUMBER_OF_SPACES_USED_FOR_INDENTATION = 2] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
+  exit(1);
+}
+
 int main(int argc, char **argv) {
   bool isJava = false;
   bool isCC = false;
+  bool isSpacesUsedForIndentation = true;
+  uint8_t numberOfSpacesUsedForIndentation = 2;
   bool hotsBegun = false;
   char *outputDir = 0;
   char **hots = 0;
@@ -269,22 +276,39 @@ int main(int argc, char **argv) {
   for (uint16_t i = 1; i < argc;) {
     if (strcmp(argv[i], "--java") == 0) {
       if (hotsBegun) {
-        fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
-        exit(1);
+        printHelpMessageAndExit();
       }
       isJava = true;
       i++;
     } else if (strcmp(argv[i], "--cc") == 0) {
       if (hotsBegun) {
-        fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
-        exit(1);
+        printHelpMessageAndExit();
       }
       isCC = true;
       i++;
+    } else if (strcmp(argv[i], "--indent-with-spaces") == 0) {
+      if (hotsBegun) {
+        fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
+        exit(1);
+      }
+      isSpacesUsedForIndentation = true;
+      i++;
+    } else if (strcmp(argv[i], "--indent-with-tabs") == 0) {
+      if (hotsBegun) {
+        printHelpMessageAndExit();
+      }
+      isSpacesUsedForIndentation = false;
+      i++;
+    } else if (strcmp(argv[i], "--help") == 0) {
+      printHelpMessageAndExit();
+    } else if (strcmp(argv[i], "--number-of-spaces-used-for-indentation") == 0) {
+      numberOfSpacesUsedForIndentation = atoi(argv[i + 1]);
+      i += 2;
     } else if (strcmp(argv[i], "--out") == 0) {
       outputDir = argv[i + 1];
       i += 2;
     } else {
+      // TODO(kamran) File names do not start with '--'. Consider this here.
       if (hots == 0) {
         hotsBegun = true;
         hots = new char*[argc - i];
@@ -295,11 +319,9 @@ int main(int argc, char **argv) {
   if (!isJava && !isCC) {
     isCC = true;
   }
-  /*std::cout << "Num: " << numOfHots << std::endl;
-  std::cout << "Is Java: " << isJava << std::endl;
-  std::cout << "Is CC: " << isCC << std::endl;
-  std::cout << "Out: " << (outputDir == 0 ? "NOT SET" : outputDir) << std::endl;
-  std::cout << "Hot files: \n";*/
+  if (outputDir == 0) {
+    outputDir = "gen";
+  }
   for (uint16_t i = 0; i < numOfHots; i++) {
     yyin = fopen(hots[i],"r+");
     if (!yyin) {
@@ -310,6 +332,8 @@ int main(int argc, char **argv) {
     currentHot->Display();
     ::naeem::hottentot::generator::GenerationConfig generationConfig;
     generationConfig.SetOutDir(outputDir);
+    generationConfig.SetSpacesUsedInsteadOfTabsForIndentation(isSpacesUsedForIndentation);
+    generationConfig.SetNumberOfSpacesUsedForIndentation(numberOfSpacesUsedForIndentation);
     ::naeem::hottentot::generator::Generator *generator = 0;
     if (isCC) {
       generator = new ::naeem::hottentot::generator::cc::CCGenerator();
