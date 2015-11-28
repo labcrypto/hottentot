@@ -350,6 +350,7 @@ namespace naeem {
                         os.open(path.c_str(), std::ios::trunc);
                         replacableAbstractServiceTmpStr = abstractServiceTmpStr;
 
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableAbstractServiceTmpStr , "[%INDENT%]" , indent_ , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableAbstractServiceTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableAbstractServiceTmpStr , "[%SERVICE_NAME%]" , pService->name_ , 1);
                         //get service ID from hot parser
@@ -374,6 +375,7 @@ namespace naeem {
                         std::string replacableServiceTmpStr = serviceTmpStr;
                         //std::cout << outDir_;
                         
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceTmpStr , "[%INDENT%]" , indent_ , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceTmpStr , "[%SERVICE_NAME%]" , pService->name_ , 1);
                         // while (replacableServiceTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
@@ -421,6 +423,7 @@ namespace naeem {
                         std::string replacableServiceProxyBuilderTmpStr;
                         //write service proxy builder
                         replacableServiceProxyBuilderTmpStr = serviceProxyBuilderTmpStr;
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyBuilderTmpStr , "[%INDENT%]" , indent_ , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyBuilderTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyBuilderTmpStr , "[%SERVICE_NAME%]" , pService->name_ , 1);
                         // while (replacableServiceProxyBuilderTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
@@ -452,7 +455,7 @@ namespace naeem {
                         replacableRequestHandlerTmpStr = requestHandlerTmpStr;
 
 
-
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableRequestHandlerTmpStr , "[%INDENT%]" , indent_ , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableRequestHandlerTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
                         // while (replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
                         //     replacableRequestHandlerTmpStr.replace(
@@ -475,7 +478,7 @@ namespace naeem {
                             //get hashed mehod id
                             std::stringstream ssID;
                             ssID << pMethod->GetHash();
-                            methodConditionStr += "if(methodId == " + ssID.str() + "){\n";
+                            methodConditionStr += "if(methodId == " + ssID.str() + "L){\n";
                             methodConditionStr +=
                                     indent_ + indent_ + indent_ + "List <Argument> args = request.getArgs();\n";
                             ::naeem::hottentot::generator::ds::Argument *pArg;
@@ -541,6 +544,8 @@ namespace naeem {
                         std::string replacableServiceProxyStrTmp = serviceProxyTmpStr;
                         pService = pModule->services_.at(i);
                         pService = pModule->services_.at(i);
+
+                        ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp , "[%INDENT%]" , indent_ , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp,"[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp,"[%SERVICE_NAME%]" , pService->name_ , 1);
                         //loop on service methods
@@ -569,10 +574,10 @@ namespace naeem {
                             methodsStr += indent_ + indent_ + "Request request = new Request();\n";
                             std::stringstream serviceId;
                             serviceId << pService->GetHash();
-                            methodsStr += indent_ + indent_ + "request.setServiceId(" + serviceId.str() + ");\n";
+                            methodsStr += indent_ + indent_ + "request.setServiceId(" + serviceId.str() + "L);\n";
                             std::stringstream methodId;
                             methodId << pMethod->GetHash();
-                            methodsStr += indent_ + indent_ + "request.setMethodId(" + methodId.str() + ");\n";
+                            methodsStr += indent_ + indent_ + "request.setMethodId(" + methodId.str() + "L);\n";
                             std::stringstream argSize;
                             argSize << pMethod->arguments_.size();
                             methodsStr +=
@@ -631,8 +636,8 @@ namespace naeem {
                                 methodsStr += indent_ + indent_ + "dataLength += " + argDataLengthVarName + " + " +
                                               argDataLengthByteArrayLengthVarName + ";\n";
                             }
-                            methodsStr += indent_ + indent_ + "//\n";
-                            methodsStr += indent_ + indent_ + "request.setLength(4 + dataLength);\n";
+                            methodsStr += indent_ + indent_ + "//arg count + request type + method ID + service ID = 18;\n";
+                            methodsStr += indent_ + indent_ + "request.setLength(18 + dataLength);\n";
                             methodsStr += indent_ + indent_ + "//connect to server\n";
                             methodsStr += indent_ + indent_ + "TcpClient tcpClient = TcpClientFactory.create();\n";
                             methodsStr += indent_ + indent_ + "try{\n";
