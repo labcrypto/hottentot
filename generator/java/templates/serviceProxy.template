@@ -38,15 +38,15 @@ import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 
 public class [%SERVICE_NAME%]ServiceProxy extends Abstract[%SERVICE_NAME%]Service implements Proxy {
 	
-	private String host;
-	private int port;
+[%INDENT%]private String host;
+[%INDENT%]private int port;
 
-	public [%SERVICE_NAME%]ServiceProxy(String host, int port) {
-		this.host = host;
-		this.port = port;
-	}
-	[%METHODS%]
-	public void destroy() {
-        	//TODO
-	}
+[%INDENT%]public [%SERVICE_NAME%]ServiceProxy(String host, int port) {
+[%INDENT%][%INDENT%]this.host = host;
+[%INDENT%][%INDENT%]this.port = port;
+[%INDENT%]}
+[%INDENT%][%METHODS%]
+[%INDENT%]public void destroy() {
+[%INDENT%][%INDENT%]//TODO
+[%INDENT%]}
 }
