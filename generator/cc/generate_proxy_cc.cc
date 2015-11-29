@@ -80,7 +80,7 @@ namespace naeem {
           for (uint32_t i = 0; i < service->module_->structs_.size(); i++) {
             includeStructHeaders += "#include \"../" + 
               ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-                service->module_->structs_[i]->GetName()) + ".h\";\r\n";
+                service->module_->structs_[i]->GetName()) + ".h\"\r\n";
           }
           namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
           namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);

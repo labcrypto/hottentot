@@ -1,6 +1,6 @@
 [[[INDENT]]][[[INDENT]]]if (request.GetMethodId() == [[[METHOD_HASH]]]) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::service::Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]] *serviceObject = 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]dynamic_cast<[[[NAMESPACE]]]::service::Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]]*>(service_);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]dynamic_cast< [[[NAMESPACE]]]::service::Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]]*>(service_);
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]* Deserialization and making input variables
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]*/

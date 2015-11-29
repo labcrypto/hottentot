@@ -79,7 +79,7 @@ namespace naeem {
           for (uint32_t i = 0; i < service->module_->structs_.size(); i++) {
             includeStructHeaders += "#include \"../" + 
               ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-                service->module_->structs_[i]->GetName()) + ".h\";\r\n";
+                service->module_->structs_[i]->GetName()) + ".h\"\r\n";
           }
           namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
           namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
@@ -157,13 +157,13 @@ namespace naeem {
           }
           std::string methodCall = indent + indent + indent;
           if (TypeHelper::IsUDT(method->GetReturnType())) {
-            methodCall += "::" + ns + "::" + method->GetReturnType() + "* result = serverObject->" 
+            methodCall += "::" + ns + "::" + method->GetReturnType() + "* result = serviceObject->" 
                           + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
           } else {
             if (TypeHelper::IsVoid(method->GetReturnType())) {
-              methodCall += "serverObject->" + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
+              methodCall += "serviceObject->" + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
             } else {
-              methodCall += TypeHelper::GetCCType(method->GetReturnType()) + " result = serverObject->" 
+              methodCall += TypeHelper::GetCCType(method->GetReturnType()) + " result = serviceObject->" 
                           + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
             }
           }

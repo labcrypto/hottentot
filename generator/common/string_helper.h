@@ -158,11 +158,11 @@ namespace naeem {
           }
           static inline std::string MakeCamelCaseFirstCapital(std::string str, 
                                                               char del = ' ') {
-            return MakeCamelCase(Split(str, del));
+            return MakeCamelCase(Split(MakeSnakeCaseFromCamelCase(str), '_'));
           }
           static inline std::string MakeCamelCaseFirstSmall(std::string str, 
                                                             char del = ' ') {
-            return MakeCamelCase(Split(str, del), false);
+            return MakeCamelCase(Split(MakeSnakeCaseFromCamelCase(str), '_'), false);
           }
           static inline std::string MakeSnakeCase(std::string str, 
                                                   char del = ' ') {

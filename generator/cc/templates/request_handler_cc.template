@@ -20,7 +20,7 @@
 [[[NAMESPACES_START]]]
 namespace service {
   void 
-  AuthenticateServiceRequestHandler::HandleRequest(::naeem::hottentot::runtime::Request &request, ::naeem::hottentot::runtime::Response &response) {
+  [[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler::HandleRequest(::naeem::hottentot::runtime::Request &request, ::naeem::hottentot::runtime::Response &response) {
     [[[METHOD_IF_CLAUSES]]]
     char errorMessage[] = "Method not found.";
     response.SetStatusCode(1);
