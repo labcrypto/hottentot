@@ -38,6 +38,9 @@ compile:
 	g++ -c cc/generate_request_handler_cc.cc -o generate_request_handler_cc.o
 	g++ -c cc/generate_struct_header.cc -o generate_struct_header.o
 	g++ -c cc/generate_struct_cc.cc -o generate_struct_cc.o
+	g++ -c cc/generate_makefile.cc -o generate_makefile.o
+	g++ -c cc/generate_client.cc -o generate_client.o
+	g++ -c cc/generate_stub.cc -o generate_stub.o
 	g++ -c java/java_generator.cc -o java_generator.o
 	g++ -c dep/fasthash.cc -o fasthash.o
 	g++ -c ds/service.cc -o service.o
@@ -55,6 +58,9 @@ compile:
 	    generate_request_handler_cc.o \
 	    generate_struct_header.o \
 	    generate_struct_cc.o \
+	    generate_makefile.o \
+	    generate_client.o \
+	    generate_stub.o \
 	    java_generator.o \
 	    fasthash.o \
 	    service.o \
@@ -65,4 +71,4 @@ java: compile
 	./hot --java --out ../examples/authentication/java/src/main/java/example/generated test3.hot
         #./hot --java --out /home/developer/Desktop/gen test3.hot
 cc: compile
-	./hot --cc --indent-with-spaces --number-of-spaces-used-for-indentation 2 --out gen test2.hot
+	./hot --cc --indent-with-spaces --number-of-spaces-used-for-indentation 2 --out gen --makefile --client --stub test2.hot

@@ -41,6 +41,12 @@ namespace naeem {
         public:
           virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
                                 ::naeem::hottentot::generator::GenerationConfig &);
+          virtual void GenerateMakefile(::naeem::hottentot::generator::ds::Hot *,
+                                        ::naeem::hottentot::generator::GenerationConfig &);
+          virtual void GenerateClient(::naeem::hottentot::generator::ds::Hot *,
+                                        ::naeem::hottentot::generator::GenerationConfig &);
+          virtual void GenerateStub(::naeem::hottentot::generator::ds::Hot *,
+                                    ::naeem::hottentot::generator::GenerationConfig &);
         protected:
           virtual void GenerateServiceInterface(::naeem::hottentot::generator::ds::Service *,
                                                 ::naeem::hottentot::generator::GenerationConfig &,
@@ -84,6 +90,7 @@ namespace naeem {
                                                                      ::naeem::hottentot::generator::ds::Method *,
                                                                      ::naeem::hottentot::generator::GenerationConfig &,
                                                                      std::map<std::string, std::string> &);
+          
         };
       }
     }
