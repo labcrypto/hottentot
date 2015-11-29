@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string.h>
 
-#include "[[[STRUCT_NAME]]].h"
+#include "[[[SNAKE_CASE_STRUCT_NAME]]].h"
 
 
 [[[NAMESPACES_START]]]
