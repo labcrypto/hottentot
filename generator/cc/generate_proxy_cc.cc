@@ -179,6 +179,10 @@ namespace naeem {
           } else {
             responseDeserialization = indent + indent + "TODO(kamran) Deserialization of response should be done.\r\n";
           }
+          std::stringstream serviceHashSS;
+          serviceHashSS << service->GetHash();
+          std::stringstream methodHashSS;
+          methodHashSS << method->GetHash();
           /*
            * Filling templates with real values
            */
@@ -189,6 +193,8 @@ namespace naeem {
           params.insert(std::pair<std::string, std::string>("ARGUMENTS", arguments));
           params.insert(std::pair<std::string, std::string>("ARGUMENTS_SERIALIZATION", argumentsSerialization));
           params.insert(std::pair<std::string, std::string>("RESPONSE_DESERIALIZATION", responseDeserialization));
+          params.insert(std::pair<std::string, std::string>("SERVICE_HASH", serviceHashSS.str()));
+          params.insert(std::pair<std::string, std::string>("METHOD_HASH", methodHashSS.str()));
           params.insert(std::pair<std::string, std::string>("INDENT", indent));
           std::string proxyCCMethodTemplate = templates["proxy_cc__method"];
           for (std::map<std::string, std::string>::iterator it = params.begin();
