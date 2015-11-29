@@ -21,7 +21,7 @@ namespace proxy {
 [[[INDENT]]][[[INDENT]]]static [[[CAMEL_CASE_FC_SERVICE_NAME]]]* Create(std::string /* host */, uint32_t /* port */);
 [[[INDENT]]][[[INDENT]]]static void Destroy([[[CAMEL_CASE_FC_SERVICE_NAME]]] *);
 [[[INDENT]]]};
-}
+} // END OF NAMESPACE proxy
 [[[NAMESPACES_END]]]
 
 #endif

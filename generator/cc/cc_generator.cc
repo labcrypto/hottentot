@@ -57,8 +57,9 @@ namespace naeem {
           std::string proxyCCMethodArgumentSerializationTemplate;
           std::string proxyCCResponseDeserialization;
           std::string proxyHeaderTemplate;
-          std::string requestHandlerHeaderTemplate;
           std::string requestHandlerCCTemplate;
+          std::string requestHandlerCCMethodIfClauseTemplate;
+          std::string requestHandlerHeaderTemplate;
           std::string serviceInterfaceTemplate;
           std::string structCCTemplate;
           std::string structHeaderTemplate;
@@ -71,8 +72,9 @@ namespace naeem {
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method_argument_serialization.template", proxyCCMethodArgumentSerializationTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__response_deserialization.template", proxyCCResponseDeserialization);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_header.template", proxyHeaderTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_header.template", requestHandlerHeaderTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_cc.template", requestHandlerCCTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_cc__method_if_clause.template", requestHandlerCCMethodIfClauseTemplate);
+          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_header.template", requestHandlerHeaderTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_interface.template", serviceInterfaceTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_cc.template", structCCTemplate);
           ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_header.template", structHeaderTemplate);
@@ -86,8 +88,9 @@ namespace naeem {
           templates.insert(std::pair<std::string, std::string>("proxy_cc__method_argument_serialization",proxyCCMethodArgumentSerializationTemplate));
           templates.insert(std::pair<std::string, std::string>("proxy_cc__response_deserialization",proxyCCResponseDeserialization));
           templates.insert(std::pair<std::string, std::string>("proxy_header",proxyHeaderTemplate));
+          templates.insert(std::pair<std::string, std::string>("request_handler_cc",requestHandlerCCTemplate));          
+          templates.insert(std::pair<std::string, std::string>("request_handler_cc__method_if_clause",requestHandlerCCMethodIfClauseTemplate));
           templates.insert(std::pair<std::string, std::string>("request_handler_header",requestHandlerHeaderTemplate));
-          templates.insert(std::pair<std::string, std::string>("request_handler_cc",requestHandlerCCTemplate));
           templates.insert(std::pair<std::string, std::string>("service_interface",serviceInterfaceTemplate));
           templates.insert(std::pair<std::string, std::string>("struct_cc",structCCTemplate));
           templates.insert(std::pair<std::string, std::string>("struct_header",structHeaderTemplate));

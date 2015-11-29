@@ -21,17 +21,17 @@
 
 [[[NAMESPACES_START]]]
 namespace service {
-  class Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]] : public [[[CAMEL_CASE_FC_SERVICE_NAME]]], public ::naeem::hottentot::runtime::service::Service {
-  public:
-    inline virtual uint32_t GetServiceId() const {
-      return [[[SERVICE_HASH]]];
-    }
-  protected:
-    inline virtual ::naeem::hottentot::runtime::service::RequestHandler* MakeRequestHandler() {
-      return new [[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler(this);
-    }
-  };
-}
+[[[INDENT]]]class Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]] : public [[[CAMEL_CASE_FC_SERVICE_NAME]]], public ::naeem::hottentot::runtime::service::Service {
+[[[INDENT]]]public:
+[[[INDENT]]][[[INDENT]]]inline virtual uint32_t GetServiceId() const {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]return [[[SERVICE_HASH]]];
+[[[INDENT]]][[[INDENT]]]}
+[[[INDENT]]]protected:
+[[[INDENT]]][[[INDENT]]]inline virtual ::naeem::hottentot::runtime::service::RequestHandler* MakeRequestHandler() {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]return new [[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler(this);
+[[[INDENT]]][[[INDENT]]]}
+[[[INDENT]]]};
+} // END OF NAMESPACE service
 [[[NAMESPACES_END]]]
 
 #endif

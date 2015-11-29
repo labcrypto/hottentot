@@ -80,6 +80,10 @@ namespace naeem {
           virtual void GenerateRequestHandlerCC(::naeem::hottentot::generator::ds::Service *,
                                                 ::naeem::hottentot::generator::GenerationConfig &,
                                                 std::map<std::string, std::string> &);
+          virtual std::string GenerateRequestHandlerCCMethodIfClause(::naeem::hottentot::generator::ds::Service *,
+                                                                     ::naeem::hottentot::generator::ds::Method *,
+                                                                     ::naeem::hottentot::generator::GenerationConfig &,
+                                                                     std::map<std::string, std::string> &);
         };
       }
     }

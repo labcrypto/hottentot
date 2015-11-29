@@ -17,16 +17,15 @@
 
 [[[NAMESPACES_START]]]
 namespace service {
-  class [[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler : public ::naeem::hottentot::runtime::service::RequestHandler {
-  public:
-    [[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler(::naeem::hottentot::runtime::service::Service *service)
-      : ::naeem::hottentot::runtime::service::RequestHandler(service) {
-    }
-    virtual ~[[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler() {}
-  public:
-    virtual void HandleRequest(::naeem::hottentot::runtime::Request &   /* Request object */,
-                               ::naeem::hottentot::runtime::Response &  /* Response object */);
-  };
+[[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler : public ::naeem::hottentot::runtime::service::RequestHandler {
+[[[INDENT]]]public:
+[[[INDENT]]][[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler(::naeem::hottentot::runtime::service::Service *service)
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]: ::naeem::hottentot::runtime::service::RequestHandler(service) {
+[[[INDENT]]][[[INDENT]]]}
+[[[INDENT]]][[[INDENT]]]virtual ~[[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler() {}
+[[[INDENT]]]public:
+[[[INDENT]]][[[INDENT]]]virtual void HandleRequest(::naeem::hottentot::runtime::Request &   /* Request object */, ::naeem::hottentot::runtime::Response &  /* Response object */);
+[[[INDENT]]]};
 } // END OF NAMESPACE service
 [[[NAMESPACES_END]]]
 

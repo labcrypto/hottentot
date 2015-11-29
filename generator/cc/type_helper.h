@@ -24,6 +24,8 @@
 #ifndef _NAEEM_HOTTENTOT_GENERATOR__CC__TYPE_HELPER_H_
 #define _NAEEM_HOTTENTOT_GENERATOR__CC__TYPE_HELPER_H_
 
+#include "../common/string_helper.h"
+
 
 namespace naeem {
   namespace hottentot {
@@ -31,6 +33,9 @@ namespace naeem {
       namespace cc {
         class TypeHelper {
         public:
+          static inline bool IsVoid(std::string type) {
+            return ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(type) == "void";
+          }
           static inline bool IsUDT(std::string type) {
             if (type == "int8") {
               return false;

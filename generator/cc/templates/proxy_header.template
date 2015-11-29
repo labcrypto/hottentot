@@ -29,7 +29,7 @@ namespace proxy {
 [[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]][[[METHOD_DEFS]]]
 [[[INDENT]]]};
-}
+} // END OF NAMESPACE proxy
 [[[NAMESPACES_END]]]
 
 #endif

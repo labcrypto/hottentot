@@ -12,13 +12,13 @@
 
 [[[NAMESPACES_START]]]
 namespace proxy {
-  [[[CAMEL_CASE_FC_SERVICE_NAME]]]*
-  [[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Create(std::string host, uint32_t port) {
-    return new [[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy(host, port);
-  }
-  void
-  [[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Destroy([[[CAMEL_CASE_FC_SERVICE_NAME]]] *service) {
-    delete service;
-  }
-}
+[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]*
+[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Create(std::string host, uint32_t port) {
+[[[INDENT]]][[[INDENT]]]return new [[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy(host, port);
+[[[INDENT]]]}
+[[[INDENT]]]void
+[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Destroy([[[CAMEL_CASE_FC_SERVICE_NAME]]] *service) {
+[[[INDENT]]][[[INDENT]]]delete service;
+[[[INDENT]]]}
+} // END OF NAMESPACE proxy
 [[[NAMESPACES_END]]]
