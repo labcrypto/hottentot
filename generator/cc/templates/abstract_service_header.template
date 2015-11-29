@@ -23,7 +23,7 @@
 namespace service {
   class Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]] : public [[[CAMEL_CASE_FC_SERVICE_NAME]]], public ::naeem::hottentot::runtime::service::Service {
   public:
-    inline virtual uint8_t GetServiceId() const {
+    inline virtual uint32_t GetServiceId() const {
       return [[[SERVICE_HASH]]];
     }
   protected:

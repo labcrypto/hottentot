@@ -116,6 +116,9 @@ namespace naeem {
             for (uint32_t serviceCounter = 0;
                  serviceCounter < hot->modules_[moduleCounter]->services_.size();
                  serviceCounter++) {
+              GenerateAbstractServiceHeader(hot->modules_[moduleCounter]->services_[serviceCounter],
+                                            generationConfig,
+                                            templates);
               GenerateServiceInterface(hot->modules_[moduleCounter]->services_[serviceCounter],
                                        generationConfig,
                                        templates);
@@ -131,6 +134,12 @@ namespace naeem {
               GenerateProxyBuilderCC(hot->modules_[moduleCounter]->services_[serviceCounter],
                                      generationConfig,
                                      templates);
+              GenerateRequestHandlerHeader(hot->modules_[moduleCounter]->services_[serviceCounter],
+                                           generationConfig,
+                                           templates);
+              GenerateRequestHandlerCC(hot->modules_[moduleCounter]->services_[serviceCounter],
+                                       generationConfig,
+                                       templates);
             }
           }
           std::cout << "C++ Generation done." << std::endl;

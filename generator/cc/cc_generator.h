@@ -71,7 +71,7 @@ namespace naeem {
           virtual void GenerateStructCC(::naeem::hottentot::generator::ds::Struct *,
                                         ::naeem::hottentot::generator::GenerationConfig &,
                                         std::map<std::string, std::string> &);
-          virtual void GenerateAsbtractServiceHeader(::naeem::hottentot::generator::ds::Service *,
+          virtual void GenerateAbstractServiceHeader(::naeem::hottentot::generator::ds::Service *,
                                                      ::naeem::hottentot::generator::GenerationConfig &,
                                                      std::map<std::string, std::string> &);
           virtual void GenerateRequestHandlerHeader(::naeem::hottentot::generator::ds::Service *,
