@@ -139,6 +139,57 @@ namespace naeem {
               service->GetName()) + "Service";
           std::stringstream methodHashSS;
           methodHashSS << method->GetHash();
+          std::string ns = 
+            ::naeem::hottentot::generator::common::StringHelper::Concat( 
+                ::naeem::hottentot::generator::common::StringHelper::Split(
+                    service->module_->GetPackage(), '.'), "::");
+          std::string inputVariables = "";
+          for (uint32_t i = 0; i < method->arguments_.size(); i++) {
+            if (TypeHelper::IsUDT(method->arguments_[i]->GetType())) {
+              inputVariables += indent + indent + indent + "::" + ns + "::" + method->arguments_[i]->GetType() + " " + method->arguments_[i]->GetVariable() + ";\r\n";
+              std::stringstream tempSS;
+              tempSS << ".Deserialize(request.GetArgumentData(" << i << "), request.GetArgumentLength(" << i << "));";
+              inputVariables += indent + indent + indent + method->arguments_[i]->GetVariable() + tempSS.str() + "\r\n";
+            } else {
+              inputVariables += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[i]->GetType()) + " " + method->arguments_[i]->GetVariable() + ";\r\n";
+              inputVariables += indent + indent + indent + "// TODO(kamran) Deserialization of non-UDT request argument for '" + method->arguments_[i]->GetVariable() + "' should be done.\r\n";
+            }
+          }
+          std::string methodCall = indent + indent + indent;
+          if (TypeHelper::IsUDT(method->GetReturnType())) {
+            methodCall += "::" + ns + "::" + method->GetReturnType() + "* result = serverObject->" 
+                          + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
+          } else {
+            if (TypeHelper::IsVoid(method->GetReturnType())) {
+              methodCall += "serverObject->" + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
+            } else {
+              methodCall += TypeHelper::GetCCType(method->GetReturnType()) + " result = serverObject->" 
+                          + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
+            }
+          }
+          std::string sep = "";
+          for (uint32_t i = 0; i < method->arguments_.size(); i++) {
+            if (TypeHelper::IsUDT(method->arguments_[i]->GetType())) {
+              methodCall += sep + "&" + method->arguments_[i]->GetVariable();
+            } else {
+              methodCall += sep + method->arguments_[i]->GetVariable();
+            }
+            sep = ", ";
+          }
+          methodCall += ");\r\n";
+          std::string resultSerialization = "";
+          if (TypeHelper::IsUDT(method->GetReturnType())) {
+            resultSerialization += indent + indent + indent + "unsigned char *serializedData = result->Serialize(&serializedDataLength);\r\n";
+            resultSerialization += indent + indent + indent + "delete result;";
+
+          } else {
+            if (TypeHelper::IsVoid(method->GetReturnType())) {
+              resultSerialization += indent + indent + indent + "unsigned char *serializedData = 0;";
+            } else {
+              resultSerialization += indent + indent + indent + "unsigned char *serializedData = 0; // TODO(kamran): Serialization for non-UDT return type.";
+            }
+          }
+          resultSerialization += "\r\n";
           /*
            * Filling template
            */
@@ -147,6 +198,27 @@ namespace naeem {
             ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
                                                                          "[[[INDENT]]]",
                                                                          indent);
+          proxyCCMethodIfClauseTemplate =
+            ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
+                                                                         "[[[CAMEL_CASE_FC_SERVICE_NAME]]]",
+                                                                         serviceNameCamelCaseFirstCapital);
+          proxyCCMethodIfClauseTemplate =
+            ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
+                                                                         "[[[METHOD_NAME]]]",
+                                                                         ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+                                                                           method->GetName()));
+          proxyCCMethodIfClauseTemplate =
+            ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
+                                                                         "[[[INPUT_VARIABLES]]]",
+                                                                         inputVariables);
+          proxyCCMethodIfClauseTemplate =
+            ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
+                                                                         "[[[RESULT_SERIALIZATION]]]",
+                                                                         resultSerialization);
+          proxyCCMethodIfClauseTemplate =
+            ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
+                                                                         "[[[METHOD_CALL]]]",
+                                                                         methodCall);
           proxyCCMethodIfClauseTemplate =
             ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
                                                                          "[[[METHOD_HASH]]]",

@@ -1,13 +1,18 @@
-    if (request.GetMethodId() == [[[METHOD_HASH]]]) {
-      ::naeem::hottentot::examples::auth::Credential credential;
-      credential.Deserialize(request.GetArgumentData(0), request.GetArgumentLength(0));
-      ::naeem::hottentot::examples::auth::service::AbstractAuthenticateService *authenticateService = 
-        dynamic_cast<naeem::hottentot::examples::auth::service::AbstractAuthenticateService*>(service_);
-      Token *token = authenticateService->Authenticate(&credential);
-      uint32_t tokenSerializedDataLength = 0;
-      unsigned char *tokenSerializedData = token->Serialize(&tokenSerializedDataLength);
-      response.SetStatusCode(0);
-      response.SetData(tokenSerializedData);
-      response.SetDataLength(tokenSerializedDataLength);
-      return;
-    }
+[[[INDENT]]][[[INDENT]]]if (request.GetMethodId() == [[[METHOD_HASH]]]) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::service::Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]] *serviceObject = 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]dynamic_cast<[[[NAMESPACE]]]::service::Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]]*>(service_);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]* Deserialization and making input variables
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]*/
+[[[INPUT_VARIABLES]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]* Calling service method
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]*/
+[[[METHOD_CALL]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]/*
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]* Serializiation of returned object
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]*/
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]uint32_t serializedDataLength = 0;
+[[[RESULT_SERIALIZATION]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]response.SetStatusCode(0);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]response.SetData(serializedData);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]response.SetDataLength(serializedDataLength);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]return;
+[[[INDENT]]][[[INDENT]]]}

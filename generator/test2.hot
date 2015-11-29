@@ -7,8 +7,13 @@ module example.generated.abc.xyz {
     string username ord(1);
     string password ord(2);
   };
+  struct DateTime {
+    uint8 day ord(3);
+    uint8 month ord(2);
+    uint8 year ord(1);
+  };
   stateless service Authentication {
-    Token authenticate(Credential credential);
+    Token authenticate(Credential credential, DateTime datetime);
   };
   stateless service Calculator {
     uint32 add(uint32 a, uint32 b);
