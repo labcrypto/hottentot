@@ -40,7 +40,7 @@ namespace naeem {
           }
           virtual ~Service() {}
         public:
-          virtual uint8_t GetServiceId() const = 0;
+          virtual uint32_t GetServiceId() const = 0;
           virtual RequestHandler* GetRequestHandler() {
             if (requestHandler_ == 0) {
               requestHandler_ = MakeRequestHandler();

@@ -44,7 +44,7 @@ namespace naeem {
           class AbstractAuthenticateService : public AuthenticateService,
                                               public ::naeem::hottentot::runtime::service::Service {
           public:
-            inline virtual uint8_t GetServiceId() const {
+            inline virtual uint32_t GetServiceId() const {
               return 1;
             }
           protected:
