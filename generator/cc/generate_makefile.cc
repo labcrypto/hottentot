@@ -46,7 +46,28 @@ namespace naeem {
         void
         CCGenerator::GenerateMakefile(::naeem::hottentot::generator::ds::Hot *hot,
                                       ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
-         
+          std::string makefile = "RTDIR = ../../cc/runtime\r\n";
+          makefile += "all:\r\n";
+          makefile += "\tmkdir -p lib\r\n";
+          for (uint32_t moduleCounter = 0; moduleCounter < hot->modules_.size(); moduleCounter++) {
+            for (uint32_t structCounter = 0; structCounter < hot->modules_[moduleCounter]->structs_.size(); structCounter++) {
+              makefile += "\tg++ -c -I$(RTDIR) " + 
+                ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
+                  hot->modules_[moduleCounter]->structs_[structCounter]->GetName()) + ".cc\r\n";
+            }
+            for (uint32_t serviceCounter = 0; serviceCounter < hot->modules_[moduleCounter]->services_.size(); serviceCounter++) {
+              std::string serviceNam =
+                ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
+                  hot->modules_[moduleCounter]->services_[serviceCounter]->GetName() + "Service");
+              makefile += "\tg++ -c -I$(RTDIR) proxy/" + serviceNam + "_proxy.cc\r\n";
+              makefile += "\tg++ -c -I$(RTDIR) proxy/" + serviceNam + "_proxy_builder.cc\r\n";
+            }
+          }
+          std::string filename = generationConfig.GetOutDir() + "/Makefile";
+          std::fstream f;
+          f.open(filename.c_str(), std::fstream::out | std::fstream::binary);
+          f << makefile;
+          f.close();
         }
       }
     }

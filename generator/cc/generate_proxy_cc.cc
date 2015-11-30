@@ -170,14 +170,15 @@ namespace naeem {
             proxyCCResponseDeserializationTemplate =
               ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCResponseDeserializationTemplate,
                                                                            "[[[RETURN_TYPE]]]",
-                                                                           method->GetReturnType());
+                                                                           TypeHelper::GetCCType(method->GetReturnType()));
             proxyCCResponseDeserializationTemplate =
               ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCResponseDeserializationTemplate,
                                                                            "[[[INDENT]]]",
                                                                            indent);
             responseDeserialization += proxyCCResponseDeserializationTemplate + "\r\n";
           } else {
-            responseDeserialization = indent + indent + "TODO(kamran) Deserialization of response should be done.\r\n";
+            responseDeserialization = indent + indent + TypeHelper::GetCCType(method->GetReturnType()) + " returnObject;\r\n";
+            responseDeserialization += indent + indent + "// TODO(kamran) Deserialization of response should be done.\r\n";
           }
           std::stringstream serviceHashSS;
           serviceHashSS << service->GetHash();
