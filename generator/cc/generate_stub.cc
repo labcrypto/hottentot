@@ -187,8 +187,8 @@ namespace naeem {
               /*
                * Filling templates with real values
                */
-              params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
-              params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + "_impl.cc"));
+              params["GENERATION_DATE"] = ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime();
+              params["FILENAME"] = serviceNameSnakeCase + "_impl.cc";
               std::string implCCTemplate;
               ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_cc.template", implCCTemplate);
               for (std::map<std::string, std::string>::iterator it = params.begin();
@@ -204,6 +204,27 @@ namespace naeem {
                */
               f.open(implCCFilePath.c_str(), std::fstream::out | std::fstream::binary);
               f << implCCTemplate;
+              f.close();
+              /*
+               * Filling templates with real values
+               */
+              params["GENERATION_DATE"] = ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime();
+              params["FILENAME"] = serviceNameSnakeCase + "_server.cc";
+              std::string serverTemplate;
+              ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/server.template", serverTemplate);
+              for (std::map<std::string, std::string>::iterator it = params.begin();
+                   it != params.end();
+                   ++it) {
+                serverTemplate = 
+                  ::naeem::hottentot::generator::common::StringHelper::Replace(serverTemplate, 
+                                                                               "[[[" + it->first + "]]]", 
+                                                                               it->second);
+              }
+              /*
+               * Writing final results to files
+               */
+              f.open(serverFilePath.c_str(), std::fstream::out | std::fstream::binary);
+              f << serverTemplate;
               f.close();
             }
           }          
