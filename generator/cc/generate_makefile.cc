@@ -48,19 +48,24 @@ namespace naeem {
                                       ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
           std::string makefile = "RTDIR = ../../cc/runtime\r\n";
           makefile += "all:\r\n";
+          makefile += "\tmkdir -p bin\r\n";
           makefile += "\tmkdir -p lib\r\n";
+          makefile += "\tmkdir -p lib/proxy\r\n";
+          makefile += "\tmkdir -p lib/service\r\n";
           for (uint32_t moduleCounter = 0; moduleCounter < hot->modules_.size(); moduleCounter++) {
             for (uint32_t structCounter = 0; structCounter < hot->modules_[moduleCounter]->structs_.size(); structCounter++) {
-              makefile += "\tg++ -c -I$(RTDIR) " + 
+              std::string structName = 
                 ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-                  hot->modules_[moduleCounter]->structs_[structCounter]->GetName()) + ".cc\r\n";
+                  hot->modules_[moduleCounter]->structs_[structCounter]->GetName());
+              makefile += "\tg++ -c -I$(RTDIR) " + structName + ".cc -o lib/" + structName + ".o\r\n";
             }
             for (uint32_t serviceCounter = 0; serviceCounter < hot->modules_[moduleCounter]->services_.size(); serviceCounter++) {
-              std::string serviceNam =
+              std::string serviceName =
                 ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
                   hot->modules_[moduleCounter]->services_[serviceCounter]->GetName() + "Service");
-              makefile += "\tg++ -c -I$(RTDIR) proxy/" + serviceNam + "_proxy.cc\r\n";
-              makefile += "\tg++ -c -I$(RTDIR) proxy/" + serviceNam + "_proxy_builder.cc\r\n";
+              makefile += "\tg++ -c -I$(RTDIR) proxy/" + serviceName + "_proxy.cc -o lib/proxy/" + serviceName + "_proxy.o\r\n";
+              makefile += "\tg++ -c -I$(RTDIR) proxy/" + serviceName + "_proxy_builder.cc -o lib/proxy/" + serviceName + "_proxy_builder.o\r\n";
+              makefile += "\tg++ -c -I$(RTDIR) service/" + serviceName + "_request_handler.cc -o lib/service/" + serviceName + "_request_handler.o\r\n";
             }
           }
           std::string filename = generationConfig.GetOutDir() + "/Makefile";
