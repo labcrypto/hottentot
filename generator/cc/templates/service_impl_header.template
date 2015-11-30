@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include <string>
 
-#include "../generated/service/abstract_[[[SNAKE_CASE_SERVICE_NAME]]].h"
+#include "../service/abstract_[[[SNAKE_CASE_SERVICE_NAME]]].h"
 
 
 [[[NAMESPACES_START]]]

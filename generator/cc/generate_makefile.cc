@@ -55,6 +55,9 @@ namespace naeem {
           if (generationConfig.IsClientGenerated()) {
             makefile += "\tmkdir -p lib/client\r\n";
           }
+          if (generationConfig.IsStubGenerated()) {
+            makefile += "\tmkdir -p lib/stub\r\n";
+          }
           for (uint32_t moduleCounter = 0; moduleCounter < hot->modules_.size(); moduleCounter++) {
             for (uint32_t structCounter = 0; structCounter < hot->modules_[moduleCounter]->structs_.size(); structCounter++) {
               std::string structName = 
@@ -71,6 +74,9 @@ namespace naeem {
               makefile += "\tg++ -c -I$(RTDIR) service/" + serviceName + "_request_handler.cc -o lib/service/" + serviceName + "_request_handler.o\r\n";
               if (generationConfig.IsClientGenerated()) {
                 makefile += "\tg++ -c -I$(RTDIR) client/" + serviceName + "_client.cc -o lib/client/" + serviceName + "_client.o\r\n";
+              }
+              if (generationConfig.IsStubGenerated()) {
+                makefile += "\tg++ -c -I$(RTDIR) stub/" + serviceName + "_impl.cc -o lib/stub/" + serviceName + "_impl.o\r\n";
               }
             }
           }
