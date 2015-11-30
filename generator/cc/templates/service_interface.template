@@ -18,7 +18,7 @@
 [[[NAMESPACES_START]]]
 [[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]] {
 [[[INDENT]]]public:
-[[[INDENT]]][[[INDENT]]][[[METHOD_DEFS]]]
+[[[METHOD_DEFS]]]
 [[[INDENT]]]};
 [[[NAMESPACES_END]]]
 

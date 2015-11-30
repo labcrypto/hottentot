@@ -74,7 +74,7 @@ namespace naeem {
                */
               std::map<std::string, std::string> params;
               params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
-              params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + "_proxy.h"));
+              params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + "_client.h"));
               params.insert(std::pair<std::string, std::string>("NAMESPACE","::" + 
                 ::naeem::hottentot::generator::common::StringHelper::Concat( 
                   ::naeem::hottentot::generator::common::StringHelper::Split(
@@ -101,7 +101,7 @@ namespace naeem {
               f << clientTemplate;
               f.close();
             }
-          }          
+          }
         }
       }
     }
