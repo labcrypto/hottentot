@@ -90,7 +90,6 @@ namespace naeem {
             ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
             methods += GenerateProxyCCMethod(service, method, generationConfig, templates) + "\r\n";
           }
-          methods = ::naeem::hottentot::generator::common::StringHelper::Trim(methods);
           /*
            * Filling templates with real values
            */

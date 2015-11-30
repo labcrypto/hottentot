@@ -7,12 +7,12 @@
  ******************************************************************/
  
 #include <naeem/hottentot/runtime/utils.h>
+ #include <naeem/hottentot/runtime/logger.h>
 
 #include "[[[SNAKE_CASE_SERVICE_NAME]]]_impl.h"
 
 [[[INCLUDE_STRUCT_HEADERS]]]
 
 
-[[[NAMESPACE_START]]]
-  [[METHODS]]
-[[[NAMESPACE_END]]]
+[[[NAMESPACES_START]]]
+[[[METHODS]]][[[NAMESPACES_END]]]

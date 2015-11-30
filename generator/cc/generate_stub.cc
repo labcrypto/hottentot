@@ -98,6 +98,54 @@ namespace naeem {
                 methodDefs += ");\r\n";
               }
               methodDefs = ::naeem::hottentot::generator::common::StringHelper::Trim(methodDefs);
+              std::string methods = "";
+              for (uint32_t i = 0; i < service->methods_.size(); i++) {
+                ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
+                std::string arguments = "";
+                std::string sep = "";
+                for (uint32_t j = 0; j < method->arguments_.size(); j++) {
+                  arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " " + (TypeHelper::IsUDT(method->arguments_[j]->GetType()) ? "*" : "") + method->arguments_[j]->GetVariable();
+                  sep = ", ";
+                }
+                std::string returnClause = "";
+                if (!TypeHelper::IsVoid(method->GetReturnType())) {
+                  if (TypeHelper::IsUDT(method->GetReturnType())) {
+                    returnClause += indent + indent + "return NULL;";
+                  } else {
+                    returnClause += indent + indent + "return 0;";
+                  }
+                } else {
+                  returnClause += indent + indent + "return;";
+                }
+                std::string methodTemplate;
+                ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_cc__method.template", methodTemplate);
+                methodTemplate = 
+                  ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
+                                                                               "[[[CAMEL_CASE_FC_SERVICE_NAME]]]", 
+                                                                               serviceNameCamelCaseFirstCapital);
+                methodTemplate = 
+                  ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
+                                                                               "[[[ARGUMENTS]]]", 
+                                                                               arguments);
+                methodTemplate = 
+                  ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
+                                                                               "[[[METHOD_NAME]]]", 
+                                                                               ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()));
+                methodTemplate = 
+                  ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
+                                                                               "[[[RETURN_TYPE]]]", 
+                                                                               TypeHelper::GetCCType(method->GetReturnType()) + (TypeHelper::IsUDT(method->GetReturnType()) ? "*" : ""));
+                methodTemplate = 
+                  ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
+                                                                               "[[[RETURN_CLAUSE]]]", 
+                                                                               returnClause);
+                methodTemplate = 
+                  ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
+                                                                               "[[[INDENT]]]", 
+                                                                               indent);
+                  
+                methods += methodTemplate + "\r\n";
+              }
               /*
                * Filling templates with real values
                */
@@ -117,6 +165,7 @@ namespace naeem {
               params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
               params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
               params.insert(std::pair<std::string, std::string>("METHOD_DEFS", methodDefs));
+              params.insert(std::pair<std::string, std::string>("METHODS", methods));
               params.insert(std::pair<std::string, std::string>("INDENT", indent));
               std::string implHeaderTemplate;
               ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_header.template", implHeaderTemplate);
