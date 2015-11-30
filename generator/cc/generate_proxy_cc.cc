@@ -177,8 +177,16 @@ namespace naeem {
                                                                            indent);
             responseDeserialization += proxyCCResponseDeserializationTemplate + "\r\n";
           } else {
-            responseDeserialization = indent + indent + TypeHelper::GetCCType(method->GetReturnType()) + " returnObject;\r\n";
+            if (!TypeHelper::IsVoid(method->GetReturnType())) {
+              responseDeserialization = indent + indent + TypeHelper::GetCCType(method->GetReturnType()) + " returnObject;\r\n";
+            }
             responseDeserialization += indent + indent + "// TODO(kamran) Deserialization of response should be done.\r\n";
+          }
+          std::string returnClause = "";
+          if (!TypeHelper::IsVoid(method->GetReturnType())) {
+            returnClause += indent + indent + "return returnObject;";
+          } else {
+            returnClause += indent + indent + "return;";
           }
           std::stringstream serviceHashSS;
           serviceHashSS << service->GetHash();
@@ -196,6 +204,7 @@ namespace naeem {
           params.insert(std::pair<std::string, std::string>("RESPONSE_DESERIALIZATION", responseDeserialization));
           params.insert(std::pair<std::string, std::string>("SERVICE_HASH", serviceHashSS.str()));
           params.insert(std::pair<std::string, std::string>("METHOD_HASH", methodHashSS.str()));
+          params.insert(std::pair<std::string, std::string>("RETURN_CLAUSE", returnClause));
           params.insert(std::pair<std::string, std::string>("INDENT", indent));
           std::string proxyCCMethodTemplate = templates["proxy_cc__method"];
           for (std::map<std::string, std::string>::iterator it = params.begin();
