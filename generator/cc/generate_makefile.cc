@@ -77,6 +77,7 @@ namespace naeem {
               }
               if (generationConfig.IsStubGenerated()) {
                 makefile += "\tg++ -c -I$(RTDIR) stub/" + serviceName + "_impl.cc -o lib/stub/" + serviceName + "_impl.o\r\n";
+                makefile += "\tg++ -c -I$(RTDIR) stub/" + serviceName + "_server.cc -o lib/stub/" + serviceName + "_server.o\r\n";
               }
             }
           }
