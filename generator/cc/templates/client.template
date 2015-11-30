@@ -11,9 +11,9 @@
 #include <naeem/hottentot/runtime/logger.h>
 #include <naeem/hottentot/runtime/proxy/proxy_runtime.h>
 
-[[[INCLUDE_STRUCTS]]]
-[[[INCLUDE_SERVICE_INTERFACES]]]
-[[[INCLUDE_PROXY_BUILDERS]]]
+[[[INCLUDE_STRUCT_HEADERS]]]
+#include "../[[[SNAKE_CASE_SERVICE_NAME]]].h"
+#include "../proxy/[[[SNAKE_CASE_SERVICE_NAME]]]_proxy_builder.h"
 
 
 int 
@@ -21,15 +21,11 @@ main(int argc, char **argv) {
   try {
     ::naeem::hottentot::runtime::Logger::Init();
     ::naeem::hottentot::runtime::proxy::ProxyRuntime::Init(argc, argv);
-    ::naeem::hottentot::examples::auth::AuthenticateService *proxy = 
-        ::naeem::hottentot::examples::auth::proxy::AuthenticateServiceProxyBuilder::Create("127.0.0.1", 2005);
-    ::naeem::hottentot::examples::auth::Credential credential;
-    credential.SetUsername("Admin");
-    credential.SetPassword("12345");
-    ::naeem::hottentot::examples::auth::Token *token = proxy->Authenticate(&credential);
-    std::cout << "Token: " << token->GetValue() << std::endl;
-    ::naeem::hottentot::examples::auth::proxy::AuthenticateServiceProxyBuilder::Destroy(proxy);
-    delete token;
+    [[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]] *proxy = 
+        [[[NAMESPACE]]]::proxy::[[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Create("127.0.0.1", 2000);
+    // TODO Do whatever you want with proxy objects.
+    [[[NAMESPACE]]]::proxy::[[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Destroy(proxy);
+    // Delete allocated objects
   } catch (...) {
     std::cout << "Error." << std::endl;
     return 1;

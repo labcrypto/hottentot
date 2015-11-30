@@ -52,6 +52,9 @@ namespace naeem {
           makefile += "\tmkdir -p lib\r\n";
           makefile += "\tmkdir -p lib/proxy\r\n";
           makefile += "\tmkdir -p lib/service\r\n";
+          if (generationConfig.IsClientGenerated()) {
+            makefile += "\tmkdir -p lib/client\r\n";
+          }
           for (uint32_t moduleCounter = 0; moduleCounter < hot->modules_.size(); moduleCounter++) {
             for (uint32_t structCounter = 0; structCounter < hot->modules_[moduleCounter]->structs_.size(); structCounter++) {
               std::string structName = 
@@ -66,6 +69,9 @@ namespace naeem {
               makefile += "\tg++ -c -I$(RTDIR) proxy/" + serviceName + "_proxy.cc -o lib/proxy/" + serviceName + "_proxy.o\r\n";
               makefile += "\tg++ -c -I$(RTDIR) proxy/" + serviceName + "_proxy_builder.cc -o lib/proxy/" + serviceName + "_proxy_builder.o\r\n";
               makefile += "\tg++ -c -I$(RTDIR) service/" + serviceName + "_request_handler.cc -o lib/service/" + serviceName + "_request_handler.o\r\n";
+              if (generationConfig.IsClientGenerated()) {
+                makefile += "\tg++ -c -I$(RTDIR) client/" + serviceName + "_client.cc -o lib/client/" + serviceName + "_client.o\r\n";
+              }
             }
           }
           std::string filename = generationConfig.GetOutDir() + "/Makefile";
