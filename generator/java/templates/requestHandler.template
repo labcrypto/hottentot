@@ -30,6 +30,6 @@ public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
 [%INDENT%][%INDENT%][%SERVICE_NAME%]Service [%SERVICE_NAME_LOWERCASE%]Impl = (Abstract[%SERVICE_NAME%]Service) service;
 
 [%METHOD_CONDITIONS%]
-[%INDENT%][%INDENT%][%INDENT%]throw new MethodNotSupportException("method id is incorrect");
+[%INDENT%][%INDENT%]throw new MethodNotSupportException("method id is incorrect");
 [%INDENT%][%INDENT%]}
 }
