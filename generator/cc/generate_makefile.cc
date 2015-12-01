@@ -59,11 +59,13 @@ namespace naeem {
             makefile += "\tmkdir -p lib/stub\r\n";
           }
           for (uint32_t moduleCounter = 0; moduleCounter < hot->modules_.size(); moduleCounter++) {
+            std::string objectFiles = "";
             for (uint32_t structCounter = 0; structCounter < hot->modules_[moduleCounter]->structs_.size(); structCounter++) {
               std::string structName = 
                 ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
                   hot->modules_[moduleCounter]->structs_[structCounter]->GetName());
               makefile += "\tg++ -c -I$(RTDIR) " + structName + ".cc -o lib/" + structName + ".o\r\n";
+              objectFiles += "lib/" + structName + ".o ";
             }
             for (uint32_t serviceCounter = 0; serviceCounter < hot->modules_[moduleCounter]->services_.size(); serviceCounter++) {
               std::string serviceName =
@@ -72,12 +74,17 @@ namespace naeem {
               makefile += "\tg++ -c -I$(RTDIR) proxy/" + serviceName + "_proxy.cc -o lib/proxy/" + serviceName + "_proxy.o\r\n";
               makefile += "\tg++ -c -I$(RTDIR) proxy/" + serviceName + "_proxy_builder.cc -o lib/proxy/" + serviceName + "_proxy_builder.o\r\n";
               makefile += "\tg++ -c -I$(RTDIR) service/" + serviceName + "_request_handler.cc -o lib/service/" + serviceName + "_request_handler.o\r\n";
+              objectFiles += "lib/proxy/" + serviceName + "_proxy.o ";
+              objectFiles += "lib/proxy/" + serviceName + "_proxy_builder.o ";
+              objectFiles += "lib/service/" + serviceName + "_request_handler.o ";
               if (generationConfig.IsClientGenerated()) {
                 makefile += "\tg++ -c -I$(RTDIR) client/" + serviceName + "_client.cc -o lib/client/" + serviceName + "_client.o\r\n";
+                makefile += "\tg++ " + objectFiles + " -o " + serviceName + "_client.out\r\n";
               }
               if (generationConfig.IsStubGenerated()) {
                 makefile += "\tg++ -c -I$(RTDIR) stub/" + serviceName + "_impl.cc -o lib/stub/" + serviceName + "_impl.o\r\n";
                 makefile += "\tg++ -c -I$(RTDIR) stub/" + serviceName + "_server.cc -o lib/stub/" + serviceName + "_server.o\r\n";
+                makefile += "\tg++ " + objectFiles + " -o " + serviceName + "_server.out\r\n";
               }
             }
           }
