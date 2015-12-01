@@ -18,17 +18,17 @@
 
 int
 main(int argc, char **argv) {
-  try {
-    ::naeem::hottentot::runtime::Logger::Init();
-    ::naeem::hottentot::runtime::Logger::GetOut() << "Starting server ..." << std::endl;
-    ::naeem::hottentot::runtime::service::ServiceRuntime::Init(argc, argv);
-    [[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl *service =
-        new [[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl;
-    ::naeem::hottentot::runtime::service::ServiceRuntime::Register("0.0.0.0", 2000, service);
-    ::naeem::hottentot::runtime::service::ServiceRuntime::Start();
-  } catch (...) {
-    std::cout << "Error." << std::endl;
-    return 1;
-  }
-  return 0;
+[[[INDENT]]]try {
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::Init();
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Starting server ..." << std::endl;
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::ServiceRuntime::Init(argc, argv);
+[[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl *service =
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]new [[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl;
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::ServiceRuntime::Register("0.0.0.0", 2000, service);
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::ServiceRuntime::Start();
+[[[INDENT]]]} catch (...) {
+[[[INDENT]]][[[INDENT]]]std::cout << "Error." << std::endl;
+[[[INDENT]]][[[INDENT]]]return 1;
+[[[INDENT]]]}
+[[[INDENT]]]return 0;
 }

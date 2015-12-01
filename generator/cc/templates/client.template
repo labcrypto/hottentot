@@ -20,11 +20,15 @@ int
 main(int argc, char **argv) {
 [[[INDENT]]]try {
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::Init();
+[[[INDENT]]][[[INDENT]]]std::cout << "Logger is initialized." << std::endl;
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::ProxyRuntime::Init(argc, argv);
+[[[INDENT]]][[[INDENT]]]std::cout << "Proxy runtime is initialized." << std::endl;
 [[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]] *proxy = 
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::proxy::[[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Create("127.0.0.1", 2000);
+[[[INDENT]]][[[INDENT]]]std::cout << "Proxy object is created." << std::endl;
 [[[INDENT]]][[[INDENT]]]// TODO Do whatever you want with proxy objects.
 [[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::proxy::[[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Destroy(proxy);
+[[[INDENT]]][[[INDENT]]]std::cout << "Proxy object is destroyed." << std::endl;
 [[[INDENT]]][[[INDENT]]]// Delete allocated objects
 [[[INDENT]]]} catch (...) {
 [[[INDENT]]][[[INDENT]]]std::cout << "Error." << std::endl;

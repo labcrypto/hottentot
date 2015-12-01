@@ -19,13 +19,13 @@
 
 [[[NAMESPACES_START]]]
 namespace service {
-  void 
-  [[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler::HandleRequest(::naeem::hottentot::runtime::Request &request, ::naeem::hottentot::runtime::Response &response) {
-    [[[METHOD_IF_CLAUSES]]]
-    char errorMessage[] = "Method not found.";
-    response.SetStatusCode(1);
-    response.SetData((unsigned char*)errorMessage);
-    response.SetDataLength(strlen(errorMessage));
-  }
+[[[INDENT]]]void 
+[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler::HandleRequest(::naeem::hottentot::runtime::Request &request, ::naeem::hottentot::runtime::Response &response) {
+[[[INDENT]]][[[INDENT]]][[[METHOD_IF_CLAUSES]]]
+[[[INDENT]]][[[INDENT]]]char errorMessage[] = "Method not found.";
+[[[INDENT]]][[[INDENT]]]response.SetStatusCode(1);
+[[[INDENT]]][[[INDENT]]]response.SetData((unsigned char*)errorMessage);
+[[[INDENT]]][[[INDENT]]]response.SetDataLength(strlen(errorMessage));
+[[[INDENT]]]}
 } // END OF NAMESPACE service
 [[[NAMESPACES_END]]]

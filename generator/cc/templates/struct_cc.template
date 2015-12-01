@@ -13,12 +13,12 @@
 
 
 [[[NAMESPACES_START]]]
-  unsigned char *
-  [[[STRUCT_NAME]]]::Serialize(uint32_t *length) {
-    [[[SERIALIZATION]]]
-  }
-  void
-  [[[STRUCT_NAME]]]::Deserialize(unsigned char *data, uint32_t length) {
-    [[[DESERIALIZATION]]]
-  }
+[[[INDENT]]]unsigned char *
+[[[INDENT]]][[[STRUCT_NAME]]]::Serialize(uint32_t *length) {
+[[[INDENT]]][[[INDENT]]][[[SERIALIZATION]]]
+[[[INDENT]]]}
+[[[INDENT]]]void
+[[[INDENT]]][[[STRUCT_NAME]]]::Deserialize(unsigned char *data, uint32_t length) {
+[[[INDENT]]][[[INDENT]]][[[DESERIALIZATION]]]
+[[[INDENT]]]}
 [[[NAMESPACES_END]]]
