@@ -31,5 +31,5 @@ public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
 
 [%METHOD_CONDITIONS%]
 [%INDENT%][%INDENT%]throw new MethodNotSupportException("method id is incorrect");
-[%INDENT%][%INDENT%]}
+[%INDENT%]}
 }

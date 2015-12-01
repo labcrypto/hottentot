@@ -278,7 +278,8 @@ namespace naeem {
                             deserializeMethodStr += indent_ + indent_ + "//" + declarationPtr->variable_ + " : " + declarationJavaType + "\n";
                             if(declarationJavaType.compare("String") == 0) {
                                 deserializeMethodStr += indent_ + indent_ + "dataLength = 0;\n";
-                                deserializeMethodStr += indent_ + indent_ + "if(serializedByteArray[counter] < 0x80){\n";
+                                deserializeMethodStr += indent_ + indent_ +
+                                                        "if(( serializedByteArray[counter] & 0x80) == 0 ) {\n";
                                 deserializeMethodStr += indent_ + indent_ + indent_ + "dataLength = serializedByteArray[counter++];\n";
                                 deserializeMethodStr += indent_ + indent_ + "}else{\n";             
                                 deserializeMethodStr += indent_ + indent_ + indent_ + "numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;\n";
@@ -515,7 +516,9 @@ namespace naeem {
                                 methodConditionStr += " = arg" + ssI.str() + ".getData();\n";
                                 if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)){
                                     methodConditionStr +=
-                                        indent_ + indent_ + indent_ + pArg->type_ + " " + pArg->variable_ + " = new " +
+                                        indent_ + indent_ + indent_ +
+                                        pArg->type_ + " " + pArg->variable_ +
+                                        " = new " +
                                         pArg->type_ + "();\n";
 
                                         methodConditionStr +=
@@ -531,7 +534,10 @@ namespace naeem {
                                     std::string capitalizedArgVar = 
                                       ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
                                       pArg->variable_);
-                                      methodConditionStr +=
+                                    if(capitalizedArgType == "String"){
+                                        capitalizedArgType = "FullString";
+                                    }
+                                    methodConditionStr +=
                                         indent_ + indent_ + indent_ +
                                         javaType +
                                         " " +
