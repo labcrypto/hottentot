@@ -16,13 +16,13 @@
 
 
 [[[NAMESPACES_START]]]
-  class [[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl : public [[[NAMESPACE]]]::service::Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]] {
-  public:
-    [[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl() {}
-    virtual ~[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl() {}
-  public:
-    [[[METHOD_DEFS]]]
-  };
+[[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl : public [[[NAMESPACE]]]::service::Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]] {
+[[[INDENT]]]public:
+[[[INDENT]]][[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl() {}
+[[[INDENT]]][[[INDENT]]]virtual ~[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl() {}
+[[[INDENT]]]public:
+[[[INDENT]]][[[INDENT]]][[[METHOD_DEFS]]]
+[[[INDENT]]]};
 [[[NAMESPACES_END]]]
 
 #endif

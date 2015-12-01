@@ -1,0 +1,11 @@
+module ir.ntnaeem.hottentot.examples.echoer {
+  struct RequestMessage {
+    string name ord(1);
+  };
+  struct ResponseMessage {
+    string message ord(1);
+  };
+  stateless service Echo {
+    ResponseMessage echoMessage(RequestMessage req);
+  };
+};
