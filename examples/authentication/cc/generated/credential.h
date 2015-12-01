@@ -26,7 +26,7 @@
 
 #include <string>
 
-#include <naeem/hottentot/serialization/serializable.h>
+#include <naeem/hottentot/runtime/serializable.h>
 
 
 namespace naeem {
