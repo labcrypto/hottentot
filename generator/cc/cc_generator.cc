@@ -145,7 +145,7 @@ namespace naeem {
                                        templates);
             }
           }
-          std::cout << "C++ Generation done." << std::endl;
+          // std::cout << "C++ Generation done." << std::endl;
         }
       }
     }
