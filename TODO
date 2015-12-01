@@ -8,4 +8,5 @@ Custom Encryption                                                               
 Compression                                                                           [TODO]
 Support SSL Sockets                                                                   [TODO]
 Custom C++ Extension                                                                  [TODO]
-
+We have to consider a length for header in request and response for backward
+compatibility.                                                                        [TODO]
