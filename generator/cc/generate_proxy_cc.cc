@@ -80,7 +80,7 @@ namespace naeem {
           for (uint32_t i = 0; i < service->module_->structs_.size(); i++) {
             includeStructHeaders += "#include \"../" + 
               ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-                service->module_->structs_[i]->GetName()) + ".h\";\r\n";
+                service->module_->structs_[i]->GetName()) + ".h\"\r\n";
           }
           namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
           namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
@@ -90,7 +90,6 @@ namespace naeem {
             ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
             methods += GenerateProxyCCMethod(service, method, generationConfig, templates) + "\r\n";
           }
-          methods = ::naeem::hottentot::generator::common::StringHelper::Trim(methods);
           /*
            * Filling templates with real values
            */
@@ -170,15 +169,28 @@ namespace naeem {
             proxyCCResponseDeserializationTemplate =
               ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCResponseDeserializationTemplate,
                                                                            "[[[RETURN_TYPE]]]",
-                                                                           method->GetReturnType());
+                                                                           TypeHelper::GetCCType(method->GetReturnType()));
             proxyCCResponseDeserializationTemplate =
               ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCResponseDeserializationTemplate,
                                                                            "[[[INDENT]]]",
                                                                            indent);
             responseDeserialization += proxyCCResponseDeserializationTemplate + "\r\n";
           } else {
-            responseDeserialization = indent + indent + "TODO(kamran) Deserialization of response should be done.\r\n";
+            if (!TypeHelper::IsVoid(method->GetReturnType())) {
+              responseDeserialization = indent + indent + TypeHelper::GetCCType(method->GetReturnType()) + " returnObject;\r\n";
+            }
+            responseDeserialization += indent + indent + "// TODO(kamran) Deserialization of response should be done.\r\n";
           }
+          std::string returnClause = "";
+          if (!TypeHelper::IsVoid(method->GetReturnType())) {
+            returnClause += indent + indent + "return returnObject;";
+          } else {
+            returnClause += indent + indent + "return;";
+          }
+          std::stringstream serviceHashSS;
+          serviceHashSS << service->GetHash();
+          std::stringstream methodHashSS;
+          methodHashSS << method->GetHash();
           /*
            * Filling templates with real values
            */
@@ -189,6 +201,9 @@ namespace naeem {
           params.insert(std::pair<std::string, std::string>("ARGUMENTS", arguments));
           params.insert(std::pair<std::string, std::string>("ARGUMENTS_SERIALIZATION", argumentsSerialization));
           params.insert(std::pair<std::string, std::string>("RESPONSE_DESERIALIZATION", responseDeserialization));
+          params.insert(std::pair<std::string, std::string>("SERVICE_HASH", serviceHashSS.str()));
+          params.insert(std::pair<std::string, std::string>("METHOD_HASH", methodHashSS.str()));
+          params.insert(std::pair<std::string, std::string>("RETURN_CLAUSE", returnClause));
           params.insert(std::pair<std::string, std::string>("INDENT", indent));
           std::string proxyCCMethodTemplate = templates["proxy_cc__method"];
           for (std::map<std::string, std::string>::iterator it = params.begin();

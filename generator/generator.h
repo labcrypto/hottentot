@@ -65,6 +65,24 @@ namespace naeem {
         inline void SetSpacesUsedInsteadOfTabsForIndentation(bool spacesUsedInsteadOfTabsForIndentation) {
           spacesUsedInsteadOfTabsForIndentation_ = spacesUsedInsteadOfTabsForIndentation;
         }
+        inline bool IsMakefileGenerated() const {
+          return makefileGenerated_;
+        }
+        inline void SetMakefileGenerated(bool makefileGenerated) {
+          makefileGenerated_ = makefileGenerated;
+        }
+        inline bool IsClientGenerated() const {
+          return clientGenerated_;
+        }
+        inline void SetClientGenerated(bool clientGenerated) {
+          clientGenerated_ = clientGenerated;
+        }
+        inline bool IsStubGenerated() const {
+          return stubGenerated_;
+        }
+        inline void SetStubGenerated(bool stubGenerated) {
+          stubGenerated_ = stubGenerated;
+        }
         inline uint8_t GetNumberOfSpacesUsedForIndentation() const {
           return numberOfSpacesUsedForIndentation_;
         }
@@ -82,6 +100,9 @@ namespace naeem {
           return "\t";
         }
       private:
+        bool makefileGenerated_;
+        bool clientGenerated_;
+        bool stubGenerated_;
         bool spacesUsedInsteadOfTabsForIndentation_;
         uint8_t numberOfSpacesUsedForIndentation_;
         std::string outDir_;

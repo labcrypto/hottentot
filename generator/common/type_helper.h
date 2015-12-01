@@ -21,21 +21,17 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__CC__TYPE_HELPER_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__CC__TYPE_HELPER_H_
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__COMMON__TYPE_HELPER_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__COMMON__TYPE_HELPER_H_
 
-#include "../common/string_helper.h"
-
+#include <stdexcept>
 
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace cc {
+      namespace common {
         class TypeHelper {
         public:
-          static inline bool IsVoid(std::string type) {
-            return ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(type) == "void";
-          }
           static inline bool IsUDT(std::string type) {
             if (type == "int8") {
               return false;
@@ -97,6 +93,43 @@ namespace naeem {
               return "unsigned char *";
             } else if (type == "date") {
               return "uint64_t";
+            } else if (type == "double") {
+              return "double";
+            } else if (type == "void") {
+              return "void";
+            }
+            return type;
+          }
+          static inline std::string GetJavaType(std::string type) {
+            if(IsUDT(type)){
+                std::runtime_error("type is not PDT");
+            }
+            if (type == "int8") {
+              return "byte";
+            } else if (type == "int16") {
+              return "short";
+            } else if (type == "int32") {
+              return "int";
+            } else if (type == "int64") {
+              return "long";
+            } else if (type == "uint8") {
+              return "byte";
+            } else if (type == "uint16") {
+              return "short";
+            } else if (type == "uint32") {
+              return "int";
+            } else if (type == "uint64") {
+              return "long";
+            } else if (type == "bool") {
+              return "boolean";
+            } else if (type == "string") {
+              return "String";
+            } else if (type == "char") {
+              return "char";
+            } else if (type == "data") {
+              return "byte[]";
+            } else if (type == "date") {
+              return "date";
             } else if (type == "double") {
               return "double";
             } else if (type == "void") {

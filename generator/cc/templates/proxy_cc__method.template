@@ -74,5 +74,5 @@
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Return the acquired token
 [[[INDENT]]][[[INDENT]]] */
-[[[INDENT]]][[[INDENT]]]return returnObject;
+[[[INDENT]]][[[INDENT]]][[[RETURN_CLAUSE]]]
 [[[INDENT]]]}

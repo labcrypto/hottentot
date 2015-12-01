@@ -113,6 +113,7 @@ namespace naeem {
           }
           static inline std::string MakeLowerCase(std::string str) {
             std::string result(str);
+
             std::transform(str.begin(), str.end(), result.begin(), ::tolower);
             return result;
           }
@@ -122,9 +123,12 @@ namespace naeem {
             return result;
           }
           static inline std::string MakeFirstCapital(std::string str) {
+            if((int)str[0] < 97 || (int)str[0] > 122){
+              return str;   
+            }    
             std::string result = str;
             result[0] = std::toupper(result[0]);
-            return result;
+            return result;         
           }
           static inline std::string MakeCamelCase(std::vector<std::string> strs, 
                                                   bool firstCapital = true) {
@@ -158,11 +162,11 @@ namespace naeem {
           }
           static inline std::string MakeCamelCaseFirstCapital(std::string str, 
                                                               char del = ' ') {
-            return MakeCamelCase(Split(str, del));
+            return MakeCamelCase(Split(MakeSnakeCaseFromCamelCase(str), '_'));
           }
           static inline std::string MakeCamelCaseFirstSmall(std::string str, 
                                                             char del = ' ') {
-            return MakeCamelCase(Split(str, del), false);
+            return MakeCamelCase(Split(MakeSnakeCaseFromCamelCase(str), '_'), false);
           }
           static inline std::string MakeSnakeCase(std::string str, 
                                                   char del = ' ') {

@@ -34,8 +34,6 @@ namespace naeem {
   namespace hottentot {
     namespace examples {
       namespace auth {
-        class Token;
-        class Credential;
         class AuthenticateServiceImpl : public ::naeem::hottentot::examples::auth::service::AbstractAuthenticateService {
         public:
           AuthenticateServiceImpl() {}

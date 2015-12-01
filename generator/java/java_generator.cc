@@ -28,6 +28,7 @@
 #include <sstream>
 #include "../common/string_helper.h"
 #include "../common/os.h" 
+#include "../common/type_helper.h" 
 #include "templates/byte_arrays/abstractService.h" 
 #include "templates/byte_arrays/requestHandler.h" 
 #include "templates/byte_arrays/service.h" 
@@ -42,6 +43,23 @@ namespace naeem {
 
                 JavaGenerator::~JavaGenerator() {
                     //TODO change vector to map 
+
+                    // for (int i = 0; i < modules_.size(); i++) {
+                    //     ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
+                    //     for (int j = 0; j < pModule->structs_.size(); j++) {
+                    //         ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(j);
+                    //         for (int k = 0; k < pStruct->declarations_.size(); k++) {
+                    //             delete pStruct->declarations_.at(k);
+                    //         }
+                    //         delete pStruct;
+                    //     }
+                    //     delete pModule;
+                    // }
+                }
+                
+                void
+                JavaGenerator::Destroy(){
+                    //TODO
 
                     // for (int i = 0; i < modules_.size(); i++) {
                     //     ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
@@ -91,28 +109,10 @@ namespace naeem {
                         GenerateServiceProxy(pModule);
                     }
                     std::cout << "Java Generation done." << std::endl;
+                    Destroy();
                 }
 
-                std::string
-                JavaGenerator::ConvertType(std::string hotType){
-                	std::string javaType;
-                	if (hotType.compare("string") == 0) {
-						javaType = "String";
-					} else if (hotType.compare("int8") == 0 ||
-					           hotType.compare("uint8") == 0) {
-					    javaType = "short";
-					} else if (hotType.compare("int16") == 0 ||
-					           hotType.compare("uint16") == 0) {
-					    javaType = "short";
-					} else if (hotType.compare("int32") == 0 ||
-					           hotType.compare("uint32") == 0) {
-					    javaType = "int";
-					} else if (hotType.compare("int64") == 0 ||
-					           hotType.compare("uint64") == 0) {
-					    javaType = "long";
-					}
-					return javaType;
-                }
+                
 
                 uint32_t
                 JavaGenerator::GetTypeLength(std::string type){
@@ -176,7 +176,7 @@ namespace naeem {
                              it != pStruct->declarations_.end();
                              ++it) {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
-                            declarationJavaType = ConvertType(declarationPtr->type_);
+                            declarationJavaType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
                             capitalizedDeclarationJavaType  = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
                             std::string declarationName = declarationPtr->variable_;
                             std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
@@ -205,7 +205,7 @@ namespace naeem {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                             std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
                             serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
-                            declarationJavaType = ConvertType(declarationPtr->type_);
+                            declarationJavaType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
                             capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
                             std::string capitalizedDeclarationType  = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->type_);
                             serializeMethodStr += capitalizedDeclarationType + "(";
@@ -233,7 +233,7 @@ namespace naeem {
                              it != pStruct->declarations_.end();
                              ++it) {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
-                            declarationJavaType = ConvertType(declarationPtr->type_);
+                            declarationJavaType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
                             capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
                             std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
                             serializeMethodStr += indent_ + indent_ + "for (int i = 0; i < serialized" +
@@ -272,7 +272,7 @@ namespace naeem {
                              it != pStruct->declarations_.end();
                              ++it) {
                             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
-                            declarationJavaType = ConvertType(declarationPtr->type_);
+                            declarationJavaType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
                             std::string capitalizedDeclarationType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->type_);
                             std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
                             deserializeMethodStr += indent_ + indent_ + "//" + declarationPtr->variable_ + " : " + declarationJavaType + "\n";
@@ -391,17 +391,31 @@ namespace naeem {
                         ::naeem::hottentot::generator::ds::Method *pMethod;
                         for (int i = 0; i < pService->methods_.size(); i++) {
                             pMethod = pService->methods_.at(i);
-                            serviceMethodsStr += indent_ + "" + pMethod->returnType_ + " " + pMethod->name_ + "(";
+                            if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
+                                serviceMethodsStr += indent_ + "" + pMethod->returnType_ + " " + pMethod->name_ + "(";    
+                            }else{
+                                std::string returnType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
+                                serviceMethodsStr += indent_ + "" + returnType + " " + pMethod->name_ + "(";
+                            }
+                            
                             //loop on methods arguments
                             ::naeem::hottentot::generator::ds::Argument *pArg;
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
                                 pArg = pMethod->arguments_.at(i);
-                                serviceMethodsStr += pArg->type_ + " " + pArg->variable_;
+                                if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
+                                    serviceMethodsStr += pArg->type_ + " " + pArg->variable_;    
+                                }else{
+                                    std::string argType =
+                                    ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(
+                                      pArg->type_);
+                                    serviceMethodsStr += argType + " " + pArg->variable_;
+                                }
+                                
                                 if (i < pMethod->arguments_.size() - 1) {
                                     serviceMethodsStr += ",";
                                 }
                             }
-                            serviceMethodsStr += ");";
+                            serviceMethodsStr += ");\n";
                         };
                         replacableServiceTmpStr.replace(replacableServiceTmpStr.find("[%SERVICE_METHODS%]"), 19,
                                                         serviceMethodsStr);
@@ -454,7 +468,6 @@ namespace naeem {
                         lowerCaseServiceName[0] += 32;
                         replacableRequestHandlerTmpStr = requestHandlerTmpStr;
 
-
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableRequestHandlerTmpStr , "[%INDENT%]" , indent_ , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableRequestHandlerTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
                         // while (replacableRequestHandlerTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
@@ -478,9 +491,10 @@ namespace naeem {
                             //get hashed mehod id
                             std::stringstream ssID;
                             ssID << pMethod->GetHash();
-                            methodConditionStr += "if(methodId == " + ssID.str() + "L){\n";
-                            methodConditionStr +=
-                                    indent_ + indent_ + indent_ + "List <Argument> args = request.getArgs();\n";
+                            methodConditionStr += indent_ + indent_ +
+                                                  "if(methodId == " + ssID.str() + "L){\n";
+                            methodConditionStr += indent_ + indent_ +
+                                                  indent_ + "List <Argument> args = request.getArgs();\n";
                             ::naeem::hottentot::generator::ds::Argument *pArg;
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
                                 pArg = pMethod->arguments_.at(i);
@@ -489,23 +503,68 @@ namespace naeem {
                                 methodConditionStr +=
                                         indent_ + indent_ + indent_ + "Argument arg" + ssI.str() + " = args.get(" +
                                         ssI.str() + ");\n";
-                                methodConditionStr += indent_ + indent_ + indent_ + "byte[] serialized" + pArg->type_;
+                                std::string argType = 
+                                    ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(
+                                    pArg->type_);
+                                std::string capitalizedArgVar = 
+                                    ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+                                    pArg->variable_);
+                                methodConditionStr += indent_ + indent_ + indent_ +
+                                                     "byte[] serialized"
+                                                      + capitalizedArgVar;
                                 methodConditionStr += " = arg" + ssI.str() + ".getData();\n";
-                                methodConditionStr +=
+                                if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)){
+                                    methodConditionStr +=
                                         indent_ + indent_ + indent_ + pArg->type_ + " " + pArg->variable_ + " = new " +
                                         pArg->type_ + "();\n";
-                                methodConditionStr +=
+
+                                        methodConditionStr +=
                                         indent_ + indent_ + indent_ + pArg->variable_ + ".deserialize(serialized" +
                                         pArg->type_ + ");\n";
+                                }else{
+                                    std::string javaType = 
+                                      ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(
+                                      pArg->type_);
+                                    std::string capitalizedArgType = 
+                                      ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+                                      pArg->type_);
+                                    std::string capitalizedArgVar = 
+                                      ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+                                      pArg->variable_);
+                                      methodConditionStr +=
+                                        indent_ + indent_ + indent_ +
+                                        javaType +
+                                        " " +
+                                        pArg->variable_.c_str() +
+                                        " = PDTDeserializer.get" +
+                                        capitalizedArgType +
+                                        "(serialized" + 
+                                        capitalizedArgVar + 
+                                        ");\n";
+                                }
                             }
-                            methodConditionStr +=
+                            if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
+                               methodConditionStr +=
                                     indent_ + indent_ + indent_ + pMethod->returnType_ + " " + lowerCaseReturnType +
-                                    " = null;\n";
+                                    " = null;\n"; 
+                            }
+                            
                             methodConditionStr += indent_ + indent_ + indent_ + "Response response = new Response();\n";
                             //methodConditionStr += indent_ + indent_ + "try{\n";
-                            methodConditionStr +=
+                            if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
+                                methodConditionStr +=
                                     indent_ + indent_ + indent_ + lowerCaseReturnType + " = " + lowerCaseServiceName +
                                     "Impl." + pMethod->name_ + "(";
+                            }else{
+                                std::string javaReturnType = 
+                                  ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(
+                                    pMethod->returnType_);
+                                methodConditionStr +=
+                                    indent_ + indent_ + indent_ + javaReturnType +
+                                    " result = " +
+                                    lowerCaseServiceName +
+                                    "Impl." + pMethod->name_ + "(";
+                            }
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
                                 pArg = pMethod->arguments_.at(i);
                                 methodConditionStr += pArg->variable_;
@@ -514,17 +573,46 @@ namespace naeem {
                                 }
                             }
                             methodConditionStr += ");\n";
-                            methodConditionStr +=
+
+                            if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
+                                
+                                methodConditionStr +=
                                     indent_ + indent_ + indent_ + "byte[] serialized" + pMethod->returnType_ + " = " +
-                                    lowerCaseReturnType + ".serialize();\n";
+                                    lowerCaseReturnType + ".serialize();\n";    
+                            }else{
+                                std::string javaReturnType = 
+                                  ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(
+                                    pMethod->returnType_);
+                                std::string capitalizedReturnType = 
+                                  ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+                                    pMethod->returnType_);
+                                methodConditionStr += 
+                                    indent_ + indent_ + indent_ +
+                                    "byte[] serializedResult = " + 
+                                    "PDTSerializer.get" +
+                                    capitalizedReturnType + 
+                                    "( result );\n";
+                            }
+                            
+                            
                             methodConditionStr += indent_ + indent_ + indent_ + "response.setStatusCode((byte) 100);\n";
-                            methodConditionStr +=
+                            
+                            if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
+                                methodConditionStr +=
                                     indent_ + indent_ + indent_ + "response.setData(serialized" + pMethod->returnType_ +
                                     ");\n";
-                            methodConditionStr += indent_ + indent_ + indent_ + "response.setLength(serialized" +
-                                                  pMethod->returnType_ + ".length + 1);\n";
+                                methodConditionStr += indent_ + indent_ + indent_ + "response.setLength(serialized" +
+                                                  pMethod->returnType_ + ".length + 1);\n";    
+                            }else{
+                                methodConditionStr +=
+                                    indent_ + indent_ + indent_ +
+                                    "response.setData(serializedResult);\n";
+                                methodConditionStr += indent_ + indent_ + indent_ +
+                                    "response.setLength(serializedResult.length + 1);\n";
+                            }
+
                             methodConditionStr += indent_ + indent_ + indent_ + "return response;\n";
-                            methodConditionStr += indent_ + indent_ + "}";
+                            methodConditionStr += indent_ + indent_ + "}\n";
 
                         }
                         replacableRequestHandlerTmpStr.replace(
@@ -544,7 +632,6 @@ namespace naeem {
                         std::string replacableServiceProxyStrTmp = serviceProxyTmpStr;
                         pService = pModule->services_.at(i);
                         pService = pModule->services_.at(i);
-
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp , "[%INDENT%]" , indent_ , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp,"[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
                         ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp,"[%SERVICE_NAME%]" , pService->name_ , 1);
@@ -554,20 +641,42 @@ namespace naeem {
                         for (int i = 0; i < pService->methods_.size(); i++) {
                             pMethod = pService->methods_.at(i);
                             pMethod = pService->methods_.at(i);
-                            methodsStr += "public " + pMethod->returnType_ + " " + pMethod->name_ + "(";
+                            std::string returnType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
+                            methodsStr += "public " + returnType + " " + pMethod->name_ + "(";
                             ::naeem::hottentot::generator::ds::Argument *pArg;
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
                                 pArg = pMethod->arguments_.at(i);
-                                methodsStr += pArg->type_ + " " + pArg->variable_;
+                                std::string argType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pArg->type_);
+                                methodsStr += argType + " " + pArg->variable_;
                                 if (i < pMethod->arguments_.size() - 1) {
                                     methodsStr += ",";
                                 }
                             }
                             methodsStr += ") { \n";
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
+                                pArg = pMethod->arguments_.at(i);
                                 methodsStr += indent_ + indent_ + "//serialize " + pArg->variable_ + "\n";
-                                methodsStr += indent_ + indent_ + "byte[] serialized" + pArg->type_ + " = " +
+                                std::string capitalalizedArgVar = 
+                                ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+                                  pArg->variable_);     
+                                if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)){
+                                    methodsStr += indent_ + indent_ +
+                                              "byte[] serialized" +
+                                              capitalalizedArgVar + " = " +
                                               pArg->variable_ + ".serialize();\n";
+                                }else{
+                                    std::string capitalizedArgType =
+                                    ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+                                      pArg->type_);
+                                    methodsStr += indent_ + indent_ +
+                                                  "byte[] serialized" +
+                                                  capitalalizedArgVar + " = " +
+                                                  "PDTSerializer.get" + 
+                                                  capitalizedArgType +
+                                                  "(" +
+                                                  pArg->variable_+ 
+                                                  ");\n" ;
+                                }
                             }
                             methodsStr += "\n";
                             methodsStr += indent_ + indent_ + "//make request\n";
@@ -595,11 +704,30 @@ namespace naeem {
                                 pArg = pMethod->arguments_.at(i);
                                 ssI << i;
                                 methodsStr += indent_ + indent_ + "Argument arg" + ssI.str() + " = new Argument();\n";
-                                methodsStr += indent_ + indent_ + "arg" + ssI.str() + ".setDataLength(" +
-                                              pArg->variable_.c_str() + ".serialize().length);\n";
-                                methodsStr +=
-                                        indent_ + indent_ + "arg" + ssI.str() + ".setData(" + pArg->variable_.c_str() +
-                                        ".serialize());\n";
+                                methodsStr += indent_ + indent_ + "arg" + ssI.str() + ".setDataLength(";
+
+                                if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)){
+                                    methodsStr += pArg->variable_ + ".serialize().length);\n";
+                                    methodsStr += indent_ + indent_ + 
+                                    "arg" + ssI.str() + ".setData(" + pArg->variable_.c_str() +
+                                    ".serialize());\n";
+                                }else{
+                                    std::string capitalizedArgType = 
+                                    ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+                                      pArg->type_); 
+                                    methodsStr += "PDTSerializer.get" + 
+                                    capitalizedArgType +
+                                    "(" +
+                                    pArg->variable_.c_str() +
+                                    ").length);\n";
+                                    methodsStr += indent_ + indent_ + 
+                                    "arg" + ssI.str() + ".setData(PDTSerializer.get" + 
+                                    capitalizedArgType + 
+                                    "(" + 
+                                    pArg->variable_ + 
+                                    "));\n";
+                                }
+                                
                                 methodsStr += indent_ + indent_ + "request.addArgument(arg" + ssI.str() + ");\n";
                             }
                             //calculate request length
@@ -608,11 +736,14 @@ namespace naeem {
                             for (int i = 0; i < pMethod->arguments_.size(); i++) {
                                 pArg = pMethod->arguments_.at(i);
                                 std::string argDataLengthVarName = pArg->variable_ + "DataLength";
+                                std::string capitalizedArgVar = 
+                                ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+                                  pArg->variable_); 
                                 std::string argDataLengthByteArrayLengthVarName =
                                         pArg->variable_ + "DataLengthByteArrayLength";
                                 methodsStr += indent_ + indent_ + "//calulate " + argDataLengthVarName + "\n";
                                 methodsStr += indent_ + indent_ + "int " + argDataLengthVarName + "= serialized" +
-                                              pArg->type_ + ".length;\n";
+                                              capitalizedArgVar  + ".length;\n";
                                 methodsStr +=
                                         indent_ + indent_ + "int " + argDataLengthByteArrayLengthVarName + " = 1;\n";
                                 methodsStr += indent_ + indent_ + "if (" + argDataLengthVarName + " >= 0x80) {\n";
@@ -674,24 +805,38 @@ namespace naeem {
                             methodsStr += indent_ + indent_ + "//deserialize " + pMethod->returnType_ +
                                           "part from response\n";
                             std::string lowerCaseReturnType = pMethod->returnType_;
+                            std::string capitalizedReturnType = 
+                            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+                              pMethod->returnType_);
                             lowerCaseReturnType[0] += 32;
-                            methodsStr += indent_ + indent_ + "" + pMethod->returnType_ + " " + lowerCaseReturnType +
-                                          "= null;\n";
+                            if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)) {
+                                methodsStr += indent_ + indent_ + "" + pMethod->returnType_ + " " + lowerCaseReturnType +
+                                              "= null;\n";    
+                            }
                             methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-                            methodsStr += indent_ + indent_ + indent_ + "//\n";
-                            methodsStr += indent_ + indent_ + "} else {\n";
-                            methodsStr += indent_ + indent_ + indent_ + "" + lowerCaseReturnType + "= new " +
-                                          pMethod->returnType_ + "();\n";
-                            methodsStr += indent_ + indent_ + indent_ + "" + lowerCaseReturnType +
-                                          ".deserialize(response.getData());\n";
+                            methodsStr += indent_ + indent_ + indent_ + "// TODO\n";
                             methodsStr += indent_ + indent_ + "}\n";
-                            methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
-                            methodsStr += indent_ + "}\n";
+
+                            if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)) {
+                                methodsStr += indent_ + indent_ + indent_ + "" + lowerCaseReturnType + "= new " +
+                                          pMethod->returnType_ + "();\n";
+                                methodsStr += indent_ + indent_ + indent_ + "" + lowerCaseReturnType +
+                                              ".deserialize(response.getData());\n";
+                                methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
+                                methodsStr += indent_ + "}\n"; 
+                            }else {
+                                std::string capitalizedArgType = 
+                                ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+                                  pArg->type_);
+                                methodsStr += indent_ + indent_ +
+                                              "return PDTDeserializer.get" + 
+                                              capitalizedReturnType + 
+                                              "(response.getData());\n";
+                                methodsStr += indent_ + "}\n"; 
+                            }
                         }
                         replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%METHODS%]"), 11,
                                                              methodsStr);
-                        
-
                         std::string path = outDir_ + "/" + pService->name_.c_str() + "ServiceProxy.java";
                         ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableServiceProxyStrTmp);
                     }

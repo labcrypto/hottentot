@@ -59,7 +59,7 @@ namespace naeem {
             ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
               serviceNameCamelCaseFirstCapital);
           std::string serviceNameScreamingSnakeCase =
-          ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
+            ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
           std::string serviceProxyHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy.h";
           /*
            * Making real values
@@ -83,17 +83,15 @@ namespace naeem {
           namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
           structClassForwardDeclarations = ::naeem::hottentot::generator::common::StringHelper::Trim(structClassForwardDeclarations);
           std::string methodDefs = "";
-          std::string methodIndent = "";
           for (uint32_t i = 0; i < service->methods_.size(); i++) {
             ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
-            methodDefs += methodIndent + TypeHelper::GetCCType(method->GetReturnType()) + (TypeHelper::IsUDT(method->GetReturnType()) ? "*" : "") + " " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
+            methodDefs += indent + indent + TypeHelper::GetCCType(method->GetReturnType()) + (TypeHelper::IsUDT(method->GetReturnType()) ? "*" : "") + " " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
             std::string sep = "";
             for (uint32_t j = 0; j < method->arguments_.size(); j++) {
               methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " " + (TypeHelper::IsUDT(method->arguments_[j]->GetType()) ? "*" : "") + method->arguments_[j]->GetVariable();
               sep = ", ";
             }
             methodDefs += ");\r\n";
-            methodIndent = indent + indent;
           }
           methodDefs = ::naeem::hottentot::generator::common::StringHelper::Trim(methodDefs);
           /*

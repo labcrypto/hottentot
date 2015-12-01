@@ -3,4 +3,9 @@ Ids of methods and services should be hashed in 32 bits.                        
 Option for choosing end-of-line character: \r\n for Windows, \n for Unix.             [TODO]
 Serialization and deserialization for primitive data types.                           [TODO]
 Producing each struct in its namespace directory.                                     [TODO]
+Support collection types: list, set and map                                           [TODO]
+Custom Encryption                                                                     [TODO]
+Compression                                                                           [TODO]
+Support SSL Sockets                                                                   [TODO]
+Custom C++ Extension                                                                  [TODO]
 

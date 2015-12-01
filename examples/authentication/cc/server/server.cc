@@ -28,7 +28,6 @@
 
 #include "../generated/token.h"
 #include "../generated/credential.h"
-#include "../generated/authenticate_service.h"
 
 #include "authenticate_service_impl.h"
 

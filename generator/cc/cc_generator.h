@@ -41,6 +41,12 @@ namespace naeem {
         public:
           virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
                                 ::naeem::hottentot::generator::GenerationConfig &);
+          virtual void GenerateMakefile(::naeem::hottentot::generator::ds::Hot *,
+                                        ::naeem::hottentot::generator::GenerationConfig &);
+          virtual void GenerateClient(::naeem::hottentot::generator::ds::Hot *,
+                                        ::naeem::hottentot::generator::GenerationConfig &);
+          virtual void GenerateStub(::naeem::hottentot::generator::ds::Hot *,
+                                    ::naeem::hottentot::generator::GenerationConfig &);
         protected:
           virtual void GenerateServiceInterface(::naeem::hottentot::generator::ds::Service *,
                                                 ::naeem::hottentot::generator::GenerationConfig &,
@@ -71,6 +77,20 @@ namespace naeem {
           virtual void GenerateStructCC(::naeem::hottentot::generator::ds::Struct *,
                                         ::naeem::hottentot::generator::GenerationConfig &,
                                         std::map<std::string, std::string> &);
+          virtual void GenerateAbstractServiceHeader(::naeem::hottentot::generator::ds::Service *,
+                                                     ::naeem::hottentot::generator::GenerationConfig &,
+                                                     std::map<std::string, std::string> &);
+          virtual void GenerateRequestHandlerHeader(::naeem::hottentot::generator::ds::Service *,
+                                                    ::naeem::hottentot::generator::GenerationConfig &,
+                                                    std::map<std::string, std::string> &);
+          virtual void GenerateRequestHandlerCC(::naeem::hottentot::generator::ds::Service *,
+                                                ::naeem::hottentot::generator::GenerationConfig &,
+                                                std::map<std::string, std::string> &);
+          virtual std::string GenerateRequestHandlerCCMethodIfClause(::naeem::hottentot::generator::ds::Service *,
+                                                                     ::naeem::hottentot::generator::ds::Method *,
+                                                                     ::naeem::hottentot::generator::GenerationConfig &,
+                                                                     std::map<std::string, std::string> &);
+          
         };
       }
     }
