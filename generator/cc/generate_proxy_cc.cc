@@ -155,13 +155,7 @@ namespace naeem {
                                                                              "[[[INDENT]]]",
                                                                              indent);
               argumentsSerialization += proxyCCMethodUDTArgumentSerializationTemplate + "\r\n";
-            } else {
-              std::string argumentLength = "";
-              if (TypeHelper::HasFixedLength(method->arguments_[j]->GetType())) {
-                argumentsSerialization += indent + indent + ""
-              } else {
-
-              }
+            } else {             
               argumentsSerialization += indent + indent + "// TODO(kamran) Serialization should be done for argument '" + method->arguments_[j]->GetVariable() + "'\r\n";
             }
             argumentsSerialization =
