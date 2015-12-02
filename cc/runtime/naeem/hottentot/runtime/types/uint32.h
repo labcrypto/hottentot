@@ -47,7 +47,7 @@ namespace naeem {
           inline void SetValue(uint32_t value) {
             value_ = value;
           }
-          inline uint32_t GetData() const {
+          inline uint32_t GetValue() const {
             return data_;
           }
         public:

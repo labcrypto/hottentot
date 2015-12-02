@@ -21,11 +21,10 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME__TYPES__UINT64_H_
-#define _NAEEM_HOTTENTOT_RUNTIME__TYPES__UINT64_H_
+#ifndef _NAEEM_HOTTENTOT_RUNTIME__TYPES__BOOLEAN_H_
+#define _NAEEM_HOTTENTOT_RUNTIME__TYPES__BOOLEAN_H_
 
 #include <iostream>
-#include <stdexcept>
 #include <stdint.h>
 
 #include "../serializable.h"
@@ -35,55 +34,40 @@ namespace naeem {
   namespace hottentot {
     namespace runtime {
       namespace types {
-        class UInt64 : public ::naeem::hottentot::runtime::Serializable {
+        class Boolean : public ::naeem::hottentot::runtime::Serializable {
         public:
-          UInt64()
+          Boolean()
             : value_(0) {
           }
-          UInt64(uint64_t value)
-            : value_(value) {
+          Boolean(bool value)
+            : value_(value != 0) {
           }
-          virtual ~UInt64() {}
+          virtual ~Boolean() {}
         public:
-          inline void SetValue(uint64_t value) {
+          inline void SetValue(bool value) {
             value_ = value;
           }
-          inline uint64_t GetValue() const {
-            return data_;
+          inline bool GetValue() const {
+            return value_;
           }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            *length_ptr = 8 * sizeof(unsigned char);
+            *length_ptr = 1 * sizeof(unsigned char);
             unsigned char *data = 
-              new unsigned char[8 * sizeof(unsigned char)];
+              new unsigned char[1 * sizeof(unsigned char)];
             unsigned char *ptr = (unsigned char*)(&value_);
-            data[0] = ptr[0];
-            data[1] = ptr[1];
-            data[2] = ptr[2];
-            data[3] = ptr[3];
-            data[4] = ptr[4];
-            data[5] = ptr[5];
-            data[6] = ptr[6];
-            data[7] = ptr[7];
+            data[0] = value_ ? 1 : 0;
             return data;
           }
           inline virtual void Deserialize(unsigned char data,
                                           uint32_t length) {
-            if (length != 8) {
+            if (length != 1) {
               throw std::runtime_exception("Length is not correct for deserialization.");
             }
-            unsigned char *ptr = (unsigned char*)(&value_);
-            ptr[0] = data[0];
-            ptr[1] = data[1];
-            ptr[2] = data[2];
-            ptr[3] = data[3];
-            ptr[4] = data[4];
-            ptr[5] = data[5];
-            ptr[6] = data[6];
-            ptr[7] = data[7];
+            value_ = data[0] != 0;
           }
         private:
-          uint64_t value_;
+          bool value_;
         };
       }
     }

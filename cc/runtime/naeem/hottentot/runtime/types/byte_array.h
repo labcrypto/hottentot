@@ -52,7 +52,7 @@ namespace naeem {
             data_ = data;
             length_ = length;
           }
-          inline unsigned char* GetData() const {
+          inline unsigned char* GetValue() const {
             return data_;
           }
           inline uint32_t GetLength() const {

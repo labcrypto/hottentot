@@ -63,6 +63,10 @@ namespace naeem {
               return false;
             } else if (type == "date") {
               return false;
+            } else if (type == "time") {
+              return false;
+            } else if (type == "datetime") {
+              return false;
             } else if (type == "double") {
               return false;
             } else if (type == "void") {
