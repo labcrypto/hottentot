@@ -149,13 +149,19 @@ namespace naeem {
           std::string argumentsSerialization = "";
           for (uint32_t j = 0; j < method->arguments_.size(); j++) {
             if (TypeHelper::IsUDT(method->arguments_[j]->GetType())) {
-              std::string proxyCCMethodArgumentSerializationTemplate = templates["proxy_cc__method_argument_serialization"];
-              proxyCCMethodArgumentSerializationTemplate =
-                ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodArgumentSerializationTemplate,
+              std::string proxyCCMethodUDTArgumentSerializationTemplate = templates["proxy_cc__method_udt_argument_serialization"];
+              proxyCCMethodUDTArgumentSerializationTemplate =
+                ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodUDTArgumentSerializationTemplate,
                                                                              "[[[INDENT]]]",
                                                                              indent);
-              argumentsSerialization += proxyCCMethodArgumentSerializationTemplate + "\r\n";
+              argumentsSerialization += proxyCCMethodUDTArgumentSerializationTemplate + "\r\n";
             } else {
+              std::string argumentLength = "";
+              if (TypeHelper::HasFixedLength(method->arguments_[j]->GetType())) {
+                argumentsSerialization += indent + indent + ""
+              } else {
+
+              }
               argumentsSerialization += indent + indent + "// TODO(kamran) Serialization should be done for argument '" + method->arguments_[j]->GetVariable() + "'\r\n";
             }
             argumentsSerialization =
@@ -165,16 +171,16 @@ namespace naeem {
           }
           std::string responseDeserialization = "";
           if (TypeHelper::IsUDT(method->GetReturnType())) {
-            std::string proxyCCResponseDeserializationTemplate = templates["proxy_cc__response_deserialization"];
-            proxyCCResponseDeserializationTemplate =
-              ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCResponseDeserializationTemplate,
+            std::string proxyCCMethodResponseDeserializationTemplate = templates["proxy_cc__method_response_deserialization"];
+            proxyCCMethodResponseDeserializationTemplate =
+              ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                            "[[[RETURN_TYPE]]]",
                                                                            TypeHelper::GetCCType(method->GetReturnType()));
-            proxyCCResponseDeserializationTemplate =
-              ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCResponseDeserializationTemplate,
+            proxyCCMethodResponseDeserializationTemplate =
+              ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                            "[[[INDENT]]]",
                                                                            indent);
-            responseDeserialization += proxyCCResponseDeserializationTemplate + "\r\n";
+            responseDeserialization += proxyCCMethodResponseDeserializationTemplate + "\r\n";
           } else {
             if (!TypeHelper::IsVoid(method->GetReturnType())) {
               responseDeserialization = indent + indent + TypeHelper::GetCCType(method->GetReturnType()) + " returnObject;\r\n";
