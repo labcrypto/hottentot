@@ -43,6 +43,7 @@ compile:
 	g++ -c cc/generate_makefile.cc -o .lib/generate_makefile.o
 	g++ -c cc/generate_client.cc -o .lib/generate_client.o
 	g++ -c cc/generate_stub.cc -o .lib/generate_stub.o
+	g++ -c cc/templates/templates.cc -o .lib/templates.o
 	g++ -c java/java_generator.cc -o .lib/java_generator.o
 	g++ -c dep/fasthash.cc -o .lib/fasthash.o
 	g++ -c ds/service.cc -o .lib/service.o
@@ -63,6 +64,7 @@ compile:
 	    .lib/generate_makefile.o \
 	    .lib/generate_client.o \
 	    .lib/generate_stub.o \
+	    .lib/templates.o \
 	    .lib/java_generator.o \
 	    .lib/fasthash.o \
 	    .lib/service.o \
