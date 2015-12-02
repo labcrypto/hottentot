@@ -25,6 +25,7 @@
 #define _NAEEM_HOTTENTOT_RUNTIME__TYPES__UTF8_STRING_H_
 
 #include <iostream>
+#include <stdexcept>
 #include <stdint.h>
 
 #include "../serializable.h"
@@ -46,7 +47,7 @@ namespace naeem {
             // TODO(kamran)
             return 0;
           }
-          inline virtual void Deserialize(unsigned char data,
+          inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
             // TODO(kamran)
           }

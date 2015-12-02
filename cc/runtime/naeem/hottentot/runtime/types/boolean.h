@@ -25,6 +25,7 @@
 #define _NAEEM_HOTTENTOT_RUNTIME__TYPES__BOOLEAN_H_
 
 #include <iostream>
+#include <stdexcept>
 #include <stdint.h>
 
 #include "../serializable.h"
@@ -59,10 +60,10 @@ namespace naeem {
             data[0] = value_ ? 1 : 0;
             return data;
           }
-          inline virtual void Deserialize(unsigned char data,
+          inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
             if (length != 1) {
-              throw std::runtime_exception("Length is not correct for deserialization.");
+              throw std::runtime_error("Length is not correct for deserialization.");
             }
             value_ = data[0] != 0;
           }

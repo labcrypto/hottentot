@@ -21,24 +21,19 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME__SERIALIZABLE_H_
-#define _NAEEM_HOTTENTOT_RUNTIME__SERIALIZABLE_H_
+#ifndef _NAEEM_HOTTENTOT_RUNTIME__TYPES__PRIMITIVES_H_
+#define _NAEEM_HOTTENTOT_RUNTIME__TYPES__PRIMITIVES_H_
 
-#include <stdint.h>
-#include <vector>
-
-
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      class Serializable {
-      public:
-        virtual unsigned char * Serialize(uint32_t *        /* Pointer to length */) = 0;
-        virtual void Deserialize(unsigned char *   /* Data */,
-                                 uint32_t          /* Data length */) = 0;
-      };
-    }
-  }
-}
+#include "boolean.h"
+#include "byte_array.h"
+#include "int16.h"
+#include "int32.h"
+#include "int64.h"
+#include "int8.h"
+#include "uint16.h"
+#include "uint32.h"
+#include "uint64.h"
+#include "uint8.h"
+#include "utf8_string.h"
 
 #endif

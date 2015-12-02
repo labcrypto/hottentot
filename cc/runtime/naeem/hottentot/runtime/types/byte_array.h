@@ -25,6 +25,7 @@
 #define _NAEEM_HOTTENTOT_RUNTIME__TYPES__BYTE_ARRAY_H_
 
 #include <iostream>
+#include <stdexcept>
 #include <stdint.h>
 
 #include "../serializable.h"
@@ -68,7 +69,7 @@ namespace naeem {
             }
             return data;
           }
-          inline virtual void Deserialize(unsigned char data,
+          inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
             data_ = data;
             length_ = length;

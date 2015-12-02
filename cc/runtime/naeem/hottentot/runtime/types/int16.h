@@ -25,6 +25,7 @@
 #define _NAEEM_HOTTENTOT_RUNTIME__TYPES__INT16_H_
 
 #include <iostream>
+#include <stdexcept>
 #include <stdint.h>
 
 #include "../serializable.h"
@@ -48,7 +49,7 @@ namespace naeem {
             value_ = value;
           }
           inline int16_t GetValue() const {
-            return data_;
+            return value_;
           }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
@@ -60,10 +61,10 @@ namespace naeem {
             data[1] = ptr[1];
             return data;
           }
-          inline virtual void Deserialize(unsigned char data,
+          inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
             if (length != 2) {
-              throw std::runtime_exception("Length is not correct for deserialization.");
+              throw std::runtime_error("Length is not correct for deserialization.");
             }
             unsigned char *ptr = (unsigned char*)(&value_);
             ptr[0] = data[0];

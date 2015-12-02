@@ -1,4 +1,4 @@
-RTDIR = ../../cc/runtime
+RTDIR = ../../../cc/runtime
 all:
 	mkdir -p bin
 	mkdir -p lib
