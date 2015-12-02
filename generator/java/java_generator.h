@@ -57,6 +57,7 @@ namespace naeem {
           void MakeTabStr(::naeem::hottentot::generator::GenerationConfig &);
           std::string ConvertType(std::string);
           uint32_t GetTypeLength(std::string);
+          void Destroy();
           
         private:
           std::ofstream os;
