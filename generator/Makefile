@@ -24,6 +24,7 @@
 compile:
 	mkdir -p .lib
 	./java/templates/byte_array_maker.sh
+	./cc/templates/generate_templates_header.sh ./cc/templates/
 	yacc -d hot.y
 	g++ -c y.tab.c -o .lib/y.tab.o
 	flex hot.l

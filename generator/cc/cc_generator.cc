@@ -27,6 +27,8 @@
 #include "cc_generator.h"
 #include "type_helper.h"
 
+#include "templates/templates.h"
+
 #include "../ds/hot.h"
 #include "../ds/service.h"
 #include "../ds/method.h"
@@ -49,36 +51,36 @@ namespace naeem {
           /*
            * Reading all needed templates and stroing them in a map
            */
-          std::string abstractServiceHeaderTemplate;
-          std::string proxyBuilderCCTemplate;
-          std::string proxyBuilderHeaderTemplate;
-          std::string proxyCCTemplate;
-          std::string proxyCCMethodTemplate;
-          std::string proxyCCMethodArgumentSerializationTemplate;
-          std::string proxyCCMethodResponseDeserialization;
-          std::string proxyHeaderTemplate;
-          std::string requestHandlerCCTemplate;
-          std::string requestHandlerCCMethodIfClauseTemplate;
-          std::string requestHandlerHeaderTemplate;
-          std::string serviceInterfaceTemplate;
-          std::string structCCTemplate;
-          std::string structHeaderTemplate;
-          std::string structHeaderGetterAndSetterTemplate;
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/abstract_service_header.template", abstractServiceHeaderTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_builder_cc.template", proxyBuilderCCTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_builder_header.template", proxyBuilderHeaderTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc.template", proxyCCTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method.template", proxyCCMethodTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method_argument_serialization.template", proxyCCMethodArgumentSerializationTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method_response_deserialization.template", proxyCCMethodResponseDeserialization);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_header.template", proxyHeaderTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_cc.template", requestHandlerCCTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_cc__method_if_clause.template", requestHandlerCCMethodIfClauseTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_header.template", requestHandlerHeaderTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_interface.template", serviceInterfaceTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_cc.template", structCCTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_header.template", structHeaderTemplate);
-          ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_header__getter_and_setter.template", structHeaderGetterAndSetterTemplate);
+          std::string abstractServiceHeaderTemplate((char *)__cc_templates_abstract_service_header_template, __cc_templates_abstract_service_header_template_len);
+          std::string proxyBuilderCCTemplate((char *)__cc_templates_proxy_builder_cc_template, __cc_templates_proxy_builder_cc_template_len);
+          std::string proxyBuilderHeaderTemplate((char *)__cc_templates_proxy_builder_header_template, __cc_templates_proxy_builder_header_template_len);
+          std::string proxyCCTemplate((char *)__cc_templates_proxy_cc_template, __cc_templates_proxy_cc_template_len);
+          std::string proxyCCMethodTemplate((char *)__cc_templates_proxy_cc__method_template, __cc_templates_proxy_cc__method_template_len);
+          std::string proxyCCMethodArgumentSerializationTemplate((char *)__cc_templates_proxy_cc__method_argument_serialization_template, __cc_templates_proxy_cc__method_argument_serialization_template_len);
+          std::string proxyCCMethodResponseDeserialization((char *)__cc_templates_proxy_cc__method_response_deserialization_template, __cc_templates_proxy_cc__method_response_deserialization_template_len);
+          std::string proxyHeaderTemplate((char *)__cc_templates_proxy_header_template, __cc_templates_proxy_header_template_len);
+          std::string requestHandlerCCTemplate((char *)__cc_templates_request_handler_cc_template, __cc_templates_request_handler_cc_template_len);
+          std::string requestHandlerCCMethodIfClauseTemplate((char *)__cc_templates_request_handler_cc__method_if_clause_template, __cc_templates_request_handler_cc__method_if_clause_template_len);
+          std::string requestHandlerHeaderTemplate((char *)__cc_templates_request_handler_header_template, __cc_templates_request_handler_header_template_len);
+          std::string serviceInterfaceTemplate((char *)__cc_templates_service_interface_template, __cc_templates_service_interface_template_len);
+          std::string structCCTemplate((char *)__cc_templates_struct_cc_template, __cc_templates_struct_cc_template_len);
+          std::string structHeaderTemplate((char *)__cc_templates_struct_header_template, __cc_templates_struct_header_template_len);
+          std::string structHeaderGetterAndSetterTemplate((char *)__cc_templates_struct_header__getter_and_setter_template, __cc_templates_struct_header__getter_and_setter_template_len);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/abstract_service_header.template", abstractServiceHeaderTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_builder_cc.template", proxyBuilderCCTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_builder_header.template", proxyBuilderHeaderTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc.template", proxyCCTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method.template", proxyCCMethodTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method_argument_serialization.template", proxyCCMethodArgumentSerializationTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method_response_deserialization.template", proxyCCMethodResponseDeserialization);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_header.template", proxyHeaderTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_cc.template", requestHandlerCCTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_cc__method_if_clause.template", requestHandlerCCMethodIfClauseTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_header.template", requestHandlerHeaderTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_interface.template", serviceInterfaceTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_cc.template", structCCTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_header.template", structHeaderTemplate);
+          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_header__getter_and_setter.template", structHeaderGetterAndSetterTemplate);
           std::map<std::string, std::string> templates;
           templates.insert(std::pair<std::string, std::string>("abstract_service_header",abstractServiceHeaderTemplate));
           templates.insert(std::pair<std::string, std::string>("proxy_builder_cc",proxyBuilderCCTemplate));
