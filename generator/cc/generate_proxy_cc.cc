@@ -171,44 +171,46 @@ namespace naeem {
             argumentsSerialization += proxyCCMethodArgumentSerializationTemplate + "\r\n";
           }
           std::string responseDeserialization = "";
-          std::string proxyCCMethodResponseDeserializationTemplate = templates["proxy_cc__method_response_deserialization"];
-          proxyCCMethodResponseDeserializationTemplate =
-            ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
-                                                                         "[[[RETURN_TYPE]]]",
-                                                                         TypeHelper::GetCCType(method->GetReturnType()));
-          proxyCCMethodResponseDeserializationTemplate =
-            ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
-                                                                         "[[[INDENT]]]",
-                                                                         indent);
-          
-          if (TypeHelper::IsUDT(method->GetReturnType())) {
+          if (!TypeHelper::IcVoid(method->GetReturnType())) {
+            std::string proxyCCMethodResponseDeserializationTemplate = templates["proxy_cc__method_response_deserialization"];
             proxyCCMethodResponseDeserializationTemplate =
               ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
-                                                                           "[[[ACCESS_OPERATOR]]]",
-                                                                           "->");
+                                                                           "[[[RETURN_TYPE]]]",
+                                                                           TypeHelper::GetCCType(method->GetReturnType()));
             proxyCCMethodResponseDeserializationTemplate =
               ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
-                                                                           "[[[POINTER_SIGN]]]",
-                                                                           "*");
-            proxyCCMethodResponseDeserializationTemplate =
-              ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
-                                                                           "[[[NEW_CLAUSE]]]",
-                                                                           " = new " +  TypeHelper::GetCCType(method->GetReturnType()));
-          } else {
-            proxyCCMethodResponseDeserializationTemplate =         
-              ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
-                                                                           "[[[ACCESS_OPERATOR]]]",
-                                                                           ".");
-            proxyCCMethodResponseDeserializationTemplate =
-              ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
-                                                                           "[[[POINTER_SIGN]]]",
-                                                                           "");
-            proxyCCMethodResponseDeserializationTemplate =
-              ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
-                                                                           "[[[NEW_CLAUSE]]]",
-                                                                           "");
+                                                                           "[[[INDENT]]]",
+                                                                           indent);
+            
+            if (TypeHelper::IsUDT(method->GetReturnType())) {
+              proxyCCMethodResponseDeserializationTemplate =
+                ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
+                                                                             "[[[ACCESS_OPERATOR]]]",
+                                                                             "->");
+              proxyCCMethodResponseDeserializationTemplate =
+                ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
+                                                                             "[[[POINTER_SIGN]]]",
+                                                                             "*");
+              proxyCCMethodResponseDeserializationTemplate =
+                ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
+                                                                             "[[[NEW_CLAUSE]]]",
+                                                                             " = new " +  TypeHelper::GetCCType(method->GetReturnType()));
+            } else {
+              proxyCCMethodResponseDeserializationTemplate =         
+                ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
+                                                                             "[[[ACCESS_OPERATOR]]]",
+                                                                             ".");
+              proxyCCMethodResponseDeserializationTemplate =
+                ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
+                                                                             "[[[POINTER_SIGN]]]",
+                                                                             "");
+              proxyCCMethodResponseDeserializationTemplate =
+                ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
+                                                                             "[[[NEW_CLAUSE]]]",
+                                                                             "");
+            }
+            responseDeserialization += proxyCCMethodResponseDeserializationTemplate + "\r\n";
           }
-          responseDeserialization += proxyCCMethodResponseDeserializationTemplate + "\r\n";
           std::string returnClause = "";
           if (!TypeHelper::IsVoid(method->GetReturnType())) {
             returnClause += indent + indent + "return returnObject;";
