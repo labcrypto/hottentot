@@ -26,6 +26,13 @@ namespace calc {
     c.SetValue(a.GetValue() + b.GetValue());
     return c;
   }
+  ::naeem::hottentot::runtime::types::Int16
+  CalculatorServiceImpl::Mul(::naeem::hottentot::runtime::types::Int16 a, ::naeem::hottentot::runtime::types::Int16 b) {
+    ::naeem::hottentot::runtime::Logger::GetOut() << "CalculatorServiceImpl::Mul() is called." << std::endl;
+    ::naeem::hottentot::runtime::types::Int16 c;
+    c.SetValue(a.GetValue() * b.GetValue());
+    return c;
+  }
 } // END OF NAMESPACE calc
 } // END OF NAMESPACE examples
 } // END OF NAMESPACE hottentot

@@ -26,6 +26,7 @@ namespace calc {
     virtual ~CalculatorServiceImpl() {}
   public:
     virtual ::naeem::hottentot::runtime::types::UInt16 Add(::naeem::hottentot::runtime::types::UInt16 a, ::naeem::hottentot::runtime::types::UInt16 b);
+    virtual ::naeem::hottentot::runtime::types::Int16 Mul(::naeem::hottentot::runtime::types::Int16 a, ::naeem::hottentot::runtime::types::Int16 b);
   };
 } // END OF NAMESPACE calc
 } // END OF NAMESPACE examples

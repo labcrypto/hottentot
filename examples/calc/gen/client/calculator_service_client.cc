@@ -27,10 +27,15 @@ main(int argc, char **argv) {
         ::ir::ntnaeem::hottentot::examples::calc::proxy::CalculatorServiceProxyBuilder::Create("127.0.0.1", 2000);
     std::cout << "Proxy object is created." << std::endl;
     ::naeem::hottentot::runtime::types::UInt16 a(3);
-    ::naeem::hottentot::runtime::types::UInt16 b(4);
+    ::naeem::hottentot::runtime::types::UInt16 b(-5);
     ::naeem::hottentot::runtime::types::UInt16 res = proxy->Add(a, b);
     std::cout << "Response is received." << std::endl;
     std::cout << "Result is " << res.GetValue() << std::endl;
+    ::naeem::hottentot::runtime::types::Int16 x(3);
+    ::naeem::hottentot::runtime::types::Int16 y(-4);
+    ::naeem::hottentot::runtime::types::Int16 res2 = proxy->Mul(x, y);
+    std::cout << "Response is received." << std::endl;
+    std::cout << "Result is " << res2.GetValue() << std::endl;
     ::ir::ntnaeem::hottentot::examples::calc::proxy::CalculatorServiceProxyBuilder::Destroy(proxy);
     std::cout << "Proxy object is destroyed." << std::endl;
     // Delete allocated objects
