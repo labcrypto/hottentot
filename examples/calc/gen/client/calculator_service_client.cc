@@ -12,7 +12,6 @@
  #include <naeem/hottentot/runtime/types/primitives.h>
 #include <naeem/hottentot/runtime/proxy/proxy_runtime.h>
 
-
 #include "../calculator_service.h"
 #include "../proxy/calculator_service_proxy_builder.h"
 
@@ -30,6 +29,7 @@ main(int argc, char **argv) {
     ::naeem::hottentot::runtime::types::UInt16 a(3);
     ::naeem::hottentot::runtime::types::UInt16 b(4);
     ::naeem::hottentot::runtime::types::UInt16 res = proxy->Add(a, b);
+    std::cout << "Respnse is received." << std::endl;
     std::cout << "Result is " << res.GetValue() << std::endl;
     ::ir::ntnaeem::hottentot::examples::calc::proxy::CalculatorServiceProxyBuilder::Destroy(proxy);
     std::cout << "Proxy object is destroyed." << std::endl;

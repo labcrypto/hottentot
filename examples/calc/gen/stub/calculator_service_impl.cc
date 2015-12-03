@@ -23,7 +23,7 @@ namespace calc {
   CalculatorServiceImpl::Add(::naeem::hottentot::runtime::types::UInt16 a, ::naeem::hottentot::runtime::types::UInt16 b) {
     ::naeem::hottentot::runtime::Logger::GetOut() << "CalculatorServiceImpl::Add() is called." << std::endl;
     ::naeem::hottentot::runtime::types::UInt16 c;
-    b.SetValue(a.GetValue() + b.GetValue());
+    c.SetValue(a.GetValue() + b.GetValue());
     return c;
   }
 } // END OF NAMESPACE calc

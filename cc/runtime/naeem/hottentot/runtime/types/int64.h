@@ -57,14 +57,14 @@ namespace naeem {
             unsigned char *data = 
               new unsigned char[8 * sizeof(unsigned char)];
             unsigned char *ptr = (unsigned char*)(&value_);
-            data[0] = ptr[0];
-            data[1] = ptr[1];
-            data[2] = ptr[2];
-            data[3] = ptr[3];
-            data[4] = ptr[4];
-            data[5] = ptr[5];
-            data[6] = ptr[6];
-            data[7] = ptr[7];
+            data[0] = ptr[7];
+            data[1] = ptr[6];
+            data[2] = ptr[5];
+            data[3] = ptr[4];
+            data[4] = ptr[3];
+            data[5] = ptr[2];
+            data[6] = ptr[1];
+            data[7] = ptr[0];
             return data;
           }
           inline virtual void Deserialize(unsigned char *data,
@@ -73,14 +73,14 @@ namespace naeem {
               throw std::runtime_error("Length is not correct for deserialization.");
             }
             unsigned char *ptr = (unsigned char*)(&value_);
-            ptr[0] = data[0];
-            ptr[1] = data[1];
-            ptr[2] = data[2];
-            ptr[3] = data[3];
-            ptr[4] = data[4];
-            ptr[5] = data[5];
-            ptr[6] = data[6];
-            ptr[7] = data[7];
+            ptr[0] = data[7];
+            ptr[1] = data[6];
+            ptr[2] = data[5];
+            ptr[3] = data[4];
+            ptr[4] = data[3];
+            ptr[5] = data[2];
+            ptr[6] = data[1];
+            ptr[7] = data[0];
           }
         private:
           int64_t value_;
