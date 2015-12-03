@@ -12,6 +12,8 @@
 #include <stdint.h>
 #include <string>
 
+#include <naeem/hottentot/runtime/types/primitives.h>
+
 [[[INCLUDE_STRUCT_HEADERS]]]
 
 

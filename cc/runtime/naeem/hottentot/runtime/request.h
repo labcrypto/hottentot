@@ -45,7 +45,9 @@ namespace naeem {
           InvokeStateful
         };
       public:
-        Request() {}
+        Request()
+          : argumentCount_(0) {
+        }
         ~Request() {}
         inline RequestType GetType() const {
           return type_;

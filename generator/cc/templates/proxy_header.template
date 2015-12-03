@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <string>
 
+#include <naeem/hottentot/runtime/types/primitives.h>
 #include <naeem/hottentot/runtime/proxy/proxy.h>
 
 #include "../[[[SNAKE_CASE_SERVICE_NAME]]].h"

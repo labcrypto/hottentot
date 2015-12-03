@@ -1,0 +1,5 @@
+module ir.ntnaeem.hottentot.examples.calc {
+  stateless service Calculator {
+    uint16 add(uint16 a, uint16 b);
+  };
+};

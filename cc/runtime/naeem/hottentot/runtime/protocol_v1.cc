@@ -62,10 +62,11 @@ namespace naeem {
                                    uint32_t *length) {
         uint32_t actualLength = 0;
         actualLength += 1;  // Request type
-        actualLength += 1;  // Service Id
-        actualLength += 1;  // Method Id
+        actualLength += 4;  // Service Id
+        actualLength += 4;  // Method Id
         actualLength += 1;  // Number of arguments
         for (unsigned int i = 0; i < request.GetArgumentCount(); i++) {
+          std::cout << ">>>> " << request.GetArgumentLength(i) << std::endl;
           actualLength += request.GetArgumentLength(i) > 127 ? 3 : 1;
           actualLength += request.GetArgumentLength(i);
         }
@@ -73,8 +74,16 @@ namespace naeem {
         unsigned char *data = new unsigned char[*length];
         unsigned int c = 0;
         data[c++] = request.GetType();
-        data[c++] = request.GetServiceId();
-        data[c++] = request.GetMethodId();
+        uint32_t serviceId = request.GetServiceId();
+        data[c++] = ((unsigned char *)&serviceId)[0];
+        data[c++] = ((unsigned char *)&serviceId)[1];
+        data[c++] = ((unsigned char *)&serviceId)[2];
+        data[c++] = ((unsigned char *)&serviceId)[3];
+        uint32_t methodId = request.GetMethodId();
+        data[c++] = ((unsigned char *)&methodId)[0];
+        data[c++] = ((unsigned char *)&methodId)[1];
+        data[c++] = ((unsigned char *)&methodId)[2];
+        data[c++] = ((unsigned char *)&methodId)[3];
         data[c++] = request.GetArgumentCount();
         for (unsigned int i = 0; i < request.GetArgumentCount(); i++) {
           if (request.GetArgumentLength(i) > 127) {
@@ -125,8 +134,18 @@ namespace naeem {
         uint32_t c = 0;
         Request *request = new Request;
         request->SetType((Request::RequestType)data[c++]);
-        request->SetServiceId(data[c++]);
-        request->SetMethodId(data[c++]);
+        uint32_t serviceId;
+        ((unsigned char *)&serviceId)[0] = data[c++];
+        ((unsigned char *)&serviceId)[1] = data[c++];
+        ((unsigned char *)&serviceId)[2] = data[c++];
+        ((unsigned char *)&serviceId)[3] = data[c++];
+        request->SetServiceId(serviceId);
+        uint32_t methodId;
+        ((unsigned char *)&methodId)[0] = data[c++];
+        ((unsigned char *)&methodId)[1] = data[c++];
+        ((unsigned char *)&methodId)[2] = data[c++];
+        ((unsigned char *)&methodId)[3] = data[c++];
+        request->SetMethodId(methodId);
         request->SetArgumentCount(data[c++]);
         for (unsigned int k = 0; k < request->GetArgumentCount(); k++) {
           uint32_t argLength = 0;
