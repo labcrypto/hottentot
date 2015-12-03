@@ -46,7 +46,7 @@ namespace naeem {
         void
         CCGenerator::GenerateMakefile(::naeem::hottentot::generator::ds::Hot *hot,
                                       ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
-          std::string makefile = "RTDIR = ../../cc/runtime\r\n";
+          std::string makefile = "RTDIR = ../../../cc/runtime\r\n";
           makefile += "all:\r\n";
           makefile += "\tmkdir -p bin\r\n";
           makefile += "\tmkdir -p lib\r\n";
