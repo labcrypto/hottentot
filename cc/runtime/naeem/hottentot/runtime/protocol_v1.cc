@@ -66,7 +66,6 @@ namespace naeem {
         actualLength += 4;  // Method Id
         actualLength += 1;  // Number of arguments
         for (unsigned int i = 0; i < request.GetArgumentCount(); i++) {
-          std::cout << ">>>> " << request.GetArgumentLength(i) << std::endl;
           actualLength += request.GetArgumentLength(i) > 127 ? 3 : 1;
           actualLength += request.GetArgumentLength(i);
         }
