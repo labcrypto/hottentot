@@ -93,6 +93,8 @@ typedef unsigned __int64 uint64_t;
 #include "../../ds/method.h"
 #include "../../ds/argument.h"
 
+#include "../../dep/fasthash.h"
+
 #include "../../cc/cc_generator.h"
 #include "../../java/java_generator.h"
 #else
@@ -101,6 +103,8 @@ typedef unsigned __int64 uint64_t;
 #include "ds/service.h"
 #include "ds/method.h"
 #include "ds/argument.h"
+
+#include "dep/fasthash.h"
 
 #include "cc/cc_generator.h"
 #include "java/java_generator.h"
@@ -122,7 +126,7 @@ std::stack<std::string> stack;
 
 
 /* Line 371 of yacc.c  */
-#line 126 "hot.tab.cpp"
+#line 130 "hot.tab.cpp"
 
 # ifndef YY_NULL
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -177,13 +181,13 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 387 of yacc.c  */
-#line 81 "../../hot.y"
+#line 85 "../../hot.y"
 
   char *string;
 
 
 /* Line 387 of yacc.c  */
-#line 187 "hot.tab.cpp"
+#line 191 "hot.tab.cpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -211,7 +215,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 215 "hot.tab.cpp"
+#line 219 "hot.tab.cpp"
 
 #ifdef short
 # undef short
@@ -512,10 +516,10 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    99,    99,   103,   104,   107,   107,   136,   140,   144,
-     147,   150,   151,   154,   154,   169,   169,   183,   183,   198,
-     200,   201,   204,   210,   213,   214,   217,   217,   229,   230,
-     231,   234,   240,   247,   254,   263,   267
+       0,   103,   103,   107,   108,   111,   111,   140,   144,   148,
+     151,   154,   155,   158,   158,   173,   173,   187,   187,   202,
+     204,   205,   208,   214,   217,   218,   221,   221,   233,   234,
+     235,   238,   244,   251,   258,   267,   271
 };
 #endif
 
@@ -1454,14 +1458,14 @@ yyreduce:
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 99 "../../hot.y"
+#line 103 "../../hot.y"
     {                 
                 }
     break;
 
   case 5:
 /* Line 1792 of yacc.c  */
-#line 107 "../../hot.y"
+#line 111 "../../hot.y"
     {
                   if (currentHot == NULL) {
                     currentHot = new ::naeem::hottentot::generator::ds::Hot();
@@ -1484,7 +1488,7 @@ yyreduce:
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 124 "../../hot.y"
+#line 128 "../../hot.y"
     {
                   // printf("Module parsed.\n");
                   std::string package = "";
@@ -1499,7 +1503,7 @@ yyreduce:
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 136 "../../hot.y"
+#line 140 "../../hot.y"
     { 
                   // printf("Package seen: %s\n", $1);
                   stack.push((yyvsp[(1) - (2)].string));
@@ -1508,7 +1512,7 @@ yyreduce:
 
   case 8:
 /* Line 1792 of yacc.c  */
-#line 140 "../../hot.y"
+#line 144 "../../hot.y"
     { 
                   // printf("Package seen: %s\n", $1);
                   stack.push((yyvsp[(1) - (3)].string)); 
@@ -1517,7 +1521,7 @@ yyreduce:
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 154 "../../hot.y"
+#line 158 "../../hot.y"
     {
                   if (currentStruct == NULL) {
                     currentStruct = new ::naeem::hottentot::generator::ds::Struct(currentModule);
@@ -1533,7 +1537,7 @@ yyreduce:
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 164 "../../hot.y"
+#line 168 "../../hot.y"
     {
                   // printf("Struct seen: %s\n", $3);
                   currentStruct->SetName((yyvsp[(3) - (7)].string));
@@ -1543,7 +1547,7 @@ yyreduce:
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 169 "../../hot.y"
+#line 173 "../../hot.y"
     {
                     if (currentService == NULL) {
                       currentService = new ::naeem::hottentot::generator::ds::Service("stateless", "", currentModule);
@@ -1557,7 +1561,7 @@ yyreduce:
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 177 "../../hot.y"
+#line 181 "../../hot.y"
     {
                   // printf("Stateless service seen: %s\n", $4);
                   currentService->SetName((yyvsp[(4) - (8)].string));
@@ -1568,7 +1572,7 @@ yyreduce:
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 183 "../../hot.y"
+#line 187 "../../hot.y"
     {
                     if (currentService == NULL) {
                       currentService = new ::naeem::hottentot::generator::ds::Service("stateful", "",currentModule);
@@ -1582,7 +1586,7 @@ yyreduce:
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 191 "../../hot.y"
+#line 195 "../../hot.y"
     {
                   // printf("Stateful service seen: %s\n", $4);
                   currentService->SetName((yyvsp[(4) - (8)].string));
@@ -1593,7 +1597,7 @@ yyreduce:
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 204 "../../hot.y"
+#line 208 "../../hot.y"
     {
                   // printf("Declaration3 seen:    LIST<%s> %s %s\n", $3, $5, $6);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::Declaration((yyvsp[(1) - (4)].string), (yyvsp[(2) - (4)].string), (yyvsp[(3) - (4)].string)));
@@ -1602,7 +1606,7 @@ yyreduce:
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 217 "../../hot.y"
+#line 221 "../../hot.y"
     {
                   if (currentMethod == NULL) {
                     currentMethod = new ::naeem::hottentot::generator::ds::Method(currentService);
@@ -1613,7 +1617,7 @@ yyreduce:
 
   case 27:
 /* Line 1792 of yacc.c  */
-#line 222 "../../hot.y"
+#line 226 "../../hot.y"
     {
                   currentMethod->SetReturnType((yyvsp[(2) - (7)].string));
                   currentMethod->SetName((yyvsp[(3) - (7)].string));
@@ -1623,7 +1627,7 @@ yyreduce:
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 234 "../../hot.y"
+#line 238 "../../hot.y"
     {
                   currentMethod->AddArgument(new ::naeem::hottentot::generator::ds::Argument((yyvsp[(1) - (2)].string), (yyvsp[(2) - (2)].string)));
                   // printf("Argument has been added.\n");
@@ -1632,7 +1636,7 @@ yyreduce:
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 240 "../../hot.y"
+#line 244 "../../hot.y"
     {
                   (yyval.string) = (char*)malloc(strlen((yyvsp[(1) - (4)].string)) + strlen((yyvsp[(3) - (4)].string)) + 10);
                   strcpy((yyval.string), (yyvsp[(1) - (4)].string));
@@ -1644,7 +1648,7 @@ yyreduce:
 
   case 33:
 /* Line 1792 of yacc.c  */
-#line 247 "../../hot.y"
+#line 251 "../../hot.y"
     {
                   (yyval.string) = (char*)malloc(strlen((yyvsp[(1) - (4)].string)) + strlen((yyvsp[(3) - (4)].string)) + 10);
                   strcpy((yyval.string), (yyvsp[(1) - (4)].string));
@@ -1656,7 +1660,7 @@ yyreduce:
 
   case 34:
 /* Line 1792 of yacc.c  */
-#line 254 "../../hot.y"
+#line 258 "../../hot.y"
     {
                   (yyval.string) = (char*)malloc(strlen((yyvsp[(1) - (6)].string)) + strlen((yyvsp[(3) - (6)].string)) + strlen((yyvsp[(5) - (6)].string)) + 10);
                   strcpy((yyval.string), (yyvsp[(1) - (6)].string));
@@ -1670,7 +1674,7 @@ yyreduce:
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 263 "../../hot.y"
+#line 267 "../../hot.y"
     {
                   (yyval.string) = (char *)malloc(strlen((yyvsp[(1) - (1)].string)) + 2);
                   strcpy((yyval.string), (yyvsp[(1) - (1)].string));
@@ -1679,7 +1683,7 @@ yyreduce:
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 267 "../../hot.y"
+#line 271 "../../hot.y"
     {
                   (yyval.string) = (char *)malloc(strlen((yyvsp[(1) - (1)].string)) + 2);
                   strcpy((yyval.string), (yyvsp[(1) - (1)].string));
@@ -1688,7 +1692,7 @@ yyreduce:
 
 
 /* Line 1792 of yacc.c  */
-#line 1692 "hot.tab.cpp"
+#line 1696 "hot.tab.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1920,7 +1924,7 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 273 "../../hot.y"
+#line 277 "../../hot.y"
 
 
 void yyerror(char *s) {

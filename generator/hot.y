@@ -50,6 +50,8 @@ typedef unsigned __int64 uint64_t;
 #include "../../ds/method.h"
 #include "../../ds/argument.h"
 
+#include "../../dep/fasthash.h"
+
 #include "../../cc/cc_generator.h"
 #include "../../java/java_generator.h"
 #else
@@ -58,6 +60,8 @@ typedef unsigned __int64 uint64_t;
 #include "ds/service.h"
 #include "ds/method.h"
 #include "ds/argument.h"
+
+#include "dep/fasthash.h"
 
 #include "cc/cc_generator.h"
 #include "java/java_generator.h"
@@ -288,7 +292,6 @@ void printHelpMessageAndExit() {
 }
 
 int main(int argc, char **argv) {
-  uint32_t hash = fasthash("kamran", 6, 0);
   bool isJava = false;
   bool isCC = false;
   bool isSpacesUsedForIndentation = true;
