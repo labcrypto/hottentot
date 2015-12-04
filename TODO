@@ -12,4 +12,5 @@ We have to consider a length for header in request and response for backward
 compatibility.                                                                        [TODO]
 Support for Date, Time and DateTime.                                                  [TODO]
 Embedding all templates in a single binary.                                           [DONE]
+Only structs option for those who wants serialization only.                           [TODO]
 
