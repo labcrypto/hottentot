@@ -3,4 +3,7 @@
 target
 *.out
 CMakeLists.txt
+*.suo
 *~
+Debug
+Release
