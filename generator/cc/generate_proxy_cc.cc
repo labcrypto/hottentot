@@ -255,6 +255,7 @@ namespace naeem {
                                                                 ::naeem::hottentot::generator::GenerationConfig &generationConfig,
                                                                 std::map<std::string, std::string> &templates) {
           // TODO
+          return "";
         }
       }
     }

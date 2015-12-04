@@ -84,7 +84,6 @@ namespace naeem {
           inline void SetName(std::string name) {
             name_ = name;
           }
-          
           inline virtual void Display() {
             std::cout << name_ <<  "(";
             std::string del = "";

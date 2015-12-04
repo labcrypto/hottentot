@@ -18,6 +18,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -36,6 +37,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="."
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE"
+				RuntimeLibrary="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -48,6 +52,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\hot.exe"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -144,11 +149,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\lex.yy.c"
+				RelativePath=".\hot.lex.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\y.tab.c"
+				RelativePath=".\hot.tab.cpp"
 				>
 			</File>
 			<Filter
@@ -230,6 +235,14 @@
 					RelativePath="..\..\cc\generate_stub.cc"
 					>
 				</File>
+				<Filter
+					Name="templates"
+					>
+					<File
+						RelativePath="..\..\cc\templates\templates.cc"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="dep"
@@ -247,6 +260,14 @@
 			>
 			<File
 				RelativePath="..\..\generator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\hot.tab.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\unistd.h"
 				>
 			</File>
 			<File
@@ -316,6 +337,14 @@
 					RelativePath="..\..\cc\type_helper.h"
 					>
 				</File>
+				<Filter
+					Name="templates"
+					>
+					<File
+						RelativePath="..\..\cc\templates\templates.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="java"
@@ -339,6 +368,32 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath="..\..\hot.l"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="flex -ohot.lex.cpp ../../hot.l"
+						Outputs="hot.lex.cpp"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\hot.y"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="bison -d -ohot.tab.cpp ../../hot.y&#x0D;&#x0A;"
+						Outputs="hot.tab.cpp hot.tab.h"
+					/>
+				</FileConfiguration>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
