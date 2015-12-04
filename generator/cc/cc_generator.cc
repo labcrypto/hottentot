@@ -47,13 +47,15 @@ namespace naeem {
       namespace cc {
         void
         CCGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
-                              ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
+                              ::naeem::hottentot::generator::GenerationConfig &generationConfig) {                                
+                                std::cout << "asdasdasD" << std::endl;
           /*
            * Reading all needed templates and stroing them in a map
            */
           std::string abstractServiceHeaderTemplate((char *)__cc_templates_abstract_service_header_template, __cc_templates_abstract_service_header_template_len);
           std::string proxyBuilderCCTemplate((char *)__cc_templates_proxy_builder_cc_template, __cc_templates_proxy_builder_cc_template_len);
           std::string proxyBuilderHeaderTemplate((char *)__cc_templates_proxy_builder_header_template, __cc_templates_proxy_builder_header_template_len);
+          std::cout << "asdasdasD" << std::endl;
           std::string proxyCCTemplate((char *)__cc_templates_proxy_cc_template, __cc_templates_proxy_cc_template_len);
           std::string proxyCCMethodTemplate((char *)__cc_templates_proxy_cc__method_template, __cc_templates_proxy_cc__method_template_len);
           std::string proxyCCMethodArgumentSerializationTemplate((char *)__cc_templates_proxy_cc__method_argument_serialization_template, __cc_templates_proxy_cc__method_argument_serialization_template_len);
@@ -66,6 +68,7 @@ namespace naeem {
           std::string structCCTemplate((char *)__cc_templates_struct_cc_template, __cc_templates_struct_cc_template_len);
           std::string structHeaderTemplate((char *)__cc_templates_struct_header_template, __cc_templates_struct_header_template_len);
           std::string structHeaderGetterAndSetterTemplate((char *)__cc_templates_struct_header__getter_and_setter_template, __cc_templates_struct_header__getter_and_setter_template_len);
+          std::cout << "asdasdasD" << std::endl;
           // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/abstract_service_header.template", abstractServiceHeaderTemplate);
           // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_builder_cc.template", proxyBuilderCCTemplate);
           // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_builder_header.template", proxyBuilderHeaderTemplate);
@@ -100,8 +103,10 @@ namespace naeem {
           /*
            * Creating needed directories
            */
+          
           ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir() + "/proxy");
           ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir() + "/service");
+          std::cout << "asdasdasD" << std::endl;
           /*
            * Proceed to generate files
            */

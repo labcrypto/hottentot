@@ -105,7 +105,7 @@
             GenerateServiceProxyBuilder(pModule);
             GenerateServiceProxy(pModule);
           }
-          std::cout << "Java Generation done." << std::endl;
+          // std::cout << "Java Generation done." << std::endl;
           Destroy();
         }
         uint32_t

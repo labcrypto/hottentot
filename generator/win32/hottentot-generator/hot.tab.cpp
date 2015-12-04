@@ -2032,7 +2032,7 @@ int main(int argc, char **argv) {
       return 1;
     }
     yyparse();
-    currentHot->Display();
+    // currentHot->Display();
     ::naeem::hottentot::generator::GenerationConfig generationConfig;
     generationConfig.SetOutDir(outputDir);
     generationConfig.SetSpacesUsedInsteadOfTabsForIndentation(isSpacesUsedForIndentation);
