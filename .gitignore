@@ -7,3 +7,5 @@ CMakeLists.txt
 *~
 Debug
 Release
+*.ncb
+*.user

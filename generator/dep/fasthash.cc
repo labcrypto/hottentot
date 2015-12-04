@@ -27,10 +27,17 @@
 
 // Compression function for Merkle-Damgard construction.
 // This function is generated using the framework provided.
-#define mix(h) ({         \
-      (h) ^= (h) >> 23;   \
+#ifdef _MSC_VER
+#define mix(h) \
+      (h) ^= (h) >> 23; \
+      (h) *= 0x2127599bf4325c37ULL; \
+      (h) ^= (h) >> 47;
+#else
+#define mix(h) ({ \
+      (h) ^= (h) >> 23; \
       (h) *= 0x2127599bf4325c37ULL; \
       (h) ^= (h) >> 47; })
+#endif
 
 uint64_t fasthash64(const void *buf, size_t len, uint64_t seed)
 {
