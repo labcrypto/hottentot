@@ -62,8 +62,8 @@ namespace naeem {
                                    uint32_t *length) {
         uint32_t actualLength = 0;
         actualLength += 1;  // Request type
-        actualLength += 1;  // Service Id
-        actualLength += 1;  // Method Id
+        actualLength += 4;  // Service Id
+        actualLength += 4;  // Method Id
         actualLength += 1;  // Number of arguments
         for (unsigned int i = 0; i < request.GetArgumentCount(); i++) {
           actualLength += request.GetArgumentLength(i) > 127 ? 3 : 1;
@@ -73,8 +73,16 @@ namespace naeem {
         unsigned char *data = new unsigned char[*length];
         unsigned int c = 0;
         data[c++] = request.GetType();
-        data[c++] = request.GetServiceId();
-        data[c++] = request.GetMethodId();
+        uint32_t serviceId = request.GetServiceId();
+        data[c++] = ((unsigned char *)&serviceId)[0];
+        data[c++] = ((unsigned char *)&serviceId)[1];
+        data[c++] = ((unsigned char *)&serviceId)[2];
+        data[c++] = ((unsigned char *)&serviceId)[3];
+        uint32_t methodId = request.GetMethodId();
+        data[c++] = ((unsigned char *)&methodId)[0];
+        data[c++] = ((unsigned char *)&methodId)[1];
+        data[c++] = ((unsigned char *)&methodId)[2];
+        data[c++] = ((unsigned char *)&methodId)[3];
         data[c++] = request.GetArgumentCount();
         for (unsigned int i = 0; i < request.GetArgumentCount(); i++) {
           if (request.GetArgumentLength(i) > 127) {
@@ -125,10 +133,24 @@ namespace naeem {
         uint32_t c = 0;
         Request *request = new Request;
         request->SetType((Request::RequestType)data[c++]);
-        request->SetServiceId(data[c++]);
-        request->SetMethodId(data[c++]);
-        request->SetArgumentCount(data[c++]);
-        for (unsigned int k = 0; k < request->GetArgumentCount(); k++) {
+        ::naeem::hottentot::runtime::Logger::GetOut() << "Request Type: " << request->GetType() << std::endl;
+        uint32_t serviceId = 0;
+        ((unsigned char *)(&serviceId))[0] = data[c++];
+        ((unsigned char *)(&serviceId))[1] = data[c++];
+        ((unsigned char *)(&serviceId))[2] = data[c++];
+        ((unsigned char *)(&serviceId))[3] = data[c++];
+        request->SetServiceId(serviceId);
+        ::naeem::hottentot::runtime::Logger::GetOut() << "Service Id: " << serviceId << std::endl;
+        uint32_t methodId = 0;
+        ((unsigned char *)(&methodId))[0] = data[c++];
+        ((unsigned char *)(&methodId))[1] = data[c++];
+        ((unsigned char *)(&methodId))[2] = data[c++];
+        ((unsigned char *)(&methodId))[3] = data[c++];
+        request->SetMethodId(methodId);
+        ::naeem::hottentot::runtime::Logger::GetOut() << "Method Id: " << methodId << std::endl;
+        uint8_t argCount = data[c++];
+        ::naeem::hottentot::runtime::Logger::GetOut() << "Arg. Count: " << (uint8_t)argCount << std::endl;
+        for (unsigned int k = 0; k < (uint8_t)argCount; k++) {
           uint32_t argLength = 0;
           if (data[c] > 127) {
             uint32_t t = 1;
@@ -145,6 +167,8 @@ namespace naeem {
           for (uint32_t i = 0; i < argLength; i++) {
             argData[i] = data[c++];
           }
+          ::naeem::hottentot::runtime::Logger::GetOut() << "Argument[" << k << "] Length: " << argLength << std::endl;
+          ::naeem::hottentot::runtime::Utils::PrintArray("Argument Data", argData, argLength);
           request->AddArgument(argData, argLength);
         }
         return request;
@@ -173,6 +197,7 @@ namespace naeem {
         }
         response->SetData(resultData);
         response->SetDataLength(resultLength);
+        ::naeem::hottentot::runtime::Utils::PrintArray("Response", resultData, resultLength);
         return response;
       }
       void 
@@ -231,11 +256,15 @@ namespace naeem {
                   for (unsigned int c = 0; c < requestLength; c++) {
                     requestData[c] = readingBuffer_[c];
                   }
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Deserializing request ..." << std::endl;
                   Request *request = DeserializeRequest(requestData, requestLength);
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Deserialized." << std::endl;
                   readingBuffer_.clear();
                   readingCounter_ = 0;
                   currentState_ = ReadingLengthState;
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Calling callback ..." << std::endl;
                   Response *response = requestCallback_->OnRequest(this, *request);
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Callback was successful." << std::endl;
                   if (response) {
                     uint32_t responseSerializedLength = 0;
                     unsigned char *responseSerializedData = SerializeResponse(*response, &responseSerializedLength);
@@ -252,7 +281,7 @@ namespace naeem {
                     for (unsigned int k = 0; k < responseSerializedLength; k++) {
                       sendData[c++] = responseSerializedData[k];
                     }
-                    ::naeem::hottentot::runtime::Utils::PrintArray("Response", sendData, sendLength);
+                    ::naeem::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
                     write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
                     delete sendData;
                     delete responseSerializedData;

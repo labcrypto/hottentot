@@ -63,6 +63,10 @@ namespace naeem {
               return false;
             } else if (type == "date") {
               return false;
+            } else if (type == "time") {
+              return false;
+            } else if (type == "datetime") {
+              return false;
             } else if (type == "double") {
               return false;
             } else if (type == "void") {
@@ -72,33 +76,37 @@ namespace naeem {
           }
           static inline std::string GetCCType(std::string type) {
             if (type == "int8") {
-              return "int8_t";
+              return "::naeem::hottentot::runtime::types::Int8";
             } else if (type == "int16") {
-              return "int16_t";
+              return "::naeem::hottentot::runtime::types::Int16";
             } else if (type == "int32") {
-              return "int32_t";
+              return "::naeem::hottentot::runtime::types::Int32";
             } else if (type == "int64") {
-              return "int64_t";
+              return "::naeem::hottentot::runtime::types::Int64";
             } else if (type == "uint8") {
-              return "uint8_t";
+              return "::naeem::hottentot::runtime::types::UInt8";
             } else if (type == "uint16") {
-              return "uint16_t";
+              return "::naeem::hottentot::runtime::types::UInt16";
             } else if (type == "uint32") {
-              return "uint32_t";
+              return "::naeem::hottentot::runtime::types::UInt32";
             } else if (type == "uint64") {
-              return "uint64_t";
+              return "::naeem::hottentot::runtime::types::UInt64";
             } else if (type == "bool") {
-              return "bool";
+              return "::naeem::hottentot::runtime::types::Boolean";
             } else if (type == "string") {
-              return "std::string";
+              return "::naeem::hottentot::runtime::types::Utf8String";
             } else if (type == "char") {
-              return "char";
+              return "::naeem::hottentot::runtime::types::Char";
             } else if (type == "data") {
-              return "unsigned char *";
+              return "::naeem::hottentot::runtime::types::ByteArray";
             } else if (type == "date") {
-              return "uint64_t";
+              return "::naeem::hottentot::runtime::types::Date";
+            } else if (type == "time") {
+              return "::naeem::hottentot::runtime::types::Time";
+            } else if (type == "datetime") {
+              return "::naeem::hottentot::runtime::types::DateTime";
             } else if (type == "double") {
-              return "double";
+              return "::naeem::hottentot::runtime::types::Double";
             } else if (type == "void") {
               return "void";
             }

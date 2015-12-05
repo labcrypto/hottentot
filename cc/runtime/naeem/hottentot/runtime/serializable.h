@@ -30,7 +30,7 @@
 
 namespace naeem {
   namespace hottentot {
-    namespace serialization {
+    namespace runtime {
       class Serializable {
       public:
         virtual unsigned char * Serialize(uint32_t *        /* Pointer to length */) = 0;

@@ -27,6 +27,8 @@
 #include "cc_generator.h"
 #include "type_helper.h"
 
+#include "templates/templates.h"
+ 
 #include "../ds/hot.h"
 #include "../ds/service.h"
 #include "../ds/method.h"
@@ -83,8 +85,8 @@ namespace naeem {
               params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", serviceNameSnakeCase));
               params.insert(std::pair<std::string, std::string>("INCLUDE_STRUCT_HEADERS", includeStructHeaders));
               params.insert(std::pair<std::string, std::string>("INDENT", indent));
-              std::string clientTemplate;
-              ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/client.template", clientTemplate);
+              std::string clientTemplate((char *)__cc_templates_client_template, __cc_templates_client_template_len);
+              // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/client.template", clientTemplate);
               for (std::map<std::string, std::string>::iterator it = params.begin();
                    it != params.end();
                    ++it) {

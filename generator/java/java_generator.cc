@@ -21,14 +21,17 @@
  *  SOFTWARE.
  */
 
+#include <sys/stat.h>
+
+#include <sstream>
+
 #include "java_generator.h"
 #include "../ds/hot.h"
-#include <stdint.h>
-#include <sys/stat.h>
-#include <sstream>
+
 #include "../common/string_helper.h"
 #include "../common/os.h" 
 #include "../common/type_helper.h" 
+
 #include "templates/byte_arrays/abstractService.h" 
 #include "templates/byte_arrays/requestHandler.h" 
 #include "templates/byte_arrays/service.h" 
@@ -36,12 +39,13 @@
 #include "templates/byte_arrays/serviceProxyBuilder.h" 
 #include "templates/byte_arrays/struct.h" 
 
+
  namespace naeem {
   namespace hottentot {
     namespace generator {
       namespace java {
-
         JavaGenerator::~JavaGenerator() {
+
                     //TODO change vecsetor to map 
 
                     // for (int i = 0; i < modules_.size(); i++) {
@@ -55,32 +59,42 @@
                     //     }
                     //     delete pModule;
                     // }
+
+          //TODO change vector to map 
+
+          // for (int i = 0; i < modules_.size(); i++) {
+          //     ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
+          //     for (int j = 0; j < pModule->structs_.size(); j++) {
+          //         ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(j);
+          //         for (int k = 0; k < pStruct->declarations_.size(); k++) {
+          //             delete pStruct->declarations_.at(k);
+          //         }
+          //         delete pStruct;
+          //     }
+          //     delete pModule;
+          // }
+
         }
-        
         void
         JavaGenerator::Destroy(){
-                    //TODO
+          //TODO
 
-                    // for (int i = 0; i < modules_.size(); i++) {
-                    //     ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
-                    //     for (int j = 0; j < pModule->structs_.size(); j++) {
-                    //         ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(j);
-                    //         for (int k = 0; k < pStruct->declarations_.size(); k++) {
-                    //             delete pStruct->declarations_.at(k);
-                    //         }
-                    //         delete pStruct;
-                    //     }
-                    //     delete pModule;
-                    // }
+          // for (int i = 0; i < modules_.size(); i++) {
+          //     ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
+          //     for (int j = 0; j < pModule->structs_.size(); j++) {
+          //         ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(j);
+          //         for (int k = 0; k < pStruct->declarations_.size(); k++) {
+          //             delete pStruct->declarations_.at(k);
+          //         }
+          //         delete pStruct;
+          //     }
+          //     delete pModule;
+          // }
         }
-
-
         JavaGenerator::JavaGenerator() {
-
-                    //MakeStringsFromByteArrays();
-                    //ReadTemplateFiles();
+          //MakeStringsFromByteArrays();
+          //ReadTemplateFiles();
         }
-
         void
         JavaGenerator::MakeTabStr(::naeem::hottentot::generator::GenerationConfig &generationConfig){
           outDir_ = generationConfig.outDir_;
@@ -92,7 +106,6 @@
             indent_ = "\t";
           }
         }
-
         void
         JavaGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
           ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
@@ -108,29 +121,26 @@
             GenerateServiceProxyBuilder(pModule);
             GenerateServiceProxy(pModule);
           }
-          std::cout << "Java Generation done." << std::endl;
+          // std::cout << "Java Generation done." << std::endl;
           Destroy();
         }
-
-        
-
         uint32_t
         JavaGenerator::GetTypeLength(std::string type){
           if (type.compare("int8") == 0 ||
             type.compare("uint8") == 0) {
             return 1;
-        } else if (type.compare("int16") == 0 ||
-         type.compare("uint16") == 0) {
-          return 2;
-        } else if (type.compare("int32") == 0 ||
-         type.compare("uint32") == 0) {
-          return 4;
-        } else if (type.compare("int64") == 0 ||
-         type.compare("uint64") == 0) {
-          return 8;
+          } else if (type.compare("int16") == 0 ||
+           type.compare("uint16") == 0) {
+            return 2;
+          } else if (type.compare("int32") == 0 ||
+           type.compare("uint32") == 0) {
+            return 4;
+          } else if (type.compare("int64") == 0 ||
+           type.compare("uint64") == 0) {
+            return 8;
+          }
+          return -1;
         }
-      }
-
       void
       JavaGenerator::ReadTemplateFiles() {
         ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/struct.template",structTmpStr_);
@@ -146,7 +156,6 @@
 //			std::cout << serviceProxyTmpStr_;
 //			std::cout << requestHandlerTmpStr_;
       }
-
       void
       JavaGenerator::GenerateStructs(::naeem::hottentot::generator::ds::Module *pModule) {
                     //loop on structs in everey module
@@ -176,25 +185,25 @@
            it != pStruct->declarations_.end();
            ++it) {
             ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
-          declarationJavaType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
-          capitalizedDeclarationJavaType  = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
-          std::string declarationName = declarationPtr->variable_;
-          std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
-          declarationStr +=
-          indent_ + "private " + declarationJavaType + " " + declarationName + ";\n";
-          getterSetterStr += indent_ + "public void set" + capitalizedDeclarationName + "(" +
-           declarationJavaType + " " + declarationName + ") {\n";
-getterSetterStr +=
-indent_ + indent_ + "this." + declarationName + " = " + declarationName + ";\n";
-getterSetterStr += indent_ + "}\n";
-getterSetterStr +=
-indent_ + "public " + declarationJavaType + " get" + capitalizedDeclarationName +
-"() {\n";
-getterSetterStr += indent_ + indent_ + "return " + declarationPtr->variable_ + ";\n";
-getterSetterStr += indent_ + "}\n";
-}
-replacableStructTmpStr.replace(replacableStructTmpStr.find("[%MEMBERS%]"), 11,
- declarationStr + getterSetterStr);
+            declarationJavaType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
+            capitalizedDeclarationJavaType  = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
+            std::string declarationName = declarationPtr->variable_;
+            std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
+            declarationStr +=
+              indent_ + "private " + declarationJavaType + " " + declarationName + ";\n";
+            getterSetterStr += indent_ + "public void set" + capitalizedDeclarationName + "(" +
+              declarationJavaType + " " + declarationName + ") {\n";
+            getterSetterStr +=
+              indent_ + indent_ + "this." + declarationName + " = " + declarationName + ";\n";
+            getterSetterStr += indent_ + "}\n";
+            getterSetterStr +=
+              indent_ + "public " + declarationJavaType + " get" + capitalizedDeclarationName +
+              "() {\n";
+            getterSetterStr += indent_ + indent_ + "return " + declarationPtr->variable_ + ";\n";
+            getterSetterStr += indent_ + "}\n";
+          }
+          replacableStructTmpStr.replace(replacableStructTmpStr.find("[%MEMBERS%]"), 11,
+            declarationStr + getterSetterStr);
 
                         //serilize method
 std::string serializeMethodStr;

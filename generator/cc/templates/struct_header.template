@@ -11,11 +11,12 @@
 
 #include <string>
 
+#include <naeem/hottentot/runtime/types/primitives.h>
 #include <naeem/hottentot/runtime/serializable.h>
 
 
 [[[NAMESPACES_START]]]
-[[[INDENT]]]class [[[STRUCT_NAME]]] : public ::naeem::hottentot::serialization::Serializable {
+[[[INDENT]]]class [[[STRUCT_NAME]]] : public ::naeem::hottentot::runtime::Serializable {
 [[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]][[[STRUCT_NAME]]]() {}
 [[[INDENT]]][[[INDENT]]]~[[[STRUCT_NAME]]]() {}

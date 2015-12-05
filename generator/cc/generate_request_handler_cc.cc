@@ -147,13 +147,12 @@ namespace naeem {
           for (uint32_t i = 0; i < method->arguments_.size(); i++) {
             if (TypeHelper::IsUDT(method->arguments_[i]->GetType())) {
               inputVariables += indent + indent + indent + "::" + ns + "::" + method->arguments_[i]->GetType() + " " + method->arguments_[i]->GetVariable() + ";\r\n";
-              std::stringstream tempSS;
-              tempSS << ".Deserialize(request.GetArgumentData(" << i << "), request.GetArgumentLength(" << i << "));";
-              inputVariables += indent + indent + indent + method->arguments_[i]->GetVariable() + tempSS.str() + "\r\n";
             } else {
               inputVariables += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[i]->GetType()) + " " + method->arguments_[i]->GetVariable() + ";\r\n";
-              inputVariables += indent + indent + indent + "// TODO(kamran) Deserialization of non-UDT request argument for '" + method->arguments_[i]->GetVariable() + "' should be done.\r\n";
             }
+            std::stringstream tempSS;
+            tempSS << ".Deserialize(request.GetArgumentData(" << i << "), request.GetArgumentLength(" << i << "));";
+            inputVariables += indent + indent + indent + method->arguments_[i]->GetVariable() + tempSS.str() + "\r\n";
           }
           std::string methodCall = indent + indent + indent;
           if (TypeHelper::IsUDT(method->GetReturnType())) {
@@ -186,7 +185,7 @@ namespace naeem {
             if (TypeHelper::IsVoid(method->GetReturnType())) {
               resultSerialization += indent + indent + indent + "unsigned char *serializedData = 0;";
             } else {
-              resultSerialization += indent + indent + indent + "unsigned char *serializedData = 0; // TODO(kamran): Serialization for non-UDT return type.";
+              resultSerialization += indent + indent + indent + "unsigned char *serializedData = result.Serialize(&serializedDataLength);\r\n";
             }
           }
           resultSerialization += "\r\n";

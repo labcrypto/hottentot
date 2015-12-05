@@ -1,3 +1,0 @@
-[[[INDENT]]][[[INDENT]]][[[RETURN_TYPE]]] *returnObject = new [[[RETURN_TYPE]]];
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Utils::PrintArray("Response", protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
-[[[INDENT]]][[[INDENT]]]returnObject->Deserialize(protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
