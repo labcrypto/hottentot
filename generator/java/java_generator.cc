@@ -42,7 +42,7 @@
       namespace java {
 
         JavaGenerator::~JavaGenerator() {
-                    //TODO change vector to map 
+                    //TODO change vecsetor to map 
 
                     // for (int i = 0; i < modules_.size(); i++) {
                     //     ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
@@ -203,14 +203,21 @@ for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterat
  it != pStruct->declarations_.end();
  ++it) {
   ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
-std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
-serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
-declarationJavaType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
-capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
-std::string capitalizedDeclarationType  = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->type_);
-serializeMethodStr += capitalizedDeclarationType + "(";
-  serializeMethodStr += declarationPtr->variable_ + ");\n";
+  std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
+  //std::cout << "ssss : " << declarationPtr->type_ << std::endl;
+  if(declarationPtr->type_.compare("data") == 0){
+    serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = " + declarationPtr->variable_ + ";\n";
+  }else{
+    //std::cout << "OKK";
+    serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
+    declarationJavaType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
+    capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
+    std::string capitalizedDeclarationType  = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->type_);
+    serializeMethodStr += capitalizedDeclarationType + "(";
+    serializeMethodStr += declarationPtr->variable_ + ");\n";
+  }
 }
+
 serializeMethodStr += indent_ + indent_ + "byte[] output = new byte[";
   for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
    = pStruct->declarations_.begin();
@@ -276,7 +283,8 @@ declarationJavaType = ::naeem::hottentot::generator::common::TypeHelper::GetJava
 std::string capitalizedDeclarationType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->type_);
 std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
 deserializeMethodStr += indent_ + indent_ + "//" + declarationPtr->variable_ + " : " + declarationJavaType + "\n";
-if(declarationJavaType.compare("String") == 0) {
+if(declarationJavaType.compare("String") == 0 ||
+   declarationJavaType.compare("byte[]") == 0) {
   deserializeMethodStr += indent_ + indent_ + "dataLength = 0;\n";
   deserializeMethodStr += indent_ + indent_ +
   "if(( serializedByteArray[counter] & 0x80) == 0 ) {\n";
@@ -290,7 +298,11 @@ if(declarationJavaType.compare("String") == 0) {
   deserializeMethodStr += indent_ + indent_ + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[dataLength];\n";
   deserializeMethodStr += indent_ + indent_ + "System.arraycopy(serializedByteArray,counter," + declarationPtr->variable_.c_str() + "ByteArray,0,dataLength);\n";
   deserializeMethodStr += indent_ + indent_ + "counter += dataLength;\n";
-  deserializeMethodStr += indent_ + indent_ + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
+  if(declarationJavaType.compare("String") == 0){
+    deserializeMethodStr += indent_ + indent_ + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
+  }else if(declarationJavaType.compare("byte[]") == 0){
+    deserializeMethodStr += indent_ + indent_ + "set" + capitalizedDeclarationName + "(" + declarationPtr->variable_.c_str() + "ByteArray);\n";
+  }
 }else {
   uint32_t dataLength = GetTypeLength(declarationPtr->type_.c_str());
   capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
