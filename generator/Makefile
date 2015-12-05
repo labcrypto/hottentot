@@ -22,53 +22,57 @@
 #
 
 compile:
+	mkdir -p .lib
 	./java/templates/byte_array_maker.sh
+	./cc/templates/generate_templates_header.sh ./cc/templates/
 	yacc -d hot.y
-	g++ -c y.tab.c
+	g++ -c y.tab.c -o .lib/y.tab.o
 	flex hot.l
-	g++ -c lex.yy.c
-	g++ -c cc/cc_generator.cc -o cc_generator.o
-	g++ -c cc/generate_abstract_service_header.cc -o generate_abstract_service_header.o
-	g++ -c cc/generate_service_interface.cc -o generate_service_interface.o
-	g++ -c cc/generate_proxy_header.cc -o generate_proxy_header.o
-	g++ -c cc/generate_proxy_cc.cc -o generate_proxy_cc.o
-	g++ -c cc/generate_proxy_builder_header.cc -o generate_proxy_builder_header.o
-	g++ -c cc/generate_proxy_builder_cc.cc -o generate_proxy_builder_cc.o
-	g++ -c cc/generate_request_handler_header.cc -o generate_request_handler_header.o
-	g++ -c cc/generate_request_handler_cc.cc -o generate_request_handler_cc.o
-	g++ -c cc/generate_struct_header.cc -o generate_struct_header.o
-	g++ -c cc/generate_struct_cc.cc -o generate_struct_cc.o
-	g++ -c cc/generate_makefile.cc -o generate_makefile.o
-	g++ -c cc/generate_client.cc -o generate_client.o
-	g++ -c cc/generate_stub.cc -o generate_stub.o
-	g++ -c java/java_generator.cc -o java_generator.o
-	g++ -c dep/fasthash.cc -o fasthash.o
-	g++ -c ds/service.cc -o service.o
-	g++ -c ds/method.cc -o method.o
-	g++ y.tab.o \
-	    lex.yy.o \
-	    cc_generator.o \
-	    generate_abstract_service_header.o \
-	    generate_service_interface.o \
-	    generate_proxy_header.o \
-	    generate_proxy_cc.o \
-	    generate_proxy_builder_header.o \
-	    generate_proxy_builder_cc.o \
-	    generate_request_handler_header.o \
-	    generate_request_handler_cc.o \
-	    generate_struct_header.o \
-	    generate_struct_cc.o \
-	    generate_makefile.o \
-	    generate_client.o \
-	    generate_stub.o \
-	    java_generator.o \
-	    fasthash.o \
-	    service.o \
-	    method.o \
+	g++ -c lex.yy.c -o .lib/lex.yy.o
+	g++ -c cc/cc_generator.cc -o .lib/cc_generator.o
+	g++ -c cc/generate_abstract_service_header.cc -o .lib/generate_abstract_service_header.o
+	g++ -c cc/generate_service_interface.cc -o .lib/generate_service_interface.o
+	g++ -c cc/generate_proxy_header.cc -o .lib/generate_proxy_header.o
+	g++ -c cc/generate_proxy_cc.cc -o .lib/generate_proxy_cc.o
+	g++ -c cc/generate_proxy_builder_header.cc -o .lib/generate_proxy_builder_header.o
+	g++ -c cc/generate_proxy_builder_cc.cc -o .lib/generate_proxy_builder_cc.o
+	g++ -c cc/generate_request_handler_header.cc -o .lib/generate_request_handler_header.o
+	g++ -c cc/generate_request_handler_cc.cc -o .lib/generate_request_handler_cc.o
+	g++ -c cc/generate_struct_header.cc -o .lib/generate_struct_header.o
+	g++ -c cc/generate_struct_cc.cc -o .lib/generate_struct_cc.o
+	g++ -c cc/generate_makefile.cc -o .lib/generate_makefile.o
+	g++ -c cc/generate_client.cc -o .lib/generate_client.o
+	g++ -c cc/generate_stub.cc -o .lib/generate_stub.o
+	g++ -c cc/templates/templates.cc -o .lib/templates.o
+	g++ -c java/java_generator.cc -o .lib/java_generator.o
+	g++ -c dep/fasthash.cc -o .lib/fasthash.o
+	g++ -c ds/service.cc -o .lib/service.o
+	g++ -c ds/method.cc -o .lib/method.o
+	g++ .lib/y.tab.o \
+	    .lib/lex.yy.o \
+	    .lib/cc_generator.o \
+	    .lib/generate_abstract_service_header.o \
+	    .lib/generate_service_interface.o \
+	    .lib/generate_proxy_header.o \
+	    .lib/generate_proxy_cc.o \
+	    .lib/generate_proxy_builder_header.o \
+	    .lib/generate_proxy_builder_cc.o \
+	    .lib/generate_request_handler_header.o \
+	    .lib/generate_request_handler_cc.o \
+	    .lib/generate_struct_header.o \
+	    .lib/generate_struct_cc.o \
+	    .lib/generate_makefile.o \
+	    .lib/generate_client.o \
+	    .lib/generate_stub.o \
+	    .lib/templates.o \
+	    .lib/java_generator.o \
+	    .lib/fasthash.o \
+	    .lib/service.o \
+	    .lib/method.o \
 	    -lfl -ll -o hot
 
 java: compile
-	./hot --java --out ../examples/authentication/java/src/main/java/example/generated test3.hot
-        #./hot --java --out /home/developer/Desktop/gen test3.hot
+	# ./hot --java --out ../examples/authentication/java/src/main/java/example/generated test3.hot
+	./hot --java --out /home/developer/Desktop/gen test3.hot
 cc: compile
 	./hot --cc --indent-with-spaces --number-of-spaces-used-for-indentation 2 --out gen --makefile --client --stub test2.hot

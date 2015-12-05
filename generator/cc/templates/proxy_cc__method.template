@@ -61,9 +61,6 @@
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]int numOfReadBytes = tcpClient->Read(buffer, 256);
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]protocol->ProcessDataForResponse(buffer, numOfReadBytes);
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]/*
-[[[INDENT]]][[[INDENT]]] * Response deserialization
-[[[INDENT]]][[[INDENT]]] */
 [[[RESPONSE_DESERIALIZATION]]][[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Finalization
 [[[INDENT]]][[[INDENT]]] */
@@ -72,7 +69,7 @@
 [[[INDENT]]][[[INDENT]]]delete protocol;
 [[[INDENT]]][[[INDENT]]]delete tcpClient;
 [[[INDENT]]][[[INDENT]]]/*
-[[[INDENT]]][[[INDENT]]] * Return the acquired token
+[[[INDENT]]][[[INDENT]]] * Leave method
 [[[INDENT]]][[[INDENT]]] */
-[[[INDENT]]][[[INDENT]]][[[RETURN_CLAUSE]]]
+[[[RETURN_CLAUSE]]]
 [[[INDENT]]]}

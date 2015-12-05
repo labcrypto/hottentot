@@ -24,21 +24,48 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include <sstream>
 #include <string.h>
+
+#include <sstream>
 #include <stack>
-#include <stdint.h>
 #include <iostream>
 
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#endif
+
+#ifdef _MSC_VER
+#include "../../ds/hot.h"
+#include "../../ds/declaration.h"
+#include "../../ds/service.h"
+#include "../../ds/method.h"
+#include "../../ds/argument.h"
+
+#include "../../dep/fasthash.h"
+
+#include "../../cc/cc_generator.h"
+#include "../../java/java_generator.h"
+#else
 #include "ds/hot.h"
 #include "ds/declaration.h"
 #include "ds/service.h"
 #include "ds/method.h"
 #include "ds/argument.h"
 
+#include "dep/fasthash.h"
+
 #include "cc/cc_generator.h"
 #include "java/java_generator.h"
-
+#endif
 
 void yyerror(char *);
 
@@ -342,6 +369,10 @@ int main(int argc, char **argv) {
   }
   if (outputDir == 0) {
     outputDir = "gen";
+  }
+  if (numOfHots == 0) {
+    printHelpMessageAndExit();
+    exit(1);
   }
   for (uint16_t i = 0; i < numOfHots; i++) {
     yyin = fopen(hots[i],"r+");

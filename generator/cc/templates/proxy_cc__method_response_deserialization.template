@@ -1,0 +1,3 @@
+[[[INDENT]]][[[INDENT]]][[[RETURN_TYPE]]] [[[POINTER_SIGN]]]returnObject[[[NEW_CLAUSE]]];
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Utils::PrintArray("Response", protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
+[[[INDENT]]][[[INDENT]]]returnObject[[[ACCESS_OPERATOR]]]Deserialize(protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());

@@ -24,15 +24,31 @@
 #ifndef _NAEEM_HOTTENTOT_GENERATOR__JAVA__JAVA_GENERATOR_H_
 #define _NAEEM_HOTTENTOT_GENERATOR__JAVA__JAVA_GENERATOR_H_
 
-#include "../generator.h"
+
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <stdint.h>
 #include <fstream>
 #include <map>
+
+#include <stdio.h>
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#endif
+
+#include "../generator.h"
 #include "../ds/module.h"
+
 
 namespace naeem {
   namespace hottentot {

@@ -27,6 +27,8 @@
 #include "cc_generator.h"
 #include "type_helper.h"
 
+#include "templates/templates.h"
+ 
 #include "../ds/hot.h"
 #include "../ds/service.h"
 #include "../ds/method.h"
@@ -117,8 +119,8 @@ namespace naeem {
                 } else {
                   returnClause += indent + indent + "return;";
                 }
-                std::string methodTemplate;
-                ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_cc__method.template", methodTemplate);
+                std::string methodTemplate((char *)__cc_templates_service_impl_cc__method_template, __cc_templates_service_impl_cc__method_template_len);
+                // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_cc__method.template", methodTemplate);
                 methodTemplate = 
                   ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
                                                                                "[[[CAMEL_CASE_FC_SERVICE_NAME]]]", 
@@ -167,8 +169,8 @@ namespace naeem {
               params.insert(std::pair<std::string, std::string>("METHOD_DEFS", methodDefs));
               params.insert(std::pair<std::string, std::string>("METHODS", methods));
               params.insert(std::pair<std::string, std::string>("INDENT", indent));
-              std::string implHeaderTemplate;
-              ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_header.template", implHeaderTemplate);
+              std::string implHeaderTemplate((char *)__cc_templates_service_impl_header_template, __cc_templates_service_impl_header_template_len);
+              // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_header.template", implHeaderTemplate);
               for (std::map<std::string, std::string>::iterator it = params.begin();
                    it != params.end();
                    ++it) {
@@ -189,8 +191,8 @@ namespace naeem {
                */
               params["GENERATION_DATE"] = ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime();
               params["FILENAME"] = serviceNameSnakeCase + "_impl.cc";
-              std::string implCCTemplate;
-              ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_cc.template", implCCTemplate);
+              std::string implCCTemplate((char *)__cc_templates_service_impl_cc_template, __cc_templates_service_impl_cc_template_len);
+              // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_cc.template", implCCTemplate);
               for (std::map<std::string, std::string>::iterator it = params.begin();
                    it != params.end();
                    ++it) {
@@ -210,8 +212,8 @@ namespace naeem {
                */
               params["GENERATION_DATE"] = ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime();
               params["FILENAME"] = serviceNameSnakeCase + "_server.cc";
-              std::string serverTemplate;
-              ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/server.template", serverTemplate);
+              std::string serverTemplate((char *)__cc_templates_server_template, __cc_templates_server_template_len);
+              // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/server.template", serverTemplate);
               for (std::map<std::string, std::string>::iterator it = params.begin();
                    it != params.end();
                    ++it) {

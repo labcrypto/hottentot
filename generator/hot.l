@@ -21,10 +21,15 @@
  *  SOFTWARE.
  */
 
+%option noyywrap
 %{
 #include <stdio.h>
 
+#ifdef _MSC_VER
+#include "hot.tab.hpp"
+#else
 #include "y.tab.h"
+#endif
 
 
 extern "C" int yylex();
