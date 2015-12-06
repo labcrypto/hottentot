@@ -45,6 +45,12 @@ compile:
 	g++ -c cc/generate_stub.cc -o .lib/generate_stub.o
 	g++ -c cc/templates/templates.cc -o .lib/templates.o
 	g++ -c java/java_generator.cc -o .lib/java_generator.o
+	g++ -c java/generate_abstract_service_java.cc -o .lib/generate_abstract_service_java.o
+	g++ -c java/generate_structs_java.cc -o .lib/generate_structs_java.o
+	g++ -c java/generate_service_interface_java.cc -o .lib/generate_service_interface_java.o
+	g++ -c java/generate_request_handler_java.cc -o .lib/generate_request_handler_java.o
+	g++ -c java/generate_service_proxy_builder_java.cc -o .lib/generate_service_proxy_builder_java.o
+	g++ -c java/generate_service_proxy_java.cc -o .lib/generate_service_proxy_java.o
 	g++ -c dep/fasthash.cc -o .lib/fasthash.o
 	g++ -c ds/service.cc -o .lib/service.o
 	g++ -c ds/method.cc -o .lib/method.o
@@ -66,6 +72,12 @@ compile:
 	    .lib/generate_stub.o \
 	    .lib/templates.o \
 	    .lib/java_generator.o \
+	    .lib/generate_structs_java.o \
+	    .lib/generate_abstract_service_java.o \
+	    .lib/generate_service_interface_java.o \
+	    .lib/generate_request_handler_java.o \
+	    .lib/generate_service_proxy_builder_java.o \
+	    .lib/generate_service_proxy_java.o \
 	    .lib/fasthash.o \
 	    .lib/service.o \
 	    .lib/method.o \

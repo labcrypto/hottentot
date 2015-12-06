@@ -66,6 +66,7 @@ namespace naeem {
             }
             return true;
           }
+
           static inline std::string GetCCType(std::string type) {
             if (type == "int8") {
               return "int8_t";
@@ -100,6 +101,7 @@ namespace naeem {
             }
             return type;
           }
+
           static inline std::string GetJavaType(std::string type) {
             if(IsUDT(type)){
                 std::runtime_error("type is not PDT");
@@ -137,6 +139,24 @@ namespace naeem {
             }
             return type;
           }
+        
+          static inline uint32_t GetTypeLength(std::string type){
+            if (type.compare("int8") == 0 ||
+              type.compare("uint8") == 0) {
+              return 1;
+            } else if (type.compare("int16") == 0 ||
+             type.compare("uint16") == 0) {
+              return 2;
+            } else if (type.compare("int32") == 0 ||
+             type.compare("uint32") == 0) {
+              return 4;
+            } else if (type.compare("int64") == 0 ||
+             type.compare("uint64") == 0) {
+              return 8;
+            }
+            return -1;
+          }
+          
         };
       }
     }
