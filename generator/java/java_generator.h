@@ -24,7 +24,6 @@
 #ifndef _NAEEM_HOTTENTOT_GENERATOR__JAVA__JAVA_GENERATOR_H_
 #define _NAEEM_HOTTENTOT_GENERATOR__JAVA__JAVA_GENERATOR_H_
 
-
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -70,7 +69,7 @@ namespace naeem {
           void GenerateServiceProxyBuilder(::naeem::hottentot::generator::ds::Module*);
           void GenerateRequestHandler(::naeem::hottentot::generator::ds::Module*);
           void GenerateServiceProxy(::naeem::hottentot::generator::ds::Module*);
-          void MakeTabStr(::naeem::hottentot::generator::GenerationConfig &);
+          void SetTabStr(::naeem::hottentot::generator::GenerationConfig &);
           std::string ConvertType(std::string);
           uint32_t GetTypeLength(std::string);
           void Destroy();
