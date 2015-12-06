@@ -10,6 +10,6 @@ module example.generated {
   };
   stateless service Authentication {
     Token authenticate(Credential credential);
-    int32 test(string str);
+    
   };
 };

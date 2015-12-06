@@ -158,7 +158,16 @@
       }
       void
       JavaGenerator::GenerateStructs(::naeem::hottentot::generator::ds::Module *pModule) {
-                    //loop on structs in everey module
+        //loop on methods
+        // for (int i = 0; i < pMadule->services_.size(); i++) {
+        //   for(int j = 0 ; j < pModule->services_.at(i)->methods_.size() ; j++){
+        //     ::naeem::hottentot::generator::ds::Method* pMethod = pModule->services_.at(i)->methods_.at(j);
+
+        //   }
+        // }
+
+        //TODO make struct for PDT arg and return type in methods
+        //loop on structs in everey module
         for (int i = 0; i < pModule->structs_.size(); i++) {
           ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(i);
           std::string basePackageName = pModule->package_;
@@ -167,14 +176,6 @@
           ::naeem::hottentot::generator::common::StringHelper::Replace(replacableStructTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
           ::naeem::hottentot::generator::common::StringHelper::Replace(replacableStructTmpStr , "[%INDENT%]" , indent_ , 1);
           ::naeem::hottentot::generator::common::StringHelper::Replace(replacableStructTmpStr , "[%STRUCT_NAME%]" , pStruct->name_ , 1);
-                        // while (replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]") != std::string::npos) {
-                        //     replacableStructTmpStr.replace(replacableStructTmpStr.find("[%BASE_PACKAGE_NAME%]"), 21,
-                        //                                    basePackageName);
-                        // }
-                        // while (replacableStructTmpStr.find("[%STRUCT_NAME%]") != std::string::npos) {
-                        //     replacableStructTmpStr.replace(replacableStructTmpStr.find("[%STRUCT_NAME%]"), 15,
-                        //                                    pStruct->name_);
-                        // }
           std::string declarationStr;
           std::string getterSetterStr;
           std::string declarationJavaType;
@@ -692,17 +693,17 @@ for (int i = 0; i < pMethod->arguments_.size(); i++) {
     capitalalizedArgVar + " = " +
     pArg->variable_ + ".serialize();\n";
   }else{
-    std::string capitalizedArgType =
-    ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
-      pArg->type_);
-    methodsStr += indent_ + indent_ +
-    "byte[] serialized" +
-    capitalalizedArgVar + " = " +
-    "PDTSerializer.get" + 
-    capitalizedArgType +
-    "(" +
-      pArg->variable_+ 
-      ");\n" ;
+    // std::string capitalizedArgType =
+    // ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+    //   pArg->type_);
+    // methodsStr += indent_ + indent_ +
+    // "byte[] serialized" +
+    // capitalalizedArgVar + " = " +
+    // "PDTSerializer.get" + 
+    // capitalizedArgType +
+    // "(" +
+    //   pArg->variable_+ 
+    //   ");\n" ;
 }
 }
 methodsStr += "\n";
@@ -739,25 +740,25 @@ methodsStr += indent_ + indent_ +
 "arg" + ssI.str() + ".setData(" + pArg->variable_.c_str() +
   ".serialize());\n";
 }else{
-  std::string capitalizedArgType = 
-  ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
-    pArg->type_); 
-  methodsStr += "PDTSerializer.get" + 
-  capitalizedArgType +
-  "(" +
-    pArg->variable_.c_str() +
-    ").length);\n";
-methodsStr += indent_ + indent_ + 
-"arg" + ssI.str() + ".setData(PDTSerializer.get" + 
-  capitalizedArgType + 
-  "(" + 
-    pArg->variable_ + 
-    "));\n";
+//   std::string capitalizedArgType = 
+//   ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+//     pArg->type_); 
+//   methodsStr += "PDTSerializer.get" + 
+//   capitalizedArgType +
+//   "(" +
+//     pArg->variable_.c_str() +
+//     ").length);\n";
+// methodsStr += indent_ + indent_ + 
+// "arg" + ssI.str() + ".setData(PDTSerializer.get" + 
+//   capitalizedArgType + 
+//   "(" + 
+//     pArg->variable_ + 
+//     "));\n";
 }
 
 methodsStr += indent_ + indent_ + "request.addArgument(arg" + ssI.str() + ");\n";
 }
-                            //calculate request length
+//calculate request length
 methodsStr += indent_ + indent_ + "int dataLength = 0;\n";
 methodsStr += indent_ + indent_ + "//calculate data length for every argument\n";
 for (int i = 0; i < pMethod->arguments_.size(); i++) {
@@ -852,14 +853,14 @@ if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)) {
   methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
   methodsStr += indent_ + "}\n"; 
 }else {
-  std::string capitalizedArgType = 
-  ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
-    pArg->type_);
-  methodsStr += indent_ + indent_ +
-  "return PDTDeserializer.get" + 
-  capitalizedReturnType + 
-  "(response.getData());\n";
-  methodsStr += indent_ + "}\n"; 
+  // std::string capitalizedArgType = 
+  // ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+  //   pArg->type_);
+  // methodsStr += indent_ + indent_ +
+  // "return PDTDeserializer.get" + 
+  // capitalizedReturnType + 
+  // "(response.getData());\n";
+  // methodsStr += indent_ + "}\n"; 
 }
 }
 replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%METHODS%]"), 11,
