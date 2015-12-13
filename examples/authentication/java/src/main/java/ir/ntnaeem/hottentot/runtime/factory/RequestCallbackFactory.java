@@ -31,7 +31,7 @@ import java.util.Map;
 
 
 public class RequestCallbackFactory {
-    public static RequestCallback create(Map<Integer,RequestHandler> requestHandlers){
+    public static RequestCallback create(Map<Long,RequestHandler> requestHandlers){
         return new DefaultRequestCallback(requestHandlers);
     }
 }

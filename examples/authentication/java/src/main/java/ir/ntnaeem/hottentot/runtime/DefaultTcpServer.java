@@ -44,9 +44,9 @@ public class DefaultTcpServer implements TcpServer {
 
     private int port;
     private String host;
-    private Map<Integer, RequestHandler> requestHandlers;
+    private Map<Long, RequestHandler> requestHandlers;
 
-    public DefaultTcpServer(String host, int port, Map<Integer, RequestHandler> requestHandlers) {
+    public DefaultTcpServer(String host, int port, Map<Long, RequestHandler> requestHandlers) {
         this.requestHandlers = requestHandlers;
         this.host = host;
         this.port = port;
