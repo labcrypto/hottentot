@@ -41,6 +41,8 @@ namespace naeem {
               ::naeem::hottentot::generator::ds::Argument *pArg;
               for (int i = 0; i < pMethod->arguments_.size(); i++) {
                 pArg = pMethod->arguments_.at(i);
+                
+                //
                 std::stringstream ssI;
                 ssI << i;
                 methodConditionStr +=
@@ -64,6 +66,8 @@ namespace naeem {
                   ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->type_);
                   std::string capitalizedArgVar = 
                   ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_);
+
+                  
                   if(capitalizedArgType == "String"){
                     capitalizedArgType = "FullString";
                   }
@@ -72,6 +76,7 @@ namespace naeem {
                                         " = PDTDeserializer.get" + capitalizedArgType +
                                         "(serialized" + capitalizedArgVar + ");\n";
                 }
+
               }
               if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +
@@ -93,9 +98,10 @@ namespace naeem {
               }
               for (int i = 0; i < pMethod->arguments_.size(); i++) {
                 pArg = pMethod->arguments_.at(i);
-                methodConditionStr += pArg->variable_;
                 if (i < pMethod->arguments_.size() - 1) {
-                  methodConditionStr += pArg->variable_ += ",";
+                  methodConditionStr += pArg->variable_ + ",";
+                }else{
+                  methodConditionStr += pArg->variable_;
                 }
               }
               methodConditionStr += ");\n";

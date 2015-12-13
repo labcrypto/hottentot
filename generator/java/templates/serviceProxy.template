@@ -3,7 +3,7 @@
  * Date: 
  * Name: 
  * Description:
- *   This file contains definition of an abstract service class.
+ *   
  ******************************************************************/
 package [%BASE_PACKAGE_NAME%];
 

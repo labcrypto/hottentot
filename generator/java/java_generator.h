@@ -84,6 +84,8 @@ namespace naeem {
           std::string requestHandlerTmpStr_;
           std::string serviceProxyTmpStr_;
           std::string outDir_;
+          std::string clientOutDir_;
+          std::string serverOutDir_;
           static const uint32_t TAB_SPACE_NUMBER = 4;
           std::string indent_;
         };
