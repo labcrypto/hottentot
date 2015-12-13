@@ -62,8 +62,46 @@ namespace naeem {
                 "() {\n";
               getterSetterStr += indent_ + indent_ + "return " + declarationPtr->variable_ + ";\n";
               getterSetterStr += indent_ + "}\n";
+              
+
+             
             }
-            replacableStructTmpStr.replace(replacableStructTmpStr.find("[%MEMBERS%]"), 11, declarationStr + getterSetterStr);
+
+
+             // @Override
+             //  public String toString() {
+             //    return "UserHot{" +
+             //            "username='" + username + '\'' +
+             //            ", password='" + password + '\'' +
+             //            ", email='" + email + '\'' +
+             //            '}';
+             //  }
+
+            //toString method
+            std::string toStringMethodStr = indent_  + "@Override \n"; 
+            toStringMethodStr += indent_  + "public String toString() { \n"; 
+            toStringMethodStr += indent_ + indent_ + "return \"" + pStruct->name_.c_str() + "{\" + \n";
+            int counter = 0;
+            for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+             = pStruct->declarations_.begin();
+             it != pStruct->declarations_.end();
+             ++it) {
+              ::naeem::hottentot::generator::ds::Declaration *pDeclaration = it->second;
+              toStringMethodStr += indent_ + indent_ + indent_ + "\"";
+              if(counter != 0){
+                toStringMethodStr += ",";
+              }
+              counter++;
+              toStringMethodStr += pDeclaration->variable_ + " = '\" + " +
+                                   pDeclaration->variable_.c_str() + " + '\\'' + \n"; 
+            }
+            toStringMethodStr += indent_ + indent_ + indent_ + "\"}\"; \n";
+            toStringMethodStr += indent_ + "}\n";
+
+
+            replacableStructTmpStr.replace(replacableStructTmpStr.find("[%MEMBERS%]"),
+                                          11,
+                                          declarationStr + getterSetterStr + toStringMethodStr);
             //serilize method
             std::string serializeMethodStr;
             for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
