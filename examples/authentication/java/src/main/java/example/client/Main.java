@@ -23,19 +23,22 @@
 
 package example.client;
 
-import example.generatedBackup.Credential;
-import example.generatedBackup.AuthenticationService;
-import example.generatedBackup.Token;
-import example.generatedBackup.AuthenticationServiceProxyBuilder;
+import example.generated.AuthenticationService;
+import example.generated.AuthenticationServiceProxyBuilder;
+import example.generated.Credential;
+import example.generated.Token;
+
+import java.util.Arrays;
 
 public class Main {
-    public static void main(String[] args) {
-        AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8000);
-        Credential credential = new Credential();
-        credential.setUsername("zoro");
-        credential.setPassword("12345");
-        Token token = proxy.authenticate(credential);
-        System.out.println(token.getValue());
-        AuthenticationServiceProxyBuilder.destroy();
-    }
+  public static void main(String[] args) {
+    AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8000);
+    Credential credential = new Credential();
+    credential.setUsername("zoro");
+    credential.setPassword("12345");
+    Token token = proxy.authenticate(credential);
+    System.out.println(token.getValue());
+    System.out.println(Arrays.toString(token.getSampleData()));
+    AuthenticationServiceProxyBuilder.destroy();
+  }
 }
