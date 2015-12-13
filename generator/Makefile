@@ -84,7 +84,8 @@ compile:
 	    -lfl -ll -o hot
 
 java: compile
-	 ./hot --java --out ../examples/authentication/java/src/main/java/example/generated test3.hot
-	#./hot --java --out /home/developer/Desktop/gen test3.hot
+	 #./hot --java --out ../examples/authentication/java/src/main/java/example/generated test3.hot
+	 #./hot --java --out /home/developer/Desktop/gen test3.hot
+	 ./hot --java --out /home/developer/projects/kawthar-a3-service/CAS/server/src/main/java/generated a3.hot
 cc: compile
 	./hot --cc --indent-with-spaces --number-of-spaces-used-for-indentation 2 --out gen --makefile --client --stub test2.hot

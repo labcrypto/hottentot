@@ -27,7 +27,6 @@ namespace naeem {
             std::string methodsStr;
             for (int i = 0; i < pService->methods_.size(); i++) {
               pMethod = pService->methods_.at(i);
-              pMethod = pService->methods_.at(i);
               std::string returnType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
               methodsStr += indent_ + "public " + returnType + " " + pMethod->name_ + "(";
               ::naeem::hottentot::generator::ds::Argument *pArg;

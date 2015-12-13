@@ -64,6 +64,7 @@ namespace naeem {
 
         void
         JavaGenerator::ReadTemplateFiles() {
+          //I dont use this ... 
           ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/struct.template",structTmpStr_);
           ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/abstractService.template",abstractServiceTmpStr_);
           ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/service.template",serviceTmpStr_);
@@ -75,7 +76,7 @@ namespace naeem {
       
         void
         JavaGenerator::SetTabStr(::naeem::hottentot::generator::GenerationConfig &generationConfig){
-          outDir_ = generationConfig.outDir_;
+          
           if(generationConfig.IsSpacesUsedInsteadOfTabsForIndentation()) {
             for (int i = 0; i < generationConfig.GetNumberOfSpacesUsedForIndentation() ; i++) {
               indent_ += " ";
@@ -89,18 +90,28 @@ namespace naeem {
         JavaGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
           ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
           SetTabStr(generationConfig);
+          //set out dir
+          outDir_ = generationConfig.outDir_;
+          clientOutDir_ = outDir_ + "/client";
+          serverOutDir_ = outDir_ + "/server";
+          //
           ::naeem::hottentot::generator::common::Os::MakeDir(outDir_.c_str());
+          // std::string serviceFolder = outDir_ + "/service";
+          // std::string proxyFolder = outDir_ + "/proxy";
+          // ::naeem::hottentot::generator::common::Os::MakeDir(serviceFolder);
+          // ::naeem::hottentot::generator::common::Os::MakeDir(proxyFolder);
           modules_ = hot->modules_;
           for (int i = 0; i < modules_.size(); i++) {
             ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
+
             GenerateStructs(pModule);
             GenerateAbstractService(pModule);
             GenerateServiceInterface(pModule);
             GenerateRequestHandler(pModule);
             GenerateServiceProxyBuilder(pModule);
             GenerateServiceProxy(pModule);
+            
           }
-          // std::cout << "Java Generation done." << std::endl;
           Destroy();
         }
         
