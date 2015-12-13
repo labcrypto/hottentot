@@ -31,13 +31,14 @@ import java.util.Map;
 
 public class DefaultRequestCallback implements RequestCallback {
 
-    private Map<Integer , RequestHandler> requestHandlers;
-    public DefaultRequestCallback(Map<Integer,RequestHandler> requestHandlers) {
-        this.requestHandlers = requestHandlers;
-    }
+  private Map<Long, RequestHandler> requestHandlers;
 
-    public Response onRequest(Request request) throws TcpClientReadException, TcpClientConnectException, TcpClientWriteException, MethodNotSupportException {
-        RequestHandler requestHandler = requestHandlers.get((int)request.getServiceId());
-        return requestHandler.handleRequest(request);
-    }
+  public DefaultRequestCallback(Map<Long, RequestHandler> requestHandlers) {
+    this.requestHandlers = requestHandlers;
+  }
+
+  public Response onRequest(Request request) throws TcpClientReadException, TcpClientConnectException, TcpClientWriteException, MethodNotSupportException {
+    RequestHandler requestHandler = requestHandlers.get(request.getServiceId());
+    return requestHandler.handleRequest(request);
+  }
 }
