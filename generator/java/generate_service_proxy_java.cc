@@ -29,7 +29,7 @@ namespace naeem {
               pMethod = pService->methods_.at(i);
               pMethod = pService->methods_.at(i);
               std::string returnType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
-              methodsStr += "public " + returnType + " " + pMethod->name_ + "(";
+              methodsStr += indent_ + "public " + returnType + " " + pMethod->name_ + "(";
               ::naeem::hottentot::generator::ds::Argument *pArg;
               for (int i = 0; i < pMethod->arguments_.size(); i++) {
                 pArg = pMethod->arguments_.at(i);
