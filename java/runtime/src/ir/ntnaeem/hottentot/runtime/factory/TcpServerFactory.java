@@ -30,7 +30,7 @@ import java.util.Map;
 
 
 public class TcpServerFactory {
-    public static TcpServer create(String host , int port , Map<Integer , RequestHandler> requestHandlers) {
+    public static TcpServer create(String host , int port , Map<Long , RequestHandler> requestHandlers) {
         return new DefaultTcpServer(host,port,requestHandlers);
     }
 }

@@ -22,66 +22,75 @@
  */
 package ir.ntnaeem.hottentot.serializerHelper;
 
-import java.util.Arrays;
-
 import static java.lang.StrictMath.pow;
+
 
 public class PDTDeserializer {
 
-    public static void main(String[] args) {
-        String string = getString(new byte[]{-40, -77 , -40 , -77});
-        System.out.println(string);
-        String str = "س";
-        byte[] bytes = str.getBytes();
-        System.out.println(Arrays.toString(bytes));
+  public static String getFullString(byte[] bytes) {
+    //TODO notice utf8 !
+    int dataLength = 0;
+    int counter = 0;
+    if((bytes[0] & 0x80) == 0) {
+      dataLength = bytes[counter++];
+    }else {
+      int numbersOfBytesForDataLength = bytes[0] & 0x0f;
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+        dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * bytes[counter++];
+      }
     }
+    byte[] valueByteArray = new byte[dataLength];
+    System.arraycopy(bytes,counter,valueByteArray,0,dataLength);
+    return new String(valueByteArray);
+  }
+  public static String getString(byte[] bytes){
+    return new String(bytes);
+  }
 
-    public static String getString(byte[] bytes){
-        //TODO notice utf8 !
-        return  new String(bytes);
+  public static boolean getBool(byte b) {
+    if (b == 1) {
+      return true;
     }
-    public static boolean getBool(byte b){
-        if(b == 1){
-            return true;
-        }
-        return false;
-    }
-    public static short getInt8(byte b){
-        return (b < 0) ? (short)(256 + b) : (short)b;
-    }
-    public static short getInt16(byte[] bytes){
-        short number = 0 ;
-        for(byte i = 0 ; i < bytes.length ; i++){
-            if(bytes[i] < 0){
-                number += pow(256,bytes.length - 1 - i) * (bytes[i] + 256);
-            }else{
-                number += pow(256,bytes.length - 1 - i) * bytes[i];
-            }
-        }
-        return number;
-    }
+    return false;
+  }
 
-    public static int getInt32(byte[] bytes){
-        int number = 0 ;
-        for(byte i = 0 ; i < bytes.length ; i++){
-            if(bytes[i] < 0){
-                number += pow(256,bytes.length - 1 - i) * (bytes[i] + 256);
-            }else{
-                number += pow(256,bytes.length - 1 - i) * bytes[i];
-            }
-        }
-        return number;
-    }
+  public static byte getInt8(byte[] bytes) {
+    return (bytes[0] < 0) ? (byte) (256 + bytes[0]) : bytes[0];
+  }
 
-    public static long getInt64(byte[] bytes){
-        long number = 0L ;
-        for(byte i = 0 ; i < bytes.length ; i++){
-            if(bytes[i] < 0){
-                number += pow(256,bytes.length - 1 - i) * (bytes[i] + 256);
-            }else{
-                number += pow(256,bytes.length - 1 - i) * bytes[i];
-            }
-        }
-        return number;
+  public static short getInt16(byte[] bytes) {
+    short number = 0;
+    for (byte i = 0; i < bytes.length; i++) {
+      if (bytes[i] < 0) {
+        number += pow(256, bytes.length - 1 - i) * (bytes[i] + 256);
+      } else {
+        number += pow(256, bytes.length - 1 - i) * bytes[i];
+      }
     }
+    return number;
+  }
+
+  public static int getInt32(byte[] bytes) {
+    int number = 0;
+    for (byte i = 0; i < bytes.length; i++) {
+      if (bytes[i] < 0) {
+        number += pow(256, bytes.length - 1 - i) * (bytes[i] + 256);
+      } else {
+        number += pow(256, bytes.length - 1 - i) * bytes[i];
+      }
+    }
+    return number;
+  }
+
+  public static long getInt64(byte[] bytes) {
+    long number = 0L;
+    for (byte i = 0; i < bytes.length; i++) {
+      if (bytes[i] < 0) {
+        number += pow(256, bytes.length - 1 - i) * (bytes[i] + 256);
+      } else {
+        number += pow(256, bytes.length - 1 - i) * bytes[i];
+      }
+    }
+    return number;
+  }
 }

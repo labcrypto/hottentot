@@ -35,27 +35,27 @@ import java.util.Map;
 public class ServiceRuntime {
 
     private Map<Endpoint,List<Service>> serviceMap = new HashMap<Endpoint, List<Service>>();
-    private Map<Endpoint , Map<Integer , RequestHandler>> requestHandlerMap = new HashMap<Endpoint, Map<Integer, RequestHandler>>();
+    private Map<Endpoint , Map<Long , RequestHandler>> requestHandlerMap = new HashMap<Endpoint, Map<Long, RequestHandler>>();
     public void register(String host , int port , Service service){
         Endpoint endPoint = new Endpoint(host,port);
         if(serviceMap.containsKey(endPoint)){
             List<Service> serviceListInEndpoint = serviceMap.get(endPoint);
             //TODO search in service list for duplicate service registered
             serviceListInEndpoint.add(service);
-            Map<Integer, RequestHandler> requestHandlerMapInEndpoint = requestHandlerMap.get(endPoint);
+            Map<Long, RequestHandler> requestHandlerMapInEndpoint = requestHandlerMap.get(endPoint);
             requestHandlerMapInEndpoint.put(service.getServiceId() , service.makeRequestHandler());
         }else{
             ArrayList<Service> serviceList = new ArrayList<Service>();
             serviceList.add(service);
             serviceMap.put(endPoint,serviceList);
-            HashMap<Integer, RequestHandler> requestHandlers = new HashMap<Integer , RequestHandler>();
+            HashMap<Long, RequestHandler> requestHandlers = new HashMap<Long , RequestHandler>();
             requestHandlers.put(service.getServiceId() , service.makeRequestHandler());
             requestHandlerMap.put(endPoint, requestHandlers);
         }
     }
     public void start(){
-        for(Map.Entry<Endpoint , Map<Integer , RequestHandler> > entry : requestHandlerMap.entrySet()){
-            Map<Integer, RequestHandler> requestHandlerMapInEndpoint = entry.getValue();
+        for(Map.Entry<Endpoint , Map<Long , RequestHandler> > entry : requestHandlerMap.entrySet()){
+            Map<Long, RequestHandler> requestHandlerMapInEndpoint = entry.getValue();
             Endpoint endpoint = entry.getKey();
             TcpServer tcpServer = TcpServerFactory.create(endpoint.getHost(), endpoint.getPort(), requestHandlerMapInEndpoint);
             try {
