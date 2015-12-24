@@ -27,6 +27,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <stdint.h>
+#include <string.h>
 
 #include "../serializable.h"
 
@@ -37,22 +38,66 @@ namespace naeem {
       namespace types {
         class Utf8String : public ::naeem::hottentot::runtime::Serializable {
         public:
-          Utf8String() {
+          Utf8String(const char *data) {
+            FromByteArray(data);
           }
-          virtual ~Utf8String() {}
+          virtual ~Utf8String() {
+            delete [] data_;
+          }
         public:
-         
+          uint32_t Length() const {
+           return length;
+          }
+          uint16_t CharAt(uint32_t index) const {
+            return chars_[index];
+          }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            // TODO(kamran)
-            return 0;
+            uint32_t byteLength = strlen(data_);
+            char *data = new char[byteLength + 1];
+            strcpy(data, data_);
+            *length_ptr = byteLength;
+            return data;
           }
           inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
-            // TODO(kamran)
+            FromByteArray(data);
+          }
+        protected:
+          inline void FromByteArray(const char *data) {
+            uint32_t byteLength = strlen(data);
+            data_ = new char[byteLength + 1];
+            strcpy(data_, data);
+            length_ = 0;
+            for (uint32_t i = 0; i < byteLength; i++) {
+              if (data_[i] & 0x80 == 0x00) {
+                length_++;
+              } else {
+                if (data_[i] & 0x40 == 0x40 && data_[i] & 0x20 == 0x00) {
+                  length_++;
+                }
+              }
+            }
+            uint32_t c = 0;
+            chars_ = new uint16_t[length_ + 1];
+            for (uint32_t i = 0; i < byteLength; i++) {
+              if (data_[i] & 0x80 == 0x00) {
+                chars_[c++] = data_[i];
+              } else {
+                if (data_[i] & 0x40 == 0x40 && data_[i] & 0x20 == 0x00) {
+                  uint16_t left = data_[i] & 0x1f;
+                  uint16_t right = data_[i + 1] & 0x3f;
+                  uint16_t result = right | (left << 6);
+                  chars_[c++] = result;
+                }
+              }
+            }
+            chars_[c] = 0;
           }
         private:
-          // TODO(kamran)
+          char *data_;
+          uinr16_t chars_;
+          uint32_t length_;
         };
       }
     }
