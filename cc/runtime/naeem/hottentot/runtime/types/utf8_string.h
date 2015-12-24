@@ -38,15 +38,20 @@ namespace naeem {
       namespace types {
         class Utf8String : public ::naeem::hottentot::runtime::Serializable {
         public:
-          Utf8String(const char *data) {
-            FromByteArray(data);
+          Utf8String(const char *data = 0)
+            : data_(0),
+              chars_(0),
+              length_(0) {
+            if (data) {
+              FromByteArray(data);
+            }
           }
           virtual ~Utf8String() {
             delete [] data_;
           }
         public:
           uint32_t Length() const {
-           return length;
+           return length_;
           }
           uint16_t CharAt(uint32_t index) const {
             return chars_[index];
@@ -54,14 +59,14 @@ namespace naeem {
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
             uint32_t byteLength = strlen(data_);
-            char *data = new char[byteLength + 1];
-            strcpy(data, data_);
+            unsigned char *data = new unsigned char[byteLength + 1];
+            strcpy((char *)data, data_);
             *length_ptr = byteLength;
             return data;
           }
           inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
-            FromByteArray(data);
+            FromByteArray((const char *)data);
           }
         protected:
           inline void FromByteArray(const char *data) {
@@ -96,7 +101,7 @@ namespace naeem {
           }
         private:
           char *data_;
-          uinr16_t chars_;
+          uint16_t *chars_;
           uint32_t length_;
         };
       }
