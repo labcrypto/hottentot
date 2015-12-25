@@ -47,7 +47,16 @@ namespace naeem {
             }
           }
           virtual ~Utf8String() {
-            delete [] data_;
+            uint32_t byteLength = strlen(data_);
+            for (uint32_t i = 0; i < byteLength; i++) {
+              std::cout << "BYE: " << data_[i] << std::endl;
+            }
+            if (data_) {
+              delete [] data_;
+            }
+            if (chars_) {
+              delete [] chars_;
+            }
           }
         public:
           uint32_t Length() const {
@@ -60,8 +69,11 @@ namespace naeem {
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
             uint32_t byteLength = strlen(data_);
             unsigned char *data = new unsigned char[byteLength + 1];
-            strcpy((char *)data, data_);
-            *length_ptr = byteLength;
+            for (uint32_t i = 0; i < byteLength; i++) {
+              data[i] = data_[i];
+            }
+            data[byteLength] = 0;
+            *length_ptr = byteLength + 1;
             return data;
           }
           inline virtual void Deserialize(unsigned char *data,
@@ -71,25 +83,34 @@ namespace naeem {
         protected:
           inline void FromByteArray(const char *data) {
             uint32_t byteLength = strlen(data);
+            std::cout << "BL: " << byteLength << std::endl;
+            if (data_) {
+              delete [] data_;
+            }
             data_ = new char[byteLength + 1];
-            strcpy(data_, data);
+            for (uint32_t i = 0; i < byteLength; i++) {
+              data_[i] = data[i];
+            }
+            data_[byteLength] = 0;
             length_ = 0;
             for (uint32_t i = 0; i < byteLength; i++) {
-              if (data_[i] & 0x80 == 0x00) {
+              std::cout << "CHAR: " << data_[i] << std::endl;
+              if ((data_[i] & 0x80) == 0x00) {
                 length_++;
               } else {
-                if (data_[i] & 0x40 == 0x40 && data_[i] & 0x20 == 0x00) {
+                if ((data_[i] & 0x40) == 0x40 && (data_[i] & 0x20) == 0x00) {
                   length_++;
                 }
               }
             }
+            std::cout << "LLLL: " << length_ << std::endl;
             uint32_t c = 0;
             chars_ = new uint16_t[length_ + 1];
             for (uint32_t i = 0; i < byteLength; i++) {
-              if (data_[i] & 0x80 == 0x00) {
+              if ((data_[i] & 0x80) == 0x00) {
                 chars_[c++] = data_[i];
               } else {
-                if (data_[i] & 0x40 == 0x40 && data_[i] & 0x20 == 0x00) {
+                if ((data_[i] & 0x40) == 0x40 && (data_[i] & 0x20) == 0x00) {
                   uint16_t left = data_[i] & 0x1f;
                   uint16_t right = data_[i + 1] & 0x3f;
                   uint16_t result = right | (left << 6);
@@ -98,6 +119,7 @@ namespace naeem {
               }
             }
             chars_[c] = 0;
+            std::cout << "LLLL ccc: " << c << std::endl;
           }
         private:
           char *data_;

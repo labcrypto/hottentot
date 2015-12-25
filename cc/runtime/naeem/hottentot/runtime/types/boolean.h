@@ -25,6 +25,7 @@
 #define _NAEEM_HOTTENTOT_RUNTIME__TYPES__BOOLEAN_H_
 
 #include <iostream>
+#include <stdlib.h>
 #include <stdexcept>
 #include <stdint.h>
 
@@ -41,7 +42,7 @@ namespace naeem {
             : value_(0) {
           }
           Boolean(bool value)
-            : value_(value != 0) {
+            : value_(value) {
           }
           virtual ~Boolean() {}
         public:
@@ -53,19 +54,18 @@ namespace naeem {
           }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            *length_ptr = 1 * sizeof(unsigned char);
-            unsigned char *data = 
-              new unsigned char[1 * sizeof(unsigned char)];
-            unsigned char *ptr = (unsigned char*)(&value_);
+            *length_ptr = 2 * sizeof(unsigned char);
+            unsigned char *data = (unsigned char *)malloc(2 * sizeof(unsigned char));
             data[0] = value_ ? 1 : 0;
+            data[1] = 0x10;
             return data;
           }
           inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
-            if (length != 1) {
+            if (length != 2) {
               throw std::runtime_error("Length is not correct for deserialization.");
             }
-            value_ = data[0] != 0;
+            value_ = data[1] != 0;
           }
         private:
           bool value_;
