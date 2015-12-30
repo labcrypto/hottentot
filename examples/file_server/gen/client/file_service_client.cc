@@ -26,7 +26,13 @@ main(int argc, char **argv) {
     ::ir::ntnaeem::hottentot::examples::file::server::FileService *proxy = 
         ::ir::ntnaeem::hottentot::examples::file::server::proxy::FileServiceProxyBuilder::Create("127.0.0.1", 2000);
     std::cout << "Proxy object is created." << std::endl;
+    unsigned char data[100];
+    for (unsigned int i = 0; i < 100; i++) {
+        data[i] = 65 + i % 26;
+    }
     ::naeem::hottentot::runtime::types::Utf8String str("1.txt");
+    ::naeem::hottentot::runtime::types::ByteArray byteArray(data, 100);
+    proxy->UploadFile(&str, &byteArray);
     ::naeem::hottentot::runtime::types::Boolean* result = proxy->FileExists(&str);
     std::cout << "Result is " << result->GetValue() << std::endl;
     ::naeem::hottentot::runtime::types::ByteArray *result2 = proxy->DownloadFile(&str);

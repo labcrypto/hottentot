@@ -48,7 +48,6 @@ namespace naeem {
               return 0;
             }
             requestHandler->HandleRequest(request, *response);
-            ::naeem::hottentot::runtime::Utils::PrintArray("Actual Response", response->GetData(), response->GetDataLength());
             return response;
           } else {
             return 0;            

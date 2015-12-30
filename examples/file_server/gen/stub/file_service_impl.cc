@@ -23,7 +23,13 @@ namespace server {
   void
   FileServiceImpl::UploadFile(::naeem::hottentot::runtime::types::Utf8String *fileName, ::naeem::hottentot::runtime::types::ByteArray *content) {
     ::naeem::hottentot::runtime::Logger::GetOut() << "FileServiceImpl::UploadFile() is called." << std::endl;
-        return;
+    for (unsigned int i = 0; i < fileName->Length(); i++) {
+      std::cout << "FN[" << i << "]: " << fileName->CharAt(i) << std::endl;
+    }
+    for (unsigned int i = 0; i < content->GetLength(); i++) {
+      std::cout << "C[" << i << "]: " << content->GetValue()[i] << std::endl;
+    }
+    return;
   }
   ::naeem::hottentot::runtime::types::Boolean*
   FileServiceImpl::FileExists(::naeem::hottentot::runtime::types::Utf8String *fileName) {
