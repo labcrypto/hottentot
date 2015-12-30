@@ -148,6 +148,17 @@ namespace naeem {
             methodsStr += indent_ + indent_ + "//deserialize token part of response\n";
             methodsStr += indent_ + indent_ + "Response response = protocol.getResponse();\n";
             methodsStr += indent_ + indent_ + "//close everything\n";
+            methodsStr += indent_ + indent_ + " try { \n";
+            methodsStr += indent_ + indent_ + indent_ + " tcpClient.close(); \n";
+            methodsStr += indent_ + indent_ + "} catch (TcpClientCloseException e) { \n";
+            methodsStr += indent_ + indent_ + indent_ + "e.printStackTrace(); \n";
+            methodsStr += indent_ + indent_ + "} \n";
+
+            try {
+      tcpClient.close();
+    } catch (TcpClientCloseException e) {
+      e.printStackTrace();
+    }
             methodsStr += indent_ + indent_ + "//deserialize " + pMethod->returnType_ + "part from response\n";
             std::string lowerCaseReturnType = pMethod->returnType_;
             std::string capitalizedReturnType = 
