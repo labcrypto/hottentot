@@ -228,7 +228,7 @@ namespace naeem {
            * Filling templates with real values
            */
           std::map<std::string, std::string> params;
-          params.insert(std::pair<std::string, std::string>("RETURN_TYPE", TypeHelper::GetCCType(method->GetReturnType()) + (TypeHelper::IsUDT(method->GetReturnType()) ? "*" : "")));
+          params.insert(std::pair<std::string, std::string>("RETURN_TYPE", TypeHelper::IsVoid(method->GetReturnType()) ? "void" : TypeHelper::GetCCType(method->GetReturnType()) + "*"));
           params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
           params.insert(std::pair<std::string, std::string>("METHOD_NAME", ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName())));
           params.insert(std::pair<std::string, std::string>("ARGUMENTS", arguments));

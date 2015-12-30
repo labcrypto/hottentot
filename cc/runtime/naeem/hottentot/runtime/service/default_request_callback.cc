@@ -47,7 +47,7 @@ namespace naeem {
             if (requestHandler == 0) {
               return 0;
             }
-            requestHandler->HandleRequest(request, response);
+            requestHandler->HandleRequest(request, *response);
             std::cout << ">>>>>>>>>>>>>> " << (intptr_t)response->GetData() << std::endl;
             std::cout << "<<<<<<< " << response->GetData()[0] << std::endl;
             std::cout << "<<<<<<< " << response->GetDataLength() << std::endl;

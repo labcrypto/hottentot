@@ -162,17 +162,17 @@ namespace naeem {
             if (TypeHelper::IsVoid(method->GetReturnType())) {
               methodCall += "serviceObject->" + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
             } else {
-              methodCall += TypeHelper::GetCCType(method->GetReturnType()) + " result = serviceObject->" 
+              methodCall += TypeHelper::GetCCType(method->GetReturnType()) + "* result = serviceObject->" 
                           + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
             }
           }
           std::string sep = "";
           for (uint32_t i = 0; i < method->arguments_.size(); i++) {
-            if (TypeHelper::IsUDT(method->arguments_[i]->GetType())) {
+            // if (TypeHelper::IsUDT(method->arguments_[i]->GetType())) {
               methodCall += sep + "&" + method->arguments_[i]->GetVariable();
-            } else {
+            /* } else {
               methodCall += sep + method->arguments_[i]->GetVariable();
-            }
+            } */
             sep = ", ";
           }
           methodCall += ");\r\n";
@@ -185,7 +185,7 @@ namespace naeem {
             if (TypeHelper::IsVoid(method->GetReturnType())) {
               resultSerialization += indent + indent + indent + "unsigned char *serializedData = 0;";
             } else {
-              resultSerialization += indent + indent + indent + "unsigned char *serializedData = result.Serialize(&serializedDataLength);\r\n";
+              resultSerialization += indent + indent + indent + "unsigned char *serializedData = result->Serialize(&serializedDataLength);\r\n";
             }
           }
           resultSerialization += "\r\n";
