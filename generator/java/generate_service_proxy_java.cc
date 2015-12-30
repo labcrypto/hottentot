@@ -153,12 +153,6 @@ namespace naeem {
             methodsStr += indent_ + indent_ + "} catch (TcpClientCloseException e) { \n";
             methodsStr += indent_ + indent_ + indent_ + "e.printStackTrace(); \n";
             methodsStr += indent_ + indent_ + "} \n";
-
-            try {
-      tcpClient.close();
-    } catch (TcpClientCloseException e) {
-      e.printStackTrace();
-    }
             methodsStr += indent_ + indent_ + "//deserialize " + pMethod->returnType_ + "part from response\n";
             std::string lowerCaseReturnType = pMethod->returnType_;
             std::string capitalizedReturnType = 
