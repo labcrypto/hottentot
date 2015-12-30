@@ -39,8 +39,8 @@ public class PDTSerializer {
         }
         return b;
     }
-    public static byte[] getInt8(short number){
-        return new byte[]{ (byte)number };
+    public static byte getInt8(short number){
+        return (byte)number;
     }
     public static byte[] getInt16(short number){
         byte[] byteArray = new byte[2];

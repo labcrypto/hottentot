@@ -22,10 +22,21 @@
  */
 package ir.ntnaeem.hottentot.serializerHelper;
 
+import com.sun.org.apache.xalan.internal.xsltc.dom.SortingIterator;
+
+import java.util.Arrays;
+
 import static java.lang.StrictMath.pow;
 
-
 public class PDTDeserializer {
+
+  public static void main(String[] args) {
+    String string = getString(new byte[]{97 , 98 , 99});
+    System.out.println(string);
+    String str = "س";
+    byte[] bytes = str.getBytes();
+    System.out.println(Arrays.toString(bytes));
+  }
 
   public static String getFullString(byte[] bytes) {
     //TODO notice utf8 !
@@ -54,8 +65,8 @@ public class PDTDeserializer {
     return false;
   }
 
-  public static byte getInt8(byte[] bytes) {
-    return (bytes[0] < 0) ? (byte) (256 + bytes[0]) : bytes[0];
+  public static short getInt8(byte b) {
+    return (b < 0) ? (short) (256 + b) : (short) b;
   }
 
   public static short getInt16(byte[] bytes) {

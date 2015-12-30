@@ -12,10 +12,7 @@ import ir.ntnaeem.hottentot.runtime.Proxy;
 import ir.ntnaeem.hottentot.runtime.Request;
 import ir.ntnaeem.hottentot.runtime.Response;
 import ir.ntnaeem.hottentot.runtime.TcpClient;
-import ir.ntnaeem.hottentot.runtime.exception.HottentotRuntimeException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
+import ir.ntnaeem.hottentot.runtime.exception.*;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
@@ -95,6 +92,12 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     //deserialize token part of response
     Response response = protocol.getResponse();
     //close everything
+    try {
+      tcpClient.close();
+      System.out.println(">>>>>>>>>>>" + Thread.currentThread() + " socket closed");
+    } catch (TcpClientCloseException e) {
+      e.printStackTrace();
+    }
     //deserialize Tokenpart from response
     Token token= null;
     if (response.getStatusCode() == -1) {
@@ -106,6 +109,6 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
   }
 
   public void destroy() {
-    //TODO
+    //
   }
 }
