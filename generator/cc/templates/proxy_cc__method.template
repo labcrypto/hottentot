@@ -1,4 +1,4 @@
-[[[RETURN_TYPE]]]
+[[[INDENT]]][[[RETURN_TYPE]]]
 [[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy::[[[METHOD_NAME]]]([[[ARGUMENTS]]]) {
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Make request object

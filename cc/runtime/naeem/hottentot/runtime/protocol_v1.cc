@@ -268,6 +268,7 @@ namespace naeem {
                   if (response) {
                     uint32_t responseSerializedLength = 0;
                     unsigned char *responseSerializedData = SerializeResponse(*response, &responseSerializedLength);
+                    ::naeem::hottentot::runtime::Utils::PrintArray("Serialized response: ", responseSerializedData, responseSerializedLength);
                     uint32_t sendLength = (responseSerializedLength > 127 ? 3 : 1) +  responseSerializedLength;
                     unsigned char *sendData = new unsigned char[sendLength];
                     uint32_t c = 0;

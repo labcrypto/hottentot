@@ -22,5 +22,5 @@
 
 [[[NAMESPACES_START]]]
 namespace proxy {
-[[[INDENT]]][[[METHODS]]]} // END OF NAMESPACE proxy
+[[[METHODS]]]} // END OF NAMESPACE proxy
 [[[NAMESPACES_END]]]

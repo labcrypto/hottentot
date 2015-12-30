@@ -85,10 +85,10 @@ namespace naeem {
           std::string methodDefs = "";
           for (uint32_t i = 0; i < service->methods_.size(); i++) {
             ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
-            methodDefs += indent + indent + TypeHelper::GetCCType(method->GetReturnType()) + (TypeHelper::IsUDT(method->GetReturnType()) ? "*" : "") + " " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
+            methodDefs += indent + indent + TypeHelper::GetCCType(method->GetReturnType()) + (!TypeHelper::IsVoid(method->GetReturnType()) ? "*" : "") + " " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
             std::string sep = "";
             for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-              methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " " + (TypeHelper::IsUDT(method->arguments_[j]->GetType()) ? "*" : "") + method->arguments_[j]->GetVariable();
+              methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " *" + method->arguments_[j]->GetVariable();
               sep = ", ";
             }
             methodDefs += ");\r\n";

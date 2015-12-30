@@ -28,7 +28,7 @@ namespace proxy {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]: ::naeem::hottentot::runtime::proxy::Proxy(host, port) {}
 [[[INDENT]]][[[INDENT]]]virtual ~[[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy() {}
 [[[INDENT]]]public:
-[[[METHOD_DEFS]]]
+[[[INDENT]]][[[INDENT]]][[[METHOD_DEFS]]]
 [[[INDENT]]]};
 } // END OF NAMESPACE proxy
 [[[NAMESPACES_END]]]

@@ -20,7 +20,7 @@
 [[[NAMESPACES_START]]]
 [[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]] {
 [[[INDENT]]]public:
-[[[METHOD_DEFS]]]
+[[[INDENT]]][[[INDENT]]][[[METHOD_DEFS]]]
 [[[INDENT]]]};
 [[[NAMESPACES_END]]]
 
