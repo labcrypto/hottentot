@@ -28,7 +28,7 @@ namespace server {
   ::naeem::hottentot::runtime::types::Boolean*
   FileServiceImpl::FileExists(::naeem::hottentot::runtime::types::Utf8String *fileName) {
     ::naeem::hottentot::runtime::Logger::GetOut() << "FileServiceImpl::FileExists() is called." << std::endl;
-        return NULL;
+        return new ::naeem::hottentot::runtime::types::Boolean(false);
   }
   ::naeem::hottentot::runtime::types::ByteArray*
   FileServiceImpl::DownloadFile(::naeem::hottentot::runtime::types::Utf8String *fileName) {

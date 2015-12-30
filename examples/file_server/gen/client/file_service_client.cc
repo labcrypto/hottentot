@@ -26,10 +26,12 @@ main(int argc, char **argv) {
     ::ir::ntnaeem::hottentot::examples::file::server::FileService *proxy = 
         ::ir::ntnaeem::hottentot::examples::file::server::proxy::FileServiceProxyBuilder::Create("127.0.0.1", 2000);
     std::cout << "Proxy object is created." << std::endl;
-    // TODO Do whatever you want with proxy objects.
+    ::naeem::hottentot::runtime::types::Utf8String str("1.txt");
+    ::naeem::hottentot::runtime::types::Boolean* result = proxy->FileExists(&str);
+    std::cout << "Result is " << result->GetValue() << std::endl;
     ::ir::ntnaeem::hottentot::examples::file::server::proxy::FileServiceProxyBuilder::Destroy(proxy);
     std::cout << "Proxy object is destroyed." << std::endl;
-    // Delete allocated objects
+    delete result;
   } catch (...) {
     std::cout << "Error." << std::endl;
     return 1;
