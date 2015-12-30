@@ -28,12 +28,16 @@ namespace server {
   ::naeem::hottentot::runtime::types::Boolean*
   FileServiceImpl::FileExists(::naeem::hottentot::runtime::types::Utf8String *fileName) {
     ::naeem::hottentot::runtime::Logger::GetOut() << "FileServiceImpl::FileExists() is called." << std::endl;
-        return new ::naeem::hottentot::runtime::types::Boolean(false);
+    return new ::naeem::hottentot::runtime::types::Boolean(false);
   }
   ::naeem::hottentot::runtime::types::ByteArray*
   FileServiceImpl::DownloadFile(::naeem::hottentot::runtime::types::Utf8String *fileName) {
     ::naeem::hottentot::runtime::Logger::GetOut() << "FileServiceImpl::DownloadFile() is called." << std::endl;
-        return NULL;
+    unsigned char *str = new unsigned char[10];
+    strcpy((char *)str, "Kamran");
+    ::naeem::hottentot::runtime::types::ByteArray *result = new ::naeem::hottentot::runtime::types::ByteArray;
+    result->SetValue(str, strlen((char *)str) + 1);
+    return result;
   }
 } // END OF NAMESPACE server
 } // END OF NAMESPACE file

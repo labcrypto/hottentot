@@ -29,9 +29,15 @@ main(int argc, char **argv) {
     ::naeem::hottentot::runtime::types::Utf8String str("1.txt");
     ::naeem::hottentot::runtime::types::Boolean* result = proxy->FileExists(&str);
     std::cout << "Result is " << result->GetValue() << std::endl;
+    ::naeem::hottentot::runtime::types::ByteArray *result2 = proxy->DownloadFile(&str);
+    std::cout << "Result2 length is " << result2->GetLength() << std::endl;
+    for (unsigned int i = 0; i < result2->GetLength(); i++) {
+      std::cout << "Result2[" << i << "]: " << result2->GetValue()[i] << std::endl;
+    }
     ::ir::ntnaeem::hottentot::examples::file::server::proxy::FileServiceProxyBuilder::Destroy(proxy);
     std::cout << "Proxy object is destroyed." << std::endl;
     delete result;
+    delete result2;
   } catch (...) {
     std::cout << "Error." << std::endl;
     return 1;
