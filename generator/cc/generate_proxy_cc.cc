@@ -143,7 +143,7 @@ namespace naeem {
           std::string arguments = "";
           std::string sep = "";
           for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-            arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " " + (TypeHelper::IsUDT(method->arguments_[j]->GetType()) ? "*" : "") + method->arguments_[j]->GetVariable();
+            arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " " + (!TypeHelper::IsVoid(method->arguments_[j]->GetType()) ? "*" : "") + method->arguments_[j]->GetVariable();
             sep = ", ";
           }
           std::string argumentsSerialization = "";
@@ -157,17 +157,17 @@ namespace naeem {
               ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodArgumentSerializationTemplate,
                                                                            "[[[INDENT]]]",
                                                                            indent);
-            if (TypeHelper::IsUDT(method->arguments_[j]->GetType())) {
+            // if (TypeHelper::IsUDT(method->arguments_[j]->GetType())) {
               proxyCCMethodArgumentSerializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodArgumentSerializationTemplate,
                                                                              "[[[ACCESS_OPERATOR]]]",
                                                                              "->");
-            } else {
+            /* } else {
               proxyCCMethodArgumentSerializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodArgumentSerializationTemplate,
                                                                              "[[[ACCESS_OPERATOR]]]",
                                                                              ".");
-            }
+            } */
             argumentsSerialization += proxyCCMethodArgumentSerializationTemplate + "\r\n";
           }
           std::string responseDeserialization = "";
@@ -185,7 +185,7 @@ namespace naeem {
                                                                            "[[[INDENT]]]",
                                                                            indent);
             
-            if (TypeHelper::IsUDT(method->GetReturnType())) {
+            // if (TypeHelper::IsUDT(method->GetReturnType())) {
               proxyCCMethodResponseDeserializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                              "[[[ACCESS_OPERATOR]]]",
@@ -198,7 +198,7 @@ namespace naeem {
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                              "[[[NEW_CLAUSE]]]",
                                                                              " = new " +  TypeHelper::GetCCType(method->GetReturnType()));
-            } else {
+            /*} else {
               proxyCCMethodResponseDeserializationTemplate =         
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                              "[[[ACCESS_OPERATOR]]]",
@@ -211,7 +211,7 @@ namespace naeem {
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                              "[[[NEW_CLAUSE]]]",
                                                                              "");
-            }
+            }*/
             responseDeserialization += proxyCCMethodResponseDeserializationTemplate + "\r\n";
           }
           std::string returnClause = "";

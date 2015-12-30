@@ -27,6 +27,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <stdint.h>
+#include <string.h>
 
 #include "../serializable.h"
 
@@ -37,22 +38,93 @@ namespace naeem {
       namespace types {
         class Utf8String : public ::naeem::hottentot::runtime::Serializable {
         public:
-          Utf8String() {
+          Utf8String(const char *data = 0)
+            : data_(0),
+              chars_(0),
+              length_(0) {
+            if (data) {
+              FromByteArray(data);
+            }
           }
-          virtual ~Utf8String() {}
+          virtual ~Utf8String() {
+            uint32_t byteLength = strlen(data_);
+            for (uint32_t i = 0; i < byteLength; i++) {
+              std::cout << "BYE: " << data_[i] << std::endl;
+            }
+            if (data_) {
+              delete [] data_;
+            }
+            if (chars_) {
+              delete [] chars_;
+            }
+          }
         public:
-         
+          uint32_t Length() const {
+           return length_;
+          }
+          uint16_t CharAt(uint32_t index) const {
+            return chars_[index];
+          }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            // TODO(kamran)
-            return 0;
+            uint32_t byteLength = strlen(data_);
+            unsigned char *data = new unsigned char[byteLength + 1];
+            for (uint32_t i = 0; i < byteLength; i++) {
+              data[i] = data_[i];
+            }
+            data[byteLength] = 0;
+            *length_ptr = byteLength + 1;
+            return data;
           }
           inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
-            // TODO(kamran)
+            FromByteArray((const char *)data);
+          }
+        protected:
+          inline void FromByteArray(const char *data) {
+            uint32_t byteLength = strlen(data);
+            std::cout << "BL: " << byteLength << std::endl;
+            if (data_) {
+              delete [] data_;
+            }
+            data_ = new char[byteLength + 1];
+            for (uint32_t i = 0; i < byteLength; i++) {
+              data_[i] = data[i];
+            }
+            data_[byteLength] = 0;
+            length_ = 0;
+            for (uint32_t i = 0; i < byteLength; i++) {
+              std::cout << "CHAR: " << data_[i] << std::endl;
+              if ((data_[i] & 0x80) == 0x00) {
+                length_++;
+              } else {
+                if ((data_[i] & 0x40) == 0x40 && (data_[i] & 0x20) == 0x00) {
+                  length_++;
+                }
+              }
+            }
+            std::cout << "LLLL: " << length_ << std::endl;
+            uint32_t c = 0;
+            chars_ = new uint16_t[length_ + 1];
+            for (uint32_t i = 0; i < byteLength; i++) {
+              if ((data_[i] & 0x80) == 0x00) {
+                chars_[c++] = data_[i];
+              } else {
+                if ((data_[i] & 0x40) == 0x40 && (data_[i] & 0x20) == 0x00) {
+                  uint16_t left = data_[i] & 0x1f;
+                  uint16_t right = data_[i + 1] & 0x3f;
+                  uint16_t result = right | (left << 6);
+                  chars_[c++] = result;
+                }
+              }
+            }
+            chars_[c] = 0;
+            std::cout << "LLLL ccc: " << c << std::endl;
           }
         private:
-          // TODO(kamran)
+          char *data_;
+          uint16_t *chars_;
+          uint32_t length_;
         };
       }
     }

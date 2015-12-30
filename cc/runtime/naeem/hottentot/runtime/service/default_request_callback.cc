@@ -22,6 +22,7 @@
  */
  
 #include <iostream>
+#include <stdint.h>
 
 #include "default_request_callback.h"
 #include "request_handler.h"
@@ -29,6 +30,7 @@
 #include "../response.h"
 #include "../request.h"
 #include "../logger.h"
+#include "../utils.h"
 
 
 namespace naeem {
@@ -45,7 +47,11 @@ namespace naeem {
             if (requestHandler == 0) {
               return 0;
             }
-            requestHandler->HandleRequest(request, *response);
+            requestHandler->HandleRequest(request, response);
+            std::cout << ">>>>>>>>>>>>>> " << (intptr_t)response->GetData() << std::endl;
+            std::cout << "<<<<<<< " << response->GetData()[0] << std::endl;
+            std::cout << "<<<<<<< " << response->GetDataLength() << std::endl;
+            ::naeem::hottentot::runtime::Utils::PrintArray("Actual Response", response->GetData(), response->GetDataLength());
             return response;
           } else {
             return 0;            

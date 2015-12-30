@@ -287,7 +287,7 @@ int yywrap(void) {
 extern FILE *yyin;
 
 void printHelpMessageAndExit() {
-  fprintf(stderr, "Usage: hot [--java] [--cc] [--indent-with-spaces = TRUE] [--indent-with-tabs] [--number-of-spaces-used-for-indentation NUMBER_OF_SPACES_USED_FOR_INDENTATION = 2] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
+  fprintf(stderr, "Usage: hot [--java] [--cc] [--makefile] [--client] [--stub] [--indent-with-spaces = TRUE] [--indent-with-tabs] [--number-of-spaces-used-for-indentation NUMBER_OF_SPACES_USED_FOR_INDENTATION = 2] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
   exit(1);
 }
 
@@ -295,9 +295,9 @@ int main(int argc, char **argv) {
   bool isJava = false;
   bool isCC = false;
   bool isSpacesUsedForIndentation = true;
-  bool makefileGenerated = false;
-  bool clientGenerated = false;
-  bool stubGenerated = false;
+  bool makefileGenerated = true;  // TODO(kamran): Change to false
+  bool clientGenerated = true; // TODO(kamran): Change to false
+  bool stubGenerated = true; // TODO(kamran): Change to false
   uint8_t numberOfSpacesUsedForIndentation = 2;
   bool hotsBegun = false;
   char *outputDir = 0;
@@ -318,8 +318,7 @@ int main(int argc, char **argv) {
       i++;
     } else if (strcmp(argv[i], "--indent-with-spaces") == 0) {
       if (hotsBegun) {
-        fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
-        exit(1);
+        printHelpMessageAndExit();
       }
       isSpacesUsedForIndentation = true;
       i++;
