@@ -284,8 +284,8 @@ namespace naeem {
                     }
                     ::naeem::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
                     write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
-                    delete sendData;
-                    delete responseSerializedData;
+                    delete [] sendData;
+                    delete [] responseSerializedData;
                     delete response;
                   } else {
                     std::cout << "No handler is found." << std::endl;
