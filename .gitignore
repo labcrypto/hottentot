@@ -9,3 +9,5 @@ Debug
 Release
 *.ncb
 *.user
+cc/lib
+cc/libd
