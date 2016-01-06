@@ -46,7 +46,8 @@ namespace naeem {
         void
         CCGenerator::GenerateMakefile(::naeem::hottentot::generator::ds::Hot *hot,
                                       ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
-          std::string makefile = "RTDIR = ../../../cc/runtime\r\n";
+          std::string makefile = "";
+          // makefile += "RTDIR = ../../../cc/runtime\r\n";
           makefile += "all:\r\n";
           makefile += "\tmkdir -p bin\r\n";
           makefile += "\tmkdir -p lib\r\n";
@@ -58,7 +59,7 @@ namespace naeem {
           if (generationConfig.IsStubGenerated()) {
             makefile += "\tmkdir -p lib/stub\r\n";
           }
-          makefile += "\tmkdir -p lib/runtime\r\n";
+          /*makefile += "\tmkdir -p lib/runtime\r\n";
           makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/logger.cc -o lib/runtime/logger.o\r\n";
           makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/protocol_v1.cc -o lib/runtime/protocol_v1.o\r\n";
           makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/proxy/proxy.cc -o lib/runtime/proxy.o\r\n";
@@ -68,36 +69,37 @@ namespace naeem {
           makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/service/service_runtime.cc -o lib/runtime/service_runtime.o\r\n";
           makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/service/default_tcp_server.cc -o lib/runtime/default_tcp_server.o\r\n";
           makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/service/default_tcp_server_factory.cc -o lib/runtime/default_tcp_server_factory.o\r\n";
-          makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/service/default_request_callback.cc -o lib/runtime/default_request_callback.o\r\n";
+          makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/service/default_request_callback.cc -o lib/runtime/default_request_callback.o\r\n";*/
           for (uint32_t moduleCounter = 0; moduleCounter < hot->modules_.size(); moduleCounter++) {
-            std::string objectFiles = "lib/runtime/logger.o lib/runtime/protocol_v1.o lib/runtime/proxy.o lib/runtime/proxy_runtime.o ";
+            std::string objectFiles = "";
+            /*objectFiles += "lib/runtime/logger.o lib/runtime/protocol_v1.o lib/runtime/proxy.o lib/runtime/proxy_runtime.o ";
             objectFiles += "lib/runtime/default_tcp_client.o lib/runtime/default_tcp_client_factory.o lib/runtime/service_runtime.o lib/runtime/default_tcp_server.o ";
-            objectFiles += "lib/runtime/default_tcp_server_factory.o lib/runtime/default_request_callback.o ";
+            objectFiles += "lib/runtime/default_tcp_server_factory.o lib/runtime/default_request_callback.o ";*/
             for (uint32_t structCounter = 0; structCounter < hot->modules_[moduleCounter]->structs_.size(); structCounter++) {
               std::string structName = 
                 ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
                   hot->modules_[moduleCounter]->structs_[structCounter]->GetName());
-              makefile += "\tg++ -c -I$(RTDIR) " + structName + ".cc -o lib/" + structName + ".o\r\n";
+              makefile += "\tg++ -c -I/usr/include/hot " + structName + ".cc -o lib/" + structName + ".o\r\n";
               objectFiles += "lib/" + structName + ".o ";
             }
             for (uint32_t serviceCounter = 0; serviceCounter < hot->modules_[moduleCounter]->services_.size(); serviceCounter++) {
               std::string serviceName =
                 ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
                   hot->modules_[moduleCounter]->services_[serviceCounter]->GetName() + "Service");
-              makefile += "\tg++ -c -I$(RTDIR) proxy/" + serviceName + "_proxy.cc -o lib/proxy/" + serviceName + "_proxy.o\r\n";
-              makefile += "\tg++ -c -I$(RTDIR) proxy/" + serviceName + "_proxy_builder.cc -o lib/proxy/" + serviceName + "_proxy_builder.o\r\n";
-              makefile += "\tg++ -c -I$(RTDIR) service/" + serviceName + "_request_handler.cc -o lib/service/" + serviceName + "_request_handler.o\r\n";
+              makefile += "\tg++ -c -I/usr/include/hot proxy/" + serviceName + "_proxy.cc -o lib/proxy/" + serviceName + "_proxy.o\r\n";
+              makefile += "\tg++ -c -I/usr/include/hot proxy/" + serviceName + "_proxy_builder.cc -o lib/proxy/" + serviceName + "_proxy_builder.o\r\n";
+              makefile += "\tg++ -c -I/usr/include/hot service/" + serviceName + "_request_handler.cc -o lib/service/" + serviceName + "_request_handler.o\r\n";
               objectFiles += "lib/proxy/" + serviceName + "_proxy.o ";
               objectFiles += "lib/proxy/" + serviceName + "_proxy_builder.o ";
               objectFiles += "lib/service/" + serviceName + "_request_handler.o ";
               if (generationConfig.IsClientGenerated()) {
-                makefile += "\tg++ -c -I$(RTDIR) client/" + serviceName + "_client.cc -o lib/client/" + serviceName + "_client.o\r\n";
-                makefile += "\tg++ " + objectFiles + " lib/client/" + serviceName + "_client.o " + " -lpthread -o bin/" + serviceName + "_client.out\r\n";
+                makefile += "\tg++ -c -I/usr/include/hot client/" + serviceName + "_client.cc -o lib/client/" + serviceName + "_client.o\r\n";
+                makefile += "\tg++ " + objectFiles + " lib/client/" + serviceName + "_client.o " + " -lhotd -lpthread -o bin/" + serviceName + "_client.out\r\n";
               }
               if (generationConfig.IsStubGenerated()) {
-                makefile += "\tg++ -c -I$(RTDIR) stub/" + serviceName + "_impl.cc -o lib/stub/" + serviceName + "_impl.o\r\n";
-                makefile += "\tg++ -c -I$(RTDIR) stub/" + serviceName + "_server.cc -o lib/stub/" + serviceName + "_server.o\r\n";
-                makefile += "\tg++ " + objectFiles + " lib/stub/" + serviceName + "_impl.o " + "lib/stub/" + serviceName + "_server.o " + " -lpthread -o bin/" + serviceName + "_server.out\r\n";
+                makefile += "\tg++ -c -I/usr/include/hot stub/" + serviceName + "_impl.cc -o lib/stub/" + serviceName + "_impl.o\r\n";
+                makefile += "\tg++ -c -I/usr/include/hot stub/" + serviceName + "_server.cc -o lib/stub/" + serviceName + "_server.o\r\n";
+                makefile += "\tg++ " + objectFiles + " lib/stub/" + serviceName + "_impl.o " + "lib/stub/" + serviceName + "_server.o " + " -lhotd -lpthread -o bin/" + serviceName + "_server.out\r\n";
               }
             }
           }

@@ -380,7 +380,7 @@ int main(int argc, char **argv) {
       return 1;
     }
     yyparse();
-    currentHot->Display();
+    // currentHot->Display();
     ::naeem::hottentot::generator::GenerationConfig generationConfig;
     generationConfig.SetOutDir(outputDir);
     generationConfig.SetSpacesUsedInsteadOfTabsForIndentation(isSpacesUsedForIndentation);
@@ -412,5 +412,6 @@ int main(int argc, char **argv) {
     delete currentHot;
     currentHot = NULL;
   }
+  std::cout << "Generation OK." << std::endl;
   return 0;
 }
