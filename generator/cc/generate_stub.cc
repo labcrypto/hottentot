@@ -91,11 +91,14 @@ namespace naeem {
               std::string methodDefs = "";
               for (uint32_t i = 0; i < service->methods_.size(); i++) {
                 ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
-                methodDefs += indent + indent + "virtual " + TypeHelper::GetCCType(method->GetReturnType()) + (!TypeHelper::IsVoid(method->GetReturnType()) ? "*" : "") + " " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
+                methodDefs += indent + indent + "virtual void " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
                 std::string sep = "";
                 for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-                  methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " *" + method->arguments_[j]->GetVariable();
+                  methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " &" + method->arguments_[j]->GetVariable();
                   sep = ", ";
+                }
+                if (!TypeHelper::IsVoid(method->GetReturnType())) {
+                  methodDefs += sep + TypeHelper::GetCCType(method->GetReturnType()) + " &out";
                 }
                 methodDefs += ");\r\n";
               }
@@ -106,19 +109,22 @@ namespace naeem {
                 std::string arguments = "";
                 std::string sep = "";
                 for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-                  arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " *" + method->arguments_[j]->GetVariable();
+                  arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " &" + method->arguments_[j]->GetVariable();
                   sep = ", ";
                 }
-                std::string returnClause = "";
+                if (!TypeHelper::IsVoid(method->GetReturnType())) {
+                  arguments += sep + TypeHelper::GetCCType(method->GetReturnType()) + " &out";
+                }
+                /*std::string returnClause = "";
                 if (!TypeHelper::IsVoid(method->GetReturnType())) {
                   // if (TypeHelper::IsUDT(method->GetReturnType())) {
                     returnClause += indent + indent + "return NULL;";
                   /* } else {
                     returnClause += indent + indent + "return 0;";
                   } */
-                } else {
+                /*} else {
                   returnClause += indent + indent + "return;";
-                }
+                }*/
                 std::string methodTemplate((char *)__cc_templates_service_impl_cc__method_template, __cc_templates_service_impl_cc__method_template_len);
                 // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_cc__method.template", methodTemplate);
                 methodTemplate = 
@@ -137,10 +143,10 @@ namespace naeem {
                   ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
                                                                                "[[[RETURN_TYPE]]]", 
                                                                                TypeHelper::GetCCType(method->GetReturnType()) + (!TypeHelper::IsVoid(method->GetReturnType()) ? "*" : ""));
-                methodTemplate = 
+                /*methodTemplate = 
                   ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
                                                                                "[[[RETURN_CLAUSE]]]", 
-                                                                               returnClause);
+                                                                               returnClause);*/
                 methodTemplate = 
                   ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
                                                                                "[[[INDENT]]]", 

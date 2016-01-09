@@ -143,8 +143,11 @@ namespace naeem {
           std::string arguments = "";
           std::string sep = "";
           for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-            arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " " + (!TypeHelper::IsVoid(method->arguments_[j]->GetType()) ? "*" : "") + method->arguments_[j]->GetVariable();
+            arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " &" + method->arguments_[j]->GetVariable();
             sep = ", ";
+          }
+          if (!TypeHelper::IsVoid(method->GetReturnType())) {
+            arguments += sep + TypeHelper::GetCCType(method->GetReturnType()) + " &out";
           }
           std::string argumentsSerialization = "";
           for (uint32_t j = 0; j < method->arguments_.size(); j++) {
@@ -161,7 +164,7 @@ namespace naeem {
               proxyCCMethodArgumentSerializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodArgumentSerializationTemplate,
                                                                              "[[[ACCESS_OPERATOR]]]",
-                                                                             "->");
+                                                                             ".");
             /* } else {
               proxyCCMethodArgumentSerializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodArgumentSerializationTemplate,
@@ -189,15 +192,15 @@ namespace naeem {
               proxyCCMethodResponseDeserializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                              "[[[ACCESS_OPERATOR]]]",
-                                                                             "->");
+                                                                             ".");
               proxyCCMethodResponseDeserializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                              "[[[POINTER_SIGN]]]",
                                                                              "*");
-              proxyCCMethodResponseDeserializationTemplate =
+              /*proxyCCMethodResponseDeserializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                              "[[[NEW_CLAUSE]]]",
-                                                                             " = new " +  TypeHelper::GetCCType(method->GetReturnType()));
+                                                                             " = new " +  TypeHelper::GetCCType(method->GetReturnType()));*/
             /*} else {
               proxyCCMethodResponseDeserializationTemplate =         
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
@@ -214,12 +217,12 @@ namespace naeem {
             }*/
             responseDeserialization += proxyCCMethodResponseDeserializationTemplate + "\r\n";
           }
-          std::string returnClause = "";
+          /*std::string returnClause = "";
           if (!TypeHelper::IsVoid(method->GetReturnType())) {
             returnClause += indent + indent + "return returnObject;";
           } else {
             returnClause += indent + indent + "return;";
-          }
+          }*/
           std::stringstream serviceHashSS;
           serviceHashSS << service->GetHash();
           std::stringstream methodHashSS;
@@ -236,7 +239,7 @@ namespace naeem {
           params.insert(std::pair<std::string, std::string>("RESPONSE_DESERIALIZATION", responseDeserialization));
           params.insert(std::pair<std::string, std::string>("SERVICE_HASH", serviceHashSS.str()));
           params.insert(std::pair<std::string, std::string>("METHOD_HASH", methodHashSS.str()));
-          params.insert(std::pair<std::string, std::string>("RETURN_CLAUSE", returnClause));
+          // params.insert(std::pair<std::string, std::string>("RETURN_CLAUSE", returnClause));
           params.insert(std::pair<std::string, std::string>("INDENT", indent));
           std::string proxyCCMethodTemplate = templates["proxy_cc__method"];
           for (std::map<std::string, std::string>::iterator it = params.begin();

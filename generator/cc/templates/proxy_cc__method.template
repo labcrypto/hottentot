@@ -1,4 +1,4 @@
-[[[INDENT]]][[[RETURN_TYPE]]]
+[[[INDENT]]]void
 [[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy::[[[METHOD_NAME]]]([[[ARGUMENTS]]]) {
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Make request object
@@ -68,8 +68,4 @@
 [[[INDENT]]][[[INDENT]]]delete serializedData;
 [[[INDENT]]][[[INDENT]]]delete protocol;
 [[[INDENT]]][[[INDENT]]]delete tcpClient;
-[[[INDENT]]][[[INDENT]]]/*
-[[[INDENT]]][[[INDENT]]] * Leave method
-[[[INDENT]]][[[INDENT]]] */
-[[[RETURN_CLAUSE]]]
 [[[INDENT]]]}
