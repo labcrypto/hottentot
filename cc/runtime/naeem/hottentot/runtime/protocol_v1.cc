@@ -290,7 +290,7 @@ namespace naeem {
                   } else {
                     std::cout << "No handler is found." << std::endl;
                   }
-                  // delete requestData; --> Valgrind says mismatch delete !
+                  delete [] requestData;
                 }
               }
             }
@@ -354,7 +354,7 @@ namespace naeem {
                   readingCounter_ = 0;
                   currentState_ = ReadingLengthState;
                   isResponseComplete_ = true;
-                  delete responseData;
+                  delete [] responseData;
                 }
               }
             }

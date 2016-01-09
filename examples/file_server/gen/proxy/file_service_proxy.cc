@@ -97,8 +97,8 @@ namespace proxy {
     ::naeem::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
     tcpClient->Write(sendData, sendLength);
     ::naeem::hottentot::runtime::Logger::GetOut() << "Written." << std::endl;
-    // delete sendData;
-    // delete requestSerializedData;
+    delete [] sendData;
+    delete [] requestSerializedData;
     /*
      * Read response from server
      */
@@ -112,7 +112,7 @@ namespace proxy {
      * Finalization
      */
     tcpClient->Close();
-    // delete serializedData;
+    delete [] serializedData;
     delete protocol;
     delete tcpClient;
   }
@@ -177,8 +177,8 @@ namespace proxy {
     ::naeem::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
     tcpClient->Write(sendData, sendLength);
     ::naeem::hottentot::runtime::Logger::GetOut() << "Written." << std::endl;
-    // delete sendData;
-    // delete requestSerializedData;
+    delete [] sendData;
+    delete [] requestSerializedData;
     /*
      * Read response from server
      */
@@ -197,7 +197,7 @@ namespace proxy {
      * Finalization
      */
     tcpClient->Close();
-    // delete serializedData;
+    delete [] serializedData;
     delete protocol;
     delete tcpClient;
   }
@@ -262,8 +262,8 @@ namespace proxy {
     ::naeem::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
     tcpClient->Write(sendData, sendLength);
     ::naeem::hottentot::runtime::Logger::GetOut() << "Written." << std::endl;
-    // delete sendData;
-    // delete requestSerializedData;
+    delete [] sendData;
+    delete [] requestSerializedData;
     /*
      * Read response from server
      */
@@ -282,7 +282,7 @@ namespace proxy {
      * Finalization
      */
     tcpClient->Close();
-    // delete serializedData;
+    delete [] serializedData;
     delete protocol;
     delete tcpClient;
   }
