@@ -16,4 +16,25 @@ Download or clone the source code from Github. Just run `make` and `make install
 
 Support for Windows exists. We will add documentation so soon.
 
-### Example
+### Examples
+
+#### Echo Server
+
+First of all, you need to define a common interface between client and server. We call it HOT interface.
+HOT interfaces should be saved to `.hot` files. This is our first simple HOT interface:
+
+```
+module ir.ntnaeem.hottentot.examples.echoserver {
+  stateless service Echo {
+    string say(string message);
+  };  
+};
+
+```
+Our HOT interface consists of a module which it has a stateless service inside. Echo service has a method which echos whatever has been passed to it. The interface is saved in a file named `echo.hot`. We generate our final source codes using below command:
+
+```shell
+ 
+ $ hot --cc echo.hot
+
+```
