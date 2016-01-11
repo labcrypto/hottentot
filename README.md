@@ -31,7 +31,7 @@ module ir.ntnaeem.hottentot.examples.echoserver {
 };
 
 ```
-Our HOT interface consists of a module which it has a stateless service inside. Echo service has a method which echos whatever has been passed to it. The interface is saved in a file named `echo.hot`. We generate our final source codes using below command:
+Our HOT interface consists of a module which it has a stateless service inside. Echo service has a method which echos whatever has been passed to it. The interface is saved in a file named `echo.hot`. We generate our final source codes using the command below:
 
 ```shell
  
