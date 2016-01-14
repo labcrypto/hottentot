@@ -38,3 +38,8 @@ Our HOT interface consists of a module which it has a stateless service inside. 
  $ hot --cc echo.hot
 
 ```
+
+### Developers
+
+Kamran Amini  (kam.cpp@gmail.com, amini@ntnaeem.ir)
+Ali Sharifi   (alisharifi01@gmail.com, sharifi@ntnaeem.ir)
