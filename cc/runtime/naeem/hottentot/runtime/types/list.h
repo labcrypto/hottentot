@@ -35,41 +35,21 @@ namespace naeem {
   namespace hottentot {
     namespace runtime {
       namespace types {
-        class UInt8 : public ::naeem::hottentot::runtime::Serializable {
+        template<class T>
+        class List : public ::naeem::hottentot::runtime::Serializable {
         public:
-          UInt8()
-            : value_(0) {
+          List(){
           }
-          UInt8(uint8_t value)
-            : value_(value) {
-          }
-          virtual ~UInt8() {}
+          virtual ~List() {}
         public:
-          inline void SetValue(uint8_t value) {
-            value_ = value;
-          }
-          inline uint8_t GetValue() const {
-            return value_;
-          }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            *length_ptr = 1 * sizeof(unsigned char);
-            unsigned char *data = 
-              new unsigned char[1 * sizeof(unsigned char)];
-            unsigned char *ptr = (unsigned char*)(&value_);
-            data[0] = ptr[0];
-            return data;
+            return 0;
           }
           inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
-            if (length != 1) {
-              throw std::runtime_error("Length is not correct for deserialization.");
-            }
-            unsigned char *ptr = (unsigned char*)(&value_);
-            ptr[0] = data[0];
           }
         private:
-          uint8_t value_;
         };
       }
     }

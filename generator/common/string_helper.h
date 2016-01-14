@@ -34,6 +34,7 @@
 #include <stdexcept>
 
 #include <stdio.h>
+#include <string.h>
 #ifdef _MSC_VER
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
@@ -55,9 +56,9 @@ namespace naeem {
         class StringHelper {
         public:
           static inline bool StartsWith(std::string &str, std::string &s) {
-            char *strCharArray = str.c_str();
-            char *sCharArray = s.c_str();
-            return strncmp(strCharArray, sCharArray, sizeof(sCharArray)) == 0;
+            const char *strCharArray = str.c_str();
+            const char *sCharArray = s.c_str();
+            return strncmp((char *)sCharArray, (char *)strCharArray, strlen(sCharArray)) == 0;
           } 
           static inline std::string& LeftTrim(std::string &s) {
             s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));

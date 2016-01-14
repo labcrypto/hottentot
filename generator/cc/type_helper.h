@@ -74,7 +74,8 @@ namespace naeem {
             }
             return true;
           }
-          static inline std::string GetCCType(std::string type) {
+          static inline std::string GetCCType(std::string type, std::string ns) {
+            std::string listStr = "list";
             if (type == "int8") {
               return "::naeem::hottentot::runtime::types::Int8";
             } else if (type == "int16") {
@@ -109,8 +110,14 @@ namespace naeem {
               return "::naeem::hottentot::runtime::types::Double";
             } else if (type == "void") {
               return "void";
+            } else if(::naeem::hottentot::generator::common::StringHelper::StartsWith(type, listStr)) {
+              return "::naeem::hottentot::runtime::types::List< " + GetCCType(type.substr(5, type.length() - 6), ns) + ">";
             }
-            return type;
+            if (ns.length() == 0) {
+              return type;
+            } else {
+              return ns + "::" + type;
+            }
           }
         };
       }

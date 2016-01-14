@@ -54,6 +54,9 @@ namespace naeem {
           for (uint32_t moduleCounter = 0; moduleCounter < hot->modules_.size(); moduleCounter++) {
             for (uint32_t serviceCounter = 0; serviceCounter < hot->modules_[moduleCounter]->services_.size(); serviceCounter++) {
               ::naeem::hottentot::generator::ds::Service *service = hot->modules_[moduleCounter]->services_[serviceCounter];
+              std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
+                              ::naeem::hottentot::generator::common::StringHelper::Split(
+                              service->module_->GetPackage(), '.'), "::");
               /*
                * Making real values
                */
@@ -94,11 +97,11 @@ namespace naeem {
                 methodDefs += indent + indent + "virtual void " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
                 std::string sep = "";
                 for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-                  methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " &" + method->arguments_[j]->GetVariable();
+                  methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + method->arguments_[j]->GetVariable();
                   sep = ", ";
                 }
                 if (!TypeHelper::IsVoid(method->GetReturnType())) {
-                  methodDefs += sep + TypeHelper::GetCCType(method->GetReturnType()) + " &out";
+                  methodDefs += sep + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out";
                 }
                 methodDefs += ");\r\n";
               }
@@ -109,11 +112,11 @@ namespace naeem {
                 std::string arguments = "";
                 std::string sep = "";
                 for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-                  arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " &" + method->arguments_[j]->GetVariable();
+                  arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + method->arguments_[j]->GetVariable();
                   sep = ", ";
                 }
                 if (!TypeHelper::IsVoid(method->GetReturnType())) {
-                  arguments += sep + TypeHelper::GetCCType(method->GetReturnType()) + " &out";
+                  arguments += sep + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out";
                 }
                 /*std::string returnClause = "";
                 if (!TypeHelper::IsVoid(method->GetReturnType())) {
@@ -142,7 +145,7 @@ namespace naeem {
                 methodTemplate = 
                   ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
                                                                                "[[[RETURN_TYPE]]]", 
-                                                                               TypeHelper::GetCCType(method->GetReturnType()) + (!TypeHelper::IsVoid(method->GetReturnType()) ? "*" : ""));
+                                                                               TypeHelper::GetCCType(method->GetReturnType(), ns) + (!TypeHelper::IsVoid(method->GetReturnType()) ? "*" : ""));
                 /*methodTemplate = 
                   ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
                                                                                "[[[RETURN_CLAUSE]]]", 
