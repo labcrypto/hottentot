@@ -33,6 +33,7 @@
 #include "logger.h"
 #include "utils.h"
 #include "response.h"
+#include "configuration.h"
 #include "service/request_callback.h"
 
 
@@ -41,11 +42,11 @@ namespace naeem {
     namespace runtime {
       ProtocolV1::ProtocolV1(int remoteSocketFD) 
         : Protocol(remoteSocketFD),
-          currentState_(ReadingLengthState),
+          isResponseComplete_(false),
           readingLength_(0),
           readingCounter_(0),
           targetCounter_(0),
-          isResponseComplete_(false) {
+          currentState_(ReadingLengthState) {
       }
       ProtocolV1::~ProtocolV1() {
       }
@@ -133,23 +134,31 @@ namespace naeem {
         uint32_t c = 0;
         Request *request = new Request;
         request->SetType((Request::RequestType)data[c++]);
-        ::naeem::hottentot::runtime::Logger::GetOut() << "Request Type: " << request->GetType() << std::endl;
+        if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+          ::naeem::hottentot::runtime::Logger::GetOut() << "Request Type: " << request->GetType() << std::endl;
+        }
         uint32_t serviceId = 0;
         ((unsigned char *)(&serviceId))[0] = data[c++];
         ((unsigned char *)(&serviceId))[1] = data[c++];
         ((unsigned char *)(&serviceId))[2] = data[c++];
         ((unsigned char *)(&serviceId))[3] = data[c++];
         request->SetServiceId(serviceId);
-        ::naeem::hottentot::runtime::Logger::GetOut() << "Service Id: " << serviceId << std::endl;
+        if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+          ::naeem::hottentot::runtime::Logger::GetOut() << "Service Id: " << serviceId << std::endl;
+        }
         uint32_t methodId = 0;
         ((unsigned char *)(&methodId))[0] = data[c++];
         ((unsigned char *)(&methodId))[1] = data[c++];
         ((unsigned char *)(&methodId))[2] = data[c++];
         ((unsigned char *)(&methodId))[3] = data[c++];
         request->SetMethodId(methodId);
-        ::naeem::hottentot::runtime::Logger::GetOut() << "Method Id: " << methodId << std::endl;
+        if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+          ::naeem::hottentot::runtime::Logger::GetOut() << "Method Id: " << methodId << std::endl;
+        }
         uint8_t argCount = data[c++];
-        ::naeem::hottentot::runtime::Logger::GetOut() << "Arg. Count: " << (uint8_t)argCount << std::endl;
+        if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+          ::naeem::hottentot::runtime::Logger::GetOut() << "Arg. Count: " << (uint8_t)argCount << std::endl;
+        }
         for (unsigned int k = 0; k < (uint8_t)argCount; k++) {
           uint32_t argLength = 0;
           if (data[c] > 127) {
@@ -167,8 +176,10 @@ namespace naeem {
           for (uint32_t i = 0; i < argLength; i++) {
             argData[i] = data[c++];
           }
-          ::naeem::hottentot::runtime::Logger::GetOut() << "Argument[" << k << "] Length: " << argLength << std::endl;
-          ::naeem::hottentot::runtime::Utils::PrintArray("Argument Data", argData, argLength);
+          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+            ::naeem::hottentot::runtime::Logger::GetOut() << "Argument[" << k << "] Length: " << argLength << std::endl;
+            ::naeem::hottentot::runtime::Utils::PrintArray("Argument Data", argData, argLength);
+          }
           request->AddArgument(argData, argLength);
         }
         return request;
@@ -197,13 +208,17 @@ namespace naeem {
         }
         response->SetData(resultData);
         response->SetDataLength(resultLength);
-        ::naeem::hottentot::runtime::Utils::PrintArray("Response", resultData, resultLength);
+        if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+          ::naeem::hottentot::runtime::Utils::PrintArray("Response", resultData, resultLength);
+        }
         return response;
       }
       void 
       ProtocolV1::ProcessDataForRequest(unsigned char *data,
                                         uint32_t       dataLength) {
-        ::naeem::hottentot::runtime::Logger::GetOut() << "We have data with length " << dataLength << " Bytes." << std::endl;
+        if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+          ::naeem::hottentot::runtime::Logger::GetOut() << "We have data with length " << dataLength << " Bytes." << std::endl;
+        }
         for (unsigned int i = 0; i < dataLength; i++) {
           // ::naeem::hottentot::runtime::Logger::GetOut() << "i is " << i << std::endl;
           if (currentState_ == ReadingLengthState) {
@@ -212,13 +227,17 @@ namespace naeem {
                 readingLength_ = data[i];
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
-                ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                }
               } else {
                 targetCounter_ = (data[i] & 0x0f) + 1;
                 readingBuffer_.clear();
                 readingBuffer_.push_back(data[i]);
                 readingCounter_++;
-                ::naeem::hottentot::runtime::Logger::GetOut() << "Length is more than 127." << std::endl;
+                if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Length is more than 127." << std::endl;
+                }
               }
             } else {
               // ::naeem::hottentot::runtime::Logger::GetOut() << "Reading counter is not zero." << std::endl;
@@ -234,7 +253,9 @@ namespace naeem {
                 }
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
-                ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                }
               }
             }
           } else if (currentState_ == ReadingDataState) {
@@ -243,32 +264,46 @@ namespace naeem {
               readingBuffer_.push_back(data[i]);
               readingCounter_++;
               targetCounter_ = readingLength_;
-              ::naeem::hottentot::runtime::Logger::GetOut() << "Preparing for reading the request body ..." << std::endl;
+              if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                ::naeem::hottentot::runtime::Logger::GetOut() << "Preparing for reading the request body ..." << std::endl;
+              }
             } else {
               if (readingCounter_ < targetCounter_) {
                 // ::naeem::hottentot::runtime::Logger::GetOut() << "Reading request body : 0x" << std::hex << std::setfill('0') << std::setw(2) << (int)data[i] << " ..." << std::dec << std::endl;
                 readingBuffer_.push_back(data[i]);
                 readingCounter_++;
                 if (readingCounter_ == targetCounter_) {
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "We have read " << readingCounter_ << " Bytes of request body ..." << std::endl;
+                  if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                    ::naeem::hottentot::runtime::Logger::GetOut() << "We have read " << readingCounter_ << " Bytes of request body ..." << std::endl;
+                  }
                   uint32_t requestLength = readingLength_;
                   unsigned char *requestData = new unsigned char[requestLength];
                   for (unsigned int c = 0; c < requestLength; c++) {
                     requestData[c] = readingBuffer_[c];
                   }
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Deserializing request ..." << std::endl;
+                  if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                    ::naeem::hottentot::runtime::Logger::GetOut() << "Deserializing request ..." << std::endl;
+                  }
                   Request *request = DeserializeRequest(requestData, requestLength);
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Deserialized." << std::endl;
+                  if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                    ::naeem::hottentot::runtime::Logger::GetOut() << "Deserialized." << std::endl;
+                  }
                   readingBuffer_.clear();
                   readingCounter_ = 0;
                   currentState_ = ReadingLengthState;
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Calling callback ..." << std::endl;
+                  if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                    ::naeem::hottentot::runtime::Logger::GetOut() << "Calling callback ..." << std::endl;
+                  }
                   Response *response = requestCallback_->OnRequest(this, *request);
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Callback was successful." << std::endl;
+                  if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                    ::naeem::hottentot::runtime::Logger::GetOut() << "Callback was successful." << std::endl;
+                  }
                   if (response) {
                     uint32_t responseSerializedLength = 0;
                     unsigned char *responseSerializedData = SerializeResponse(*response, &responseSerializedLength);
-                    ::naeem::hottentot::runtime::Utils::PrintArray("Serialized response: ", responseSerializedData, responseSerializedLength);
+                    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                      ::naeem::hottentot::runtime::Utils::PrintArray("Serialized response: ", responseSerializedData, responseSerializedLength);
+                    }
                     uint32_t sendLength = (responseSerializedLength > 127 ? 3 : 1) +  responseSerializedLength;
                     unsigned char *sendData = new unsigned char[sendLength];
                     uint32_t c = 0;
@@ -282,13 +317,15 @@ namespace naeem {
                     for (unsigned int k = 0; k < responseSerializedLength; k++) {
                       sendData[c++] = responseSerializedData[k];
                     }
-                    ::naeem::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
+                    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                      ::naeem::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
+                    }
                     write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
                     delete [] sendData;
                     delete [] responseSerializedData;
                     delete response;
                   } else {
-                    std::cout << "No handler is found." << std::endl;
+                    ::naeem::hottentot::runtime::Logger::GetError() << "No handler is found." << std::endl;
                   }
                   delete [] requestData;
                 }

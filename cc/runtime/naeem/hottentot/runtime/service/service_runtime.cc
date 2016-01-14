@@ -30,6 +30,8 @@
 #include "tcp_server.h"
 #include "default_tcp_server_factory.h"
 
+#include "../configuration.h"
+
 
 namespace naeem {
   namespace hottentot {
@@ -41,6 +43,7 @@ namespace naeem {
         void
         ServiceRuntime::Init(int argc,
                              char **argv) {
+          Configuration::Init(argc, argv);
         }
         void
         ServiceRuntime::Register(std::string   host, 
