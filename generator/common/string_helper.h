@@ -54,6 +54,11 @@ namespace naeem {
       namespace common {
         class StringHelper {
         public:
+          static inline bool StartsWith(std::string &str, std::string &s) {
+            char *strCharArray = str.c_str();
+            char *sCharArray = s.c_str();
+            return strncmp(strCharArray, sCharArray, sizeof(sCharArray)) == 0;
+          } 
           static inline std::string& LeftTrim(std::string &s) {
             s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
             return s;

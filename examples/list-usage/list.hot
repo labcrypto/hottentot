@@ -1,0 +1,6 @@
+module ir.ntnaeem.hottentot.examples.listtest {
+  stateless service ListTest {
+    void addNames(list<string> names);
+    list<string> getNames();
+  };
+};
