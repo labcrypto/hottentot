@@ -2,7 +2,11 @@
 [[[INDENT]]][[[INDENT]]] * Serialization of argument '[[[ARGUMENT_NAME]]]'
 [[[INDENT]]][[[INDENT]]] */
 [[[INDENT]]][[[INDENT]]]serializedDataLength = 0;
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Serializing argument [[[ARGUMENT_NAME]]] ..." << std::endl;
+[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Serializing argument [[[ARGUMENT_NAME]]] ..." << std::endl;
+[[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]serializedData = [[[ARGUMENT_NAME]]][[[ACCESS_OPERATOR]]]Serialize(&serializedDataLength);
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "[[[ARGUMENT_NAME]]] is serialized." << std::endl;
+[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "[[[ARGUMENT_NAME]]] is serialized." << std::endl;
+[[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]request.AddArgument(serializedData, serializedDataLength);

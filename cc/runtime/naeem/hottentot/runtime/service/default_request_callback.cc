@@ -31,6 +31,7 @@
 #include "../request.h"
 #include "../logger.h"
 #include "../utils.h"
+#include "../configuration.h"
 
 
 namespace naeem {
@@ -40,7 +41,9 @@ namespace naeem {
         Response*
         DefaultRequestCallback::OnRequest(void *source,
                                           Request &request) {
-          ::naeem::hottentot::runtime::Logger::GetOut() << "A new request is received." << std::endl;
+          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+            ::naeem::hottentot::runtime::Logger::GetOut() << "A new request is received." << std::endl;
+          }
           if (requestHandlers_->count(request.GetServiceId()) > 0) {
             Response *response = new Response;
             RequestHandler *requestHandler = requestHandlers_->find(request.GetServiceId())->second;

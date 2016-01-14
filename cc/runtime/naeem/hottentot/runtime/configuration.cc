@@ -21,7 +21,9 @@
  *  SOFTWARE.
  */
  
-#include "logger.h"
+#include <string.h>
+
+#include "configuration.h"
 
 
 namespace naeem {
@@ -31,7 +33,7 @@ namespace naeem {
       void 
       Configuration::Init(int argc,
                           char **argv) {
-        for (uint16_t i = 0; i < argc; i++) {
+        for (unsigned short i = 0; i < argc; i++) {
           if (strncmp(argv[i], "-v", 2) == 0) {
             verbose_ = true;
           } else if (strncmp(argv[i], "--verbose", 9) == 0) {

@@ -74,7 +74,9 @@ namespace naeem {
                                                                           it->first.GetPort(), 
                                                                           requestHandlers_.find(it->first)->second);
             tcpServer->BindAndStart();
-            ::naeem::hottentot::runtime::Logger::GetOut() << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
+            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+              ::naeem::hottentot::runtime::Logger::GetOut() << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
+            }
           }
           while(true);
         }

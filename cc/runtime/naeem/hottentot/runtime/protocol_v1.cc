@@ -345,7 +345,9 @@ namespace naeem {
                 readingLength_ = data[i];
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
-                ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                }
               } else {
                 targetCounter_ = (data[i] & 0x0f) + 1;
                 readingBuffer_.clear();
@@ -365,7 +367,9 @@ namespace naeem {
                 }
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
-                ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                }
               }
             }
           } else if (currentState_ == ReadingDataState) {
@@ -376,7 +380,9 @@ namespace naeem {
               targetCounter_ = readingLength_;
             } else {
               if (readingCounter_ < targetCounter_) {
-                // ::naeem::hottentot::runtime::Logger::GetOut() << "Reading response body : 0x" << std::hex << std::setfill('0') << std::setw(2) << (int)data[i] << " ..." << std::dec << std::endl;
+                if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Reading response body : 0x" << std::hex << std::setfill('0') << std::setw(2) << (int)data[i] << " ..." << std::dec << std::endl;
+                }
                 readingBuffer_.push_back(data[i]);
                 readingCounter_++;
                 if (readingCounter_ == targetCounter_) {
@@ -385,7 +391,9 @@ namespace naeem {
                   for (unsigned int c = 0; c < responseLength; c++) {
                     responseData[c] = readingBuffer_[c];
                   }
-                  ::naeem::hottentot::runtime::Utils::PrintArray("Response", responseData, responseLength);
+                  if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                    ::naeem::hottentot::runtime::Utils::PrintArray("Response", responseData, responseLength);
+                  }
                   response_ = DeserializeResponse(responseData, responseLength);
                   readingBuffer_.clear();
                   readingCounter_ = 0;
