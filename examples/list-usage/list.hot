@@ -1,6 +1,8 @@
 module ir.ntnaeem.hottentot.examples.listtest {
   struct Message {
     string value ord(1);
+    uint16 len ord(3);
+    string desc ord(2);
   };
   stateless service ListTest {
     void addNames(list<string> names);

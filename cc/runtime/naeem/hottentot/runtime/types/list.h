@@ -47,7 +47,10 @@ namespace naeem {
           inline void Add(T *e) {
             elements_.push_back(e);
           }
-          inline void Size() {
+          inline T* Get(uint32_t i) {
+            return elements_[i];
+          }
+          inline uint32_t Size() {
             return elements_.size();
           }
           inline void Purge() {
@@ -109,7 +112,7 @@ namespace naeem {
             }
             if (c != length) {
               std::cout << "List serialization: Inconsistency in serialized array length." << std::endl;
-              exit(2);
+              exit(1);
             }
             return data;
           }
