@@ -40,7 +40,12 @@ namespace listtest {
     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
       ::naeem::hottentot::runtime::Logger::GetOut() << "ListTestServiceImpl::GetNames() is called." << std::endl;
     }
-    // TODO
+    ::naeem::hottentot::runtime::types::Utf8String *first = 
+      new ::naeem::hottentot::runtime::types::Utf8String("Hello");
+    ::naeem::hottentot::runtime::types::Utf8String *second = 
+      new ::naeem::hottentot::runtime::types::Utf8String("Bye");
+    out.Add(first);
+    out.Add(second);
   }
   void
   ListTestServiceImpl::GetMessages(::naeem::hottentot::runtime::types::List< ::ir::ntnaeem::hottentot::examples::listtest::Message> &out) {

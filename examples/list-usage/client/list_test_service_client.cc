@@ -30,7 +30,16 @@ main(int argc, char **argv) {
     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
       ::naeem::hottentot::runtime::Logger::GetOut() << "Proxy object is created." << std::endl;
     }
-    // TODO Do whatever you want with proxy objects.
+    ::naeem::hottentot::runtime::types::List< ::naeem::hottentot::runtime::types::Utf8String> result;
+    proxy->GetNames(result);
+    std::cout << "Result length: " << result.Size() << std::endl;
+    for (uint32_t i = 0; i < result.Size(); i++) {
+      std::cout << ">> ";
+      for (uint32_t j = 0; j < result.Get(i)->Length(); j++) {
+        std::cout << result.Get(i)->CharAt(j) << " ";
+      }
+      std::cout << std::endl;
+    }
     ::ir::ntnaeem::hottentot::examples::listtest::proxy::ListTestServiceProxyBuilder::Destroy(proxy);
     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
       ::naeem::hottentot::runtime::Logger::GetOut() << "Proxy object is destroyed." << std::endl;
