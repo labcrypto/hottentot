@@ -296,9 +296,9 @@ int main(int argc, char **argv) {
   bool isJava = false;
   bool isCC = false;
   bool isSpacesUsedForIndentation = true;
-  bool makefileGenerated = true;  // TODO(kamran): Change to false
-  bool clientGenerated = true; // TODO(kamran): Change to false
-  bool stubGenerated = true; // TODO(kamran): Change to false
+  bool makefileGenerated = false;  // TODO(kamran): Change to false
+  bool clientGenerated = false; // TODO(kamran): Change to false
+  bool stubGenerated = false; // TODO(kamran): Change to false
   uint8_t numberOfSpacesUsedForIndentation = 2;
   bool hotsBegun = false;
   char *outputDir = 0;
