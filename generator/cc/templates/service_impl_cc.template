@@ -16,4 +16,12 @@
 
 
 [[[NAMESPACES_START]]]
+[[[INDENT]]]void
+[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl::OnInit() {
+[[[INDENT]]][[[INDENT]]]// TODO: Called when service is initializing.
+[[[INDENT]]]}
+[[[INDENT]]]void
+[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl::OnShutdown() {
+[[[INDENT]]][[[INDENT]]]// TODO: Called when service is shutting down.
+[[[INDENT]]]}
 [[[METHODS]]][[[NAMESPACES_END]]]

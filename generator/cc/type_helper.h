@@ -111,7 +111,7 @@ namespace naeem {
             } else if (type == "void") {
               return "void";
             } else if(::naeem::hottentot::generator::common::StringHelper::StartsWith(type, listStr)) {
-              return "::naeem::hottentot::runtime::types::List< " + GetCCType(type.substr(5, type.length() - 6), ns) + "&>";
+              return "::naeem::hottentot::runtime::types::List< " + GetCCType(type.substr(5, type.length() - 6), ns) + ">";
             }
             if (ns.length() == 0) {
               return type;
