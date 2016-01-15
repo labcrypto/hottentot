@@ -82,7 +82,6 @@ namespace naeem {
            * Serializarion
            */
           uint32_t counter = 0;
-          
           std::stringstream serializationSS;
           serializationSS << indent << indent << "uint32_t totalLength = 0;\r\n";
           for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
@@ -135,7 +134,33 @@ namespace naeem {
           /*
            * Deserialization
            */
-          std::string deserialization = "return; // TODO(kamran)";
+          std::stringstream deserializationSS;
+          deserializationSS << indent << indent << "uint32_t c = 0, elength = 0;\r\n";
+          for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
+               it != structt->declarations_.end();
+               ++it) {
+            deserializationSS << indent << indent << "if ((data[c] & 0x80) == 0) {\r\n";
+            deserializationSS << indent << indent << indent << "elength = data[c];\r\n";
+            deserializationSS << indent << indent << indent << "c++;\r\n";
+            deserializationSS << indent << indent << "} else {\r\n";
+            deserializationSS << indent << indent << indent << "uint8_t ll = data[c] & 0x0f;\r\n";
+            deserializationSS << indent << indent << indent << "if (ll == 2) {\r\n";
+            deserializationSS << indent << indent << indent << indent << "elength == data[c] * 256 + data[c + 1];\r\n";
+            deserializationSS << indent << indent << indent << indent << "c += 2;\r\n";
+            deserializationSS << indent << indent << indent << "} else if (ll == 3) {\r\n";
+            deserializationSS << indent << indent << indent << indent << "elength == data[c] * 256 * 256 + data[c + 1] * 256 + data[c + 2];\r\n";
+            deserializationSS << indent << indent << indent << indent << "c += 3;\r\n";
+            deserializationSS << indent << indent << indent << "}\r\n";
+            deserializationSS << indent << indent << "}\r\n";
+            deserializationSS << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+            deserializationSS << ".Deserialize(data + c, elength);\r\n";
+            deserializationSS << indent << indent << "c += elength;\r\n";
+          }
+          deserializationSS << indent << indent << "if (c != length) {\r\n";
+          deserializationSS << indent << indent << indent << "std::cout << \"Struct Deserialization: Inconsistency in length of deserialized byte array.\" << std::endl;\r\n";
+          deserializationSS << indent << indent << indent << "exit(1);\r\n";
+          deserializationSS << indent << indent << "};\r\n";
+          std::string deserialization = deserializationSS.str();
           /*
            * Filling templates with real values
            */
