@@ -130,6 +130,10 @@ namespace naeem {
           serializationSS << indent << indent << indent << "std::cout << \"Struct Serialization: Inconsistency in length of serialized byte array.\" << std::endl;\r\n";
           serializationSS << indent << indent << indent << "exit(1);\r\n";
           serializationSS << indent << indent << "};\r\n";
+          serializationSS << indent << indent << "if (length_ptr) {\r\n";
+          serializationSS << indent << indent << indent << "*length_ptr = totalLength;\r\n";
+          serializationSS << indent << indent << "}\r\n";
+          serializationSS << indent << indent << "return data;\r\n";
           std::string serialization = serializationSS.str();
           /*
            * Deserialization

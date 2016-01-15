@@ -47,12 +47,12 @@ namespace naeem {
             }
           }
           virtual ~Utf8String() {
-            if (data_) {
+            /*if (data_) {
               delete [] data_;
             }
             if (chars_) {
               delete [] chars_;
-            }
+            }*/
           }
         public:
           uint32_t Length() const {
@@ -69,7 +69,9 @@ namespace naeem {
               data[i] = data_[i];
             }
             data[byteLength] = 0;
-            *length_ptr = byteLength + 1;
+            if (length_ptr) {
+              *length_ptr = byteLength + 1;
+            }
             return data;
           }
           inline virtual void Deserialize(unsigned char *data,
