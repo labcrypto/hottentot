@@ -1,0 +1,13 @@
+module example.generated{
+  struct Token{
+    string value ord(1);
+  };
+
+  struct Credential{
+    string username ord(1);
+    string password ord(1);
+  };
+  stateless service Auth{
+    list<Token> auth(Credential credential);
+  };  
+};

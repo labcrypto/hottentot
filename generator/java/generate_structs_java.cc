@@ -40,6 +40,8 @@ namespace naeem {
              it != pStruct->declarations_.end();
              ++it) {
               ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
+
+              std::cout << "declaration : " << declarationPtr->type_ << std::endl;
               declarationJavaType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);              
               capitalizedDeclarationJavaType  = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
               std::string declarationName = declarationPtr->variable_;

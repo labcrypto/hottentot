@@ -27,7 +27,22 @@ namespace naeem {
             std::string methodsStr;
             for (int i = 0; i < pService->methods_.size(); i++) {
               pMethod = pService->methods_.at(i);
+
+              std::string fetchedReturnTypeOfList;
+              std::string lowerCaseFetchedReturnTypeOfList;
               std::string returnType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
+            
+              std::string lowerCaseReturnType = pMethod->returnType_;
+              std::string capitalizedReturnType = 
+              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+              pMethod->returnType_);
+              lowerCaseReturnType[0] += 32;
+              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+                fetchedReturnTypeOfList = ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
+                lowerCaseFetchedReturnTypeOfList = ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(fetchedReturnTypeOfList);
+                returnType = "SerializableList<" +  fetchedReturnTypeOfList + ">";
+                lowerCaseReturnType = lowerCaseFetchedReturnTypeOfList + "List";
+              }
               methodsStr += indent_ + "public " + returnType + " " + pMethod->name_ + "(";
               ::naeem::hottentot::generator::ds::Argument *pArg;
               for (int i = 0; i < pMethod->arguments_.size(); i++) {
@@ -37,7 +52,7 @@ namespace naeem {
                 if (i < pMethod->arguments_.size() - 1) {
                   methodsStr += ",";
                 }
-            }
+              }
             methodsStr += ") { \n";
             for (int i = 0; i < pMethod->arguments_.size(); i++) {
               pArg = pMethod->arguments_.at(i);
@@ -154,19 +169,25 @@ namespace naeem {
             methodsStr += indent_ + indent_ + indent_ + "e.printStackTrace(); \n";
             methodsStr += indent_ + indent_ + "} \n";
             methodsStr += indent_ + indent_ + "//deserialize " + pMethod->returnType_ + "part from response\n";
-            std::string lowerCaseReturnType = pMethod->returnType_;
-            std::string capitalizedReturnType = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
-              pMethod->returnType_);
-            lowerCaseReturnType[0] += 32;
-            methodsStr += indent_ + indent_ + "" + pMethod->returnType_ + " " + lowerCaseReturnType +
-            "= null;\n";    
+            
+            
+            methodsStr += indent_ + indent_ +
+                returnType + " " + lowerCaseReturnType + "= null;\n"; 
+            
+            //methodsStr += indent_ + indent_ + "" + pMethod->returnType_ + " " + lowerCaseReturnType +
+            //"= null;\n";    
             methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-            methodsStr += indent_ + indent_ + indent_ + "// TODO\n";
+            methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
             methodsStr += indent_ + indent_ + "}\n";
-            methodsStr += indent_ + indent_ + indent_ + "" + lowerCaseReturnType + "= new " +
-            pMethod->returnType_ + "();\n";
-            methodsStr += indent_ + indent_ + indent_ + "" + lowerCaseReturnType +
+            if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+              methodsStr += indent_ + indent_ +
+                            lowerCaseReturnType + "= new " +
+                            "SerializableList<" + fetchedReturnTypeOfList + ">" + "();\n";
+            }else{
+                 methodsStr += indent_ + indent_ + "" + lowerCaseReturnType + "= new " +
+              pMethod->returnType_ + "();\n";
+            }
+            methodsStr += indent_ + indent_ + "" + lowerCaseReturnType +
             ".deserialize(response.getData());\n";
             methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
             methodsStr += indent_ + "}\n";
