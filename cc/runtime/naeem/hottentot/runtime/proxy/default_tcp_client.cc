@@ -27,6 +27,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netdb.h> 
 #include <iostream>
@@ -61,10 +62,15 @@ namespace naeem {
           }
           memset((char *) &serverAddr, 0, sizeof(serverAddr));
           serverAddr.sin_family = AF_INET;
-          bcopy((char *)&serverAddr.sin_addr.s_addr, (char *)server->h_addr, server->h_length);
+          // bcopy((char *)&serverAddr.sin_addr.s_addr, (char *)server->h_addr, server->h_length);
           serverAddr.sin_port = htons(port_);
+          if (inet_pton(AF_INET, host_.c_str(), &serverAddr.sin_addr) <= 0) {
+            std::cerr << "ERROR setting host" << std::endl;
+            exit(1);
+          }
           if (connect(socketFD_, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
             std::cerr << "ERROR connecting" << std::endl;
+            exit(1);
           }
         }
         void 
