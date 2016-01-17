@@ -368,7 +368,7 @@ int main(int argc, char **argv) {
     isCC = true;
   }
   if (outputDir == 0) {
-    outputDir = "gen";
+    outputDir = "hotgen";
   }
   if (numOfHots == 0) {
     printHelpMessageAndExit();
