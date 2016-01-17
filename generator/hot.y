@@ -73,6 +73,7 @@ extern "C" {
   int yylex(void);
 }
 
+unsigned int lineCounter = 1;
 std::string lastType;
 std::stack<std::string> stack;
 ::naeem::hottentot::generator::ds::Hot *currentHot;
@@ -162,7 +163,7 @@ item:           {
                     currentModule->AddStruct(currentStruct);
                     // fprintf(stdout, ">>> GENERATOR: Struct object has been added to model.\n");
                   } else {
-                    fprintf(stdout, "SYNTAX ERROR: Structs can't be nested.\n");
+                    fprintf(stdout, "Line %d: Structs can't be nested.\n", lineCounter);
                     exit(1);
                   }
                 } STRUCT IDENTIFIER '{' struct_body '}' ';' {
@@ -277,7 +278,7 @@ type:           LIST '<' type '>' {
 %%
 
 void yyerror(char *s) {
-  fprintf(stderr, "ERROR: %s\n", s);
+  fprintf(stderr, "Line %d: ERROR: %s\n", lineCounter, s);
 }
 
 int yywrap(void) {
@@ -295,9 +296,9 @@ int main(int argc, char **argv) {
   bool isJava = false;
   bool isCC = false;
   bool isSpacesUsedForIndentation = true;
-  bool makefileGenerated = true;  // TODO(kamran): Change to false
-  bool clientGenerated = true; // TODO(kamran): Change to false
-  bool stubGenerated = true; // TODO(kamran): Change to false
+  bool makefileGenerated = false;  // TODO(kamran): Change to false
+  bool clientGenerated = false; // TODO(kamran): Change to false
+  bool stubGenerated = false; // TODO(kamran): Change to false
   uint8_t numberOfSpacesUsedForIndentation = 2;
   bool hotsBegun = false;
   char *outputDir = 0;
@@ -380,7 +381,7 @@ int main(int argc, char **argv) {
       return 1;
     }
     yyparse();
-    currentHot->Display();
+    // currentHot->Display();
     ::naeem::hottentot::generator::GenerationConfig generationConfig;
     generationConfig.SetOutDir(outputDir);
     generationConfig.SetSpacesUsedInsteadOfTabsForIndentation(isSpacesUsedForIndentation);
@@ -412,5 +413,6 @@ int main(int argc, char **argv) {
     delete currentHot;
     currentHot = NULL;
   }
+  std::cout << "Generation OK." << std::endl;
   return 0;
 }

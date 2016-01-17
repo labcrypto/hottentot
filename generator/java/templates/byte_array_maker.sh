@@ -41,4 +41,10 @@ rm -rf structByteArray
 echo "std::string structTmpStr(reinterpret_cast<char const *>(structByteArray),
 							         structByteArray_len);" >> ./java/templates/byte_arrays/struct.h
 
+cat ./java/templates/serializableStructList.template > serializableStructListByteArray
+xxd -i serializableStructListByteArray > ./java/templates/byte_arrays/serializableStructList.h
+rm -rf serializableStructListByteArray
+echo "std::string serializableStructListTmpStr(reinterpret_cast<char const *>(serializableStructListByteArray),
+							         structByteArray_len);" >> ./java/templates/byte_arrays/serializableStructList.h
+
 

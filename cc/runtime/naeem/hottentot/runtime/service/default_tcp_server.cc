@@ -34,6 +34,7 @@
 #include "../logger.h"
 #include "../utils.h"
 #include "../protocol_v1.h"
+#include "../configuration.h"
 
 #include "default_tcp_server.h"
 #include "default_request_callback.h"
@@ -82,7 +83,9 @@ namespace naeem {
           DefaultTcpServer *ref = (DefaultTcpServer*)data;
           while (ok) {
             int clientSocketFD = accept(ref->serverSocketFD_, (struct sockaddr *) &clientAddr, &clientAddrLength);
-            ::naeem::hottentot::runtime::Logger::GetOut() << "A new client is connected." << std::endl;
+            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+              ::naeem::hottentot::runtime::Logger::GetOut() << "A new client is connected." << std::endl;
+            }
             _HandleClientConnectionParams *params = new _HandleClientConnectionParams;
             params->tcpServer_ = ref;
             params->clientSocketFD_ = clientSocketFD;
@@ -93,6 +96,7 @@ namespace naeem {
               exit(EXIT_FAILURE);
             }
           }
+          return 0;
         }
         void*
         DefaultTcpServer::HandleClientConnection(void *data) {
@@ -109,14 +113,19 @@ namespace naeem {
               ok = false;
             }
             if (ok) {
-              ::naeem::hottentot::runtime::Utils::PrintArray("Read", buffer, numOfReadBytes);
+              if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                ::naeem::hottentot::runtime::Utils::PrintArray("Read", buffer, numOfReadBytes);
+              }
               protocol->ProcessDataForRequest(buffer, numOfReadBytes);
             }
           }
-          ::naeem::hottentot::runtime::Logger::GetOut() << "Client is gone." << std::endl;
+          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+            ::naeem::hottentot::runtime::Logger::GetOut() << "Client is gone." << std::endl;
+          }
           close(ref->clientSocketFD_);
           delete protocol;
           delete ref;
+          return 0;
         }
       }
     }

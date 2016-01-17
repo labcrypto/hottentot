@@ -28,7 +28,16 @@ namespace naeem {
             ::naeem::hottentot::generator::ds::Method *pMethod;
             for (int i = 0; i < pService->methods_.size(); i++) {
               pMethod = pService->methods_.at(i);
-              serviceMethodsStr += indent_ + "" + pMethod->returnType_ + " " + pMethod->name_ + "(";    
+              std::string fetchedReturnTypeOfList;
+              std::string lowerCaseFetchedReturnTypeOfList;
+              std::string returnType = pMethod->returnType_;
+              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+                fetchedReturnTypeOfList = ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
+                lowerCaseFetchedReturnTypeOfList = ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(fetchedReturnTypeOfList);
+                returnType = "SerializableList<" +  fetchedReturnTypeOfList + ">";
+              }
+
+              serviceMethodsStr += indent_ + "" + returnType + " " + pMethod->name_ + "(";    
               //loop on methods arguments
               ::naeem::hottentot::generator::ds::Argument *pArg;
               for (int i = 0; i < pMethod->arguments_.size(); i++) {
@@ -44,8 +53,6 @@ namespace naeem {
             std::string path = outDir_ + "/" + pService->name_.c_str() + "Service.java";
             ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableServiceTmpStr);
           }
-          
-          
         }
 
       } //END NAMESPACE JAVA

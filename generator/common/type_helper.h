@@ -102,6 +102,18 @@ namespace naeem {
             return type;
           }
 
+          static inline bool IsListType(std::string type){
+            if(type.find("list") != std::string::npos){
+              return true;
+            }
+            return false;
+          }
+
+          static inline std::string FetchTypeOfList(std::string type){
+            std::string output = ::naeem::hottentot::generator::common::StringHelper::Replace(type , "list<" , "");
+            ::naeem::hottentot::generator::common::StringHelper::Replace(output , ">" , "" , 1);
+            return output;
+          }
           static inline std::string GetJavaType(std::string type) {
             if(IsUDT(type)){
                 std::runtime_error("type is not PDT");

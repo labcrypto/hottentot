@@ -30,6 +30,8 @@
 #include "tcp_server.h"
 #include "default_tcp_server_factory.h"
 
+#include "../configuration.h"
+
 
 namespace naeem {
   namespace hottentot {
@@ -41,6 +43,7 @@ namespace naeem {
         void
         ServiceRuntime::Init(int argc,
                              char **argv) {
+          Configuration::Init(argc, argv);
         }
         void
         ServiceRuntime::Register(std::string   host, 
@@ -71,7 +74,9 @@ namespace naeem {
                                                                           it->first.GetPort(), 
                                                                           requestHandlers_.find(it->first)->second);
             tcpServer->BindAndStart();
-            ::naeem::hottentot::runtime::Logger::GetOut() << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
+            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+              ::naeem::hottentot::runtime::Logger::GetOut() << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
+            }
           }
           while(true);
         }

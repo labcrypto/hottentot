@@ -40,7 +40,7 @@ namespace naeem {
           virtual ~RequestHandler() {}
         public:
           virtual void HandleRequest(Request &   /* Request object */,
-                                     Response *  /* Response object */) = 0;
+                                     Response &  /* Response object */) = 0;
         protected:
           Service* service_;
         };

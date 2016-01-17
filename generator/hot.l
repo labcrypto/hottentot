@@ -31,6 +31,7 @@
 #include "y.tab.h"
 #endif
 
+extern unsigned int lineCounter;
 
 extern "C" int yylex();
 %}
@@ -119,8 +120,11 @@ struct {
   // fprintf(stdout, "'%c' seen.\n", *yytext);
   return *yytext; 
 }
-[ \t\r\n] ;
+\n {
+  lineCounter++;
+}
+[ \t\r] ;
 . { 
-  // fprintf(stderr, "Unknown token: %c\n", *yytext); 
+  // fprintf(stderr, "Line %d: Unknown token: %c\n", lineCounter, *yytext); 
 }
 %%

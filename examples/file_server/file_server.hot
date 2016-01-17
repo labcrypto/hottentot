@@ -1,6 +1,6 @@
 module ir.ntnaeem.hottentot.examples.file_server {
   stateless service File {
-    void uploadFile(string fileName, data content);
+    void uploadFile(string fileName, data content) ord(1);
     bool fileExists(string fileName);
     data downloadFile(string fileName);
   };

@@ -14,11 +14,9 @@
 
 [[[NAMESPACES_START]]]
 [[[INDENT]]]unsigned char *
-[[[INDENT]]][[[STRUCT_NAME]]]::Serialize(uint32_t *length) {
-[[[INDENT]]][[[INDENT]]][[[SERIALIZATION]]]
-[[[INDENT]]]}
+[[[INDENT]]][[[STRUCT_NAME]]]::Serialize(uint32_t *length_ptr) {
+[[[SERIALIZATION]]][[[INDENT]]]}
 [[[INDENT]]]void
 [[[INDENT]]][[[STRUCT_NAME]]]::Deserialize(unsigned char *data, uint32_t length) {
-[[[INDENT]]][[[INDENT]]][[[DESERIALIZATION]]]
-[[[INDENT]]]}
+[[[DESERIALIZATION]]][[[INDENT]]]}
 [[[NAMESPACES_END]]]

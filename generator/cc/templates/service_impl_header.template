@@ -21,6 +21,8 @@
 [[[INDENT]]][[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl() {}
 [[[INDENT]]][[[INDENT]]]virtual ~[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl() {}
 [[[INDENT]]]public:
+[[[INDENT]]][[[INDENT]]]virtual void OnInit();
+[[[INDENT]]][[[INDENT]]]virtual void OnShutdown();
 [[[INDENT]]][[[INDENT]]][[[METHOD_DEFS]]]
 [[[INDENT]]]};
 [[[NAMESPACES_END]]]
