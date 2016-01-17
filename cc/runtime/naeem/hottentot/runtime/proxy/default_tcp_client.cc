@@ -64,7 +64,7 @@ namespace naeem {
           serverAddr.sin_family = AF_INET;
           // bcopy((char *)&serverAddr.sin_addr.s_addr, (char *)server->h_addr, server->h_length);
           serverAddr.sin_port = htons(port_);
-          if (inet_pton(AF_INET, host_.c_str(), &serverAddr.sin_addr)) {
+          if (inet_pton(AF_INET, host_.c_str(), &serverAddr.sin_addr) <= 0) {
             std::cerr << "ERROR setting host" << std::endl;
             exit(1);
           }
