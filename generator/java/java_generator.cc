@@ -55,6 +55,7 @@ namespace naeem {
           serviceProxyTmpStr_ = serviceProxyTmpStr;
           serviceProxyBuilderTmpStr_ = serviceProxyBuilderTmpStr;
           structTmpStr_ = structTmpStr;
+          serializableStructListTmpStr_ = serializableStructListTmpStr;
           //MakeStringsFromByteArrays();
           //ReadTemplateFiles();
         }
@@ -107,7 +108,7 @@ namespace naeem {
             GenerateRequestHandler(pModule);
             GenerateServiceProxyBuilder(pModule);
             GenerateServiceProxy(pModule);
-            //GenerateSerializableStructList(pModule);
+            GenerateSerializableStructList(pModule);
           
           }
           Destroy();

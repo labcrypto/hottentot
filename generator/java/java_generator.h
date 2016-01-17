@@ -84,6 +84,7 @@ namespace naeem {
           std::string serviceProxyBuilderTmpStr_;
           std::string requestHandlerTmpStr_;
           std::string serviceProxyTmpStr_;
+          std::string serializableStructListTmpStr_;
           std::string outDir_;
           std::string clientOutDir_;
           std::string serverOutDir_;
