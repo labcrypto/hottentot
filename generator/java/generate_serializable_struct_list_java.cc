@@ -45,6 +45,19 @@ namespace naeem {
                                                   outDir_ , 
                                                   indent_ );
               }
+              ::naeem::hottentot::generator::ds::Argument *pArg;
+              for (int i = 0; i < pMethod->arguments_.size(); i++) {
+                pArg = pMethod->arguments_.at(i);
+                if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)){
+                  std::string listStructName =
+                    ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
+                  generateSerializableStructListFile(listStructName ,
+                                                    basePackageName , 
+                                                    serializableStructListTmpStr_ ,
+                                                    outDir_ , 
+                                                    indent_ );
+                }
+              }
             }
           }
         }

@@ -45,16 +45,16 @@ public class AuthRequestHandler extends RequestHandler {
       response.setLength(serializedTokenList.length + 1);
       return response;
     }
-    if(methodId == 261602188L){
+    if(methodId == 3069701910L){
       List <Argument> args = request.getArgs();
       Argument arg0 = args.get(0);
-      byte[] serializedTokens = arg0.getData();
-      SerializableTokenList serializableTokenList = new SerializableTokenList();
-      serializableTokenList.deserialize( serializedTokens);
-      List<Token> tokens = serializableTokenList.getTokenList();
+      byte[] serializedHumans = arg0.getData();
+      SerializableHumanList serializableHumanList = new SerializableHumanList();
+      serializableHumanList.deserialize( serializedHumans);
+      List<Human> humans = serializableHumanList.getHumanList();
       Token token = null;
       Response response = new Response();
-      token = authImpl.test(tokens);
+      token = authImpl.test(humans);
       byte[] serializedToken = token.serialize();
       response.setStatusCode((byte) 100);
       response.setData(serializedToken);

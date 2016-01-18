@@ -7,8 +7,12 @@ module example.generated{
     string username ord(1);
     string password ord(1);
   };
+
+  struct Human{
+    string name ord(1);
+  };
   stateless service Auth{
     list<Token> auth(Credential credential);
-    Token test(list<Token> tokens);
+    Token test(list<Human> humans);
   };  
 };

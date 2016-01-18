@@ -33,12 +33,12 @@ public class Main {
     Credential credential = new Credential();
     credential.setUsername("zoro");
     List<Token> tokenList = proxy.auth(credential);
-    List<Token> tokenList1 = new ArrayList<Token>();
-    Token token1 = new Token();
-    token1.setValue("akbar");
-    tokenList1.add(token1);
+    List<Human> humanList = new ArrayList<Human>();
+    Human human = new Human();
+    human.setName("akbar");
+    humanList.add(human);
     //System.out.println(tokenList1.get(0).getValue());
-    Token test = proxy.test(tokenList1);
+    Token test = proxy.test(humanList);
     System.out.println("exit test token : " + test.getValue());
     System.out.println("exittt token list size : " + tokenList.size());
     System.out.println("exittt token List : " + tokenList.get(0).getValue());

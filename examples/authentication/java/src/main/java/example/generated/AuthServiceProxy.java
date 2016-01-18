@@ -111,40 +111,40 @@ public class AuthServiceProxy extends AbstractAuthService implements Proxy {
     serializableTokenList.deserialize(response.getData());
     return serializableTokenList.getTokenList();
   }
-  public Token test(List<Token> tokens) { 
-    //serialize tokens
-    SerializableTokenList serializableTokenList = new SerializableTokenList();
-serializableTokenList.setTokenList(tokens);
-byte[] serializedTokens = serializableTokenList.serialize();
+  public Token test(List<Human> humans) { 
+    //serialize humans
+    SerializableHumanList serializableHumanList = new SerializableHumanList();
+serializableHumanList.setHumanList(humans);
+byte[] serializedHumans = serializableHumanList.serialize();
 
     //make request
     Request request = new Request();
     request.setServiceId(96582825L);
-    request.setMethodId(261602188L);
+    request.setMethodId(3069701910L);
     request.setArgumentCount((byte) 1);
     request.setType(Request.RequestType.InvokeStateless);
     Argument arg0 = new Argument();
-    arg0.setDataLength(serializedTokens.length);
-    arg0.setData(serializedTokens);
+    arg0.setDataLength(serializedHumans.length);
+    arg0.setData(serializedHumans);
     request.addArgument(arg0);
     int dataLength = 0;
     //calculate data length for every argument
-    //calulate tokensDataLength
-    int tokensDataLength= serializedTokens.length;
-    int tokensDataLengthByteArrayLength = 1;
-    if (tokensDataLength >= 0x80) {
-      if (tokensDataLength <= 0xff) {
+    //calulate humansDataLength
+    int humansDataLength= serializedHumans.length;
+    int humansDataLengthByteArrayLength = 1;
+    if (humansDataLength >= 0x80) {
+      if (humansDataLength <= 0xff) {
         //ex 0x81 0xff
-        tokensDataLengthByteArrayLength = 2;
-      } else if (tokensDataLength <= 0xffff) {
+        humansDataLengthByteArrayLength = 2;
+      } else if (humansDataLength <= 0xffff) {
         //ex 0x82 0xff 0xff
-        tokensDataLengthByteArrayLength = 3;
-      } else if (tokensDataLength <= 0xffffff) {
+        humansDataLengthByteArrayLength = 3;
+      } else if (humansDataLength <= 0xffffff) {
         //ex 0x83 0xff 0xff 0xff
-        tokensDataLengthByteArrayLength = 4;
+        humansDataLengthByteArrayLength = 4;
       }
     }
-    dataLength += tokensDataLength + tokensDataLengthByteArrayLength;
+    dataLength += humansDataLength + humansDataLengthByteArrayLength;
     //arg count + request type + method ID + service ID = 18;
     request.setLength(18 + dataLength);
     //connect to server
