@@ -25,6 +25,7 @@ package example.server;
 
 import example.generated.AbstractAuthService;
 import example.generated.Credential;
+import example.generated.Human;
 import example.generated.Token;
 
 import java.util.ArrayList;
@@ -41,9 +42,9 @@ public class AuthenticationImpl extends AbstractAuthService {
     return tokenList;
   }
 
-  public Token test(List<Token> tokens) {
+  public Token test(List<Human> humans) {
     Token token = new Token();
-    token.setValue(tokens.get(0).getValue());
+    token.setValue(humans.get(0).getName());
     return token;
   }
 }
