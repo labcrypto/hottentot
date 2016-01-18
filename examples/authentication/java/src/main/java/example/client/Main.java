@@ -23,60 +23,19 @@
 
 package example.client;
 
-import example.generated.AuthenticationService;
-import example.generated.AuthenticationServiceProxyBuilder;
-import example.generated.Credential;
-import example.generated.Token;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import example.generated.*;
 import java.util.List;
 
 public class Main {
   public static void main(String[] args) throws InterruptedException {
-
-
-    final AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8080);
-
-//    for(int i = 0 ; i < 1000 ; i++){
-//      Credential credential = new Credential();
-//      credential.setUsername("zoro");
-//      credential.setPassword("12345");
-//      Token token = proxy.authenticate(credential);
-//      System.out.println(token.getValue());
-//      System.out.println(Arrays.toString(token.getSampleData()));
-//      AuthenticationServiceProxyBuilder.destroy();
-//    }
-
-    class MyRunnable implements Runnable{
-
-      private int number;
-      public MyRunnable(int number) {
-        this.number = number;
-      }
-
-      public void run() {
-        System.out.println("thread number : " + Thread.currentThread());
-        Credential credential = new Credential();
-        credential.setUsername("zoro");
-        credential.setPassword("12345");
-        Token token = proxy.authenticate(credential);
-        System.out.println(token.getValue());
-        System.out.println(Arrays.toString(token.getSampleData()));
-        AuthenticationServiceProxyBuilder.destroy();
-      }
-    }
-    List<Thread> threads = new ArrayList<Thread>();
-    for(int i = 1 ; i <= 1000 ; i++) {
-      //Thread.sleep(100);
-      Runnable runnable = new MyRunnable(i);
-      Thread t = new Thread(runnable);
-      t.start();
-      threads.add(t);
-    }
-
-    for(Thread t : threads){
-      t.join();
-    }
+    final AuthService proxy = AuthServiceProxyBuilder.create("127.0.0.1", 8080);
+    Credential credential = new Credential();
+    credential.setUsername("zoro");
+    List<Token> tokenList = proxy.auth(credential);
+    Token test = proxy.test();
+    System.out.println("exit test token : " + test.getValue());
+    System.out.println("exittt token list size : " + tokenList.size());
+    System.out.println("exittt token List : " + tokenList.get(0).getValue());
+    AuthServiceProxyBuilder.destroy();
   }
 }

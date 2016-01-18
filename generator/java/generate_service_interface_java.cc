@@ -34,7 +34,7 @@ namespace naeem {
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
                 fetchedReturnTypeOfList = ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
                 lowerCaseFetchedReturnTypeOfList = ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(fetchedReturnTypeOfList);
-                returnType = "SerializableList<" +  fetchedReturnTypeOfList + ">";
+                returnType = "List<" + fetchedReturnTypeOfList + ">";
               }
 
               serviceMethodsStr += indent_ + "" + returnType + " " + pMethod->name_ + "(";    

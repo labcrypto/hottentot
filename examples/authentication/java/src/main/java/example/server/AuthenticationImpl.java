@@ -23,17 +23,27 @@
 
 package example.server;
 
-import example.generated.AbstractAuthenticationService;
+import example.generated.AbstractAuthService;
 import example.generated.Credential;
 import example.generated.Token;
 
-public class AuthenticationImpl extends AbstractAuthenticationService {
-    public Token authenticate(Credential credential){
-        Token token = new Token();
-        token.setValue("uu-token");
-        token.setSampleData(new byte[]{2,2,3});
-        return token;
-    }
+import java.util.ArrayList;
+import java.util.List;
 
 
+public class AuthenticationImpl extends AbstractAuthService {
+
+  public List<Token> auth(Credential credential) {
+    List<Token> tokenList = new ArrayList<Token>();
+    Token token = new Token();
+    token.setValue("ali");
+    tokenList.add(token);
+    return tokenList;
+  }
+
+  public Token test() {
+    Token token = new Token();
+    token.setValue("gholi");
+    return token;
+  }
 }

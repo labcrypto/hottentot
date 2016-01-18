@@ -85,7 +85,9 @@ namespace naeem {
               }
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +
-                                      "SerializableList<" + fetchedReturnTypeOfList + ">" + " " + lowerCaseFetchedReturnTypeOfList + "List = null;\n";
+                                      "Serializable" + fetchedReturnTypeOfList + "List" + " " +
+                                      "serializable" + fetchedReturnTypeOfList + "List = " +
+                                      "new Serializable" + fetchedReturnTypeOfList + "List();\n";
               } else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +
                 pMethod->returnType_ + " " + lowerCaseReturnType + " = null;\n"; 
@@ -93,10 +95,13 @@ namespace naeem {
               methodConditionStr += indent_ + indent_ + indent_ + "Response response = new Response();\n";
               
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+          
                 methodConditionStr += indent_ + indent_ + indent_ +
-                                      lowerCaseFetchedReturnTypeOfList + "List = " +
+                                      "List<" + fetchedReturnTypeOfList + ">" + " " +   
+                                      lowerCaseFetchedReturnTypeOfList + "List = " + 
                                       lowerCaseServiceName +
                                       "Impl." + pMethod->name_ + "(";
+     
               }else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +
                                     lowerCaseReturnType + " = " + lowerCaseServiceName +
@@ -121,9 +126,16 @@ namespace naeem {
               methodConditionStr += ");\n";
               
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+                
+                methodConditionStr += indent_ + indent_ + indent_ +
+                                      "serializable" + fetchedReturnTypeOfList + "List." + 
+                                      "set" + fetchedReturnTypeOfList + "List(" + 
+                                      lowerCaseFetchedReturnTypeOfList + "List);\n";
                 methodConditionStr +=
                 indent_ + indent_ + indent_ + "byte[] serialized" + fetchedReturnTypeOfList + "List = " +
-                lowerCaseFetchedReturnTypeOfList + "List.serialize();\n"; 
+                "serializable" + fetchedReturnTypeOfList + "List.serialize();\n"; 
+
+                
               }else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
                 methodConditionStr +=
                 indent_ + indent_ + indent_ + "byte[] serialized" + pMethod->returnType_ + " = " +
@@ -141,10 +153,11 @@ namespace naeem {
               
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +
-                                      "response.setData(serialized" + fetchedReturnTypeOfList + "List);\n";
+                                      "response.setData(serialized" + fetchedReturnTypeOfList +
+                                      "List);\n";
                 methodConditionStr += indent_ + indent_ + indent_ +
                                       "response.setLength(serialized" + 
-                                      fetchedReturnTypeOfList + "List.length + 1);\n";
+                                      fetchedReturnTypeOfList + "List.length + 1);\n";  
               }else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +
                                       "response.setData(serialized" + pMethod->returnType_ + ");\n";

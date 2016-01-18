@@ -7,26 +7,47 @@
 #include "../common/type_helper.h" 
 
 
+void generateSerializableStructListFile(std::string listStructName ,
+                                        std::string basePackageName ,
+                                        std::string replacableSerializableStructListTmpStr ,
+                                        std::string outDir ,
+                                        std::string indent) {
+  std::string lowerCaseStructName = ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(listStructName);
+  ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
+  ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%INDENT%]" , indent , 1);
+  ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%STRUCT_NAME%]" , listStructName , 1);
+  ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%LOWER_CASE_STRUCT_NAME%]" , lowerCaseStructName , 1);            
+  std::string path = outDir + "/Serializable" + listStructName.c_str() + "List.java";
+  ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableSerializableStructListTmpStr);
+}
+
 namespace naeem {
   namespace hottentot {
     namespace generator {
       namespace java {
         void
         JavaGenerator::GenerateSerializableStructList(::naeem::hottentot::generator::ds::Module *pModule) {
-          for (int i = 0; i < pModule->structs_.size(); i++) {
-            ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(i);
-            std::string basePackageName = pModule->package_;
-            std::string replacableStructTmpStr = structTmpStr_;
-            std::string lowerCaseStructName = ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(pStruct->name_);
-            ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
-            ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%INDENT%]" , indent_ , 1);
-            ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%STRUCT_NAME%]" , pStruct->name_ , 1);
-            ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%LOWER_CASE_STRUCT_NAME%]" , lowerCaseStructName , 1);            
-            std::string path = outDir_ + "/" + pStruct->name_.c_str() + ".java";
-            ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableStructTmpStr);
+          ::naeem::hottentot::generator::ds::Service *pService;
+          std::string basePackageName = pModule->package_;
+          for (int i = 0; i < pModule->services_.size(); i++) {
+            pService = pModule->services_.at(i);
+            std::string serviceName = pService->name_;
+            ::naeem::hottentot::generator::ds::Method *pMethod;
+            for (int i = 0; i < pService->methods_.size(); i++) {
+              pMethod = pService->methods_.at(i);
+              std::string lowerCaseReturnType = pMethod->returnType_;
+              //TODO do this for args of method and all declaration in struct
+              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+                std::string listStructName = ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
+                generateSerializableStructListFile(listStructName ,
+                                                  basePackageName , 
+                                                  serializableStructListTmpStr_ ,
+                                                  outDir_ , 
+                                                  indent_ );
+              }
+            }
           }
         }
-
       } //END NAMESPACE JAVA
     } //END NAMESPACE GENERATOR
   } //END NAMESPACE HOTTENTOT

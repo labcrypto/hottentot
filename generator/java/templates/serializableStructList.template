@@ -6,7 +6,7 @@
  * Description:
  *   
  ******************************************************************/
-package package [%BASE_PACKAGE_NAME%];
+package [%BASE_PACKAGE_NAME%];
 
 import ir.ntnaeem.hottentot.serializerHelper.DataLengthByteArrayMaker;
 import java.nio.ByteBuffer;
@@ -15,71 +15,71 @@ import java.util.List;
 
 public class Serializable[%STRUCT_NAME%]List {
 
-  private List<[%STRUCT_NAME%]> [%LOWER_CASE_STRCUT_NAME%]List;
+  private List<[%STRUCT_NAME%]> [%LOWER_CASE_STRUCT_NAME%]List;
 
   public Serializable[%STRUCT_NAME%]List() {
-    [%LOWER_CASE_STRCUT_NAME%]List = new ArrayList<[%STRUCT_NAME%]>();
+    [%LOWER_CASE_STRUCT_NAME%]List = new ArrayList<[%STRUCT_NAME%]>();
   }
 
   public List<[%STRUCT_NAME%]> get[%STRUCT_NAME%]List() {
-    return [%LOWER_CASE_STRCUT_NAME%]List;
+    return [%LOWER_CASE_STRUCT_NAME%]List;
   }
 
-  public void set[%STRUCT_NAME%]List(List<[%STRUCT_NAME%]> [%LOWER_CASE_STRCUT_NAME%]List) {
-    [%LOWER_CASE_STRCUT_NAME%]List = [%LOWER_CASE_STRCUT_NAME%]List;
+  public void set[%STRUCT_NAME%]List(List<[%STRUCT_NAME%]> [%LOWER_CASE_STRUCT_NAME%]List) {
+    this.[%LOWER_CASE_STRUCT_NAME%]List = [%LOWER_CASE_STRUCT_NAME%]List;
   }
 
   public byte[] serialize() {
-    if ([%LOWER_CASE_STRCUT_NAME%]List.size() != 0) {
-      int serialized[%STRUCT_NAME%]Length = [%LOWER_CASE_STRCUT_NAME%]List.get(0).serialize().length;
-      byte[] [%LOWER_CASE_STRCUT_NAME%]LengthByteArray = 
+    if ([%LOWER_CASE_STRUCT_NAME%]List.size() != 0) {
+      int serialized[%STRUCT_NAME%]Length = [%LOWER_CASE_STRUCT_NAME%]List.get(0).serialize().length;
+      byte[] [%LOWER_CASE_STRUCT_NAME%]LengthByteArray = 
       DataLengthByteArrayMaker.getByteArray(serialized[%STRUCT_NAME%]Length);
-      byte[] serializedTokenList = new byte[tokenLengthByteArray.length + serializedTokenLength * tokenList.size()];
-      System.arraycopy(tokenLengthByteArray, 0, serializedTokenList, 0, tokenLengthByteArray.length);
-      int counter = tokenLengthByteArray.length ;
-      for (Token token : tokenList) {
-        byte[] serializedToken = token.serialize();
-        System.arraycopy(serializedToken, 0, serializedTokenList, counter, serializedToken.length);
-        counter += serializedToken.length;
+      byte[] serialized[%STRUCT_NAME%]List = new byte[[%LOWER_CASE_STRUCT_NAME%]LengthByteArray.length + serialized[%STRUCT_NAME%]Length * [%LOWER_CASE_STRUCT_NAME%]List.size()];
+      System.arraycopy([%LOWER_CASE_STRUCT_NAME%]LengthByteArray, 0, serialized[%STRUCT_NAME%]List, 0, [%LOWER_CASE_STRUCT_NAME%]LengthByteArray.length);
+      int counter = [%LOWER_CASE_STRUCT_NAME%]LengthByteArray.length ;
+      for ([%STRUCT_NAME%] [%LOWER_CASE_STRUCT_NAME%] : [%LOWER_CASE_STRUCT_NAME%]List) {
+        byte[] serialized[%STRUCT_NAME%] = [%LOWER_CASE_STRUCT_NAME%].serialize();
+        System.arraycopy(serialized[%STRUCT_NAME%], 0, serialized[%STRUCT_NAME%]List, counter, serialized[%STRUCT_NAME%].length);
+        counter += serialized[%STRUCT_NAME%].length;
       }
-      return serializedTokenList;
+      return serialized[%STRUCT_NAME%]List;
     }
     return new byte[0];
   }
 
-  public void deserialize(byte[] serializedTokenList) {
+  public void deserialize(byte[] serialized[%LOWER_CASE_STRUCT_NAME%]List) {
 
-    if (serializedTokenList.length != 0) {
+    if (serialized[%LOWER_CASE_STRUCT_NAME%]List.length != 0) {
 
-      int firstByte = serializedTokenList[0];
-      int serializedTokenLength;
+      int firstByte = serialized[%LOWER_CASE_STRUCT_NAME%]List[0];
+      int serialized[%LOWER_CASE_STRUCT_NAME%]Length;
       int numOfByteForLength = 1;
       if ((firstByte & 0x80) == 0) {
-        serializedTokenLength = serializedTokenList[0];
+        serialized[%LOWER_CASE_STRUCT_NAME%]Length = serialized[%LOWER_CASE_STRUCT_NAME%]List[0];
       } else {
         numOfByteForLength = firstByte & 0x0f;
-        byte[] serializedTokenLengthByteArray = new byte[numOfByteForLength];
+        byte[] serialized[%LOWER_CASE_STRUCT_NAME%]LengthByteArray = new byte[numOfByteForLength];
         for (int i = 1; i <= numOfByteForLength; i++) {
-          serializedTokenLengthByteArray[i - 1] = serializedTokenList[i];
+          serialized[%LOWER_CASE_STRUCT_NAME%]LengthByteArray[i - 1] = serialized[%LOWER_CASE_STRUCT_NAME%]List[i];
         }
-        serializedTokenLength = ByteBuffer.wrap(serializedTokenLengthByteArray).getInt();
+        serialized[%LOWER_CASE_STRUCT_NAME%]Length = ByteBuffer.wrap(serialized[%LOWER_CASE_STRUCT_NAME%]LengthByteArray).getInt();
       }
       //
       int counter = numOfByteForLength;
-      byte[] tokenByteArray;
+      byte[] [%LOWER_CASE_STRUCT_NAME%]ByteArray;
       while(true){
-        if(counter == serializedTokenList.length){
+        if(counter == serialized[%LOWER_CASE_STRUCT_NAME%]List.length){
           break;
         }
-        tokenByteArray = new byte[serializedTokenLength];
-        int tokenByteArrayCounter = 0;
-        for(int i = counter ; i < counter + serializedTokenLength ; i++){
-          tokenByteArray[tokenByteArrayCounter++] = serializedTokenList[i];
+        [%LOWER_CASE_STRUCT_NAME%]ByteArray = new byte[serialized[%LOWER_CASE_STRUCT_NAME%]Length];
+        int [%LOWER_CASE_STRUCT_NAME%]ByteArrayCounter = 0;
+        for(int i = counter ; i < counter + serialized[%LOWER_CASE_STRUCT_NAME%]Length ; i++){
+          [%LOWER_CASE_STRUCT_NAME%]ByteArray[[%LOWER_CASE_STRUCT_NAME%]ByteArrayCounter++] = serialized[%LOWER_CASE_STRUCT_NAME%]List[i];
         }
-        counter += serializedTokenLength;
-        Token token = new Token();
-        token.deserialize(tokenByteArray);
-        tokenList.add(token);
+        counter += serialized[%LOWER_CASE_STRUCT_NAME%]Length;
+        [%STRUCT_NAME%] [%LOWER_CASE_STRUCT_NAME%] = new [%STRUCT_NAME%]();
+        [%LOWER_CASE_STRUCT_NAME%].deserialize([%LOWER_CASE_STRUCT_NAME%]ByteArray);
+        [%LOWER_CASE_STRUCT_NAME%]List.add([%LOWER_CASE_STRUCT_NAME%]);
       }
     }
   }

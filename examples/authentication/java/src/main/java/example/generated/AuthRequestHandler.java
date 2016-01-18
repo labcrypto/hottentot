@@ -3,7 +3,7 @@
  * Date: 
  * Name: 
  * Description:
- *   This file contains definition of an abstract service class.
+ *   
  ******************************************************************/
 package example.generated;
 
@@ -20,24 +20,36 @@ import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import java.util.List;
 
-public class AuthenticationRequestHandler extends RequestHandler {
-  public AuthenticationRequestHandler(Service service) {
+public class AuthRequestHandler extends RequestHandler {
+  public AuthRequestHandler(Service service) {
     super(service);
   }
   @Override
   public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
     long methodId = request.getMethodId();
-    AuthenticationService authenticationImpl = (AbstractAuthenticationService) service;
+    AuthService authImpl = (AbstractAuthService) service;
 
-    if(methodId == 3832527112L){
+    if(methodId == 383471646L){
       List <Argument> args = request.getArgs();
       Argument arg0 = args.get(0);
       byte[] serializedCredential = arg0.getData();
       Credential credential = new Credential();
       credential.deserialize(serializedCredential);
+      SerializableTokenList serializableTokenList = new SerializableTokenList();
+      Response response = new Response();
+      List<Token> tokenList = authImpl.auth(credential);
+      serializableTokenList.setTokenList(tokenList);
+      byte[] serializedTokenList = serializableTokenList.serialize();
+      response.setStatusCode((byte) 100);
+      response.setData(serializedTokenList);
+      response.setLength(serializedTokenList.length + 1);
+      return response;
+    }
+    if(methodId == 1248602371L){
+      List <Argument> args = request.getArgs();
       Token token = null;
       Response response = new Response();
-      token = authenticationImpl.authenticate(credential);
+      token = authImpl.test();
       byte[] serializedToken = token.serialize();
       response.setStatusCode((byte) 100);
       response.setData(serializedToken);
