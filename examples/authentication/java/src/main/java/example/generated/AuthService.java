@@ -13,6 +13,6 @@ import java.util.List;
 
 public interface AuthService extends Service {
   List<Token> auth(Credential credential);
-  Token test();
+  Token test(List<Token> tokens);
 
 }

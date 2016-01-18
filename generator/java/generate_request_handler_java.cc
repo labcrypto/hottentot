@@ -57,7 +57,25 @@ namespace naeem {
                 methodConditionStr += indent_ + indent_ + indent_ +
                                       "byte[] serialized" + capitalizedArgVar;
                 methodConditionStr += " = arg" + ssI.str() + ".getData();\n";
-                if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)){
+
+                if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)){
+                  std::string fetchedArgTypeOfList = 
+                  ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
+                  methodConditionStr += indent_ + indent_ + indent_ + 
+                                        "Serializable" + fetchedArgTypeOfList + "List " +
+                                        "serializable" + fetchedArgTypeOfList + "List = " +  
+                                        "new Serializable" + fetchedArgTypeOfList + "List();\n";
+
+// serializableTokenList.deserialize(serializedTokens);
+                  methodConditionStr += indent_ + indent_ + indent_ + 
+                                        "serializable" + fetchedArgTypeOfList + "List." + 
+                                        "deserialize( serialized" + capitalizedArgVar + ");\n";
+                  methodConditionStr += indent_ + indent_ + indent_ + 
+                                        "List<" + fetchedArgTypeOfList + "> " +  pArg->variable_ + " = " + 
+                                        "serializable" + fetchedArgTypeOfList + "List." +
+                                        "get" + fetchedArgTypeOfList + "List();\n"; 
+                }
+                else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)){
                   methodConditionStr += indent_ + indent_ + indent_ +
                                         pArg->type_ + " " + pArg->variable_ +
                                         " = new " + pArg->type_ + "();\n";

@@ -9,6 +9,6 @@ module example.generated{
   };
   stateless service Auth{
     list<Token> auth(Credential credential);
-    Token test();
+    Token test(list<Token> tokens);
   };  
 };
