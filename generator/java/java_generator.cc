@@ -55,6 +55,7 @@ namespace naeem {
           serviceProxyTmpStr_ = serviceProxyTmpStr;
           serviceProxyBuilderTmpStr_ = serviceProxyBuilderTmpStr;
           structTmpStr_ = structTmpStr;
+          serializableStructListTmpStr_ = serializableStructListTmpStr;
           //MakeStringsFromByteArrays();
           //ReadTemplateFiles();
         }
@@ -100,15 +101,13 @@ namespace naeem {
           modules_ = hot->modules_;
           for (int i = 0; i < modules_.size(); i++) {
             ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
-
             GenerateStructs(pModule);
             GenerateAbstractService(pModule);
             GenerateServiceInterface(pModule);
             GenerateRequestHandler(pModule);
             GenerateServiceProxyBuilder(pModule);
             GenerateServiceProxy(pModule);
-            //GenerateSerializableStructList(pModule);
-          
+            GenerateSerializableStructList(pModule);
           }
           Destroy();
         }

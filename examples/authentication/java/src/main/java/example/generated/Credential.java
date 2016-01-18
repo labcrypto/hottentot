@@ -12,32 +12,27 @@ import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import static java.lang.StrictMath.pow;
 
 public class Credential {
-  private String username;
-  private String password;
+  private String username = "";
   public void setUsername(String username) {
     this.username = username;
   }
   public String getUsername() {
     return username;
   }
-  public void setPassword(String password) {
-    this.password = password;
-  }
-  public String getPassword() {
-    return password;
+  @Override 
+  public String toString() { 
+    return "Credential{" + 
+      "username = '" + username + '\'' + 
+      "}"; 
   }
 	
   public byte[] serialize() {
     byte[] serializedUsername = PDTSerializer.getString(username);
-    byte[] serializedPassword = PDTSerializer.getString(password);
-    byte[] output = new byte[serializedUsername.length + serializedPassword.length];
+    byte[] output = new byte[serializedUsername.length];
     int counter = 0;
     //use a loop for every property
     for (int i = 0; i < serializedUsername.length; i++) {
       output[counter++] = serializedUsername[i];
-    }
-    for (int i = 0; i < serializedPassword.length; i++) {
-      output[counter++] = serializedPassword[i];
     }
     return output;
   }
@@ -61,20 +56,6 @@ public class Credential {
     System.arraycopy(serializedByteArray,counter,usernameByteArray,0,dataLength);
     counter += dataLength;
     setUsername(PDTDeserializer.getString(usernameByteArray));
-    //password : String
-    dataLength = 0;
-    if(( serializedByteArray[counter] & 0x80) == 0 ) {
-      dataLength = serializedByteArray[counter++];
-    }else{
-      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
-      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
-        dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];
-      }
-    }
-    byte[] passwordByteArray = new byte[dataLength];
-    System.arraycopy(serializedByteArray,counter,passwordByteArray,0,dataLength);
-    counter += dataLength;
-    setPassword(PDTDeserializer.getString(passwordByteArray));
 
   }
 }

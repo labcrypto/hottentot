@@ -39,9 +39,7 @@ namespace naeem {
               lowerCaseReturnType[0] += 32;
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
                 fetchedReturnTypeOfList = ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
-                lowerCaseFetchedReturnTypeOfList = ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(fetchedReturnTypeOfList);
-                returnType = "SerializableList<" +  fetchedReturnTypeOfList + ">";
-                lowerCaseReturnType = lowerCaseFetchedReturnTypeOfList + "List";
+                returnType = "List<" + fetchedReturnTypeOfList + ">";
               }
               methodsStr += indent_ + "public " + returnType + " " + pMethod->name_ + "(";
               ::naeem::hottentot::generator::ds::Argument *pArg;
@@ -171,25 +169,36 @@ namespace naeem {
             methodsStr += indent_ + indent_ + "//deserialize " + pMethod->returnType_ + "part from response\n";
             
             
-            methodsStr += indent_ + indent_ +
-                returnType + " " + lowerCaseReturnType + "= null;\n"; 
-            
-            //methodsStr += indent_ + indent_ + "" + pMethod->returnType_ + " " + lowerCaseReturnType +
-            //"= null;\n";    
-            methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-            methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
-            methodsStr += indent_ + indent_ + "}\n";
+         
             if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
               methodsStr += indent_ + indent_ +
-                            lowerCaseReturnType + "= new " +
-                            "SerializableList<" + fetchedReturnTypeOfList + ">" + "();\n";
+                            "Serializable" + fetchedReturnTypeOfList + "List" + 
+                            " serializable" + fetchedReturnTypeOfList + "List = null;\n"; 
+              methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
+              methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+              methodsStr += indent_ + indent_ + "}\n";
+              methodsStr += indent_ + indent_ + 
+                            "serializable" + fetchedReturnTypeOfList + "List = " 
+                            "new Serializable" + fetchedReturnTypeOfList + "List();\n";
+              methodsStr += indent_ + indent_ + 
+                            "serializable" + fetchedReturnTypeOfList + "List." + 
+                            "deserialize(response.getData());\n";
+              methodsStr += indent_ + indent_ +
+                            "return serializable" + fetchedReturnTypeOfList + 
+                            "List.getTokenList();\n"; 
             }else{
-                 methodsStr += indent_ + indent_ + "" + lowerCaseReturnType + "= new " +
-              pMethod->returnType_ + "();\n";
+              methodsStr += indent_ + indent_ +
+                            returnType + " " + lowerCaseReturnType + "= null;\n"; 
+              methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
+              methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+              methodsStr += indent_ + indent_ + "}\n";
+              methodsStr += indent_ + indent_ + "" + lowerCaseReturnType + "= new " +
+                            pMethod->returnType_ + "();\n";
+              methodsStr += indent_ + indent_ + "" + lowerCaseReturnType +
+                            ".deserialize(response.getData());\n";
+              methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
             }
-            methodsStr += indent_ + indent_ + "" + lowerCaseReturnType +
-            ".deserialize(response.getData());\n";
-            methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
+            
             methodsStr += indent_ + "}\n";
           }
           replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%METHODS%]"), 11,

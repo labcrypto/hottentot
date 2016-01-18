@@ -3,14 +3,14 @@
  * Date: 
  * Name: 
  * Description:
- *   This file contains definition of an abstract service class.
+ *   
  ******************************************************************/
 package example.generated;
 
-public class AuthenticationServiceProxyBuilder {
+public class AuthServiceProxyBuilder {
 
-  public static AuthenticationService create(String host, int port) {
-    return new AuthenticationServiceProxy(host,port);
+  public static AuthService create(String host, int port) {
+    return new AuthServiceProxy(host,port);
   }
 
   public static void destroy() {

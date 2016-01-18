@@ -3,17 +3,17 @@
  * Date: 
  * Name: 
  * Description:
- *   This file contains definition of an abstract service class.
+ *   
  ******************************************************************/
 package example.generated;
 
 import ir.ntnaeem.hottentot.runtime.RequestHandler;
 
-public abstract class AbstractAuthenticationService implements AuthenticationService {	
+public abstract class AbstractAuthService implements AuthService {	
   public RequestHandler makeRequestHandler() {
-    return new AuthenticationRequestHandler(this);
+    return new AuthRequestHandler(this);
   }
   public long getServiceId() {
-    return 2072454237L;
+    return 96582825L;
   }
 }

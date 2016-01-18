@@ -6,11 +6,13 @@
  *   
  ******************************************************************/
 
-package [%BASE_PACKAGE_NAME%];
+package example.generated;
 
 import ir.ntnaeem.hottentot.runtime.Service;
 import java.util.List;
 
-public interface [%SERVICE_NAME%]Service extends Service {
-[%SERVICE_METHODS%]
+public interface AuthService extends Service {
+  List<Token> auth(Credential credential);
+  Token test();
+
 }

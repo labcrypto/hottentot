@@ -3,7 +3,7 @@
  * Date: 
  * Name: 
  * Description:
- *   This file contains definition of an abstract service class.
+ *   
  ******************************************************************/
 package example.generated;
 
@@ -12,30 +12,35 @@ import ir.ntnaeem.hottentot.runtime.Proxy;
 import ir.ntnaeem.hottentot.runtime.Request;
 import ir.ntnaeem.hottentot.runtime.Response;
 import ir.ntnaeem.hottentot.runtime.TcpClient;
-import ir.ntnaeem.hottentot.runtime.exception.*;
+import ir.ntnaeem.hottentot.runtime.exception.HottentotRuntimeException;
+import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
+import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
+import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
+import ir.ntnaeem.hottentot.runtime.exception.TcpClientCloseException;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
+import java.util.List;
 
-public class AuthenticationServiceProxy extends AbstractAuthenticationService implements Proxy {
+public class AuthServiceProxy extends AbstractAuthService implements Proxy {
 	
   private String host;
   private int port;
 
-  public AuthenticationServiceProxy(String host, int port) {
+  public AuthServiceProxy(String host, int port) {
     this.host = host;
     this.port = port;
   }
-  public Token authenticate(Credential credential) { 
+  public List<Token> auth(Credential credential) { 
     //serialize credential
     byte[] serializedCredential = credential.serialize();
 
     //make request
     Request request = new Request();
-    request.setServiceId(2072454237L);
-    request.setMethodId(3832527112L);
+    request.setServiceId(96582825L);
+    request.setMethodId(383471646L);
     request.setArgumentCount((byte) 1);
     request.setType(Request.RequestType.InvokeStateless);
     Argument arg0 = new Argument();
@@ -92,23 +97,78 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     //deserialize token part of response
     Response response = protocol.getResponse();
     //close everything
-    try {
-      tcpClient.close();
-      System.out.println(">>>>>>>>>>>" + Thread.currentThread() + " socket closed");
-    } catch (TcpClientCloseException e) {
-      e.printStackTrace();
+     try { 
+       tcpClient.close(); 
+    } catch (TcpClientCloseException e) { 
+      e.printStackTrace(); 
+    } 
+    //deserialize list<Token>part from response
+    SerializableTokenList serializableTokenList = null;
+    if (response.getStatusCode() == -1) {
+      //TODO
     }
+    serializableTokenList = new SerializableTokenList();
+    serializableTokenList.deserialize(response.getData());
+    return serializableTokenList.getTokenList();
+  }
+  public Token test() { 
+
+    //make request
+    Request request = new Request();
+    request.setServiceId(96582825L);
+    request.setMethodId(1248602371L);
+    request.setArgumentCount((byte) 0);
+    request.setType(Request.RequestType.InvokeStateless);
+    int dataLength = 0;
+    //calculate data length for every argument
+    //arg count + request type + method ID + service ID = 18;
+    request.setLength(18 + dataLength);
+    //connect to server
+    TcpClient tcpClient = TcpClientFactory.create();
+    try{
+      tcpClient.connect(host, port);
+    } catch (TcpClientConnectException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //serialize request according to HTNP
+    Protocol protocol = ProtocolFactory.create();
+    byte[] serializedRequest = protocol.serializeRequest(request);
+    //send request
+    try {
+      tcpClient.write(serializedRequest);
+    } catch (TcpClientWriteException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //read response from server
+    byte[] buffer = new byte[256];
+    while (!protocol.IsResponseComplete()) {
+      byte[] dataChunkRead;
+      try {
+        dataChunkRead = tcpClient.read();
+      } catch (TcpClientReadException e) {
+        throw new HottentotRuntimeException(e);
+      }
+      protocol.processDataForResponse(dataChunkRead);
+    }
+    //deserialize token part of response
+    Response response = protocol.getResponse();
+    //close everything
+     try { 
+       tcpClient.close(); 
+    } catch (TcpClientCloseException e) { 
+      e.printStackTrace(); 
+    } 
     //deserialize Tokenpart from response
     Token token= null;
     if (response.getStatusCode() == -1) {
-      // TODO
+      //TODO
     }
-      token= new Token();
-      token.deserialize(response.getData());
+    token= new Token();
+    token.deserialize(response.getData());
     return token;
   }
 
   public void destroy() {
-    //
+    //TODO
   }
 }
