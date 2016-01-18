@@ -43,9 +43,17 @@ namespace naeem {
               }
               methodsStr += indent_ + "public " + returnType + " " + pMethod->name_ + "(";
               ::naeem::hottentot::generator::ds::Argument *pArg;
+              std::string fetchedArgTypeOfList;
+              std::string argType;
               for (int i = 0; i < pMethod->arguments_.size(); i++) {
                 pArg = pMethod->arguments_.at(i);
-                std::string argType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pArg->type_);
+                if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)){
+                  fetchedArgTypeOfList =
+                    ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);  
+                  argType = "List<" + fetchedArgTypeOfList + ">";
+                }else {
+                  argType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pArg->type_);  
+                }
                 methodsStr += argType + " " + pArg->variable_;
                 if (i < pMethod->arguments_.size() - 1) {
                   methodsStr += ",";
@@ -57,10 +65,24 @@ namespace naeem {
               methodsStr += indent_ + indent_ + "//serialize " + pArg->variable_ + "\n";
               std::string capitalalizedArgVar = 
               ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_);     
-              methodsStr += indent_ + indent_ +
-              "byte[] serialized" +
-              capitalalizedArgVar + " = " +
-              pArg->variable_ + ".serialize();\n";
+              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)){
+                std::string fetchedArgTypeOfList;
+                fetchedArgTypeOfList = 
+                  ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
+                methodsStr += indent_ + indent_ + 
+                              "Serializable" + fetchedArgTypeOfList + "List " + 
+                              "serializable" + fetchedArgTypeOfList + "List = new " +
+                              "Serializable" + fetchedArgTypeOfList + "List();\n";
+                methodsStr += "serializable" + fetchedArgTypeOfList + "List.set" +
+                              fetchedArgTypeOfList + "List(" + pArg->variable_ + ");\n";
+                methodsStr += "byte[] serialized" +  capitalalizedArgVar + 
+                              " = serializable" + fetchedArgTypeOfList + "List.serialize();\n";
+              }else{
+                methodsStr += indent_ + indent_ +
+                              "byte[] serialized" +
+                              capitalalizedArgVar + " = " +
+                              pArg->variable_ + ".serialize();\n";  
+              }
             }
             methodsStr += "\n";
             methodsStr += indent_ + indent_ + "//make request\n";
@@ -82,15 +104,24 @@ namespace naeem {
               methodsStr += "InvokeStatefull";
             }
             methodsStr += ");\n";
+
+            /*
+              arg0.setDataLength(serializedTokens.length);
+              arg0.setData(serializedTokens);
+            */
+
             for (int i = 0; i < pMethod->arguments_.size(); i++) {
               std::stringstream ssI;
               pArg = pMethod->arguments_.at(i);
               ssI << i;
+              std::string capitalizedArgVar = 
+                ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_);
               methodsStr += indent_ + indent_ + "Argument arg" + ssI.str() + " = new Argument();\n";
-              methodsStr += indent_ + indent_ + "arg" + ssI.str() + ".setDataLength(";              
-              methodsStr += pArg->variable_ + ".serialize().length);\n";
+              
+              methodsStr += indent_ + indent_ + "arg" + ssI.str() + ".setDataLength(" +
+                            "serialized" + capitalizedArgVar + ".length);\n";
               methodsStr += indent_ + indent_ + 
-                            "arg" + ssI.str() + ".setData(" + pArg->variable_.c_str() + ".serialize());\n";
+                            "arg" + ssI.str() + ".setData(serialized" + capitalizedArgVar + ");\n";
               methodsStr += indent_ + indent_ +
                            "request.addArgument(arg" + ssI.str() + ");\n";
             }

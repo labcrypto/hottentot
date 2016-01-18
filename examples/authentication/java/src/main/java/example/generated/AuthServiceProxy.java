@@ -44,8 +44,8 @@ public class AuthServiceProxy extends AbstractAuthService implements Proxy {
     request.setArgumentCount((byte) 1);
     request.setType(Request.RequestType.InvokeStateless);
     Argument arg0 = new Argument();
-    arg0.setDataLength(credential.serialize().length);
-    arg0.setData(credential.serialize());
+    arg0.setDataLength(serializedCredential.length);
+    arg0.setData(serializedCredential);
     request.addArgument(arg0);
     int dataLength = 0;
     //calculate data length for every argument
@@ -111,16 +111,40 @@ public class AuthServiceProxy extends AbstractAuthService implements Proxy {
     serializableTokenList.deserialize(response.getData());
     return serializableTokenList.getTokenList();
   }
-  public Token test() { 
+  public Token test(List<Token> tokens) { 
+    //serialize tokens
+    SerializableTokenList serializableTokenList = new SerializableTokenList();
+serializableTokenList.setTokenList(tokens);
+byte[] serializedTokens = serializableTokenList.serialize();
 
     //make request
     Request request = new Request();
     request.setServiceId(96582825L);
-    request.setMethodId(1248602371L);
-    request.setArgumentCount((byte) 0);
+    request.setMethodId(261602188L);
+    request.setArgumentCount((byte) 1);
     request.setType(Request.RequestType.InvokeStateless);
+    Argument arg0 = new Argument();
+    arg0.setDataLength(serializedTokens.length);
+    arg0.setData(serializedTokens);
+    request.addArgument(arg0);
     int dataLength = 0;
     //calculate data length for every argument
+    //calulate tokensDataLength
+    int tokensDataLength= serializedTokens.length;
+    int tokensDataLengthByteArrayLength = 1;
+    if (tokensDataLength >= 0x80) {
+      if (tokensDataLength <= 0xff) {
+        //ex 0x81 0xff
+        tokensDataLengthByteArrayLength = 2;
+      } else if (tokensDataLength <= 0xffff) {
+        //ex 0x82 0xff 0xff
+        tokensDataLengthByteArrayLength = 3;
+      } else if (tokensDataLength <= 0xffffff) {
+        //ex 0x83 0xff 0xff 0xff
+        tokensDataLengthByteArrayLength = 4;
+      }
+    }
+    dataLength += tokensDataLength + tokensDataLengthByteArrayLength;
     //arg count + request type + method ID + service ID = 18;
     request.setLength(18 + dataLength);
     //connect to server

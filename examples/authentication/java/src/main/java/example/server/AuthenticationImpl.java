@@ -41,9 +41,9 @@ public class AuthenticationImpl extends AbstractAuthService {
     return tokenList;
   }
 
-  public Token test() {
+  public Token test(List<Token> tokens) {
     Token token = new Token();
-    token.setValue("gholi");
+    token.setValue(tokens.get(0).getValue());
     return token;
   }
 }
