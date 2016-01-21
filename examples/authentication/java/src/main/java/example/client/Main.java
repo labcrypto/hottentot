@@ -25,23 +25,14 @@ package example.client;
 
 import example.generated.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
   public static void main(String[] args) throws InterruptedException {
-    final AuthService proxy = AuthServiceProxyBuilder.create("127.0.0.1", 8080);
-    Credential credential = new Credential();
-    credential.setUsername("zoro");
-    List<Token> tokenList = proxy.auth(credential);
-    List<Human> humanList = new ArrayList<Human>();
-    Human human = new Human();
-    human.setName("akbar");
-    humanList.add(human);
-    //System.out.println(tokenList1.get(0).getValue());
-    Token test = proxy.test(humanList);
-    System.out.println("exit test token : " + test.getValue());
-    System.out.println("exittt token list size : " + tokenList.size());
-    System.out.println("exittt token List : " + tokenList.get(0).getValue());
-    AuthServiceProxyBuilder.destroy();
+    final AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8080);
+    List<StringWrapper> stringWrapper = proxy.test2();
+    System.out.println("exit test token : " + stringWrapper.get(0).getValue());
+    AuthenticationServiceProxyBuilder.destroy();
   }
 }

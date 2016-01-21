@@ -7,10 +7,10 @@
  ******************************************************************/
 package example.generated;
 
-public class AuthServiceProxyBuilder {
+public class AuthenticationServiceProxyBuilder {
 
-  public static AuthService create(String host, int port) {
-    return new AuthServiceProxy(host,port);
+  public static AuthenticationService create(String host, int port) {
+    return new AuthenticationServiceProxy(host,port);
   }
 
   public static void destroy() {

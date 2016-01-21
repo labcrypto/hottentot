@@ -38,14 +38,14 @@ public class DataLengthByteArrayMaker {
                 //ex 0x82 0xff 0xff
                 byteArray = new byte[3];
                 byteArray[0] = (byte) 0x82;
-                byte[] byteBuffer = ByteBuffer.allocate(2).putInt(dataLength).array();
+                byte[] byteBuffer = ByteBuffer.allocate(2).putShort((short)dataLength).array();
                 byteArray[1] = byteBuffer[0];
                 byteArray[2] = byteBuffer[1];
             } else if (dataLength <= 0xffffff) {
                 //ex 0x83 0xff 0xff 0xff
-                byteArray = new byte[4];
+                byteArray = new byte[5];
                 byteArray[0] = (byte) 0x83;
-                byte[] byteBuffer = ByteBuffer.allocate(3).putInt(dataLength).array();
+                byte[] byteBuffer = ByteBuffer.allocate(4).putInt(dataLength).array();
                 byteArray[1] = byteBuffer[0];
                 byteArray[2] = byteBuffer[1];
                 byteArray[3] = byteBuffer[2];

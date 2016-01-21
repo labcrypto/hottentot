@@ -131,7 +131,9 @@ public class ProtocolV1 implements Protocol {
             data = new byte[dataLength];
             currentState = 2;
           } else {
+            System.out.println("b " + b);
             lStateLength = b & 0x0f;
+            System.out.println("lStateLenght : " + lStateLength);
             currentState = 1;
           }
         } else if (currentState == 2) {
@@ -152,7 +154,9 @@ public class ProtocolV1 implements Protocol {
             } else {
               dataLength += pow(256, (lStateLength - lStateCounter - 1)) * b;
             }
+            lStateCounter++;
           } else {
+            data = new byte[dataLength];
             currentState = 2;
             data[dStateCounter++] = b;
           }
@@ -187,14 +191,15 @@ public class ProtocolV1 implements Protocol {
         //ex 0x82 0xff 0xff
         byteArray = new byte[3];
         byteArray[0] = (byte) 0x82;
-        byte[] byteBuffer = ByteBuffer.allocate(2).putInt(dataLength).array();
+
+        byte[] byteBuffer = ByteBuffer.allocate(2).putShort((short) dataLength).array();
         byteArray[1] = byteBuffer[0];
         byteArray[2] = byteBuffer[1];
       } else if (dataLength <= 0xffffff) {
         //ex 0x83 0xff 0xff 0xff
-        byteArray = new byte[4];
-        byteArray[0] = (byte) 0x83;
-        byte[] byteBuffer = ByteBuffer.allocate(3).putInt(dataLength).array();
+        byteArray = new byte[5];
+        byteArray[0] = (byte) 0x84;
+        byte[] byteBuffer = ByteBuffer.allocate(4).putInt(dataLength).array();
         byteArray[1] = byteBuffer[0];
         byteArray[2] = byteBuffer[1];
         byteArray[3] = byteBuffer[2];

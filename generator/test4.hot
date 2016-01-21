@@ -1,18 +1,28 @@
 module example.generated{
   struct Token{
     string value ord(1);
+    uint32 id ord(2);
   };
 
   struct Credential{
     string username ord(1);
-    string password ord(1);
+    string password ord(2);
+  };
+  
+  struct DataWrapper{
+    data digi ord(1);
+    
   };
 
-  struct Human{
-    string name ord(1);
+  struct StringWrapper{
+    string value ord(1);
   };
-  stateless service Auth{
+
+  stateless service Authentication{
     list<Token> auth(Credential credential);
-    Token test(list<Human> humans);
+    list<DataWrapper> test();
+    list<StringWrapper> test2();
+    StringWrapper test3();
+    DataWrapper test4();
   };  
 };

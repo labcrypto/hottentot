@@ -216,7 +216,7 @@ namespace naeem {
                             "deserialize(response.getData());\n";
               methodsStr += indent_ + indent_ +
                             "return serializable" + fetchedReturnTypeOfList + 
-                            "List.getTokenList();\n"; 
+                            "List.get" + fetchedReturnTypeOfList + "List();\n"; 
             }else{
               methodsStr += indent_ + indent_ +
                             returnType + " " + lowerCaseReturnType + "= null;\n"; 

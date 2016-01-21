@@ -9,52 +9,44 @@ package example.generated;
 
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
+
+import java.util.Arrays;
+
 import static java.lang.StrictMath.pow;
 
-public class Token {
-  private String value = "";
-  private int id;
-  public void setValue(String value) {
-    this.value = value;
+public class DataWrapper {
+  private byte[] digi;
+  public void setDigi(byte[] digi) {
+    this.digi = digi;
   }
-  public String getValue() {
-    return value;
-  }
-  public void setId(int id) {
-    this.id = id;
-  }
-  public int getId() {
-    return id;
+  public byte[] getDigi() {
+    return digi;
   }
   @Override 
   public String toString() { 
-    return "Token{" + 
-      "value = '" + value + '\'' + 
-      ",id = '" + id + '\'' + 
+    return "DataWrapper{" + 
+      "digi = '" + digi + '\'' + 
       "}"; 
   }
 	
   public byte[] serialize() {
-    byte[] serializedValue = PDTSerializer.getString(value);
-    byte[] serializedId = PDTSerializer.getInt32(id);
-    byte[] output = new byte[serializedValue.length + serializedId.length];
+    byte[] serializedDigi = PDTSerializer.getData(digi);
+    byte[] output = new byte[serializedDigi.length];
     int counter = 0;
     //use a loop for every property
-    for (int i = 0; i < serializedValue.length; i++) {
-      output[counter++] = serializedValue[i];
-    }
-    for (int i = 0; i < serializedId.length; i++) {
-      output[counter++] = serializedId[i];
+    for (int i = 0; i < serializedDigi.length; i++) {
+      output[counter++] = serializedDigi[i];
     }
     return output;
   }
     
   public void deserialize(byte[] serializedByteArray) {
+    System.out.println(Arrays.toString(serializedByteArray));
     int counter = 0;
     int dataLength = 0;
     int numbersOfBytesForDataLength;
     //do for every property
-    //value : String
+    //digi : byte[]
     dataLength = 0;
     if(( serializedByteArray[counter] & 0x80) == 0 ) {
       dataLength = serializedByteArray[counter++];
@@ -64,16 +56,11 @@ public class Token {
         dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];
       }
     }
-    byte[] valueByteArray = new byte[dataLength];
-    System.arraycopy(serializedByteArray,counter,valueByteArray,0,dataLength);
+    byte[] digiByteArray = new byte[dataLength];
+    System.arraycopy(serializedByteArray,counter,digiByteArray,0,dataLength);
     counter += dataLength;
-    setValue(PDTDeserializer.getString(valueByteArray));
-    //id : int
-    byte[] idByteArray = new byte[4];
-    for(int i = 0 ; i < 4 ; i++){
-      idByteArray[i] = serializedByteArray[counter++];
-    }
-    setId(PDTDeserializer.getInt32(idByteArray));
+    System.out.println("digi byte array : " + Arrays.toString(digiByteArray));
+    setDigi(digiByteArray);
 
   }
 }
