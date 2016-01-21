@@ -12,7 +12,7 @@ void generateSerializableStructListFile(std::string listStructName ,
                                         std::string replacableSerializableStructListTmpStr ,
                                         std::string outDir ,
                                         std::string indent) {
-  std::string lowerCaseStructName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstLowerCase(listStructName);
+  std::string lowerCaseStructName = ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(listStructName);
   ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
   ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%INDENT%]" , indent , 1);
   ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%STRUCT_NAME%]" , listStructName , 1);

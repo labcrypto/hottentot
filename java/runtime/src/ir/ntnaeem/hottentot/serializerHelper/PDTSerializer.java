@@ -23,10 +23,12 @@
 package ir.ntnaeem.hottentot.serializerHelper;
 
 import ir.ntnaeem.hottentot.runtime.helper.ArrayUtil;
-
 import static java.lang.StrictMath.pow;
 
 public class PDTSerializer {
+    public static byte[] getData(byte[] bytes) {
+      return  ArrayUtil.concat(DataLengthByteArrayMaker.getByteArray(bytes.length), bytes);
+    }
     public static byte[] getString(String str){
         return  ArrayUtil.concat(DataLengthByteArrayMaker.getByteArray(str.getBytes().length), str.getBytes());
     }

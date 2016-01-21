@@ -9,53 +9,59 @@ package example.generated;
 
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
+
+import java.util.Arrays;
+
 import static java.lang.StrictMath.pow;
 
-public class Human {
-  private String name = "";
-  public void setName(String name) {
-    this.name = name;
+public class StringWrapper {
+  private String value = "";
+  public void setValue(String value) {
+    this.value = value;
   }
-  public String getName() {
-    return name;
+  public String getValue() {
+    return value;
   }
   @Override 
   public String toString() { 
-    return "Human{" + 
-      "name = '" + name + '\'' + 
+    return "StringWrapper{" + 
+      "value = '" + value + '\'' + 
       "}"; 
   }
 	
   public byte[] serialize() {
-    byte[] serializedName = PDTSerializer.getString(name);
-    byte[] output = new byte[serializedName.length];
+    byte[] serializedValue = PDTSerializer.getString(value);
+    byte[] output = new byte[serializedValue.length];
     int counter = 0;
     //use a loop for every property
-    for (int i = 0; i < serializedName.length; i++) {
-      output[counter++] = serializedName[i];
+    for (int i = 0; i < serializedValue.length; i++) {
+      output[counter++] = serializedValue[i];
     }
     return output;
   }
     
   public void deserialize(byte[] serializedByteArray) {
+    System.out.println(Arrays.toString(serializedByteArray));
     int counter = 0;
     int dataLength = 0;
     int numbersOfBytesForDataLength;
     //do for every property
-    //name : String
+    //value : String
     dataLength = 0;
     if(( serializedByteArray[counter] & 0x80) == 0 ) {
       dataLength = serializedByteArray[counter++];
-    }else{
+    }else {
       numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
-      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++) {
         dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];
       }
     }
-    byte[] nameByteArray = new byte[dataLength];
-    System.arraycopy(serializedByteArray,counter,nameByteArray,0,dataLength);
+    byte[] valueByteArray = new byte[dataLength];
+    System.arraycopy(serializedByteArray,counter,valueByteArray,0,dataLength);
     counter += dataLength;
-    setName(PDTDeserializer.getString(nameByteArray));
+    System.out.println("string value : " + Arrays.toString(valueByteArray));
+    setValue(PDTDeserializer.getString(valueByteArray));
 
   }
 }

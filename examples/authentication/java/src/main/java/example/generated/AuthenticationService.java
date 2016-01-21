@@ -11,8 +11,11 @@ package example.generated;
 import ir.ntnaeem.hottentot.runtime.Service;
 import java.util.List;
 
-public interface AuthService extends Service {
+public interface AuthenticationService extends Service {
   List<Token> auth(Credential credential);
-  Token test(List<Human> humans);
+  List<DataWrapper> test();
+  List<StringWrapper> test2();
+  StringWrapper test3();
+  DataWrapper test4();
 
 }

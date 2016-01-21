@@ -113,12 +113,18 @@ namespace naeem {
                   ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                   std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
                   if(declarationPtr->type_.compare("data") == 0){
-                    serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = " + declarationPtr->variable_ + ";\n";
+                    serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.getData(" + declarationPtr->variable_ + ");\n";
                   }else{
                     //std::cout << "OKK";
                     serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
                     declarationJavaType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
                     capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
+                    if(declarationPtr->type_[0] == 'u'){
+                      ::naeem::hottentot::generator::common::StringHelper::Replace(declarationPtr->type_ ,
+                                                                                   "u" ,
+                                                                                   "" ,
+                                                                                    1);
+                    }
                     std::string capitalizedDeclarationType  = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->type_);
                     serializeMethodStr += capitalizedDeclarationType + "(";
                     serializeMethodStr += declarationPtr->variable_ + ");\n";

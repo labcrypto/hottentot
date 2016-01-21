@@ -148,6 +148,14 @@ namespace naeem {
             result[0] = std::toupper(result[0]);
             return result;         
           }
+          static inline std::string MakeFirstLowerCase(std::string str) {
+            if((int)str[0] < 65 || (int)str[0] > 90){
+              return str;   
+            }    
+            std::string result = str;
+            result[0] = std::tolower(result[0]);
+            return result;         
+          }
           static inline std::string MakeCamelCase(std::vector<std::string> strs, 
                                                   bool firstCapital = true) {
             std::stringstream ss;
