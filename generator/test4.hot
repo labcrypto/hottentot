@@ -24,5 +24,7 @@ module example.generated{
     list<StringWrapper> test2();
     StringWrapper test3();
     DataWrapper test4();
+    DataWrapper test5(list<StringWrapper> inputList);
+    DataWrapper test6(list<DataWrapper> inputs);
   };  
 };
