@@ -32,7 +32,15 @@ public class Main {
     final AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8080);
     List<DataWrapper> wrapperList = proxy.test();
     System.out.println("size : " + wrapperList.get(0).getDigi().length);
-    System.out.println("exit test token : " + Arrays.toString(wrapperList.get(0).getDigi()));
+    //
+    List<StringWrapper> stringWrapperList = proxy.test2();
+    System.out.println(" stringWrapperList size : " + stringWrapperList.get(0).getValue().length());
+    //
+    StringWrapper stringWrapper = proxy.test3();
+    System.out.println("stringWrapper size : " + stringWrapper.getValue().length());
+    //
+    DataWrapper dataWrapper = proxy.test4();
+    System.out.println("dataWrapper size : " + dataWrapper.getDigi().length);
     AuthenticationServiceProxyBuilder.destroy();
   }
 }

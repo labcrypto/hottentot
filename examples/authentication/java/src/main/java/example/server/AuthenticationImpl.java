@@ -37,8 +37,8 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
 
   public List<DataWrapper> test() {
 
-    byte[] data = new byte[70000];
-    for(int i = 0 ; i < 70000; i++){
+    byte[] data = new byte[2000000];
+    for(int i = 0 ; i < 2000000; i++){
       data[i] = (byte)i;
     }
     DataWrapper dataWrapper = new DataWrapper();
@@ -51,7 +51,7 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
   public List<StringWrapper> test2() {
     StringWrapper stringWrapper = new StringWrapper();
     String str = "";
-    for(int i = 0 ; i < 16000000 ; i++){
+    for(int i = 0 ; i < 100000 ; i++){
       str += "a";
     }
     stringWrapper.setValue(str);
@@ -64,7 +64,7 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
   public StringWrapper test3() {
     StringWrapper stringWrapper = new StringWrapper();
     String str = "";
-    for(int i = 0 ; i < 1000 ; i++){
+    for(int i = 0 ; i < 100000 ; i++){
       str += "a";
     }
 
@@ -74,8 +74,8 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
 
   public DataWrapper test4() {
     DataWrapper dataWrapper = new DataWrapper();
-    byte[] data = new byte[1000];
-    for(int i = 0 ; i < 1000 ; i++){
+    byte[] data = new byte[100000];
+    for(int i = 0 ; i < 100000 ; i++){
       data[i] = (byte)i;
     }
     dataWrapper.setDigi(data);
