@@ -7,6 +7,7 @@
  ******************************************************************/
 package example.generated;
 
+import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 
@@ -37,11 +38,11 @@ public class DataWrapper {
     for (int i = 0; i < serializedDigi.length; i++) {
       output[counter++] = serializedDigi[i];
     }
+    System.out.println("serialized data wrapper :  " + Arrays.toString(output));
     return output;
   }
     
   public void deserialize(byte[] serializedByteArray) {
-    System.out.println(Arrays.toString(serializedByteArray));
     int counter = 0;
     int dataLength = 0;
     int numbersOfBytesForDataLength;
@@ -52,14 +53,18 @@ public class DataWrapper {
       dataLength = serializedByteArray[counter++];
     }else{
       numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] dataLengthByteArray = new byte[numbersOfBytesForDataLength];
       for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
-        dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];
+        ///changed
+        dataLengthByteArray[i] = serializedByteArray[counter++];
+        //dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];
       }
+      dataLength = ByteArrayToInteger.getInt(dataLengthByteArray);
+      System.out.println("dataLength : " + dataLength);
     }
     byte[] digiByteArray = new byte[dataLength];
     System.arraycopy(serializedByteArray,counter,digiByteArray,0,dataLength);
     counter += dataLength;
-    System.out.println("digi byte array : " + Arrays.toString(digiByteArray));
     setDigi(digiByteArray);
 
   }

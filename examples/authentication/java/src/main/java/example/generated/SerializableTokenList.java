@@ -7,10 +7,10 @@
 package example.generated;
 
 import ir.ntnaeem.hottentot.serializerHelper.DataLengthByteArrayMaker;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
 public class SerializableTokenList {
 
@@ -75,9 +75,9 @@ public class SerializableTokenList {
             for (int i = 1; i <= numOfByteForLength; i++) {
               serializedTokenLengthByteArray[i - 1] = serializedTokenList[i];
             }
-            serializedTokenByteArrayLength = ByteBuffer.wrap(serializedTokenLengthByteArray).getInt();
+            serializedTokenByteArrayLength = ByteArrayToInteger.getInt(serializedTokenLengthByteArray);
           }
-          counter += numOfByteForLength;
+          counter += numOfByteForLength + 1;
           byte[] tokenByteArray = new byte[serializedTokenByteArrayLength];
           int tokenByteArrayCounter = 0;
           for (int i = counter; i < counter + serializedTokenByteArrayLength; i++) {

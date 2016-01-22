@@ -7,10 +7,10 @@
 package [%BASE_PACKAGE_NAME%];
 
 import ir.ntnaeem.hottentot.serializerHelper.DataLengthByteArrayMaker;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
 public class Serializable[%STRUCT_NAME%]List {
 
@@ -75,9 +75,9 @@ public class Serializable[%STRUCT_NAME%]List {
             for (int i = 1; i <= numOfByteForLength; i++) {
               serialized[%STRUCT_NAME%]LengthByteArray[i - 1] = serialized[%STRUCT_NAME%]List[i];
             }
-            serialized[%STRUCT_NAME%]ByteArrayLength = ByteBuffer.wrap(serialized[%STRUCT_NAME%]LengthByteArray).getInt();
+            serialized[%STRUCT_NAME%]ByteArrayLength = ByteArrayToInteger.getInt(serialized[%STRUCT_NAME%]LengthByteArray);
           }
-          counter += numOfByteForLength;
+          counter += numOfByteForLength + 1;
           byte[] [%LOWER_CASE_STRUCT_NAME%]ByteArray = new byte[serialized[%STRUCT_NAME%]ByteArrayLength];
           int [%LOWER_CASE_STRUCT_NAME%]ByteArrayCounter = 0;
           for (int i = counter; i < counter + serialized[%STRUCT_NAME%]ByteArrayLength; i++) {

@@ -25,6 +25,7 @@ package ir.ntnaeem.hottentot.runtime.protocol;
 
 import ir.ntnaeem.hottentot.runtime.*;
 import ir.ntnaeem.hottentot.runtime.exception.*;
+import ir.ntnaeem.hottentot.serializerHelper.DataLengthByteArrayMaker;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -156,6 +157,7 @@ public class ProtocolV1 implements Protocol {
             }
             lStateCounter++;
           } else {
+            System.out.println("dataLenght protocol : " + dataLength);
             data = new byte[dataLength];
             currentState = 2;
             data[dStateCounter++] = b;
@@ -179,53 +181,53 @@ public class ProtocolV1 implements Protocol {
   }
 
 
-  private byte[] getByteArrayFromIntegerDataLength(int dataLength) {
-    byte[] byteArray;
-    if (dataLength >= 0x80) {
-      if (dataLength <= 0xff) {
-        //ex 0x81 0xff
-        byteArray = new byte[2];
-        byteArray[0] = (byte) 0x81;
-        byteArray[1] = (byte) dataLength;
-      } else if (dataLength <= 0xffff) {
-        //ex 0x82 0xff 0xff
-        byteArray = new byte[3];
-        byteArray[0] = (byte) 0x82;
-
-        byte[] byteBuffer = ByteBuffer.allocate(2).putShort((short) dataLength).array();
-        byteArray[1] = byteBuffer[0];
-        byteArray[2] = byteBuffer[1];
-      } else if (dataLength <= 0xffffff) {
-        //ex 0x83 0xff 0xff 0xff
-        byteArray = new byte[5];
-        byteArray[0] = (byte) 0x84;
-        byte[] byteBuffer = ByteBuffer.allocate(4).putInt(dataLength).array();
-        byteArray[1] = byteBuffer[0];
-        byteArray[2] = byteBuffer[1];
-        byteArray[3] = byteBuffer[2];
-      } else {
-        //ex 0x84 0xff 0xff 0xff 0xff
-        byteArray = new byte[5];
-        byteArray[0] = (byte) 0x84;
-        byte[] byteBuffer = ByteBuffer.allocate(4).putInt(dataLength).array();
-        byteArray[1] = byteBuffer[0];
-        byteArray[2] = byteBuffer[1];
-        byteArray[3] = byteBuffer[2];
-        byteArray[4] = byteBuffer[3];
-      }
-    } else {
-      //ex 0x7f
-      byteArray = new byte[1];
-      byteArray[0] = (byte) dataLength;
-    }
-    return byteArray;
-  }
+//  private byte[] getByteArrayFromIntegerDataLength(int dataLength) {
+//    byte[] byteArray;
+//    if (dataLength >= 0x80) {
+//      if (dataLength <= 0xff) {
+//        //ex 0x81 0xff
+//        byteArray = new byte[2];
+//        byteArray[0] = (byte) 0x81;
+//        byteArray[1] = (byte) dataLength;
+//      } else if (dataLength <= 0xffff) {
+//        //ex 0x82 0xff 0xff
+//        byteArray = new byte[3];
+//        byteArray[0] = (byte) 0x82;
+//
+//        byte[] byteBuffer = ByteBuffer.allocate(2).putShort((short) dataLength).array();
+//        byteArray[1] = byteBuffer[0];
+//        byteArray[2] = byteBuffer[1];
+//      } else if (dataLength <= 0xffffff) {
+//        //ex 0x83 0xff 0xff 0xff
+//        byteArray = new byte[5];
+//        byteArray[0] = (byte) 0x84;
+//        byte[] byteBuffer = ByteBuffer.allocate(4).putInt(dataLength).array();
+//        byteArray[1] = byteBuffer[0];
+//        byteArray[2] = byteBuffer[1];
+//        byteArray[3] = byteBuffer[2];
+//      } else {
+//        //ex 0x84 0xff 0xff 0xff 0xff
+//        byteArray = new byte[5];
+//        byteArray[0] = (byte) 0x84;
+//        byte[] byteBuffer = ByteBuffer.allocate(4).putInt(dataLength).array();
+//        byteArray[1] = byteBuffer[0];
+//        byteArray[2] = byteBuffer[1];
+//        byteArray[3] = byteBuffer[2];
+//        byteArray[4] = byteBuffer[3];
+//      }
+//    } else {
+//      //ex 0x7f
+//      byteArray = new byte[1];
+//      byteArray[0] = (byte) dataLength;
+//    }
+//    return byteArray;
+//  }
 
   public byte[] serializeRequest(Request request) {
     //tested ! :)
 
     int counter = 0;
-    byte[] byteArrayFromSerializedRequestLength = getByteArrayFromIntegerDataLength(request.getLength());
+    byte[] byteArrayFromSerializedRequestLength = DataLengthByteArrayMaker.getByteArray(request.getLength());
     byte[] serializedRequest = new byte[request.getLength() + byteArrayFromSerializedRequestLength.length];
     for (byte b : byteArrayFromSerializedRequestLength) {
       serializedRequest[counter++] = b;
@@ -254,7 +256,7 @@ public class ProtocolV1 implements Protocol {
     List<Argument> args = request.getArgs();
 
     for (Argument arg : args) {
-      byte[] byteArrayFromArgLength = getByteArrayFromIntegerDataLength(arg.getDataLength());
+      byte[] byteArrayFromArgLength = DataLengthByteArrayMaker.getByteArray(arg.getDataLength());
       for (byte b : byteArrayFromArgLength) {
         serializedRequest[counter++] = b;
       }
@@ -332,6 +334,7 @@ public class ProtocolV1 implements Protocol {
   }
 
   public Response deserializeResponseBody(byte[] serializedResponseBody) {
+
     //tested :)
     int counter = 0;
     Response response = new Response();
@@ -360,9 +363,10 @@ public class ProtocolV1 implements Protocol {
   }
 
   public byte[] serializeResponse(Response response) {
+    System.out.println("protocol response body ength " + response.getData().length);
     //tested ! :)
     int counter = 0;
-    byte[] byteArrayFromSerializedResponseLength = getByteArrayFromIntegerDataLength(response.getLength());
+    byte[] byteArrayFromSerializedResponseLength = DataLengthByteArrayMaker.getByteArray(response.getLength());
     byte[] serializedResponse = new byte[response.getLength() + byteArrayFromSerializedResponseLength.length];
     for (byte b : byteArrayFromSerializedResponseLength) {
       serializedResponse[counter++] = b;
@@ -371,6 +375,7 @@ public class ProtocolV1 implements Protocol {
     for (byte b : response.getData()) {
       serializedResponse[counter++] = b;
     }
+    System.out.println("END : " + Arrays.toString(serializedResponse));
     return serializedResponse;
   }
 

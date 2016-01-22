@@ -34,6 +34,8 @@ public class PDTSerializer {
       return  ArrayUtil.concat(DataLengthByteArrayMaker.getByteArray(bytes.length), bytes);
     }
     public static byte[] getString(String str){
+        System.out.println("str_length : " + str.length());
+        System.out.println("--- : " + str.getBytes().length);
         return  ArrayUtil.concat(DataLengthByteArrayMaker.getByteArray(str.getBytes().length), str.getBytes());
     }
     public static byte getBool(boolean bool){
