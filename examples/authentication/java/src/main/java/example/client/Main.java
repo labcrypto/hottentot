@@ -24,15 +24,15 @@
 package example.client;
 
 import example.generated.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Main {
   public static void main(String[] args) throws InterruptedException {
     final AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8080);
-    List<StringWrapper> stringWrapper = proxy.test2();
-    System.out.println("exit test token : " + stringWrapper.get(0).getValue());
+    List<DataWrapper> wrapperList = proxy.test();
+    System.out.println("size : " + wrapperList.get(0).getDigi().length);
+    System.out.println("exit test token : " + Arrays.toString(wrapperList.get(0).getDigi()));
     AuthenticationServiceProxyBuilder.destroy();
   }
 }

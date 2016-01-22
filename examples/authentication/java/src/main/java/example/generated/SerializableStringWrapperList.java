@@ -7,10 +7,10 @@
 package example.generated;
 
 import ir.ntnaeem.hottentot.serializerHelper.DataLengthByteArrayMaker;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
 public class SerializableStringWrapperList {
 
@@ -75,16 +75,9 @@ public class SerializableStringWrapperList {
             for (int i = 1; i <= numOfByteForLength; i++) {
               serializedStringWrapperLengthByteArray[i - 1] = serializedStringWrapperList[i];
             }
-            if(serializedStringWrapperLengthByteArray.length == 2){
-              serializedStringWrapperByteArrayLength = ByteBuffer.wrap(serializedStringWrapperLengthByteArray).getShort();
-            }else if(serializedStringWrapperLengthByteArray.length == 3){
-              //TODO
-            }else if(serializedStringWrapperLengthByteArray.length == 4){
-              serializedStringWrapperByteArrayLength = ByteBuffer.wrap(serializedStringWrapperLengthByteArray).getInt();
-            }
+            serializedStringWrapperByteArrayLength = ByteArrayToInteger.getInt(serializedStringWrapperLengthByteArray);
           }
-          System.out.println(serializedStringWrapperByteArrayLength);
-          counter += numOfByteForLength;
+          counter += numOfByteForLength + 1;
           byte[] stringWrapperByteArray = new byte[serializedStringWrapperByteArrayLength];
           int stringWrapperByteArrayCounter = 0;
           for (int i = counter; i < counter + serializedStringWrapperByteArrayLength; i++) {

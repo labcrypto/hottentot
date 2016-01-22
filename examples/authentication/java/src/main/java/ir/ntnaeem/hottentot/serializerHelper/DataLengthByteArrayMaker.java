@@ -23,6 +23,7 @@
 package ir.ntnaeem.hottentot.serializerHelper;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 
 public class DataLengthByteArrayMaker {
@@ -43,12 +44,14 @@ public class DataLengthByteArrayMaker {
                 byteArray[2] = byteBuffer[1];
             } else if (dataLength <= 0xffffff) {
                 //ex 0x83 0xff 0xff 0xff
-                byteArray = new byte[5];
+                byteArray = new byte[4];
                 byteArray[0] = (byte) 0x83;
                 byte[] byteBuffer = ByteBuffer.allocate(4).putInt(dataLength).array();
-                byteArray[1] = byteBuffer[0];
-                byteArray[2] = byteBuffer[1];
-                byteArray[3] = byteBuffer[2];
+                System.out.println("byte bufer  array : [" + Arrays.toString(byteBuffer));
+                byteArray[1] = byteBuffer[1];
+                byteArray[2] = byteBuffer[2];
+                byteArray[3] = byteBuffer[3];
+                System.out.println("lenght array : [" + Arrays.toString(byteArray));
             } else {
                 //ex 0x84 0xff 0xff 0xff 0xff
                 byteArray = new byte[5];

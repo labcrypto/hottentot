@@ -52,9 +52,12 @@ public class AuthenticationRequestHandler extends RequestHandler {
       List<DataWrapper> datawrapperList = authenticationImpl.test();
       serializableDataWrapperList.setDataWrapperList(datawrapperList);
       byte[] serializedDataWrapperList = serializableDataWrapperList.serialize();
+      System.out.println("kkk : " + serializedDataWrapperList.length);
       response.setStatusCode((byte) 100);
       response.setData(serializedDataWrapperList);
       response.setLength(serializedDataWrapperList.length + 1);
+      System.out.println("response get length : " + response.getLength());
+
       return response;
     }
     if(methodId == 17562162L){

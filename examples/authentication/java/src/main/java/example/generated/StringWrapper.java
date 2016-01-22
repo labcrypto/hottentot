@@ -9,9 +9,6 @@ package example.generated;
 
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
-
-import java.util.Arrays;
-
 import static java.lang.StrictMath.pow;
 
 public class StringWrapper {
@@ -41,7 +38,6 @@ public class StringWrapper {
   }
     
   public void deserialize(byte[] serializedByteArray) {
-    System.out.println(Arrays.toString(serializedByteArray));
     int counter = 0;
     int dataLength = 0;
     int numbersOfBytesForDataLength;
@@ -50,17 +46,15 @@ public class StringWrapper {
     dataLength = 0;
     if(( serializedByteArray[counter] & 0x80) == 0 ) {
       dataLength = serializedByteArray[counter++];
-    }else {
+    }else{
       numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
-
-      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++) {
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
         dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];
       }
     }
     byte[] valueByteArray = new byte[dataLength];
     System.arraycopy(serializedByteArray,counter,valueByteArray,0,dataLength);
     counter += dataLength;
-    System.out.println("string value : " + Arrays.toString(valueByteArray));
     setValue(PDTDeserializer.getString(valueByteArray));
 
   }
