@@ -50,16 +50,12 @@ public class SerializableDataWrapperList {
         System.arraycopy(serializedDataWrapper, 0, serializedDataWrapperList, counter, serializedDataWrapper.length);
         counter += serializedDataWrapper.length;
       }
-      System.out.println("serilaize d data wrapper list :  " + Arrays.toString(serializedDataWrapperList));
-      System.out.println("serilaize d data wrapper list length :  " + serializedDataWrapperList.length);
       return serializedDataWrapperList;
     }
     return new byte[0];
   }
 
   public void deserialize(byte[] serializedDataWrapperList) {
-    System.out.println("desrialize dat wraper list " + Arrays.toString(serializedDataWrapperList));
-    System.out.println("2222" + serializedDataWrapperList.length);
     if(serializedDataWrapperList.length != 0){
       if (serializedDataWrapperList.length != 0) {
         int firstLengthByte = serializedDataWrapperList[0];
@@ -79,14 +75,11 @@ public class SerializableDataWrapperList {
             for (int i = 1; i <= numOfByteForLength; i++) {
               serializedDataWrapperLengthByteArray[i - 1] = serializedDataWrapperList[i];
             }
-            System.out.println("nnn ; " +  Arrays.toString(serializedDataWrapperLengthByteArray));
             serializedDataWrapperByteArrayLength = ByteArrayToInteger.getInt(serializedDataWrapperLengthByteArray);
           }
           counter += numOfByteForLength + 1;
-          System.out.println(serializedDataWrapperByteArrayLength);
           byte[] dataWrapperByteArray = new byte[serializedDataWrapperByteArrayLength];
           int dataWrapperByteArrayCounter = 0;
-          System.out.println("999 " + serializedDataWrapperList.length);
           for (int i = counter; i < counter + serializedDataWrapperByteArrayLength; i++) {
             dataWrapperByteArray[dataWrapperByteArrayCounter++] = serializedDataWrapperList[i];
           }

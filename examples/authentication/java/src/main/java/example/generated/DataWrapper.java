@@ -7,13 +7,9 @@
  ******************************************************************/
 package example.generated;
 
-import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
-import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
-
-import java.util.Arrays;
-
-import static java.lang.StrictMath.pow;
+import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
+import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
 public class DataWrapper {
   private byte[] digi;
@@ -38,7 +34,6 @@ public class DataWrapper {
     for (int i = 0; i < serializedDigi.length; i++) {
       output[counter++] = serializedDigi[i];
     }
-    System.out.println("serialized data wrapper :  " + Arrays.toString(output));
     return output;
   }
     
@@ -53,14 +48,11 @@ public class DataWrapper {
       dataLength = serializedByteArray[counter++];
     }else{
       numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
-      byte[] dataLengthByteArray = new byte[numbersOfBytesForDataLength];
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
       for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
-        ///changed
-        dataLengthByteArray[i] = serializedByteArray[counter++];
-        //dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
       }
-      dataLength = ByteArrayToInteger.getInt(dataLengthByteArray);
-      System.out.println("dataLength : " + dataLength);
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
     }
     byte[] digiByteArray = new byte[dataLength];
     System.arraycopy(serializedByteArray,counter,digiByteArray,0,dataLength);

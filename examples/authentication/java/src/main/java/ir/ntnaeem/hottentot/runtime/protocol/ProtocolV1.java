@@ -132,9 +132,7 @@ public class ProtocolV1 implements Protocol {
             data = new byte[dataLength];
             currentState = 2;
           } else {
-            System.out.println("b " + b);
             lStateLength = b & 0x0f;
-            System.out.println("lStateLenght : " + lStateLength);
             currentState = 1;
           }
         } else if (currentState == 2) {
@@ -157,7 +155,6 @@ public class ProtocolV1 implements Protocol {
             }
             lStateCounter++;
           } else {
-            System.out.println("dataLenght protocol : " + dataLength);
             data = new byte[dataLength];
             currentState = 2;
             data[dStateCounter++] = b;
@@ -363,7 +360,6 @@ public class ProtocolV1 implements Protocol {
   }
 
   public byte[] serializeResponse(Response response) {
-    System.out.println("protocol response body ength " + response.getData().length);
     //tested ! :)
     int counter = 0;
     byte[] byteArrayFromSerializedResponseLength = DataLengthByteArrayMaker.getByteArray(response.getLength());
@@ -375,7 +371,6 @@ public class ProtocolV1 implements Protocol {
     for (byte b : response.getData()) {
       serializedResponse[counter++] = b;
     }
-    System.out.println("END : " + Arrays.toString(serializedResponse));
     return serializedResponse;
   }
 

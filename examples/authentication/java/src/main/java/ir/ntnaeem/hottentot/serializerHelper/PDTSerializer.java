@@ -30,12 +30,9 @@ import static java.lang.StrictMath.pow;
 
 public class PDTSerializer {
     public static byte[] getData(byte[] bytes) {
-      System.out.println(Arrays.toString(DataLengthByteArrayMaker.getByteArray(bytes.length)));
       return  ArrayUtil.concat(DataLengthByteArrayMaker.getByteArray(bytes.length), bytes);
     }
     public static byte[] getString(String str){
-        System.out.println("str_length : " + str.length());
-        System.out.println("--- : " + str.getBytes().length);
         return  ArrayUtil.concat(DataLengthByteArrayMaker.getByteArray(str.getBytes().length), str.getBytes());
     }
     public static byte getBool(boolean bool){

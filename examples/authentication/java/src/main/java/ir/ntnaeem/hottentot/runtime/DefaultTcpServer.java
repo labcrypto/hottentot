@@ -92,7 +92,6 @@ public class DefaultTcpServer implements TcpServer {
             readDataChunk = Arrays.copyOf(buffer, numReadBytes);
             protocol.processDataForRequest(readDataChunk);
           } catch (ProtocolProcessException e) {
-            System.out.println("num : ... " + numReadBytes);
             throw new HottentotRuntimeException(e);
           }
         } else {

@@ -20,18 +20,15 @@ public class ByteArrayToInteger {
 //        }else if(bytes.length == 4){
 //            output = java.nio.ByteBuffer.wrap(bytes).getInt();
 //        }
-        System.out.println("bytes : " + Arrays.toString(bytes));
         for(int i = 0 ; i < bytes.length ; i++){
             int c = 0;
             if(bytes[i] < 0){
                 c = (256 + bytes[i]);
-                System.out.println("c" + c);
             }else{
                 c = bytes[i];
             }
             output += c * Math.pow(256 , bytes.length - i - 1);
         }
-        System.out.println("output  : " + output);
         return output;
     }
 }

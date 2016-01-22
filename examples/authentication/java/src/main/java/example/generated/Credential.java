@@ -7,9 +7,9 @@
  ******************************************************************/
 package example.generated;
 
-import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
-import static java.lang.StrictMath.pow;
+import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
+import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
 public class Credential {
   private String username = "";
@@ -60,9 +60,11 @@ public class Credential {
       dataLength = serializedByteArray[counter++];
     }else{
       numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
       for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
-        dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
       }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
     }
     byte[] usernameByteArray = new byte[dataLength];
     System.arraycopy(serializedByteArray,counter,usernameByteArray,0,dataLength);
@@ -74,9 +76,11 @@ public class Credential {
       dataLength = serializedByteArray[counter++];
     }else{
       numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
       for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
-        dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
       }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
     }
     byte[] passwordByteArray = new byte[dataLength];
     System.arraycopy(serializedByteArray,counter,passwordByteArray,0,dataLength);
