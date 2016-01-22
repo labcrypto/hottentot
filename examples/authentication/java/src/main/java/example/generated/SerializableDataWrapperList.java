@@ -29,6 +29,7 @@ public class SerializableDataWrapperList {
   }
 
   public byte[] serialize() {
+    System.out.println(dataWrapperList.get(0).getDigi().length);
     if (dataWrapperList.size() != 0) {
       int counter = 0;
       int dataLength = 0;

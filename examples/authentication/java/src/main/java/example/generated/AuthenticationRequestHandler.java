@@ -91,6 +91,38 @@ public class AuthenticationRequestHandler extends RequestHandler {
       response.setLength(serializedDataWrapper.length + 1);
       return response;
     }
+    if(methodId == 3266268561L){
+      List <Argument> args = request.getArgs();
+      Argument arg0 = args.get(0);
+      byte[] serializedInputList = arg0.getData();
+      SerializableStringWrapperList serializableStringWrapperList = new SerializableStringWrapperList();
+      serializableStringWrapperList.deserialize( serializedInputList);
+      List<StringWrapper> inputList = serializableStringWrapperList.getStringWrapperList();
+      DataWrapper dataWrapper = null;
+      Response response = new Response();
+      dataWrapper = authenticationImpl.test5(inputList);
+      byte[] serializedDataWrapper = dataWrapper.serialize();
+      response.setStatusCode((byte) 100);
+      response.setData(serializedDataWrapper);
+      response.setLength(serializedDataWrapper.length + 1);
+      return response;
+    }
+    if(methodId == 989571763L){
+      List <Argument> args = request.getArgs();
+      Argument arg0 = args.get(0);
+      byte[] serializedInputs = arg0.getData();
+      SerializableDataWrapperList serializableDataWrapperList = new SerializableDataWrapperList();
+      serializableDataWrapperList.deserialize( serializedInputs);
+      List<DataWrapper> inputs = serializableDataWrapperList.getDataWrapperList();
+      DataWrapper dataWrapper = null;
+      Response response = new Response();
+      dataWrapper = authenticationImpl.test6(inputs);
+      byte[] serializedDataWrapper = dataWrapper.serialize();
+      response.setStatusCode((byte) 100);
+      response.setData(serializedDataWrapper);
+      response.setLength(serializedDataWrapper.length + 1);
+      return response;
+    }
 
     throw new MethodNotSupportException("method id is incorrect");
   }

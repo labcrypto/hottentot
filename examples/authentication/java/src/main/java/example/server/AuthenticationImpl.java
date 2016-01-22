@@ -81,4 +81,20 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
     dataWrapper.setDigi(data);
     return dataWrapper;
   }
+
+  public DataWrapper test5(List<StringWrapper> inputList) {
+    DataWrapper dataWrapper = new DataWrapper();
+    if(inputList.size() == 10){
+      dataWrapper.setDigi(new byte[]{1});
+    }
+    return dataWrapper;
+  }
+
+  public DataWrapper test6(List<DataWrapper> inputs) {
+    return null;
+  }
+
+  public void test7() {
+
+  }
 }

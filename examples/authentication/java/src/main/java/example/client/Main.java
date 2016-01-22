@@ -24,23 +24,31 @@
 package example.client;
 
 import example.generated.*;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Main {
   public static void main(String[] args) throws InterruptedException {
     final AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8080);
-    List<DataWrapper> wrapperList = proxy.test();
-    System.out.println("size : " + wrapperList.get(0).getDigi().length);
+//    List<DataWrapper> wrapperList = proxy.test();
+//    System.out.println("size : " + wrapperList.get(0).getDigi().length);
+//    //
+//    List<StringWrapper> stringWrapperList = proxy.test2();
+//    System.out.println(" stringWrapperList size : " + stringWrapperList.get(0).getValue().length());
+//    //
+//    StringWrapper stringWrapper = proxy.test3();
+//    System.out.println("stringWrapper size : " + stringWrapper.getValue().length());
+//    //
+//    DataWrapper dataWrapper = proxy.test4();
+//    System.out.println("dataWrapper size : " + dataWrapper.getDigi().length);
     //
-    List<StringWrapper> stringWrapperList = proxy.test2();
-    System.out.println(" stringWrapperList size : " + stringWrapperList.get(0).getValue().length());
+    List<DataWrapper> dataWrapperList = new ArrayList<DataWrapper>();
+    dataWrapperList.add(new DataWrapper());
+    DataWrapper dataWrapper1 = proxy.test6(dataWrapperList);
+    System.out.println(Arrays.toString(dataWrapper1.getDigi()));
     //
-    StringWrapper stringWrapper = proxy.test3();
-    System.out.println("stringWrapper size : " + stringWrapper.getValue().length());
-    //
-    DataWrapper dataWrapper = proxy.test4();
-    System.out.println("dataWrapper size : " + dataWrapper.getDigi().length);
     AuthenticationServiceProxyBuilder.destroy();
   }
 }
