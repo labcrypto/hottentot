@@ -31,6 +31,8 @@ namespace naeem {
   namespace hottentot {
     namespace runtime {
       bool Configuration::verbose_ = false;
+      std::vector<std::string> Configuration::options_;
+      std::map<std::string, std::string> Configuration::values_;
       void 
       Configuration::Init(int argc,
                           char **argv) {
@@ -52,9 +54,20 @@ namespace naeem {
         }
       }
       bool 
-      Configuration::Has(std::string optionShortName, std::string optionCompleteName) {
+      Configuration::Exists(std::string optionShortName, std::string optionCompleteName) {
         for (uint32_t i = 0; i < options_.size(); i++) {
           if (options_[i] == optionShortName || options_[i] == optionCompleteName) {
+            return true;
+          }
+        }
+        return false;
+      }
+      bool
+      Configuration::HasValue(std::string optionShortName, std::string optionCompleteName) {
+        for (std::map<std::string, std::string>::iterator it = values_.begin();
+             it != values_.end();
+             it++) {
+          if (it->first == optionShortName || it->first == optionCompleteName) {
             return true;
           }
         }

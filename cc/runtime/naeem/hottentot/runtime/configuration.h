@@ -37,7 +37,8 @@ namespace naeem {
       class Configuration {
       public:
         static void Init(int argc, char **argv);
-        static bool Has(std::string optionShortName, std::string optionCompleteName = "");
+        static bool Exists(std::string optionShortName, std::string optionCompleteName = "");
+        static bool HasValue(std::string optionShortName, std::string optionCompleteName = "");
         static uint32_t AsUInt32(std::string optionShortName, std::string optionCompleteName);
         static std::string AsString(std::string optionShortName, std::string optionCompleteName);
         static bool Verbose() {
