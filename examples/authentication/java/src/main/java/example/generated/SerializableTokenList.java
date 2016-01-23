@@ -58,14 +58,13 @@ public class SerializableTokenList {
   public void deserialize(byte[] serializedTokenList) {
     if(serializedTokenList.length != 0){
       if (serializedTokenList.length != 0) {
-        int firstLengthByte = serializedTokenList[0];
-
         int counter = 0;
         int serializedTokenByteArrayLength = 0 ;
         while (true) {
           if (counter == serializedTokenList.length) {
             break;
           }
+          int firstLengthByte = serializedTokenList[counter];
           int numOfByteForLength = 1;
           if ((firstLengthByte & 0x80) == 0) {
             serializedTokenByteArrayLength = serializedTokenList[counter];
@@ -73,8 +72,9 @@ public class SerializableTokenList {
             counter++;
             numOfByteForLength = firstLengthByte & 0x0f;
             byte[] serializedTokenLengthByteArray = new byte[numOfByteForLength];
-            for (int i = 1; i <= numOfByteForLength; i++) {
-              serializedTokenLengthByteArray[i - 1] = serializedTokenList[i];
+            int serializedDataWrapperLengthByteArrayCounter = 0;
+            for (int i = counter; i < counter + numOfByteForLength; i++) {
+              serializedTokenLengthByteArray[serializedDataWrapperLengthByteArrayCounter++] = serializedTokenList[i];
             }
             serializedTokenByteArrayLength = ByteArrayToInteger.getInt(serializedTokenLengthByteArray);
           }

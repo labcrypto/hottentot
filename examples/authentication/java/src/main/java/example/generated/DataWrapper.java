@@ -12,7 +12,14 @@ import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
 public class DataWrapper {
+  private String value = "";
   private byte[] digi;
+  public void setValue(String value) {
+    this.value = value;
+  }
+  public String getValue() {
+    return value;
+  }
   public void setDigi(byte[] digi) {
     this.digi = digi;
   }
@@ -22,15 +29,20 @@ public class DataWrapper {
   @Override 
   public String toString() { 
     return "DataWrapper{" + 
-      "digi = '" + digi + '\'' + 
+      "value = '" + value + '\'' + 
+      ",digi = '" + digi + '\'' + 
       "}"; 
   }
 	
   public byte[] serialize() {
+    byte[] serializedValue = PDTSerializer.getString(value);
     byte[] serializedDigi = PDTSerializer.getData(digi);
-    byte[] output = new byte[serializedDigi.length];
+    byte[] output = new byte[serializedValue.length + serializedDigi.length];
     int counter = 0;
     //use a loop for every property
+    for (int i = 0; i < serializedValue.length; i++) {
+      output[counter++] = serializedValue[i];
+    }
     for (int i = 0; i < serializedDigi.length; i++) {
       output[counter++] = serializedDigi[i];
     }
@@ -42,6 +54,22 @@ public class DataWrapper {
     int dataLength = 0;
     int numbersOfBytesForDataLength;
     //do for every property
+    //value : String
+    dataLength = 0;
+    if(( serializedByteArray[counter] & 0x80) == 0 ) {
+      dataLength = serializedByteArray[counter++];
+    }else{
+      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
+    }
+    byte[] valueByteArray = new byte[dataLength];
+    System.arraycopy(serializedByteArray,counter,valueByteArray,0,dataLength);
+    counter += dataLength;
+    setValue(PDTDeserializer.getString(valueByteArray));
     //digi : byte[]
     dataLength = 0;
     if(( serializedByteArray[counter] & 0x80) == 0 ) {

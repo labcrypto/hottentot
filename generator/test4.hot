@@ -10,8 +10,8 @@ module example.generated{
   };
   
   struct DataWrapper{
-    data digi ord(1);
-    
+    string value ord(1);
+    data digi ord(2);
   };
 
   struct StringWrapper{
