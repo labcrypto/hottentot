@@ -51,6 +51,7 @@ compile:
 	g++ -c java/generate_request_handler_java.cc -o .lib/generate_request_handler_java.o
 	g++ -c java/generate_service_proxy_builder_java.cc -o .lib/generate_service_proxy_builder_java.o
 	g++ -c java/generate_service_proxy_java.cc -o .lib/generate_service_proxy_java.o
+	g++ -c java/generate_serializable_struct_list_java.cc -o .lib/generate_serializable_struct_list_java.o
 	g++ -c dep/fasthash.cc -o .lib/fasthash.o
 	g++ -c ds/service.cc -o .lib/service.o
 	g++ -c ds/method.cc -o .lib/method.o
@@ -78,6 +79,7 @@ compile:
 	    .lib/generate_request_handler_java.o \
 	    .lib/generate_service_proxy_builder_java.o \
 	    .lib/generate_service_proxy_java.o \
+	    .lib/generate_serializable_struct_list_java.o \
 	    .lib/fasthash.o \
 	    .lib/service.o \
 	    .lib/method.o \
@@ -85,7 +87,8 @@ compile:
 
 java: compile
 	 #./hot --java --out ../examples/authentication/java/src/main/java/example/generated test3.hot
-	 #./hot --java --out /home/developer/Desktop/gen test3.hot
-	 ./hot --java --out /home/developer/projects/kawthar-a3-service/CAS/server/src/main/java/generated a3.hot
+	  ./hot --java --out ../examples/authentication/java/src/main/java/example/generated test4.hot
+	# ./hot --java --out /mnt/nfs/home/asharifi/work/projects/kawthar-consular-qs/src/prj/src/main/java/ir/ntnaeem/kawthar/consular/qs/hotgen test4.hot
+	 #./hot --java --out /home/developer/projects/kawthar-a3-service/CAS/server/src/main/java/generated a3.hot
 cc: compile
 	./hot --cc --indent-with-spaces --number-of-spaces-used-for-indentation 2 --out gen --makefile --client --stub test2.hot

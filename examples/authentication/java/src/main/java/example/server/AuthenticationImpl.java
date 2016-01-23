@@ -23,17 +23,91 @@
 
 package example.server;
 
-import example.generated.AbstractAuthenticationService;
-import example.generated.Credential;
-import example.generated.Token;
+
+import example.generated.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AuthenticationImpl extends AbstractAuthenticationService {
-    public Token authenticate(Credential credential){
-        Token token = new Token();
-        token.setValue("uu-token");
-        token.setSampleData(new byte[]{2,2,3});
-        return token;
+
+  public List<Token> auth(Credential credential) {
+    return null;
+  }
+
+  public List<DataWrapper> test() {
+
+    byte[] data = new byte[100000];
+    for(int i = 0 ; i < 10000; i++){
+      data[i] = (byte)i;
+    }
+    DataWrapper dataWrapper = new DataWrapper();
+    dataWrapper.setDigi(data);
+    dataWrapper.setValue("ali");
+    //
+    byte[] data2 = new byte[100000];
+    for(int i = 0 ; i < 100000 ; i++){
+      data2[i] = (byte)i;
+    }
+    //byte[] data2 = new byte[]{1};
+    DataWrapper dataWrapper2 = new DataWrapper();
+    dataWrapper2.setValue("b");
+    dataWrapper2.setDigi(data2);
+    //
+    List<DataWrapper> dataWrapperList = new ArrayList<DataWrapper>();
+    //
+    dataWrapperList.add(dataWrapper2);
+    dataWrapperList.add(dataWrapper);
+    return dataWrapperList;
+  }
+
+  public List<StringWrapper> test2() {
+    StringWrapper stringWrapper = new StringWrapper();
+    String str = "";
+    for(int i = 0 ; i < 100000 ; i++){
+      str += "a";
+    }
+    stringWrapper.setValue(str);
+
+    List<StringWrapper> stringWrapperList = new ArrayList<StringWrapper>();
+    stringWrapperList.add(stringWrapper);
+    return stringWrapperList;
+  }
+
+  public StringWrapper test3() {
+    StringWrapper stringWrapper = new StringWrapper();
+    String str = "";
+    for(int i = 0 ; i < 100000 ; i++){
+      str += "a";
     }
 
+    stringWrapper.setValue(str);
+    return stringWrapper;
+  }
 
+  public DataWrapper test4() {
+    DataWrapper dataWrapper = new DataWrapper();
+    byte[] data = new byte[100000];
+    for(int i = 0 ; i < 100000 ; i++){
+      data[i] = (byte)i;
+    }
+    dataWrapper.setDigi(data);
+    return dataWrapper;
+  }
+
+  public DataWrapper test5(List<StringWrapper> inputList) {
+    DataWrapper dataWrapper = new DataWrapper();
+    if(inputList.size() == 10){
+      dataWrapper.setDigi(new byte[]{1});
+    }
+    return dataWrapper;
+  }
+
+  public DataWrapper test6(List<DataWrapper> inputs) {
+    return null;
+  }
+
+  public void test7() {
+
+  }
 }

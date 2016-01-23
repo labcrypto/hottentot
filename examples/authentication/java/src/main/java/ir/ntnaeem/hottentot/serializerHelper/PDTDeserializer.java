@@ -32,10 +32,8 @@ public class PDTDeserializer {
 
   public static void main(String[] args) {
     String string = getString(new byte[]{97 , 98 , 99});
-    System.out.println(string);
     String str = "س";
     byte[] bytes = str.getBytes();
-    System.out.println(Arrays.toString(bytes));
   }
 
   public static String getFullString(byte[] bytes) {

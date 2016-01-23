@@ -11,40 +11,40 @@ import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
-public class Token {
+public class DataWrapper {
   private String value = "";
-  private int id;
+  private byte[] digi;
   public void setValue(String value) {
     this.value = value;
   }
   public String getValue() {
     return value;
   }
-  public void setId(int id) {
-    this.id = id;
+  public void setDigi(byte[] digi) {
+    this.digi = digi;
   }
-  public int getId() {
-    return id;
+  public byte[] getDigi() {
+    return digi;
   }
   @Override 
   public String toString() { 
-    return "Token{" + 
+    return "DataWrapper{" + 
       "value = '" + value + '\'' + 
-      ",id = '" + id + '\'' + 
+      ",digi = '" + digi + '\'' + 
       "}"; 
   }
 	
   public byte[] serialize() {
     byte[] serializedValue = PDTSerializer.getString(value);
-    byte[] serializedId = PDTSerializer.getInt32(id);
-    byte[] output = new byte[serializedValue.length + serializedId.length];
+    byte[] serializedDigi = PDTSerializer.getData(digi);
+    byte[] output = new byte[serializedValue.length + serializedDigi.length];
     int counter = 0;
     //use a loop for every property
     for (int i = 0; i < serializedValue.length; i++) {
       output[counter++] = serializedValue[i];
     }
-    for (int i = 0; i < serializedId.length; i++) {
-      output[counter++] = serializedId[i];
+    for (int i = 0; i < serializedDigi.length; i++) {
+      output[counter++] = serializedDigi[i];
     }
     return output;
   }
@@ -70,12 +70,22 @@ public class Token {
     System.arraycopy(serializedByteArray,counter,valueByteArray,0,dataLength);
     counter += dataLength;
     setValue(PDTDeserializer.getString(valueByteArray));
-    //id : int
-    byte[] idByteArray = new byte[4];
-    for(int i = 0 ; i < 4 ; i++){
-      idByteArray[i] = serializedByteArray[counter++];
+    //digi : byte[]
+    dataLength = 0;
+    if(( serializedByteArray[counter] & 0x80) == 0 ) {
+      dataLength = serializedByteArray[counter++];
+    }else{
+      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
     }
-    setId(PDTDeserializer.getInt32(idByteArray));
+    byte[] digiByteArray = new byte[dataLength];
+    System.arraycopy(serializedByteArray,counter,digiByteArray,0,dataLength);
+    counter += dataLength;
+    setDigi(digiByteArray);
 
   }
 }

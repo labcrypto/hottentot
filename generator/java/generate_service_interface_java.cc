@@ -28,12 +28,28 @@ namespace naeem {
             ::naeem::hottentot::generator::ds::Method *pMethod;
             for (int i = 0; i < pService->methods_.size(); i++) {
               pMethod = pService->methods_.at(i);
-              serviceMethodsStr += indent_ + "" + pMethod->returnType_ + " " + pMethod->name_ + "(";    
+              std::string fetchedReturnTypeOfList;
+              std::string lowerCaseFetchedReturnTypeOfList;
+              std::string returnType = pMethod->returnType_;
+              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+                fetchedReturnTypeOfList = ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
+                lowerCaseFetchedReturnTypeOfList = ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(fetchedReturnTypeOfList);
+                returnType = "List<" + fetchedReturnTypeOfList + ">";
+              }
+
+              serviceMethodsStr += indent_ + "" + returnType + " " + pMethod->name_ + "(";    
               //loop on methods arguments
               ::naeem::hottentot::generator::ds::Argument *pArg;
               for (int i = 0; i < pMethod->arguments_.size(); i++) {
                 pArg = pMethod->arguments_.at(i);
-                serviceMethodsStr += pArg->type_ + " " + pArg->variable_;    
+                if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)){
+                  std::string fetchedArgTypeOfList = 
+                    ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
+                  serviceMethodsStr += "List<" + fetchedArgTypeOfList + "> " + pArg->variable_;    
+                }else{
+                  serviceMethodsStr += pArg->type_ + " " + pArg->variable_;    
+                }
+                
                 if (i < pMethod->arguments_.size() - 1) {
                   serviceMethodsStr += ",";
                 }
@@ -44,8 +60,6 @@ namespace naeem {
             std::string path = outDir_ + "/" + pService->name_.c_str() + "Service.java";
             ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableServiceTmpStr);
           }
-          
-          
         }
 
       } //END NAMESPACE JAVA

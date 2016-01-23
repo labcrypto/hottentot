@@ -1,0 +1,30 @@
+module example.generated{
+  struct Token{
+    string value ord(1);
+    uint32 id ord(2);
+  };
+
+  struct Credential{
+    string username ord(1);
+    string password ord(2);
+  };
+  
+  struct DataWrapper{
+    string value ord(1);
+    data digi ord(2);
+  };
+
+  struct StringWrapper{
+    string value ord(1);
+  };
+
+  stateless service Authentication{
+    list<Token> auth(Credential credential);
+    list<DataWrapper> test();
+    list<StringWrapper> test2();
+    StringWrapper test3();
+    DataWrapper test4();
+    DataWrapper test5(list<StringWrapper> inputList);
+    DataWrapper test6(list<DataWrapper> inputs);
+  };  
+};

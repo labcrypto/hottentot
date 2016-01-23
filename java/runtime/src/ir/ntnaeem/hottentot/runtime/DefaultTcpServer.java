@@ -88,7 +88,6 @@ public class DefaultTcpServer implements TcpServer {
         protocol.setRequestCallback(requestCallback);
         protocol.setResponseCallback(this);
         if (numReadBytes < 256) {
-
           try {
             readDataChunk = Arrays.copyOf(buffer, numReadBytes);
             protocol.processDataForRequest(readDataChunk);

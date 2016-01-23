@@ -11,40 +11,28 @@ import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
-public class Token {
+public class StringWrapper {
   private String value = "";
-  private int id;
   public void setValue(String value) {
     this.value = value;
   }
   public String getValue() {
     return value;
   }
-  public void setId(int id) {
-    this.id = id;
-  }
-  public int getId() {
-    return id;
-  }
   @Override 
   public String toString() { 
-    return "Token{" + 
+    return "StringWrapper{" + 
       "value = '" + value + '\'' + 
-      ",id = '" + id + '\'' + 
       "}"; 
   }
 	
   public byte[] serialize() {
     byte[] serializedValue = PDTSerializer.getString(value);
-    byte[] serializedId = PDTSerializer.getInt32(id);
-    byte[] output = new byte[serializedValue.length + serializedId.length];
+    byte[] output = new byte[serializedValue.length];
     int counter = 0;
     //use a loop for every property
     for (int i = 0; i < serializedValue.length; i++) {
       output[counter++] = serializedValue[i];
-    }
-    for (int i = 0; i < serializedId.length; i++) {
-      output[counter++] = serializedId[i];
     }
     return output;
   }
@@ -70,12 +58,6 @@ public class Token {
     System.arraycopy(serializedByteArray,counter,valueByteArray,0,dataLength);
     counter += dataLength;
     setValue(PDTDeserializer.getString(valueByteArray));
-    //id : int
-    byte[] idByteArray = new byte[4];
-    for(int i = 0 ; i < 4 ; i++){
-      idByteArray[i] = serializedByteArray[counter++];
-    }
-    setId(PDTDeserializer.getInt32(idByteArray));
 
   }
 }

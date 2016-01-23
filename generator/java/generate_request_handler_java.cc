@@ -31,6 +31,12 @@ namespace naeem {
               pMethod = pService->methods_.at(i);
               std::string lowerCaseReturnType = pMethod->returnType_;
               lowerCaseReturnType[0] += 32;
+              std::string fetchedReturnTypeOfList;
+              std::string lowerCaseFetchedReturnTypeOfList;
+              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+                fetchedReturnTypeOfList = ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
+                lowerCaseFetchedReturnTypeOfList = ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(fetchedReturnTypeOfList);
+              }
               //get hashed mehod id
               std::stringstream ssID;
               ssID << pMethod->GetHash();
@@ -41,7 +47,6 @@ namespace naeem {
               ::naeem::hottentot::generator::ds::Argument *pArg;
               for (int i = 0; i < pMethod->arguments_.size(); i++) {
                 pArg = pMethod->arguments_.at(i);
-                
                 //
                 std::stringstream ssI;
                 ssI << i;
@@ -52,7 +57,25 @@ namespace naeem {
                 methodConditionStr += indent_ + indent_ + indent_ +
                                       "byte[] serialized" + capitalizedArgVar;
                 methodConditionStr += " = arg" + ssI.str() + ".getData();\n";
-                if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)){
+
+                if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)){
+                  std::string fetchedArgTypeOfList = 
+                  ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
+                  methodConditionStr += indent_ + indent_ + indent_ + 
+                                        "Serializable" + fetchedArgTypeOfList + "List " +
+                                        "serializable" + fetchedArgTypeOfList + "List = " +  
+                                        "new Serializable" + fetchedArgTypeOfList + "List();\n";
+
+// serializableTokenList.deserialize(serializedTokens);
+                  methodConditionStr += indent_ + indent_ + indent_ + 
+                                        "serializable" + fetchedArgTypeOfList + "List." + 
+                                        "deserialize( serialized" + capitalizedArgVar + ");\n";
+                  methodConditionStr += indent_ + indent_ + indent_ + 
+                                        "List<" + fetchedArgTypeOfList + "> " +  pArg->variable_ + " = " + 
+                                        "serializable" + fetchedArgTypeOfList + "List." +
+                                        "get" + fetchedArgTypeOfList + "List();\n"; 
+                }
+                else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)){
                   methodConditionStr += indent_ + indent_ + indent_ +
                                         pArg->type_ + " " + pArg->variable_ +
                                         " = new " + pArg->type_ + "();\n";
@@ -78,12 +101,26 @@ namespace naeem {
                 }
 
               }
-              if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
+              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+                methodConditionStr += indent_ + indent_ + indent_ +
+                                      "Serializable" + fetchedReturnTypeOfList + "List" + " " +
+                                      "serializable" + fetchedReturnTypeOfList + "List = " +
+                                      "new Serializable" + fetchedReturnTypeOfList + "List();\n";
+              } else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +
                 pMethod->returnType_ + " " + lowerCaseReturnType + " = null;\n"; 
               }
               methodConditionStr += indent_ + indent_ + indent_ + "Response response = new Response();\n";
-              if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
+              
+              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+          
+                methodConditionStr += indent_ + indent_ + indent_ +
+                                      "List<" + fetchedReturnTypeOfList + ">" + " " +   
+                                      lowerCaseFetchedReturnTypeOfList + "List = " + 
+                                      lowerCaseServiceName +
+                                      "Impl." + pMethod->name_ + "(";
+     
+              }else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +
                                     lowerCaseReturnType + " = " + lowerCaseServiceName +
                                     "Impl." + pMethod->name_ + "(";
@@ -105,8 +142,19 @@ namespace naeem {
                 }
               }
               methodConditionStr += ");\n";
+              
+              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+                
+                methodConditionStr += indent_ + indent_ + indent_ +
+                                      "serializable" + fetchedReturnTypeOfList + "List." + 
+                                      "set" + fetchedReturnTypeOfList + "List(" + 
+                                      lowerCaseFetchedReturnTypeOfList + "List);\n";
+                methodConditionStr +=
+                indent_ + indent_ + indent_ + "byte[] serialized" + fetchedReturnTypeOfList + "List = " +
+                "serializable" + fetchedReturnTypeOfList + "List.serialize();\n"; 
 
-              if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
+                
+              }else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
                 methodConditionStr +=
                 indent_ + indent_ + indent_ + "byte[] serialized" + pMethod->returnType_ + " = " +
                 lowerCaseReturnType + ".serialize();\n";    
@@ -120,7 +168,15 @@ namespace naeem {
                                       "( result );\n";
               }
               methodConditionStr += indent_ + indent_ + indent_ + "response.setStatusCode((byte) 100);\n";
-              if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
+              
+              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+                methodConditionStr += indent_ + indent_ + indent_ +
+                                      "response.setData(serialized" + fetchedReturnTypeOfList +
+                                      "List);\n";
+                methodConditionStr += indent_ + indent_ + indent_ +
+                                      "response.setLength(serialized" + 
+                                      fetchedReturnTypeOfList + "List.length + 1);\n";  
+              }else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +
                                       "response.setData(serialized" + pMethod->returnType_ + ");\n";
                 methodConditionStr += indent_ + indent_ + indent_ +
