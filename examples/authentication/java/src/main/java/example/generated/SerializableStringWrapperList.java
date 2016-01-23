@@ -58,14 +58,13 @@ public class SerializableStringWrapperList {
   public void deserialize(byte[] serializedStringWrapperList) {
     if(serializedStringWrapperList.length != 0){
       if (serializedStringWrapperList.length != 0) {
-        int firstLengthByte = serializedStringWrapperList[0];
-
         int counter = 0;
         int serializedStringWrapperByteArrayLength = 0 ;
         while (true) {
           if (counter == serializedStringWrapperList.length) {
             break;
           }
+          int firstLengthByte = serializedStringWrapperList[counter];
           int numOfByteForLength = 1;
           if ((firstLengthByte & 0x80) == 0) {
             serializedStringWrapperByteArrayLength = serializedStringWrapperList[counter];
@@ -73,8 +72,9 @@ public class SerializableStringWrapperList {
             counter++;
             numOfByteForLength = firstLengthByte & 0x0f;
             byte[] serializedStringWrapperLengthByteArray = new byte[numOfByteForLength];
-            for (int i = 1; i <= numOfByteForLength; i++) {
-              serializedStringWrapperLengthByteArray[i - 1] = serializedStringWrapperList[i];
+            int serializedDataWrapperLengthByteArrayCounter = 0;
+            for (int i = counter; i < counter + numOfByteForLength; i++) {
+              serializedStringWrapperLengthByteArray[serializedDataWrapperLengthByteArrayCounter++] = serializedStringWrapperList[i];
             }
             serializedStringWrapperByteArrayLength = ByteArrayToInteger.getInt(serializedStringWrapperLengthByteArray);
           }

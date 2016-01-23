@@ -58,14 +58,13 @@ public class Serializable[%STRUCT_NAME%]List {
   public void deserialize(byte[] serialized[%STRUCT_NAME%]List) {
     if(serialized[%STRUCT_NAME%]List.length != 0){
       if (serialized[%STRUCT_NAME%]List.length != 0) {
-        int firstLengthByte = serialized[%STRUCT_NAME%]List[0];
-
         int counter = 0;
         int serialized[%STRUCT_NAME%]ByteArrayLength = 0 ;
         while (true) {
           if (counter == serialized[%STRUCT_NAME%]List.length) {
             break;
           }
+          int firstLengthByte = serialized[%STRUCT_NAME%]List[counter];
           int numOfByteForLength = 1;
           if ((firstLengthByte & 0x80) == 0) {
             serialized[%STRUCT_NAME%]ByteArrayLength = serialized[%STRUCT_NAME%]List[counter];
@@ -73,8 +72,9 @@ public class Serializable[%STRUCT_NAME%]List {
             counter++;
             numOfByteForLength = firstLengthByte & 0x0f;
             byte[] serialized[%STRUCT_NAME%]LengthByteArray = new byte[numOfByteForLength];
-            for (int i = 1; i <= numOfByteForLength; i++) {
-              serialized[%STRUCT_NAME%]LengthByteArray[i - 1] = serialized[%STRUCT_NAME%]List[i];
+            int serializedDataWrapperLengthByteArrayCounter = 0;
+            for (int i = counter; i < counter + numOfByteForLength; i++) {
+              serialized[%STRUCT_NAME%]LengthByteArray[serializedDataWrapperLengthByteArrayCounter++] = serialized[%STRUCT_NAME%]List[i];
             }
             serialized[%STRUCT_NAME%]ByteArrayLength = ByteArrayToInteger.getInt(serialized[%STRUCT_NAME%]LengthByteArray);
           }

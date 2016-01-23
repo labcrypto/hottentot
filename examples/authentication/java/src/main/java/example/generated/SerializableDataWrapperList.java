@@ -58,14 +58,13 @@ public class SerializableDataWrapperList {
   public void deserialize(byte[] serializedDataWrapperList) {
     if(serializedDataWrapperList.length != 0){
       if (serializedDataWrapperList.length != 0) {
-        int firstLengthByte = serializedDataWrapperList[0];
-
         int counter = 0;
         int serializedDataWrapperByteArrayLength = 0 ;
         while (true) {
           if (counter == serializedDataWrapperList.length) {
             break;
           }
+          int firstLengthByte = serializedDataWrapperList[counter];
           int numOfByteForLength = 1;
           if ((firstLengthByte & 0x80) == 0) {
             serializedDataWrapperByteArrayLength = serializedDataWrapperList[counter];
@@ -73,8 +72,9 @@ public class SerializableDataWrapperList {
             counter++;
             numOfByteForLength = firstLengthByte & 0x0f;
             byte[] serializedDataWrapperLengthByteArray = new byte[numOfByteForLength];
-            for (int i = 1; i <= numOfByteForLength; i++) {
-              serializedDataWrapperLengthByteArray[i - 1] = serializedDataWrapperList[i];
+            int serializedDataWrapperLengthByteArrayCounter = 0;
+            for (int i = counter; i < counter + numOfByteForLength; i++) {
+              serializedDataWrapperLengthByteArray[serializedDataWrapperLengthByteArrayCounter++] = serializedDataWrapperList[i];
             }
             serializedDataWrapperByteArrayLength = ByteArrayToInteger.getInt(serializedDataWrapperLengthByteArray);
           }
