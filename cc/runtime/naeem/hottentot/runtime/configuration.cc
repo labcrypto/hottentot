@@ -21,6 +21,7 @@
  *  SOFTWARE.
  */
  
+#include <stdlib.h>
 #include <string.h>
 
 #include "configuration.h"
@@ -34,12 +35,52 @@ namespace naeem {
       Configuration::Init(int argc,
                           char **argv) {
         for (unsigned short i = 0; i < argc; i++) {
+          if (strncmp(argv[i], "--", 2) == 0) {
+            options_.push_back(argv[i] + 2);
+          } else if (strncmp(argv[i], "-", 1) == 0) {
+            options_.push_back(argv[i] + 1);
+          } else {
+            if (options_.size() > 0) {
+              values_.insert(std::pair<std::string, std::string>(options_[options_.size() - 1], argv[i]));
+            }
+          }
           if (strncmp(argv[i], "-v", 2) == 0) {
             verbose_ = true;
           } else if (strncmp(argv[i], "--verbose", 9) == 0) {
             verbose_ = true;
           }
         }
+      }
+      bool 
+      Configuration::Has(std::string optionShortName, std::string optionCompleteName) {
+        for (uint32_t i = 0; i < options_.size(); i++) {
+          if (options_[i] == optionShortName || options_[i] == optionCompleteName) {
+            return true;
+          }
+        }
+        return false;
+      }
+      uint32_t 
+      Configuration::AsUInt32(std::string optionShortName, std::string optionCompleteName) {
+        for (std::map<std::string, std::string>::iterator it = values_.begin();
+             it != values_.end();
+             it++) {
+          if (it->first == optionShortName || it->first == optionCompleteName) {
+            return atol(it->second.c_str());
+          }
+        }
+        return 0;
+      }
+      std::string 
+      Configuration::AsString(std::string optionShortName, std::string optionCompleteName) {
+        for (std::map<std::string, std::string>::iterator it = values_.begin();
+             it != values_.end();
+             it++) {
+          if (it->first == optionShortName || it->first == optionCompleteName) {
+            return it->second.c_str();
+          }
+        }
+        return "";
       }
     }
   }

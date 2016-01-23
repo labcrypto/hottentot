@@ -57,6 +57,7 @@ namespace naeem {
           } else {
             services_.find(endpoint)->second->push_back(service);
           }
+          service->OnInit();
           if (requestHandlers_.count(endpoint) == 0) {
             std::map<uint8_t, RequestHandler*> *m = new std::map<uint8_t, RequestHandler*>();
             m->insert(std::pair<uint8_t, RequestHandler*>(service->GetServiceId(), service->GetRequestHandler()));
