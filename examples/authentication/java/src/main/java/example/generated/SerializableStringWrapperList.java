@@ -70,6 +70,7 @@ public class SerializableStringWrapperList {
           if ((firstLengthByte & 0x80) == 0) {
             serializedStringWrapperByteArrayLength = serializedStringWrapperList[counter];
           } else {
+            counter++;
             numOfByteForLength = firstLengthByte & 0x0f;
             byte[] serializedStringWrapperLengthByteArray = new byte[numOfByteForLength];
             for (int i = 1; i <= numOfByteForLength; i++) {
@@ -77,7 +78,7 @@ public class SerializableStringWrapperList {
             }
             serializedStringWrapperByteArrayLength = ByteArrayToInteger.getInt(serializedStringWrapperLengthByteArray);
           }
-          counter += numOfByteForLength + 1;
+          counter += numOfByteForLength;
           byte[] stringWrapperByteArray = new byte[serializedStringWrapperByteArrayLength];
           int stringWrapperByteArrayCounter = 0;
           for (int i = counter; i < counter + serializedStringWrapperByteArrayLength; i++) {

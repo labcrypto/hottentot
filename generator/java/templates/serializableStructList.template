@@ -70,6 +70,7 @@ public class Serializable[%STRUCT_NAME%]List {
           if ((firstLengthByte & 0x80) == 0) {
             serialized[%STRUCT_NAME%]ByteArrayLength = serialized[%STRUCT_NAME%]List[counter];
           } else {
+            counter++;
             numOfByteForLength = firstLengthByte & 0x0f;
             byte[] serialized[%STRUCT_NAME%]LengthByteArray = new byte[numOfByteForLength];
             for (int i = 1; i <= numOfByteForLength; i++) {
@@ -77,7 +78,7 @@ public class Serializable[%STRUCT_NAME%]List {
             }
             serialized[%STRUCT_NAME%]ByteArrayLength = ByteArrayToInteger.getInt(serialized[%STRUCT_NAME%]LengthByteArray);
           }
-          counter += numOfByteForLength + 1;
+          counter += numOfByteForLength;
           byte[] [%LOWER_CASE_STRUCT_NAME%]ByteArray = new byte[serialized[%STRUCT_NAME%]ByteArrayLength];
           int [%LOWER_CASE_STRUCT_NAME%]ByteArrayCounter = 0;
           for (int i = counter; i < counter + serialized[%STRUCT_NAME%]ByteArrayLength; i++) {

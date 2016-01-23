@@ -417,10 +417,10 @@ byte[] serializedInputList = serializableStringWrapperList.serialize();
   }
   public DataWrapper test6(List<DataWrapper> inputs) { 
     //serialize inputs
-      System.out.println(inputs.size());
     SerializableDataWrapperList serializableDataWrapperList = new SerializableDataWrapperList();
-    serializableDataWrapperList.setDataWrapperList(inputs);
-    byte[] serializedInputs = serializableDataWrapperList.serialize();
+serializableDataWrapperList.setDataWrapperList(inputs);
+byte[] serializedInputs = serializableDataWrapperList.serialize();
+
     //make request
     Request request = new Request();
     request.setServiceId(2072454237L);
