@@ -29,7 +29,6 @@ public class SerializableDataWrapperList {
   }
 
   public byte[] serialize() {
-    System.out.println(dataWrapperList.get(0).getDigi().length);
     if (dataWrapperList.size() != 0) {
       int counter = 0;
       int dataLength = 0;
@@ -71,6 +70,7 @@ public class SerializableDataWrapperList {
           if ((firstLengthByte & 0x80) == 0) {
             serializedDataWrapperByteArrayLength = serializedDataWrapperList[counter];
           } else {
+            counter++;
             numOfByteForLength = firstLengthByte & 0x0f;
             byte[] serializedDataWrapperLengthByteArray = new byte[numOfByteForLength];
             for (int i = 1; i <= numOfByteForLength; i++) {
@@ -78,7 +78,7 @@ public class SerializableDataWrapperList {
             }
             serializedDataWrapperByteArrayLength = ByteArrayToInteger.getInt(serializedDataWrapperLengthByteArray);
           }
-          counter += numOfByteForLength + 1;
+          counter += numOfByteForLength;
           byte[] dataWrapperByteArray = new byte[serializedDataWrapperByteArrayLength];
           int dataWrapperByteArrayCounter = 0;
           for (int i = counter; i < counter + serializedDataWrapperByteArrayLength; i++) {

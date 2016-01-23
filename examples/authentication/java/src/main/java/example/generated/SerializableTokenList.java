@@ -70,6 +70,7 @@ public class SerializableTokenList {
           if ((firstLengthByte & 0x80) == 0) {
             serializedTokenByteArrayLength = serializedTokenList[counter];
           } else {
+            counter++;
             numOfByteForLength = firstLengthByte & 0x0f;
             byte[] serializedTokenLengthByteArray = new byte[numOfByteForLength];
             for (int i = 1; i <= numOfByteForLength; i++) {
@@ -77,7 +78,7 @@ public class SerializableTokenList {
             }
             serializedTokenByteArrayLength = ByteArrayToInteger.getInt(serializedTokenLengthByteArray);
           }
-          counter += numOfByteForLength + 1;
+          counter += numOfByteForLength;
           byte[] tokenByteArray = new byte[serializedTokenByteArrayLength];
           int tokenByteArrayCounter = 0;
           for (int i = counter; i < counter + serializedTokenByteArrayLength; i++) {
