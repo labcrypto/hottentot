@@ -37,26 +37,27 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
 
   public List<DataWrapper> test() {
 
-    byte[] data = new byte[100000];
-    for(int i = 0 ; i < 10000; i++){
-      data[i] = (byte)i;
-    }
-    DataWrapper dataWrapper = new DataWrapper();
-    dataWrapper.setDigi(data);
-    dataWrapper.setValue("ali");
-    //
-    byte[] data2 = new byte[100000];
-    for(int i = 0 ; i < 100000 ; i++){
-      data2[i] = (byte)i;
-    }
-    //byte[] data2 = new byte[]{1};
-    DataWrapper dataWrapper2 = new DataWrapper();
-    dataWrapper2.setValue("b");
-    dataWrapper2.setDigi(data2);
+//    byte[] data = new byte[100000];
+//    for(int i = 0 ; i < 10000; i++){
+//      data[i] = (byte)i;
+//    }
+//    DataWrapper dataWrapper = new DataWrapper();
+//    dataWrapper.setDigi(data);
+//    dataWrapper.setValue("ali");
+//    //
+//    byte[] data2 = new byte[100000];
+//    for(int i = 0 ; i < 100000 ; i++){
+//      data2[i] = (byte)i;
+//    }
+//    //byte[] data2 = new byte[]{1};
+//    DataWrapper dataWrapper2 = new DataWrapper();
+//    dataWrapper2.setValue("b");
+//    dataWrapper2.setDigi(data2);
     //
     List<DataWrapper> dataWrapperList = new ArrayList<DataWrapper>();
     //
-    dataWrapperList.add(dataWrapper2);
+    DataWrapper dataWrapper = new DataWrapper();
+    //dataWrapperList.add(dataWrapper2);
     dataWrapperList.add(dataWrapper);
     return dataWrapperList;
   }
@@ -87,11 +88,7 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
 
   public DataWrapper test4() {
     DataWrapper dataWrapper = new DataWrapper();
-    byte[] data = new byte[100000];
-    for(int i = 0 ; i < 100000 ; i++){
-      data[i] = (byte)i;
-    }
-    dataWrapper.setDigi(data);
+    //dataWrapper.setDigi(data);
     return dataWrapper;
   }
 
