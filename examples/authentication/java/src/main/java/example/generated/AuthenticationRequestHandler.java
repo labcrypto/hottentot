@@ -38,8 +38,13 @@ public class AuthenticationRequestHandler extends RequestHandler {
       SerializableTokenList serializableTokenList = new SerializableTokenList();
       Response response = new Response();
       List<Token> tokenList = authenticationImpl.auth(credential);
-      serializableTokenList.setTokenList(tokenList);
-      byte[] serializedTokenList = serializableTokenList.serialize();
+      byte[] serializedTokenList;
+      if(tokenList == null){
+        serializedTokenList  = new byte[0];
+      }else{
+        serializableTokenList.setTokenList(tokenList);
+        serializedTokenList = serializableTokenList.serialize();
+      }
       response.setStatusCode((byte) 100);
       response.setData(serializedTokenList);
       response.setLength(serializedTokenList.length + 1);
@@ -50,8 +55,13 @@ public class AuthenticationRequestHandler extends RequestHandler {
       SerializableDataWrapperList serializableDataWrapperList = new SerializableDataWrapperList();
       Response response = new Response();
       List<DataWrapper> datawrapperList = authenticationImpl.test();
-      serializableDataWrapperList.setDataWrapperList(datawrapperList);
-      byte[] serializedDataWrapperList = serializableDataWrapperList.serialize();
+      byte[] serializedDataWrapperList;
+      if(datawrapperList == null){
+        serializedDataWrapperList  = new byte[0];
+      }else{
+        serializableDataWrapperList.setDataWrapperList(datawrapperList);
+        serializedDataWrapperList = serializableDataWrapperList.serialize();
+      }
       response.setStatusCode((byte) 100);
       response.setData(serializedDataWrapperList);
       response.setLength(serializedDataWrapperList.length + 1);
@@ -62,8 +72,13 @@ public class AuthenticationRequestHandler extends RequestHandler {
       SerializableStringWrapperList serializableStringWrapperList = new SerializableStringWrapperList();
       Response response = new Response();
       List<StringWrapper> stringwrapperList = authenticationImpl.test2();
-      serializableStringWrapperList.setStringWrapperList(stringwrapperList);
-      byte[] serializedStringWrapperList = serializableStringWrapperList.serialize();
+      byte[] serializedStringWrapperList;
+      if(stringwrapperList == null){
+        serializedStringWrapperList  = new byte[0];
+      }else{
+        serializableStringWrapperList.setStringWrapperList(stringwrapperList);
+        serializedStringWrapperList = serializableStringWrapperList.serialize();
+      }
       response.setStatusCode((byte) 100);
       response.setData(serializedStringWrapperList);
       response.setLength(serializedStringWrapperList.length + 1);
@@ -74,7 +89,12 @@ public class AuthenticationRequestHandler extends RequestHandler {
       StringWrapper stringWrapper = null;
       Response response = new Response();
       stringWrapper = authenticationImpl.test3();
-      byte[] serializedStringWrapper = stringWrapper.serialize();
+      byte[] serializedStringWrapper;
+      if(stringWrapper == null){
+        serializedStringWrapper  = new byte[0];
+      }else{
+      serializedStringWrapper = stringWrapper.serialize();
+      }
       response.setStatusCode((byte) 100);
       response.setData(serializedStringWrapper);
       response.setLength(serializedStringWrapper.length + 1);
@@ -85,7 +105,12 @@ public class AuthenticationRequestHandler extends RequestHandler {
       DataWrapper dataWrapper = null;
       Response response = new Response();
       dataWrapper = authenticationImpl.test4();
-      byte[] serializedDataWrapper = dataWrapper.serialize();
+      byte[] serializedDataWrapper;
+      if(dataWrapper == null){
+        serializedDataWrapper  = new byte[0];
+      }else{
+      serializedDataWrapper = dataWrapper.serialize();
+      }
       response.setStatusCode((byte) 100);
       response.setData(serializedDataWrapper);
       response.setLength(serializedDataWrapper.length + 1);
@@ -101,7 +126,12 @@ public class AuthenticationRequestHandler extends RequestHandler {
       DataWrapper dataWrapper = null;
       Response response = new Response();
       dataWrapper = authenticationImpl.test5(inputList);
-      byte[] serializedDataWrapper = dataWrapper.serialize();
+      byte[] serializedDataWrapper;
+      if(dataWrapper == null){
+        serializedDataWrapper  = new byte[0];
+      }else{
+      serializedDataWrapper = dataWrapper.serialize();
+      }
       response.setStatusCode((byte) 100);
       response.setData(serializedDataWrapper);
       response.setLength(serializedDataWrapper.length + 1);
@@ -117,7 +147,12 @@ public class AuthenticationRequestHandler extends RequestHandler {
       DataWrapper dataWrapper = null;
       Response response = new Response();
       dataWrapper = authenticationImpl.test6(inputs);
-      byte[] serializedDataWrapper = dataWrapper.serialize();
+      byte[] serializedDataWrapper;
+      if(dataWrapper == null){
+        serializedDataWrapper  = new byte[0];
+      }else{
+      serializedDataWrapper = dataWrapper.serialize();
+      }
       response.setStatusCode((byte) 100);
       response.setData(serializedDataWrapper);
       response.setLength(serializedDataWrapper.length + 1);
@@ -128,7 +163,12 @@ public class AuthenticationRequestHandler extends RequestHandler {
       Result result = null;
       Response response = new Response();
       result = authenticationImpl.test7();
-      byte[] serializedResult = result.serialize();
+      byte[] serializedResult;
+      if(result == null){
+        serializedResult  = new byte[0];
+      }else{
+      serializedResult = result.serialize();
+      }
       response.setStatusCode((byte) 100);
       response.setData(serializedResult);
       response.setLength(serializedResult.length + 1);

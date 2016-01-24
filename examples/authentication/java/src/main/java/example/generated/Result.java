@@ -122,7 +122,8 @@ public class Result {
   }
     
   public void deserialize(byte[] serializedByteArray) {
-    int counter = 0;
+    if(serializedByteArray.length != 0){
+      int counter = 0;
     int dataLength = 0;
     int numbersOfBytesForDataLength;
     //do for every property
@@ -175,5 +176,6 @@ public class Result {
     }
     setStatus64(PDTDeserializer.getInt64(status64ByteArray));
 
+    }
   }
 }

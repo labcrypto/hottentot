@@ -50,7 +50,8 @@ public class Credential {
   }
     
   public void deserialize(byte[] serializedByteArray) {
-    int counter = 0;
+    if(serializedByteArray.length != 0){
+      int counter = 0;
     int dataLength = 0;
     int numbersOfBytesForDataLength;
     //do for every property
@@ -87,5 +88,6 @@ public class Credential {
     counter += dataLength;
     setPassword(PDTDeserializer.getString(passwordByteArray));
 
+    }
   }
 }

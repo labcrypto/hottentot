@@ -57,38 +57,36 @@ public class SerializableTokenList {
 
   public void deserialize(byte[] serializedTokenList) {
     if(serializedTokenList.length != 0){
-      if (serializedTokenList.length != 0) {
-        int counter = 0;
-        int serializedTokenByteArrayLength = 0 ;
-        while (true) {
-          if (counter == serializedTokenList.length) {
-            break;
-          }
-          int firstLengthByte = serializedTokenList[counter];
-          int numOfByteForLength = 1;
-          if ((firstLengthByte & 0x80) == 0) {
-            serializedTokenByteArrayLength = serializedTokenList[counter];
-          } else {
-            counter++;
-            numOfByteForLength = firstLengthByte & 0x0f;
-            byte[] serializedTokenLengthByteArray = new byte[numOfByteForLength];
-            int serializedDataWrapperLengthByteArrayCounter = 0;
-            for (int i = counter; i < counter + numOfByteForLength; i++) {
-              serializedTokenLengthByteArray[serializedDataWrapperLengthByteArrayCounter++] = serializedTokenList[i];
-            }
-            serializedTokenByteArrayLength = ByteArrayToInteger.getInt(serializedTokenLengthByteArray);
-          }
-          counter += numOfByteForLength;
-          byte[] tokenByteArray = new byte[serializedTokenByteArrayLength];
-          int tokenByteArrayCounter = 0;
-          for (int i = counter; i < counter + serializedTokenByteArrayLength; i++) {
-            tokenByteArray[tokenByteArrayCounter++] = serializedTokenList[i];
-          }
-          counter += serializedTokenByteArrayLength;
-          Token token = new Token();
-          token.deserialize(tokenByteArray);
-          tokenList.add(token);
+      int counter = 0;
+      int serializedTokenByteArrayLength = 0 ;
+      while (true) {
+        if (counter == serializedTokenList.length) {
+          break;
         }
+        int firstLengthByte = serializedTokenList[counter];
+        int numOfByteForLength = 1;
+        if ((firstLengthByte & 0x80) == 0) {
+          serializedTokenByteArrayLength = serializedTokenList[counter];
+        } else {
+          counter++;
+          numOfByteForLength = firstLengthByte & 0x0f;
+          byte[] serializedTokenLengthByteArray = new byte[numOfByteForLength];
+          int serializedDataWrapperLengthByteArrayCounter = 0;
+          for (int i = counter; i < counter + numOfByteForLength; i++) {
+            serializedTokenLengthByteArray[serializedDataWrapperLengthByteArrayCounter++] = serializedTokenList[i];
+          }
+          serializedTokenByteArrayLength = ByteArrayToInteger.getInt(serializedTokenLengthByteArray);
+        }
+        counter += numOfByteForLength;
+        byte[] tokenByteArray = new byte[serializedTokenByteArrayLength];
+        int tokenByteArrayCounter = 0;
+        for (int i = counter; i < counter + serializedTokenByteArrayLength; i++) {
+          tokenByteArray[tokenByteArrayCounter++] = serializedTokenList[i];
+        }
+        counter += serializedTokenByteArrayLength;
+        Token token = new Token();
+        token.deserialize(tokenByteArray);
+        tokenList.add(token);
       }
     }
   }
