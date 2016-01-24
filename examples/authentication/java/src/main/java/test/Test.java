@@ -8,5 +8,8 @@ public class Test {
     System.out.println((256 - 61) * 256 + 83);
     int output = java.nio.ByteBuffer.wrap(new byte[]{ -61 , 83}).getShort();
     System.out.println(output);
+
+    byte b = -1;
+    System.out.println(b);
   }
 }

@@ -13,17 +13,17 @@ import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
 public class Token {
   private String value = "";
-  private int id;
+  private byte id;
   public void setValue(String value) {
     this.value = value;
   }
   public String getValue() {
     return value;
   }
-  public void setId(int id) {
+  public void setId(byte id) {
     this.id = id;
   }
-  public int getId() {
+  public byte getId() {
     return id;
   }
   @Override 
@@ -36,7 +36,7 @@ public class Token {
 	
   public byte[] serialize() {
     byte[] serializedValue = PDTSerializer.getString(value);
-    byte[] serializedId = PDTSerializer.getInt32(id);
+    byte[] serializedId = PDTSerializer.getInt8(id);
     byte[] output = new byte[serializedValue.length + serializedId.length];
     int counter = 0;
     //use a loop for every property
@@ -70,12 +70,12 @@ public class Token {
     System.arraycopy(serializedByteArray,counter,valueByteArray,0,dataLength);
     counter += dataLength;
     setValue(PDTDeserializer.getString(valueByteArray));
-    //id : int
-    byte[] idByteArray = new byte[4];
-    for(int i = 0 ; i < 4 ; i++){
+    //id : byte
+    byte[] idByteArray = new byte[1];
+    for(int i = 0 ; i < 1 ; i++){
       idByteArray[i] = serializedByteArray[counter++];
     }
-    setId(PDTDeserializer.getInt32(idByteArray));
+    setId(PDTDeserializer.getInt8(idByteArray));
 
   }
 }

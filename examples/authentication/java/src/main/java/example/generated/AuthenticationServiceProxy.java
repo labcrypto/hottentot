@@ -85,7 +85,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     }
     //read response from server
     byte[] buffer = new byte[256];
-    while (!protocol.IsResponseComplete()) {
+    while (!protocol.isResponseComplete()) {
       byte[] dataChunkRead;
       try {
         dataChunkRead = tcpClient.read();
@@ -141,7 +141,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     }
     //read response from server
     byte[] buffer = new byte[256];
-    while (!protocol.IsResponseComplete()) {
+    while (!protocol.isResponseComplete()) {
       byte[] dataChunkRead;
       try {
         dataChunkRead = tcpClient.read();
@@ -197,7 +197,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     }
     //read response from server
     byte[] buffer = new byte[256];
-    while (!protocol.IsResponseComplete()) {
+    while (!protocol.isResponseComplete()) {
       byte[] dataChunkRead;
       try {
         dataChunkRead = tcpClient.read();
@@ -253,7 +253,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     }
     //read response from server
     byte[] buffer = new byte[256];
-    while (!protocol.IsResponseComplete()) {
+    while (!protocol.isResponseComplete()) {
       byte[] dataChunkRead;
       try {
         dataChunkRead = tcpClient.read();
@@ -309,7 +309,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     }
     //read response from server
     byte[] buffer = new byte[256];
-    while (!protocol.IsResponseComplete()) {
+    while (!protocol.isResponseComplete()) {
       byte[] dataChunkRead;
       try {
         dataChunkRead = tcpClient.read();
@@ -389,7 +389,7 @@ byte[] serializedInputList = serializableStringWrapperList.serialize();
     }
     //read response from server
     byte[] buffer = new byte[256];
-    while (!protocol.IsResponseComplete()) {
+    while (!protocol.isResponseComplete()) {
       byte[] dataChunkRead;
       try {
         dataChunkRead = tcpClient.read();
@@ -469,7 +469,7 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
     }
     //read response from server
     byte[] buffer = new byte[256];
-    while (!protocol.IsResponseComplete()) {
+    while (!protocol.isResponseComplete()) {
       byte[] dataChunkRead;
       try {
         dataChunkRead = tcpClient.read();
@@ -494,6 +494,62 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
     dataWrapper= new DataWrapper();
     dataWrapper.deserialize(response.getData());
     return dataWrapper;
+  }
+  public Result test7() { 
+
+    //make request
+    Request request = new Request();
+    request.setServiceId(2072454237L);
+    request.setMethodId(1740079794L);
+    request.setArgumentCount((byte) 0);
+    request.setType(Request.RequestType.InvokeStateless);
+    int dataLength = 0;
+    //calculate data length for every argument
+    //arg count + request type + method ID + service ID = 18;
+    request.setLength(18 + dataLength);
+    //connect to server
+    TcpClient tcpClient = TcpClientFactory.create();
+    try{
+      tcpClient.connect(host, port);
+    } catch (TcpClientConnectException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //serialize request according to HTNP
+    Protocol protocol = ProtocolFactory.create();
+    byte[] serializedRequest = protocol.serializeRequest(request);
+    //send request
+    try {
+      tcpClient.write(serializedRequest);
+    } catch (TcpClientWriteException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //read response from server
+    byte[] buffer = new byte[256];
+    while (!protocol.isResponseComplete()) {
+      byte[] dataChunkRead;
+      try {
+        dataChunkRead = tcpClient.read();
+      } catch (TcpClientReadException e) {
+        throw new HottentotRuntimeException(e);
+      }
+      protocol.processDataForResponse(dataChunkRead);
+    }
+    //deserialize token part of response
+    Response response = protocol.getResponse();
+    //close everything
+     try { 
+       tcpClient.close(); 
+    } catch (TcpClientCloseException e) { 
+      e.printStackTrace(); 
+    } 
+    //deserialize Resultpart from response
+    Result result= null;
+    if (response.getStatusCode() == -1) {
+      //TODO
+    }
+    result= new Result();
+    result.deserialize(response.getData());
+    return result;
   }
 
   public void destroy() {

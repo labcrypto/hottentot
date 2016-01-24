@@ -20,44 +20,49 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-
 package example.server;
 
-
 import example.generated.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class AuthenticationImpl extends AbstractAuthenticationService {
 
   public List<Token> auth(Credential credential) {
-    return null;
+    Token token = new Token();
+    if(credential.getUsername().equals("a")) {
+      token.setId((byte)1);
+    }else{
+      token.setId((byte)-1);
+    }
+    List<Token> tokenList = new ArrayList<Token>();
+    tokenList.add(token);
+    return tokenList;
   }
 
   public List<DataWrapper> test() {
-
     byte[] data = new byte[100000];
-    for(int i = 0 ; i < 10000; i++){
+    for(int i = 0 ; i < 10000; i++) {
       data[i] = (byte)i;
     }
     DataWrapper dataWrapper = new DataWrapper();
     dataWrapper.setDigi(data);
     dataWrapper.setValue("ali");
-    //
-    byte[] data2 = new byte[100000];
-    for(int i = 0 ; i < 100000 ; i++){
-      data2[i] = (byte)i;
-    }
-    //byte[] data2 = new byte[]{1};
-    DataWrapper dataWrapper2 = new DataWrapper();
-    dataWrapper2.setValue("b");
-    dataWrapper2.setDigi(data2);
+//    //
+//    byte[] data2 = new byte[100000];
+//    for(int i = 0 ; i < 100000 ; i++){
+//      data2[i] = (byte)i;
+//    }
+//    //byte[] data2 = new byte[]{1};
+//    DataWrapper dataWrapper2 = new DataWrapper();
+//    dataWrapper2.setValue("b");
+//    dataWrapper2.setDigi(data2);
     //
     List<DataWrapper> dataWrapperList = new ArrayList<DataWrapper>();
     //
-    dataWrapperList.add(dataWrapper2);
+    DataWrapper dataWrapper2 = new DataWrapper();
     dataWrapperList.add(dataWrapper);
+    dataWrapperList.add(dataWrapper2);
     return dataWrapperList;
   }
 
@@ -70,7 +75,7 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
     stringWrapper.setValue(str);
 
     List<StringWrapper> stringWrapperList = new ArrayList<StringWrapper>();
-    stringWrapperList.add(stringWrapper);
+    //stringWrapperList.add(stringWrapper);
     return stringWrapperList;
   }
 
@@ -87,18 +92,16 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
 
   public DataWrapper test4() {
     DataWrapper dataWrapper = new DataWrapper();
-    byte[] data = new byte[100000];
-    for(int i = 0 ; i < 100000 ; i++){
-      data[i] = (byte)i;
-    }
-    dataWrapper.setDigi(data);
+    //dataWrapper.setDigi(data);
     return dataWrapper;
   }
 
   public DataWrapper test5(List<StringWrapper> inputList) {
     DataWrapper dataWrapper = new DataWrapper();
-    if(inputList.size() == 10){
-      dataWrapper.setDigi(new byte[]{1});
+    if(inputList.size() == 2){
+      dataWrapper.setDigi(new byte[]{0});
+    }else{
+      dataWrapper.setDigi(new byte[]{-1});
     }
     return dataWrapper;
   }
@@ -107,7 +110,17 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
     return null;
   }
 
-  public void test7() {
-
+  public Result test7() {
+    Result result = new Result();
+    result.setStatus8((byte) -100);
+    result.setStatus16((short) -1000);
+    result.setStatus32(-10000);
+    result.setStatus64(-100000);
+    result.setUstatus8((byte) -100);
+    result.setUstatus16((short) -1000);
+    result.setUstatus32(-10000);
+    result.setUstatus64(-100000);
+    return result;
   }
+
 }
