@@ -1,7 +1,7 @@
 module example.generated{
   struct Token{
     string value ord(1);
-    uint32 id ord(2);
+    uint8 id ord(2);
   };
 
   struct Credential{
@@ -18,6 +18,17 @@ module example.generated{
     string value ord(1);
   };
 
+  struct Result{
+    uint8 ustatus8 ord(1);
+    uint16 ustatus16 ord(2);
+    uint32 ustatus32 ord(3);
+    uint64 ustatus64 ord(4);
+    int8 status8 ord(5);
+    int16 status16 ord(6);
+    int32 status32 ord(7);
+    int64 status64 ord(8);
+  };
+
   stateless service Authentication{
     list<Token> auth(Credential credential);
     list<DataWrapper> test();
@@ -26,5 +37,6 @@ module example.generated{
     DataWrapper test4();
     DataWrapper test5(list<StringWrapper> inputList);
     DataWrapper test6(list<DataWrapper> inputs);
+    Result test7();
   };  
 };

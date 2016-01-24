@@ -24,6 +24,7 @@ package ir.ntnaeem.hottentot.serializerHelper;
 
 import ir.ntnaeem.hottentot.runtime.helper.ArrayUtil;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import static java.lang.StrictMath.pow;
@@ -50,11 +51,15 @@ public class PDTSerializer {
     return b;
   }
 
-  public static byte getInt8(short number) {
-    return (byte) number;
+  public static byte[] getInt8(byte number) {
+    return new byte[]{number};
   }
 
-  public static byte[] getInt16(short number) {
+  public static byte[] getInt16(short number){
+    return ByteBuffer.allocate(2).putShort(number).array();
+  }
+
+  public static byte[] getUint16(short number) {
     byte[] byteArray = new byte[2];
     short temp;
     for (short i = 0; i < byteArray.length; i++) {
@@ -65,7 +70,7 @@ public class PDTSerializer {
     return byteArray;
   }
 
-  public static byte[] getInt32(int number) {
+  public static byte[] getUint32(int number) {
     byte[] byteArray = new byte[4];
     int temp;
     for (int i = 0; i < byteArray.length; i++) {
@@ -76,7 +81,11 @@ public class PDTSerializer {
     return byteArray;
   }
 
-  public static byte[] getInt64(long number) {
+  public static byte[] getInt32(int number){
+    return ByteBuffer.allocate(4).putInt(number).array();
+  }
+
+  public static byte[] getUint64(long number) {
     byte[] byteArray = new byte[8];
     long temp;
     for (short j = 0; j < byteArray.length; j++) {
@@ -85,5 +94,9 @@ public class PDTSerializer {
       number = number - (long) (temp * pow(256, byteArray.length - j - 1));
     }
     return byteArray;
+  }
+
+  public static byte[] getInt64(long number){
+    return ByteBuffer.allocate(8).putLong(number).array();
   }
 }

@@ -123,6 +123,17 @@ public class AuthenticationRequestHandler extends RequestHandler {
       response.setLength(serializedDataWrapper.length + 1);
       return response;
     }
+    if(methodId == 1740079794L){
+      List <Argument> args = request.getArgs();
+      Result result = null;
+      Response response = new Response();
+      result = authenticationImpl.test7();
+      byte[] serializedResult = result.serialize();
+      response.setStatusCode((byte) 100);
+      response.setData(serializedResult);
+      response.setLength(serializedResult.length + 1);
+      return response;
+    }
 
     throw new MethodNotSupportException("method id is incorrect");
   }
