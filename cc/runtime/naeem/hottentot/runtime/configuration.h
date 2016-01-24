@@ -25,6 +25,10 @@
 #define _NAEEM_HOTTENTOT_RUNTIME__CONFIGURATION_H_
 
 #include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <stdint.h>
 
 
 namespace naeem {
@@ -33,11 +37,17 @@ namespace naeem {
       class Configuration {
       public:
         static void Init(int argc, char **argv);
+        static bool Exists(std::string optionShortName, std::string optionCompleteName = "");
+        static bool HasValue(std::string optionShortName, std::string optionCompleteName = "");
+        static uint32_t AsUInt32(std::string optionShortName, std::string optionCompleteName);
+        static std::string AsString(std::string optionShortName, std::string optionCompleteName);
         static bool Verbose() {
           return verbose_;
         }
       private:
         static bool verbose_;
+        static std::vector<std::string> options_;
+        static std::map<std::string, std::string> values_;
       };
     }
   }
