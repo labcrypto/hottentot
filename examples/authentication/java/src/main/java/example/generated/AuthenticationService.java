@@ -19,5 +19,6 @@ public interface AuthenticationService extends Service {
   DataWrapper test4();
   DataWrapper test5(List<StringWrapper> inputList);
   DataWrapper test6(List<DataWrapper> inputs);
+  Result test7();
 
 }

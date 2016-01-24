@@ -31,10 +31,28 @@ import java.util.List;
 public class Main {
   public static void main(String[] args) throws InterruptedException {
     final AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8080);
+
+    Result result = proxy.test7();
+    System.out.println("status 8 : " + result.getStatus8());
+    System.out.println("status 16 : " + result.getStatus16());
+    System.out.println("status 32 : " + result.getStatus32());
+    System.out.println("status 64 : " + result.getStatus64());
+    //
+    System.out.println("ustatus 8 : " + result.getUstatus8());
+    System.out.println("ustatus 16 : " + result.getUstatus16());
+    System.out.println("ustatus 32 : " + result.getUstatus32());
+    System.out.println("ustatus 64 : " + result.getUstatus64());
+
+    //
+    List<Token> tokenList = proxy.auth(new Credential());
+    System.out.println("token id : " + tokenList.get(0).getId());
+    //
     List<DataWrapper> wrapperList = proxy.test();
-    System.out.println("size : " + wrapperList.get(0).getDigi().length);
-    System.out.println("value  : " + Arrays.toString(wrapperList.get(0).getDigi()));
-    //System.out.println("size : " + wrapperList.get(1).getDigi().length);
+    System.out.println(" 0 size : " + wrapperList.get(0).getDigi().length);
+    System.out.println(" 0 digi : " + Arrays.toString(wrapperList.get(0).getDigi()));
+    System.out.println(" 0 value  : " + wrapperList.get(0).getValue());
+    System.out.println(" 1 size : " + wrapperList.get(1).getDigi().length);
+    System.out.println(" 1 value : " + wrapperList.get(1).getValue());
 //    //
 //    List<StringWrapper> stringWrapperList = proxy.test2();
 //    System.out.println(" stringWrapperList size : " + stringWrapperList.get(0).getValue().length());
