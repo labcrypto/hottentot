@@ -41,9 +41,8 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
   }
 
   public List<DataWrapper> test() {
-
     byte[] data = new byte[100000];
-    for(int i = 0 ; i < 10000; i++){
+    for(int i = 0 ; i < 10000; i++) {
       data[i] = (byte)i;
     }
     DataWrapper dataWrapper = new DataWrapper();
@@ -76,7 +75,7 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
     stringWrapper.setValue(str);
 
     List<StringWrapper> stringWrapperList = new ArrayList<StringWrapper>();
-    stringWrapperList.add(stringWrapper);
+    //stringWrapperList.add(stringWrapper);
     return stringWrapperList;
   }
 

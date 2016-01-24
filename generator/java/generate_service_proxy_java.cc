@@ -178,7 +178,7 @@ namespace naeem {
             methodsStr += indent_ + indent_ + "}\n";
             methodsStr += indent_ + indent_ + "//read response from server\n";
             methodsStr += indent_ + indent_ + "byte[] buffer = new byte[256];\n";
-            methodsStr += indent_ + indent_ + "while (!protocol.IsResponseComplete()) {\n";
+            methodsStr += indent_ + indent_ + "while (!protocol.isResponseComplete()) {\n";
             methodsStr += indent_ + indent_ + indent_ + "byte[] dataChunkRead;\n";
             methodsStr += indent_ + indent_ + indent_ + "try {\n";
             methodsStr += indent_ + indent_ + indent_ + indent_ + "dataChunkRead = tcpClient.read();\n";

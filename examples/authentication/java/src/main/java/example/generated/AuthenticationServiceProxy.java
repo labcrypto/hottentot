@@ -22,8 +22,6 @@ import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
-
-import java.util.Arrays;
 import java.util.List;
 
 public class AuthenticationServiceProxy extends AbstractAuthenticationService implements Proxy {
@@ -340,9 +338,9 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
   public DataWrapper test5(List<StringWrapper> inputList) { 
     //serialize inputList
     SerializableStringWrapperList serializableStringWrapperList = new SerializableStringWrapperList();
-    serializableStringWrapperList.setStringWrapperList(inputList);
-    byte[] serializedInputList = serializableStringWrapperList.serialize();
-    System.out.println("proxy : serializedInputList" + Arrays.toString(serializedInputList));
+serializableStringWrapperList.setStringWrapperList(inputList);
+byte[] serializedInputList = serializableStringWrapperList.serialize();
+
     //make request
     Request request = new Request();
     request.setServiceId(2072454237L);
@@ -371,7 +369,6 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
       }
     }
     dataLength += inputListDataLength + inputListDataLengthByteArrayLength;
-    System.out.println("dataLenght : " + dataLength);
     //arg count + request type + method ID + service ID = 18;
     request.setLength(18 + dataLength);
     //connect to server
