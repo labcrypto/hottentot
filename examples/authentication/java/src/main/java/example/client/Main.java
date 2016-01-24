@@ -20,12 +20,9 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-
 package example.client;
 
 import example.generated.*;
-
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,24 +30,23 @@ import java.util.List;
 public class Main {
   public static void main(String[] args) throws InterruptedException {
     final AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 8080);
-
     List<StringWrapper> stringWrapperList = new ArrayList<StringWrapper>();
-    StringWrapper stringWrapper = new StringWrapper();
-    String str = "";
-    for(int i = 0 ; i < 1000 ; i++) {
-      str += "a";
-    }
-    stringWrapper.setValue(str);
+//    StringWrapper stringWrapper = new StringWrapper();
+//    String str = "";
+//    for(int i = 0 ; i < 1000 ; i++) {
+//      str += "a";
+//    }
+//    stringWrapper.setValue(str);
+//    //
+//    StringWrapper stringWrapper2 = new StringWrapper();
+//    String str2 = "";
+//    for(int i = 0 ; i < 10000 ; i++) {
+//      str2 += "a";
+//    }
+//    stringWrapper2.setValue(str2);
     //
-    StringWrapper stringWrapper2 = new StringWrapper();
-    String str2 = "";
-    for(int i = 0 ; i < 10000 ; i++) {
-      str2 += "a";
-    }
-    stringWrapper2.setValue(str2);
-    //
-    stringWrapperList.add(stringWrapper);
-    stringWrapperList.add(stringWrapper2);
+//    stringWrapperList.add(stringWrapper);
+//    stringWrapperList.add(stringWrapper2);
     DataWrapper dataWrapper = proxy.test5(stringWrapperList);
     System.out.println(" res : " + Arrays.toString(dataWrapper.getDigi()));
 //    Result result = proxy.test7();
@@ -82,8 +78,8 @@ public class Main {
 //    System.out.println(" 1 size : " + wrapperList.get(1).getDigi().length);
 //    System.out.println(" 1 value : " + wrapperList.get(1).getValue());
 //    //
-//    List<StringWrapper> stringWrapperList = proxy.test2();
-//    System.out.println(" stringWrapperList size : " + stringWrapperList.get(0).getValue().length());
+    List<StringWrapper> stringWrapperList2 = proxy.test2();
+    System.out.println("TEST2 stringWrapperList2 size : " + stringWrapperList2.size());
 ////    //
 //    StringWrapper stringWrapper = proxy.test3();
 //    System.out.println("stringWrapper size : " + stringWrapper.getValue().length());

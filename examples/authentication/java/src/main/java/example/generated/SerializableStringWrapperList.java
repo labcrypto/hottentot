@@ -50,14 +50,12 @@ public class SerializableStringWrapperList {
         System.arraycopy(serializedStringWrapper, 0, serializedStringWrapperList, counter, serializedStringWrapper.length);
         counter += serializedStringWrapper.length;
       }
-      System.out.println("serializedStringWrapperList: " + Arrays.toString(serializedStringWrapperList));
       return serializedStringWrapperList;
     }
     return new byte[0];
   }
 
   public void deserialize(byte[] serializedStringWrapperList) {
-    System.out.println("deserializedStringWrapperList: " + Arrays.toString(serializedStringWrapperList));
     if(serializedStringWrapperList.length != 0){
       if (serializedStringWrapperList.length != 0) {
         int counter = 0;

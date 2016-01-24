@@ -83,11 +83,9 @@ public class DefaultTcpServer implements TcpServer {
         protocol.setResponseCallback(this);
 
         while(!protocol.isRequestComplete()) {
-          System.out.println("-----");
           int numReadBytes = 0;
           try {
             numReadBytes = is.read(buffer, 0, buffer.length);
-            System.out.println("num read bytes : " + numReadBytes);
           } catch (IOException e) {
             e.printStackTrace();
           }
