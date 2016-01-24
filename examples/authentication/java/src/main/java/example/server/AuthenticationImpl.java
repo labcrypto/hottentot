@@ -20,21 +20,21 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-
 package example.server;
 
-
 import example.generated.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class AuthenticationImpl extends AbstractAuthenticationService {
 
   public List<Token> auth(Credential credential) {
-
     Token token = new Token();
-    token.setId((byte)-1);
+    if(credential.getUsername().equals("a")) {
+      token.setId((byte)1);
+    }else{
+      token.setId((byte)-1);
+    }
     List<Token> tokenList = new ArrayList<Token>();
     tokenList.add(token);
     return tokenList;
@@ -99,8 +99,10 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
 
   public DataWrapper test5(List<StringWrapper> inputList) {
     DataWrapper dataWrapper = new DataWrapper();
-    if(inputList.size() == 10){
-      dataWrapper.setDigi(new byte[]{1});
+    if(inputList.size() == 2){
+      dataWrapper.setDigi(new byte[]{0});
+    }else{
+      dataWrapper.setDigi(new byte[]{-1});
     }
     return dataWrapper;
   }
@@ -115,8 +117,8 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
     result.setStatus16((short) -1000);
     result.setStatus32(-10000);
     result.setStatus64(-100000);
-    result.setUstatus8((byte)-100);
-    result.setUstatus16((short)-1000);
+    result.setUstatus8((byte) -100);
+    result.setUstatus16((short) -1000);
     result.setUstatus32(-10000);
     result.setUstatus64(-100000);
     return result;

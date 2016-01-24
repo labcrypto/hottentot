@@ -76,31 +76,38 @@ public class DefaultTcpServer implements TcpServer {
         } catch (IOException e) {
           e.printStackTrace();
         }
-        int numReadBytes = 0;
-        try {
-          numReadBytes = is.read(buffer, 0, buffer.length);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-        byte[] readDataChunk;
+
         Protocol protocol = ProtocolFactory.create();
         RequestCallback requestCallback = RequestCallbackFactory.create(requestHandlers);
         protocol.setRequestCallback(requestCallback);
         protocol.setResponseCallback(this);
-        if (numReadBytes < 256) {
+
+        while(!protocol.isRequestComplete()) {
+          System.out.println("-----");
+          int numReadBytes = 0;
           try {
-            readDataChunk = Arrays.copyOf(buffer, numReadBytes);
-            protocol.processDataForRequest(readDataChunk);
-          } catch (ProtocolProcessException e) {
-            throw new HottentotRuntimeException(e);
+            numReadBytes = is.read(buffer, 0, buffer.length);
+            System.out.println("num read bytes : " + numReadBytes);
+          } catch (IOException e) {
+            e.printStackTrace();
           }
-        } else {
-          try {
-            protocol.processDataForRequest(buffer);
-          } catch (ProtocolProcessException e) {
-            throw new HottentotRuntimeException(e);
+          byte[] readDataChunk;
+          if (numReadBytes < 256) {
+            try {
+              readDataChunk = Arrays.copyOf(buffer, numReadBytes);
+              protocol.processDataForRequest(readDataChunk);
+            } catch (ProtocolProcessException e) {
+              throw new HottentotRuntimeException(e);
+            }
+          } else {
+            try {
+              protocol.processDataForRequest(buffer);
+            } catch (ProtocolProcessException e) {
+              throw new HottentotRuntimeException(e);
+            }
           }
         }
+
       }
 
       public void onResponse(byte[] serializedResponse) throws TcpServerReadException {
