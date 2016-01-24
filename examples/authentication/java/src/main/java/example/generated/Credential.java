@@ -11,6 +11,8 @@ import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
+import java.util.Arrays;
+
 public class Credential {
   private String username = "";
   private String password = "";
@@ -50,6 +52,7 @@ public class Credential {
   }
     
   public void deserialize(byte[] serializedByteArray) {
+    System.out.println("Credential des " + Arrays.toString(serializedByteArray));
     int counter = 0;
     int dataLength = 0;
     int numbersOfBytesForDataLength;
