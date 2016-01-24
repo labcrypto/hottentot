@@ -20,7 +20,18 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
- 
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netdb.h> 
+#include <iostream>
+
 #include "proxy.h"
 
 
@@ -31,6 +42,34 @@ namespace naeem {
         void
         Proxy::Destroy() {
           // TODO(kamran)
+        }
+        bool
+        Proxy::IsServerAlive() {
+          struct sockaddr_in serverAddr;
+          struct hostent *server;
+          int socketFD = socket(AF_INET, SOCK_STREAM, 0);
+          if (socketFD < 0) {
+            std::cerr << "ERROR opening socket" << std::endl;
+            return false;
+          }
+          server = gethostbyname(host_.c_str());
+          if (server == NULL) {
+            std::cerr << "ERROR, no such host" << std::endl;
+            return false;
+          }
+          memset((char *) &serverAddr, 0, sizeof(serverAddr));
+          serverAddr.sin_family = AF_INET;
+          serverAddr.sin_port = htons(port_);
+          if (inet_pton(AF_INET, host_.c_str(), &serverAddr.sin_addr) <= 0) {
+            std::cerr << "ERROR setting host" << std::endl;
+            return false;
+          }
+          if (connect(socketFD, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
+            std::cerr << "ERROR connecting to host" << std::endl;
+            return false;
+          }
+          close(socketFD);
+          return true;
         }
       }
     }

@@ -26,7 +26,7 @@
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::TcpClient *tcpClient = 
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
-[[[INDENT]]][[[INDENT]]]tcpClient->Connect();
+[[[INDENT]]][[[INDENT]]]if (tcpClient->Connect()) { throw std::runtime_error("Could not connect.");}
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Connected." << std::endl;
 [[[INDENT]]][[[INDENT]]]}

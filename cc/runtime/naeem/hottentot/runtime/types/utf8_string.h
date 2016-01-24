@@ -61,6 +61,13 @@ namespace naeem {
           uint16_t CharAt(uint32_t index) const {
             return chars_[index];
           }
+          std::string ToStdString() {
+            return (const char*)Serialize(NULL);
+          }
+          std::wstring ToStdWString() {
+            // TODO
+            return std::wstring();
+          }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
             uint32_t byteLength = strlen(data_);
