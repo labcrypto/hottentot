@@ -38,7 +38,7 @@ extern "C" int yylex();
 %%
 ord\([1-9][0-9]*\) {
   // fprintf(stdout, "ORD seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return ORD;
 }
@@ -56,49 +56,49 @@ service {
 }
 list {
   // fprintf(stdout, "LIST seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return LIST;
 }
 set {
   // fprintf(stdout, "SET seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return SET;
 }
 map {
   // fprintf(stdout, "MAP seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return MAP;
 }
 int {
   // fprintf(stdout, "INT seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 double {
   // fprintf(stdout, "DOUBLE seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 string {
   // fprintf(stdout, "STRING seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 bool {
   // fprintf(stdout, "BOOL seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 date {
   // fprintf(stdout, "DATE seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
@@ -112,7 +112,7 @@ struct {
 }
 [a-zA-Z]([a-zA-Z0-9])* {
   // fprintf(stdout, "IDENTIFIER seen: %s\n", yytext);
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return IDENTIFIER;
 }
