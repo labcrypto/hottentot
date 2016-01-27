@@ -50,6 +50,9 @@ namespace naeem {
             if (requestHandler == 0) {
               return 0;
             }
+            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+              ::naeem::hottentot::runtime::Logger::GetOut() << "Calling handler method ..." << std::endl;
+            }
             requestHandler->HandleRequest(request, *response);
             return response;
           } else {
