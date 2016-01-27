@@ -60,16 +60,16 @@ namespace naeem {
           }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            std::cout << ">>>>>> " << elements_.size() << std::endl;
+            // std::cout << ">>>>>> " << elements_.size() << std::endl;
             std::vector<uint32_t> lengths;
             std::vector<unsigned char *> datas;
             for (uint32_t i = 0; i < elements_.size(); i++) {
               uint32_t eLength = 0;
-              std::cout << "Before Ser(" << i << ") ..." << std::endl;
+              // std::cout << "Before Ser(" << i << ") ..." << std::endl;
               unsigned char *eData = elements_[i]->Serialize(&eLength);
               lengths.push_back(eLength);
               datas.push_back(eData);
-              std::cout << "Ser(" << i << ")" << std::endl;
+              // std::cout << "Ser(" << i << ")" << std::endl;
             }
             uint32_t length = 0;
             for (uint32_t i = 0; i < lengths.size(); i++) {
@@ -82,7 +82,7 @@ namespace naeem {
               } /* else if (lengths[i] <= (256 * 256 * 256 * 256 - 1)) {
                 length += 5 + lengths[i];
               } */
-              std::cout << "Len(" << i << ")" << std::endl;
+              // std::cout << "Len(" << i << ")" << std::endl;
             }
             uint32_t c = 0;
             unsigned char *data = new unsigned char[length];
@@ -113,7 +113,7 @@ namespace naeem {
               for (uint32_t j = 0; j < lengths[i]; j++) {
                 data[c++] = datas[i][j];
               }
-              std::cout << "data(" << i << ")" << std::endl;
+              // std::cout << "data(" << i << ")" << std::endl;
             }
             if (c != length) {
               std::cout << "List serialization: Inconsistency in serialized array length." << std::endl;
