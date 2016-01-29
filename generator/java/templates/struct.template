@@ -18,6 +18,8 @@ public class [%STRUCT_NAME%] {
 [%INDENT%]}
     
 [%INDENT%]public void deserialize(byte[] serializedByteArray) {
-[%DESERIALIZE_METHOD_BODY%]
+[%INDENT%][%INDENT%]if(serializedByteArray.length != 0){
+[%INDENT%][%DESERIALIZE_METHOD_BODY%]
+[%INDENT%][%INDENT%]}
 [%INDENT%]}
 }

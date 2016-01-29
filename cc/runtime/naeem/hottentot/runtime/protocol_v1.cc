@@ -342,7 +342,7 @@ namespace naeem {
       void 
       ProtocolV1::ProcessDataForResponse(unsigned char *data,
                                          uint32_t       dataLength) {
-        for (unsigned int i = 0; i < dataLength; i++) {
+        for (unsigned int i = 0; i < dataLength;) {
           if (currentState_ == ReadingLengthState) {
             if (readingCounter_ == 0) {
               if ((data[i] & 0x80) == 0) {
@@ -375,6 +375,8 @@ namespace naeem {
                 if (::naeem::hottentot::runtime::Configuration::Verbose()) {
                   ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
                 }
+                // Variable 'i' shouldn't get incremented because no byte is processed here.
+                i--;
               }
             }
           } else if (currentState_ == ReadingDataState) {
@@ -409,6 +411,7 @@ namespace naeem {
               }
             }
           }
+          i++;
         }
       }
     }

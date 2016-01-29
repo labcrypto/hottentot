@@ -142,22 +142,50 @@ namespace naeem {
                 }
               }
               methodConditionStr += ");\n";
+
+
+/*
+ byte[] serializedDataWrapper;
+      if(dataWrapper == null){
+        serializedDataWrapper = new byte[0];
+      }else{
+        serializedDataWrapper = dataWrapper.serialize();
+      }
+
+*/
               
+
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
                 
-                methodConditionStr += indent_ + indent_ + indent_ +
+                methodConditionStr += indent_ + indent_ + indent_ + 
+                                    "byte[] serialized" + fetchedReturnTypeOfList + "List;\n";
+                methodConditionStr += indent_ + indent_ + indent_ + 
+                                    "if(" + lowerCaseFetchedReturnTypeOfList + "List == null){\n";
+                methodConditionStr += indent_ + indent_ + indent_ + indent_ +
+                                      "serialized" + fetchedReturnTypeOfList + "List  = new byte[0];\n";
+                methodConditionStr += indent_ + indent_ + indent_ + "}else{\n";
+                
+                methodConditionStr += indent_ + indent_ + indent_ + indent_ +
                                       "serializable" + fetchedReturnTypeOfList + "List." + 
                                       "set" + fetchedReturnTypeOfList + "List(" + 
                                       lowerCaseFetchedReturnTypeOfList + "List);\n";
-                methodConditionStr +=
-                indent_ + indent_ + indent_ + "byte[] serialized" + fetchedReturnTypeOfList + "List = " +
-                "serializable" + fetchedReturnTypeOfList + "List.serialize();\n"; 
+                methodConditionStr += indent_ + indent_ + indent_ + indent_ +
+                                      "serialized" + fetchedReturnTypeOfList + "List = " +
+                                      "serializable" + fetchedReturnTypeOfList + "List.serialize();\n"; 
+                methodConditionStr += indent_ + indent_ + indent_ + "}\n";
 
-                
               }else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
-                methodConditionStr +=
-                indent_ + indent_ + indent_ + "byte[] serialized" + pMethod->returnType_ + " = " +
-                lowerCaseReturnType + ".serialize();\n";    
+                
+                methodConditionStr += indent_ + indent_ + indent_ + 
+                                    "byte[] serialized" + pMethod->returnType_ + ";\n";
+                methodConditionStr += indent_ + indent_ + indent_ + 
+                                    "if(" + lowerCaseReturnType + " == null){\n";
+                methodConditionStr += indent_ + indent_ + indent_ + indent_ +
+                                      "serialized" + pMethod->returnType_ + "  = new byte[0];\n";
+                methodConditionStr += indent_ + indent_ + indent_ + "}else{\n";
+                methodConditionStr += indent_ + indent_ + indent_ + "serialized" + pMethod->returnType_ + " = " +
+                lowerCaseReturnType + ".serialize();\n"; 
+                methodConditionStr += indent_ + indent_ + indent_ + "}\n";   
               }else{
                 std::string javaReturnType = 
                 ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);

@@ -57,38 +57,36 @@ public class SerializableDataWrapperList {
 
   public void deserialize(byte[] serializedDataWrapperList) {
     if(serializedDataWrapperList.length != 0){
-      if (serializedDataWrapperList.length != 0) {
-        int counter = 0;
-        int serializedDataWrapperByteArrayLength = 0 ;
-        while (true) {
-          if (counter == serializedDataWrapperList.length) {
-            break;
-          }
-          int firstLengthByte = serializedDataWrapperList[counter];
-          int numOfByteForLength = 1;
-          if ((firstLengthByte & 0x80) == 0) {
-            serializedDataWrapperByteArrayLength = serializedDataWrapperList[counter];
-          } else {
-            counter++;
-            numOfByteForLength = firstLengthByte & 0x0f;
-            byte[] serializedDataWrapperLengthByteArray = new byte[numOfByteForLength];
-            int serializedDataWrapperLengthByteArrayCounter = 0;
-            for (int i = counter; i < counter + numOfByteForLength; i++) {
-              serializedDataWrapperLengthByteArray[serializedDataWrapperLengthByteArrayCounter++] = serializedDataWrapperList[i];
-            }
-            serializedDataWrapperByteArrayLength = ByteArrayToInteger.getInt(serializedDataWrapperLengthByteArray);
-          }
-          counter += numOfByteForLength;
-          byte[] dataWrapperByteArray = new byte[serializedDataWrapperByteArrayLength];
-          int dataWrapperByteArrayCounter = 0;
-          for (int i = counter; i < counter + serializedDataWrapperByteArrayLength; i++) {
-            dataWrapperByteArray[dataWrapperByteArrayCounter++] = serializedDataWrapperList[i];
-          }
-          counter += serializedDataWrapperByteArrayLength;
-          DataWrapper dataWrapper = new DataWrapper();
-          dataWrapper.deserialize(dataWrapperByteArray);
-          dataWrapperList.add(dataWrapper);
+      int counter = 0;
+      int serializedDataWrapperByteArrayLength = 0 ;
+      while (true) {
+        if (counter == serializedDataWrapperList.length) {
+          break;
         }
+        int firstLengthByte = serializedDataWrapperList[counter];
+        int numOfByteForLength = 1;
+        if ((firstLengthByte & 0x80) == 0) {
+          serializedDataWrapperByteArrayLength = serializedDataWrapperList[counter];
+        } else {
+          counter++;
+          numOfByteForLength = firstLengthByte & 0x0f;
+          byte[] serializedDataWrapperLengthByteArray = new byte[numOfByteForLength];
+          int serializedDataWrapperLengthByteArrayCounter = 0;
+          for (int i = counter; i < counter + numOfByteForLength; i++) {
+            serializedDataWrapperLengthByteArray[serializedDataWrapperLengthByteArrayCounter++] = serializedDataWrapperList[i];
+          }
+          serializedDataWrapperByteArrayLength = ByteArrayToInteger.getInt(serializedDataWrapperLengthByteArray);
+        }
+        counter += numOfByteForLength;
+        byte[] dataWrapperByteArray = new byte[serializedDataWrapperByteArrayLength];
+        int dataWrapperByteArrayCounter = 0;
+        for (int i = counter; i < counter + serializedDataWrapperByteArrayLength; i++) {
+          dataWrapperByteArray[dataWrapperByteArrayCounter++] = serializedDataWrapperList[i];
+        }
+        counter += serializedDataWrapperByteArrayLength;
+        DataWrapper dataWrapper = new DataWrapper();
+        dataWrapper.deserialize(dataWrapperByteArray);
+        dataWrapperList.add(dataWrapper);
       }
     }
   }

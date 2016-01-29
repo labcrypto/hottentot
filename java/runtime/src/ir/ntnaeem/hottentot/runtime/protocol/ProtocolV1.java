@@ -62,12 +62,10 @@ public class ProtocolV1 implements Protocol {
             currentState = 2;
           } else {
             lStateLength = b & 0x0f;
-            System.out.println("lStateLength : " + lStateLength);
             currentState = 1;
           }
         } else if (currentState == 2) {
           if (dStateCounter < dataLength - 1) {
-            System.out.println(dStateCounter);
             data[dStateCounter++] = b;
           } else {
             data[dStateCounter] = b;
@@ -103,7 +101,6 @@ public class ProtocolV1 implements Protocol {
             } else {
               dataLength += pow(256, (lStateLength - lStateCounter - 1)) * b;
             }
-            System.out.println("data length : processor : " + dataLength);
             lStateCounter++;
           } else {
             data = new byte[dataLength];
@@ -270,10 +267,6 @@ public class ProtocolV1 implements Protocol {
         serializedRequest[counter++] = b;
       }
     }
-    System.out.println("serialized req :" + Arrays.toString(serializedRequest));
-    System.out.println("serialized req size :" + serializedRequest.length);
-
-
     return serializedRequest;
   }
 
@@ -281,7 +274,6 @@ public class ProtocolV1 implements Protocol {
     //tested :)
     int counter = 0;
     Request request = new Request();
-    System.out.println("des req body " + Arrays.toString(serializedRequestBody));
     request.setLength(serializedRequestBody.length);
     byte[] serviceIdByteArray = new byte[8];
     for (int i = 0; i < 8; i++) {
@@ -306,9 +298,7 @@ public class ProtocolV1 implements Protocol {
     }
     counter++;
     request.setArgumentCount(serializedRequestBody[counter++]);
-    System.out.println("counter + " + counter);
     //make arguments
-    System.out.println("req COUNTER first arg :" + counter);
     while (counter < serializedRequestBody.length) {
       byte firstByteInReqArgsData;
       int argLength;
@@ -330,7 +320,6 @@ public class ProtocolV1 implements Protocol {
       for(int i = 0 ; i < argLength ; i++){
         argData[i] = serializedRequestBody[counter++];
       }
-      System.out.println("arg data : " + Arrays.toString(argData));
       arg.setData(argData);
       request.addArgument(arg);
     }
