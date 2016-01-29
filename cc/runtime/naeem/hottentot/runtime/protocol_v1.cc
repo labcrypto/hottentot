@@ -75,15 +75,15 @@ namespace naeem {
         unsigned int c = 0;
         data[c++] = request.GetType();
         uint32_t serviceId = request.GetServiceId();
-        data[c++] = ((unsigned char *)&serviceId)[0];
-        data[c++] = ((unsigned char *)&serviceId)[1];
-        data[c++] = ((unsigned char *)&serviceId)[2];
         data[c++] = ((unsigned char *)&serviceId)[3];
+        data[c++] = ((unsigned char *)&serviceId)[2];
+        data[c++] = ((unsigned char *)&serviceId)[1];
+        data[c++] = ((unsigned char *)&serviceId)[0];
         uint32_t methodId = request.GetMethodId();
-        data[c++] = ((unsigned char *)&methodId)[0];
-        data[c++] = ((unsigned char *)&methodId)[1];
-        data[c++] = ((unsigned char *)&methodId)[2];
         data[c++] = ((unsigned char *)&methodId)[3];
+        data[c++] = ((unsigned char *)&methodId)[2];
+        data[c++] = ((unsigned char *)&methodId)[1];
+        data[c++] = ((unsigned char *)&methodId)[0];
         data[c++] = request.GetArgumentCount();
         for (unsigned int i = 0; i < request.GetArgumentCount(); i++) {
           if (request.GetArgumentLength(i) > 127) {
@@ -138,19 +138,19 @@ namespace naeem {
           ::naeem::hottentot::runtime::Logger::GetOut() << "Request Type: " << request->GetType() << std::endl;
         }
         uint32_t serviceId = 0;
-        ((unsigned char *)(&serviceId))[0] = data[c++];
-        ((unsigned char *)(&serviceId))[1] = data[c++];
-        ((unsigned char *)(&serviceId))[2] = data[c++];
         ((unsigned char *)(&serviceId))[3] = data[c++];
+        ((unsigned char *)(&serviceId))[2] = data[c++];
+        ((unsigned char *)(&serviceId))[1] = data[c++];
+        ((unsigned char *)(&serviceId))[0] = data[c++];
         request->SetServiceId(serviceId);
         if (::naeem::hottentot::runtime::Configuration::Verbose()) {
           ::naeem::hottentot::runtime::Logger::GetOut() << "Service Id: " << serviceId << std::endl;
         }
         uint32_t methodId = 0;
-        ((unsigned char *)(&methodId))[0] = data[c++];
-        ((unsigned char *)(&methodId))[1] = data[c++];
-        ((unsigned char *)(&methodId))[2] = data[c++];
         ((unsigned char *)(&methodId))[3] = data[c++];
+        ((unsigned char *)(&methodId))[2] = data[c++];
+        ((unsigned char *)(&methodId))[1] = data[c++];
+        ((unsigned char *)(&methodId))[0] = data[c++];
         request->SetMethodId(methodId);
         if (::naeem::hottentot::runtime::Configuration::Verbose()) {
           ::naeem::hottentot::runtime::Logger::GetOut() << "Method Id: " << methodId << std::endl;
