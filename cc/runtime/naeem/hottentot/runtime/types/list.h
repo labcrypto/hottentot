@@ -140,11 +140,12 @@ namespace naeem {
                 i++;
               } else {
                 uint32_t count = data[i] & 0x0f;
+                i++;
                 if (count == 2) {
-                  elength = data[i + 1] * 256 + data[i + 2];
+                  elength = data[i] * 256 + data[i + 1];
                   i += 2;
                 } else if (count == 3) {
-                  elength = data[i + 1] * 256 * 256 + data[i + 2] * 256 + data[i + 3];
+                  elength = data[i] * 256 * 256 + data[i + 1] * 256 + data[i + 2];
                   i += 3;
                 }
               }
