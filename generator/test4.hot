@@ -38,5 +38,6 @@ module example.generated{
     DataWrapper test5(list<StringWrapper> inputList);
     DataWrapper test6(list<DataWrapper> inputs);
     Result test7();
+    StringWrapper test8(StringWrapper str);
   };  
 };
