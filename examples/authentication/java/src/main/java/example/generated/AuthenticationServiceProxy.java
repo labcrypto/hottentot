@@ -65,8 +65,8 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
       }
     }
     dataLength += credentialDataLength + credentialDataLengthByteArrayLength;
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -121,8 +121,8 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     request.setType(Request.RequestType.InvokeStateless);
     int dataLength = 0;
     //calculate data length for every argument
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -177,8 +177,8 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     request.setType(Request.RequestType.InvokeStateless);
     int dataLength = 0;
     //calculate data length for every argument
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -233,8 +233,8 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     request.setType(Request.RequestType.InvokeStateless);
     int dataLength = 0;
     //calculate data length for every argument
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -289,8 +289,8 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     request.setType(Request.RequestType.InvokeStateless);
     int dataLength = 0;
     //calculate data length for every argument
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -369,8 +369,8 @@ byte[] serializedInputList = serializableStringWrapperList.serialize();
       }
     }
     dataLength += inputListDataLength + inputListDataLengthByteArrayLength;
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -449,8 +449,8 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
       }
     }
     dataLength += inputsDataLength + inputsDataLengthByteArrayLength;
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -505,8 +505,8 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
     request.setType(Request.RequestType.InvokeStateless);
     int dataLength = 0;
     //calculate data length for every argument
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -550,6 +550,84 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
     result= new Result();
     result.deserialize(response.getData());
     return result;
+  }
+  public StringWrapper test8(StringWrapper str) { 
+    //serialize str
+    byte[] serializedStr = str.serialize();
+
+    //make request
+    Request request = new Request();
+    request.setServiceId(2072454237L);
+    request.setMethodId(1095152123L);
+    request.setArgumentCount((byte) 1);
+    request.setType(Request.RequestType.InvokeStateless);
+    Argument arg0 = new Argument();
+    arg0.setDataLength(serializedStr.length);
+    arg0.setData(serializedStr);
+    request.addArgument(arg0);
+    int dataLength = 0;
+    //calculate data length for every argument
+    //calulate strDataLength
+    int strDataLength= serializedStr.length;
+    int strDataLengthByteArrayLength = 1;
+    if (strDataLength >= 0x80) {
+      if (strDataLength <= 0xff) {
+        //ex 0x81 0xff
+        strDataLengthByteArrayLength = 2;
+      } else if (strDataLength <= 0xffff) {
+        //ex 0x82 0xff 0xff
+        strDataLengthByteArrayLength = 3;
+      } else if (strDataLength <= 0xffffff) {
+        //ex 0x83 0xff 0xff 0xff
+        strDataLengthByteArrayLength = 4;
+      }
+    }
+    dataLength += strDataLength + strDataLengthByteArrayLength;
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
+    //connect to server
+    TcpClient tcpClient = TcpClientFactory.create();
+    try{
+      tcpClient.connect(host, port);
+    } catch (TcpClientConnectException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //serialize request according to HTNP
+    Protocol protocol = ProtocolFactory.create();
+    byte[] serializedRequest = protocol.serializeRequest(request);
+    //send request
+    try {
+      tcpClient.write(serializedRequest);
+    } catch (TcpClientWriteException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //read response from server
+    byte[] buffer = new byte[256];
+    while (!protocol.isResponseComplete()) {
+      byte[] dataChunkRead;
+      try {
+        dataChunkRead = tcpClient.read();
+      } catch (TcpClientReadException e) {
+        throw new HottentotRuntimeException(e);
+      }
+      protocol.processDataForResponse(dataChunkRead);
+    }
+    //deserialize token part of response
+    Response response = protocol.getResponse();
+    //close everything
+     try { 
+       tcpClient.close(); 
+    } catch (TcpClientCloseException e) { 
+      e.printStackTrace(); 
+    } 
+    //deserialize StringWrapperpart from response
+    StringWrapper stringWrapper= null;
+    if (response.getStatusCode() == -1) {
+      //TODO
+    }
+    stringWrapper= new StringWrapper();
+    stringWrapper.deserialize(response.getData());
+    return stringWrapper;
   }
 
   public void destroy() {

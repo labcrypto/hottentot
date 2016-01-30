@@ -63,15 +63,15 @@ public class Main {
 //    System.out.println("ustatus 64 : " + result.getUstatus64());
 //
 //    //
-//    Credential credential = new Credential();
-//    credential.setUsername("a");
-//    String pass = "";
-//    for(int i = 0 ; i < 1000 ; i++){
-//      pass += "a";
-//    }
-//    credential.setPassword(pass);
-//    List<Token> tokenList = proxy.auth(credential);
-//    System.out.println("token id : " + tokenList.get(0).getId());
+    Credential credential = new Credential();
+    credential.setUsername("a");
+    String pass = "";
+    for(int i = 0 ; i < 1000 ; i++){
+      pass += "a";
+    }
+    credential.setPassword("a");
+    List<Token> tokenList = proxy.auth(credential);
+    System.out.println("token id : " + tokenList.get(0).getId());
 //    //
 //    List<DataWrapper> wrapperList = proxy.test();
 //    System.out.println(" 0 size : " + wrapperList.get(0).getDigi().length);
@@ -80,9 +80,9 @@ public class Main {
 //    System.out.println(" 1 size : " + wrapperList.get(1).getDigi().length);
 //    System.out.println(" 1 value : " + wrapperList.get(1).getValue());
 ////    //
-    List<StringWrapper> stringWrapperList2 = proxy.test2();
-    System.out.println("TEST2 stringWrapperList2 size : " + stringWrapperList2.size());
-    System.out.println("TEST2 stringWrapperList2 : " + stringWrapperList2);
+//    List<StringWrapper> stringWrapperList2 = proxy.test2();
+//    System.out.println("TEST2 stringWrapperList2 size : " + stringWrapperList2.size());
+//    System.out.println("TEST2 stringWrapperList2 : " + stringWrapperList2);
 //////    //
 //    StringWrapper stringWrapper3 = proxy.test3();
 //    System.out.println("TEST 3 stringWrapper size : " + stringWrapper3.getValue().length());
@@ -91,12 +91,12 @@ public class Main {
 //    System.out.println("TEST4 dataWrapper size : " + dataWrapper4.getDigi().length);
 //    System.out.println("TEST4 dataWrapper size : " + Arrays.toString(dataWrapper4.getDigi()));
 
-    List<DataWrapper> dataWrapperList = new ArrayList<DataWrapper>();
-    DataWrapper dr = new DataWrapper();
-    dr.setDigi(new byte[]{1});
-    dataWrapperList.add(dr);
-    DataWrapper dataWrapper1 = proxy.test6(dataWrapperList);
-    System.out.println("TEST6 : " + dataWrapper1);
+//    List<DataWrapper> dataWrapperList = new ArrayList<DataWrapper>();
+//    DataWrapper dr = new DataWrapper();
+//    dr.setDigi(new byte[]{1});
+//    dataWrapperList.add(dr);
+//    DataWrapper dataWrapper1 = proxy.test6(dataWrapperList);
+//    System.out.println("TEST6 : " + dataWrapper1);
     //
     AuthenticationServiceProxyBuilder.destroy();
   }

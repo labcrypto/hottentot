@@ -30,6 +30,7 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
 
   public List<Token> auth(Credential credential) {
     Token token = new Token();
+    System.out.println(credential);
     if(credential.getUsername().equals("a")) {
       token.setId((byte)1);
     }else{

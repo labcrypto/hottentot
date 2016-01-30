@@ -157,8 +157,8 @@ namespace naeem {
               methodsStr += indent_ + indent_ + "dataLength += " + argDataLengthVarName + " + " +
               argDataLengthByteArrayLengthVarName + ";\n";
             }
-            methodsStr += indent_ + indent_ + "//arg count + request type + method ID + service ID = 18;\n";
-            methodsStr += indent_ + indent_ + "request.setLength(18 + dataLength);\n";
+            methodsStr += indent_ + indent_ + "//arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;\n";
+            methodsStr += indent_ + indent_ + "request.setLength(10 + dataLength);\n";
             methodsStr += indent_ + indent_ + "//connect to server\n";
             methodsStr += indent_ + indent_ + "TcpClient tcpClient = TcpClientFactory.create();\n";
             methodsStr += indent_ + indent_ + "try{\n";
