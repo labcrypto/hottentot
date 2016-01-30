@@ -31,6 +31,7 @@
 #include "../request.h"
 #include "../logger.h"
 #include "../utils.h"
+#include "../configuration.h"
 
 
 namespace naeem {
@@ -40,18 +41,19 @@ namespace naeem {
         Response*
         DefaultRequestCallback::OnRequest(void *source,
                                           Request &request) {
-          ::naeem::hottentot::runtime::Logger::GetOut() << "A new request is received." << std::endl;
+          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+            ::naeem::hottentot::runtime::Logger::GetOut() << "A new request is received." << std::endl;
+          }
           if (requestHandlers_->count(request.GetServiceId()) > 0) {
             Response *response = new Response;
             RequestHandler *requestHandler = requestHandlers_->find(request.GetServiceId())->second;
             if (requestHandler == 0) {
               return 0;
             }
-            requestHandler->HandleRequest(request, response);
-            std::cout << ">>>>>>>>>>>>>> " << (intptr_t)response->GetData() << std::endl;
-            std::cout << "<<<<<<< " << response->GetData()[0] << std::endl;
-            std::cout << "<<<<<<< " << response->GetDataLength() << std::endl;
-            ::naeem::hottentot::runtime::Utils::PrintArray("Actual Response", response->GetData(), response->GetDataLength());
+            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+              ::naeem::hottentot::runtime::Logger::GetOut() << "Calling handler method ..." << std::endl;
+            }
+            requestHandler->HandleRequest(request, *response);
             return response;
           } else {
             return 0;            

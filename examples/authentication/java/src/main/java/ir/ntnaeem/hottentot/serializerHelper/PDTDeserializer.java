@@ -24,6 +24,7 @@ package ir.ntnaeem.hottentot.serializerHelper;
 
 import com.sun.org.apache.xalan.internal.xsltc.dom.SortingIterator;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import static java.lang.StrictMath.pow;
@@ -32,10 +33,8 @@ public class PDTDeserializer {
 
   public static void main(String[] args) {
     String string = getString(new byte[]{97 , 98 , 99});
-    System.out.println(string);
     String str = "س";
     byte[] bytes = str.getBytes();
-    System.out.println(Arrays.toString(bytes));
   }
 
   public static String getFullString(byte[] bytes) {
@@ -50,12 +49,14 @@ public class PDTDeserializer {
         dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * bytes[counter++];
       }
     }
-    byte[] valueByteArray = new byte[dataLength];
-    System.arraycopy(bytes,counter,valueByteArray,0,dataLength);
+    byte[] valueByteArray = new byte[dataLength - 1];
+    System.arraycopy(bytes,counter,valueByteArray,0,dataLength - 1);
     return new String(valueByteArray);
   }
-  public static String getString(byte[] bytes){
-    return new String(bytes);
+  public static String getString(byte[] bytes) {
+    byte[] realByteArray = new byte[bytes.length - 1];
+    System.arraycopy(bytes,0,realByteArray,0,bytes.length - 1);
+    return new String(realByteArray);
   }
 
   public static boolean getBool(byte b) {
@@ -65,11 +66,11 @@ public class PDTDeserializer {
     return false;
   }
 
-  public static short getInt8(byte b) {
-    return (b < 0) ? (short) (256 + b) : (short) b;
+  public static byte getInt8(byte[] bytes) {
+    return bytes[0];
   }
 
-  public static short getInt16(byte[] bytes) {
+  public static short getUint16(byte[] bytes) {
     short number = 0;
     for (byte i = 0; i < bytes.length; i++) {
       if (bytes[i] < 0) {
@@ -81,7 +82,11 @@ public class PDTDeserializer {
     return number;
   }
 
-  public static int getInt32(byte[] bytes) {
+  public static short getInt16(byte[] bytes) {
+    return  ByteBuffer.allocate(2).wrap(bytes).getShort();
+  }
+
+  public static int getUint32(byte[] bytes) {
     int number = 0;
     for (byte i = 0; i < bytes.length; i++) {
       if (bytes[i] < 0) {
@@ -93,7 +98,11 @@ public class PDTDeserializer {
     return number;
   }
 
-  public static long getInt64(byte[] bytes) {
+  public static int getInt32(byte[] bytes) {
+    return  ByteBuffer.allocate(4).wrap(bytes).getInt();
+  }
+
+  public static long getUint64(byte[] bytes) {
     long number = 0L;
     for (byte i = 0; i < bytes.length; i++) {
       if (bytes[i] < 0) {
@@ -103,5 +112,9 @@ public class PDTDeserializer {
       }
     }
     return number;
+  }
+
+  public static long getInt64(byte[] bytes) {
+    return  ByteBuffer.allocate(8).wrap(bytes).getLong();
   }
 }

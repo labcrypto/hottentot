@@ -64,7 +64,7 @@ namespace naeem {
           inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
             if (length != 2) {
-              throw std::runtime_error("Length is not correct for deserialization.");
+              throw std::runtime_error("UInt16: Length is not correct for deserialization.");
             }
             unsigned char *ptr = (unsigned char*)(&value_);
             ptr[0] = data[1];

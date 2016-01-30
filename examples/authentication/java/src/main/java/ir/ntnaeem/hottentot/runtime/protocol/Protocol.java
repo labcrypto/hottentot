@@ -37,7 +37,8 @@ public interface Protocol {
     void processDataForRequest(byte[] dataChunk) throws ProtocolProcessException;
     void processDataForResponse(byte[] dataChunk);
     void setRequestCallback(RequestCallback requestCallback);
-    boolean IsResponseComplete();
+    boolean isResponseComplete();
+    boolean isRequestComplete();
     Response getResponse();
     void setResponseCallback(ResponseCallback responseCallback);
 }

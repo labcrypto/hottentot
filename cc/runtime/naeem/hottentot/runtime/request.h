@@ -48,7 +48,11 @@ namespace naeem {
         Request()
           : argumentCount_(0) {
         }
-        ~Request() {}
+        ~Request() {
+          for (uint32_t i = 0; i < args_.size(); i++) {
+            delete [] args_[i].data_;
+          }
+        }
         inline RequestType GetType() const {
           return type_;
         }

@@ -24,21 +24,18 @@
 #include <sys/stat.h>
 
 #include <sstream>
-
 #include "java_generator.h"
 #include "../ds/hot.h"
-
 #include "../common/string_helper.h"
 #include "../common/os.h" 
 #include "../common/type_helper.h" 
-
 #include "templates/byte_arrays/abstractService.h" 
 #include "templates/byte_arrays/requestHandler.h" 
 #include "templates/byte_arrays/service.h" 
 #include "templates/byte_arrays/serviceProxy.h" 
 #include "templates/byte_arrays/serviceProxyBuilder.h" 
 #include "templates/byte_arrays/struct.h" 
-
+#include "templates/byte_arrays/serializableStructList.h" 
 
 namespace naeem {
   namespace hottentot {
@@ -58,6 +55,7 @@ namespace naeem {
           serviceProxyTmpStr_ = serviceProxyTmpStr;
           serviceProxyBuilderTmpStr_ = serviceProxyBuilderTmpStr;
           structTmpStr_ = structTmpStr;
+          serializableStructListTmpStr_ = serializableStructListTmpStr;
           //MakeStringsFromByteArrays();
           //ReadTemplateFiles();
         }
@@ -103,14 +101,13 @@ namespace naeem {
           modules_ = hot->modules_;
           for (int i = 0; i < modules_.size(); i++) {
             ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
-
             GenerateStructs(pModule);
             GenerateAbstractService(pModule);
             GenerateServiceInterface(pModule);
             GenerateRequestHandler(pModule);
             GenerateServiceProxyBuilder(pModule);
             GenerateServiceProxy(pModule);
-            
+            GenerateSerializableStructList(pModule);
           }
           Destroy();
         }

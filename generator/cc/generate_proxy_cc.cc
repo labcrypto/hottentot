@@ -62,6 +62,9 @@ namespace naeem {
           ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
           std::string serviceProxyHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy.h";
           std::string serviceProxyCCFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy.cc";
+          std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
+                              ::naeem::hottentot::generator::common::StringHelper::Split(
+                              service->module_->GetPackage(), '.'), "::");
           /*
            * Making real values
            */
@@ -134,6 +137,9 @@ namespace naeem {
                                            ::naeem::hottentot::generator::GenerationConfig &generationConfig,
                                            std::map<std::string, std::string> &templates) {
           std::string indent = generationConfig.GetIndentString();
+          std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
+                             ::naeem::hottentot::generator::common::StringHelper::Split(
+                             service->module_->GetPackage(), '.'), "::");
           /*
            * Making real values
            */
@@ -143,8 +149,11 @@ namespace naeem {
           std::string arguments = "";
           std::string sep = "";
           for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-            arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " " + (!TypeHelper::IsVoid(method->arguments_[j]->GetType()) ? "*" : "") + method->arguments_[j]->GetVariable();
+            arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + method->arguments_[j]->GetVariable();
             sep = ", ";
+          }
+          if (!TypeHelper::IsVoid(method->GetReturnType())) {
+            arguments += sep + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out";
           }
           std::string argumentsSerialization = "";
           for (uint32_t j = 0; j < method->arguments_.size(); j++) {
@@ -161,7 +170,7 @@ namespace naeem {
               proxyCCMethodArgumentSerializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodArgumentSerializationTemplate,
                                                                              "[[[ACCESS_OPERATOR]]]",
-                                                                             "->");
+                                                                             ".");
             /* } else {
               proxyCCMethodArgumentSerializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodArgumentSerializationTemplate,
@@ -179,7 +188,7 @@ namespace naeem {
             proxyCCMethodResponseDeserializationTemplate =
               ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                            "[[[RETURN_TYPE]]]",
-                                                                           TypeHelper::GetCCType(method->GetReturnType()));
+                                                                           TypeHelper::GetCCType(method->GetReturnType(), ns));
             proxyCCMethodResponseDeserializationTemplate =
               ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                            "[[[INDENT]]]",
@@ -189,15 +198,15 @@ namespace naeem {
               proxyCCMethodResponseDeserializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                              "[[[ACCESS_OPERATOR]]]",
-                                                                             "->");
+                                                                             ".");
               proxyCCMethodResponseDeserializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                              "[[[POINTER_SIGN]]]",
                                                                              "*");
-              proxyCCMethodResponseDeserializationTemplate =
+              /*proxyCCMethodResponseDeserializationTemplate =
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
                                                                              "[[[NEW_CLAUSE]]]",
-                                                                             " = new " +  TypeHelper::GetCCType(method->GetReturnType()));
+                                                                             " = new " +  TypeHelper::GetCCType(method->GetReturnType()));*/
             /*} else {
               proxyCCMethodResponseDeserializationTemplate =         
                 ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
@@ -214,12 +223,12 @@ namespace naeem {
             }*/
             responseDeserialization += proxyCCMethodResponseDeserializationTemplate + "\r\n";
           }
-          std::string returnClause = "";
+          /*std::string returnClause = "";
           if (!TypeHelper::IsVoid(method->GetReturnType())) {
             returnClause += indent + indent + "return returnObject;";
           } else {
             returnClause += indent + indent + "return;";
-          }
+          }*/
           std::stringstream serviceHashSS;
           serviceHashSS << service->GetHash();
           std::stringstream methodHashSS;
@@ -228,7 +237,7 @@ namespace naeem {
            * Filling templates with real values
            */
           std::map<std::string, std::string> params;
-          params.insert(std::pair<std::string, std::string>("RETURN_TYPE", TypeHelper::GetCCType(method->GetReturnType()) + (TypeHelper::IsUDT(method->GetReturnType()) ? "*" : "")));
+          params.insert(std::pair<std::string, std::string>("RETURN_TYPE", TypeHelper::IsVoid(method->GetReturnType()) ? "void" : TypeHelper::GetCCType(method->GetReturnType(), ns) + "*"));
           params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
           params.insert(std::pair<std::string, std::string>("METHOD_NAME", ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName())));
           params.insert(std::pair<std::string, std::string>("ARGUMENTS", arguments));
@@ -236,7 +245,7 @@ namespace naeem {
           params.insert(std::pair<std::string, std::string>("RESPONSE_DESERIALIZATION", responseDeserialization));
           params.insert(std::pair<std::string, std::string>("SERVICE_HASH", serviceHashSS.str()));
           params.insert(std::pair<std::string, std::string>("METHOD_HASH", methodHashSS.str()));
-          params.insert(std::pair<std::string, std::string>("RETURN_CLAUSE", returnClause));
+          // params.insert(std::pair<std::string, std::string>("RETURN_CLAUSE", returnClause));
           params.insert(std::pair<std::string, std::string>("INDENT", indent));
           std::string proxyCCMethodTemplate = templates["proxy_cc__method"];
           for (std::map<std::string, std::string>::iterator it = params.begin();

@@ -35,5 +35,6 @@
 #include "uint64.h"
 #include "uint8.h"
 #include "utf8_string.h"
+#include "list.h"
 
 #endif

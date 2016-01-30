@@ -6,6 +6,7 @@
  *   This file contains implementation of the proxy class.
  ***************************************************************/
 
+#include <naeem/hottentot/runtime/configuration.h>
 #include <naeem/hottentot/runtime/logger.h>
 #include <naeem/hottentot/runtime/utils.h>
 #include <naeem/hottentot/runtime/request.h>

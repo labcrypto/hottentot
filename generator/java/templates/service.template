@@ -9,6 +9,7 @@
 package [%BASE_PACKAGE_NAME%];
 
 import ir.ntnaeem.hottentot.runtime.Service;
+import java.util.List;
 
 public interface [%SERVICE_NAME%]Service extends Service {
 [%SERVICE_METHODS%]

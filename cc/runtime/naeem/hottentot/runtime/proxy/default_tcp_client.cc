@@ -27,6 +27,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netdb.h> 
 #include <iostream>
@@ -45,27 +46,37 @@ namespace naeem {
         }
         DefaultTcpClient::~DefaultTcpClient() {
         }
-        void 
+        bool 
         DefaultTcpClient::Connect() {
           struct sockaddr_in serverAddr;
           struct hostent *server;
           socketFD_ = socket(AF_INET, SOCK_STREAM, 0);
           if (socketFD_ < 0) {
             std::cerr << "ERROR opening socket" << std::endl;
-            exit(1);
+            // exit(1);
+            return false;
           }
           server = gethostbyname(host_.c_str());
           if (server == NULL) {
             std::cerr << "ERROR, no such host" << std::endl;
-            exit(1);
+            // exit(1);
+            return false;
           }
           memset((char *) &serverAddr, 0, sizeof(serverAddr));
           serverAddr.sin_family = AF_INET;
-          bcopy((char *)&serverAddr.sin_addr.s_addr, (char *)server->h_addr, server->h_length);
+          // bcopy((char *)&serverAddr.sin_addr.s_addr, (char *)server->h_addr, server->h_length);
           serverAddr.sin_port = htons(port_);
+          if (inet_pton(AF_INET, host_.c_str(), &serverAddr.sin_addr) <= 0) {
+            std::cerr << "ERROR setting host" << std::endl;
+            // exit(1);
+            return false;
+          }
           if (connect(socketFD_, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
             std::cerr << "ERROR connecting" << std::endl;
+            // exit(1);
+            return false;
           }
+          return true;
         }
         void 
         DefaultTcpClient::Write(unsigned char *data,

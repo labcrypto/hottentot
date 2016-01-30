@@ -54,18 +54,17 @@ namespace naeem {
           }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            *length_ptr = 2 * sizeof(unsigned char);
-            unsigned char *data = (unsigned char *)malloc(2 * sizeof(unsigned char));
+            *length_ptr = 1 * sizeof(unsigned char);
+            unsigned char *data = (unsigned char *)malloc(1 * sizeof(unsigned char));
             data[0] = value_ ? 1 : 0;
-            data[1] = 0x10;
             return data;
           }
           inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
-            if (length != 2) {
-              throw std::runtime_error("Length is not correct for deserialization.");
+            if (length != 1) {
+              throw std::runtime_error("Boolean: Length is not correct for deserialization.");
             }
-            value_ = data[1] != 0;
+            value_ = data[0] != 0;
           }
         private:
           bool value_;
