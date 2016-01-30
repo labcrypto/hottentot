@@ -115,7 +115,7 @@ public class TestServiceImpl extends AbstractTestService {
     if(inputList.size() == 2){
       dataWrapper.setDigi(new byte[]{0});
     }else{
-      dataWrapper.setDigi(new byte[]{-1});
+      dataWrapper.setDigi(new byte[]{-9,34,35,56,23,45});
     }
     return dataWrapper;
   }
