@@ -163,7 +163,7 @@ namespace naeem {
           if (data[c] == 0x00) {
             request->AddArgument(0, 0);
             if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              ::naeem::hottentot::runtime::Logger::GetOut() << "Argument[" << k << "] Length: " << argLength << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetOut() << "Argument[" << k << "] Length: " << 0 << std::endl;
               ::naeem::hottentot::runtime::Logger::GetOut() << "Argument has zero length." << std::endl;
             }
           } else {
