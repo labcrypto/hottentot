@@ -42,7 +42,11 @@ namespace naeem {
         public:
           List(){
           }
-          virtual ~List() {}
+          virtual ~List() {
+            for (uint32_t i = 0; i < elements_.size(); i++) {
+              delete elements_[i];
+            }
+          }
         public:
           inline void Add(T *e) {
             elements_.push_back(e);
@@ -86,7 +90,9 @@ namespace naeem {
             }
             uint32_t c = 0;
             unsigned char *data = new unsigned char[length];
-            *length_ptr = length;
+            if (length_ptr) {
+              *length_ptr = length;
+            }
             for (uint32_t i = 0; i < lengths.size(); i++) {
               if (lengths[i] <= (128 - 1)) {
                 data[c] = lengths[i];

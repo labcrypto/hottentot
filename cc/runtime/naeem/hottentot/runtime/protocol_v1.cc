@@ -160,27 +160,31 @@ namespace naeem {
           ::naeem::hottentot::runtime::Logger::GetOut() << "Arg. Count: " << (uint8_t)argCount << std::endl;
         }
         for (unsigned int k = 0; k < (uint8_t)argCount; k++) {
-          uint32_t argLength = 0;
-          if (data[c] > 127) {
-            uint32_t t = 1;
-            uint32_t n = data[c] & 0x0f;
-            for (uint32_t i = n; i > 0; i--) {
-              argLength += data[c + i] * t;
-              t *= 256;
-            }
-            c += n + 1;
+          if (data[c] == 0x00) {
+            request->AddArgument(0, 0);
           } else {
-            argLength = data[c++];
+            uint32_t argLength = 0;
+            if (data[c] > 127) {
+              uint32_t t = 1;
+              uint32_t n = data[c] & 0x0f;
+              for (uint32_t i = n; i > 0; i--) {
+                argLength += data[c + i] * t;
+                t *= 256;
+              }
+              c += n + 1;
+            } else {
+              argLength = data[c++];
+            }
+            unsigned char *argData = new unsigned char[argLength];
+            for (uint32_t i = 0; i < argLength; i++) {
+              argData[i] = data[c++];
+            }
+            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+              ::naeem::hottentot::runtime::Logger::GetOut() << "Argument[" << k << "] Length: " << argLength << std::endl;
+              ::naeem::hottentot::runtime::Utils::PrintArray("Argument Data", argData, argLength);
+            }
+            request->AddArgument(argData, argLength);
           }
-          unsigned char *argData = new unsigned char[argLength];
-          for (uint32_t i = 0; i < argLength; i++) {
-            argData[i] = data[c++];
-          }
-          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-            ::naeem::hottentot::runtime::Logger::GetOut() << "Argument[" << k << "] Length: " << argLength << std::endl;
-            ::naeem::hottentot::runtime::Utils::PrintArray("Argument Data", argData, argLength);
-          }
-          request->AddArgument(argData, argLength);
         }
         return request;
       }
@@ -191,25 +195,30 @@ namespace naeem {
         uint32_t c = 0;
         response->SetStatusCode(data[c++]);
         uint32_t resultLength = 0;
-        if (data[c] > 127) {
-          uint32_t t = 1;
-          uint32_t n = data[c] & 0x0f;
-          for (uint32_t i = n; i > 0; i--) {
-            resultLength += data[c + i] * t;
-            t *= 256;
-          }
-          c += n + 1;
+        if (data[c] == 0x00) {
+          response->SetData(0);
+          response->SetDataLength(0);
         } else {
-          resultLength = data[c++];
-        }
-        unsigned char *resultData = new unsigned char[resultLength];
-        for (uint32_t i = 0; i < resultLength; i++) {
-          resultData[i] = data[c++];
-        }
-        response->SetData(resultData);
-        response->SetDataLength(resultLength);
-        if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-          ::naeem::hottentot::runtime::Utils::PrintArray("Response", resultData, resultLength);
+          if (data[c] > 127) {
+            uint32_t t = 1;
+            uint32_t n = data[c] & 0x0f;
+            for (uint32_t i = n; i > 0; i--) {
+              resultLength += data[c + i] * t;
+              t *= 256;
+            }
+            c += n + 1;
+          } else {
+            resultLength = data[c++];
+          }
+          unsigned char *resultData = new unsigned char[resultLength];
+          for (uint32_t i = 0; i < resultLength; i++) {
+            resultData[i] = data[c++];
+          }
+          response->SetData(resultData);
+          response->SetDataLength(resultLength);
+          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+            ::naeem::hottentot::runtime::Utils::PrintArray("Response", resultData, resultLength);
+          }
         }
         return response;
       }
@@ -285,6 +294,10 @@ namespace naeem {
                   for (unsigned int c = 0; c < requestLength; c++) {
                     requestData[c] = readingBuffer_[c];
                   }
+                  readingBuffer_.clear();
+                  readingCounter_ = 0;
+                  currentState_ = ReadingLengthState;
+                  // Request deserialization
                   if (::naeem::hottentot::runtime::Configuration::Verbose()) {
                     ::naeem::hottentot::runtime::Logger::GetOut() << "Deserializing request ..." << std::endl;
                   }
@@ -292,9 +305,7 @@ namespace naeem {
                   if (::naeem::hottentot::runtime::Configuration::Verbose()) {
                     ::naeem::hottentot::runtime::Logger::GetOut() << "Deserialized." << std::endl;
                   }
-                  readingBuffer_.clear();
-                  readingCounter_ = 0;
-                  currentState_ = ReadingLengthState;
+                  
                   if (::naeem::hottentot::runtime::Configuration::Verbose()) {
                     ::naeem::hottentot::runtime::Logger::GetOut() << "Calling callback ..." << std::endl;
                   }
@@ -331,6 +342,7 @@ namespace naeem {
                   } else {
                     ::naeem::hottentot::runtime::Logger::GetError() << "No handler is found." << std::endl;
                   }
+                  delete request;
                   delete [] requestData;
                 }
               }

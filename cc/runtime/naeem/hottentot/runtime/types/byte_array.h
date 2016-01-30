@@ -43,15 +43,24 @@ namespace naeem {
           }
           ByteArray(unsigned char *data,
                     uint32_t length)
-            : data_(data),
-              length_(length) {
+            : data_(0),
+              length_(0) {
+            FromByteArray(data, length);
           }
-          virtual ~ByteArray() {}
+          ByteArray(const ByteArray &byteArray)
+            : data_(0),
+              length_(0) {
+            FromByteArray(byteArray.data_, byteArray.length_);
+          }
+          virtual ~ByteArray() {
+            if (data_) {
+              delete [] data_;
+            }
+          }
         public:
           inline void SetValue(unsigned char *data, 
                                uint32_t length) {
-            data_ = data;
-            length_ = length;
+            FromByteArray(data, length);
           }
           inline unsigned char* GetValue() const {
             return data_;
@@ -60,19 +69,45 @@ namespace naeem {
             return length_;
           }
         public:
+          inline ByteArray& operator=(const ByteArray &other) {
+            FromByteArray(other.data_, other.length_);
+            return *this;
+          }
+        public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            *length_ptr = length_;
-            /* unsigned char *data = 
+            if (length_ptr) {
+              *length_ptr = length_;
+            }
+            unsigned char *data = 
               new unsigned char[length_ * sizeof(unsigned char)];
             for (uint32_t i = 0; i < length_; i++) {
               data[i] = data_[i];
-            } */
-            return data_;
+            }
+            return data;
           }
           inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
-            data_ = data;
+            FromByteArray(data, length);
+          }
+        private:
+          inline void FromByteArray(unsigned char *data,
+                                    uint32_t length) {
+            if (length == 0) {
+              if (data_) {
+                delete [] data_;
+              }
+              data_ = 0;
+              length_ = 0;
+              return;
+            }
             length_ = length;
+            if (data_) {
+              delete [] data_;
+            }
+            data_ = new unsigned char[length_];
+            for (uint i = 0; i < length_; i++) {
+              data_[i] = data[i];
+            }
           }
         private:
           unsigned char *data_;

@@ -123,6 +123,7 @@ namespace naeem {
             ::naeem::hottentot::runtime::Logger::GetOut() << "Client is gone." << std::endl;
           }
           close(ref->clientSocketFD_);
+          delete requestCallback;
           delete protocol;
           delete ref;
           return 0;

@@ -55,7 +55,8 @@ namespace naeem {
       namespace common {
         class StringHelper {
         public:
-          static inline bool StartsWith(std::string &str, std::string &s) {
+          static inline bool StartsWith(std::string &str, 
+                                        std::string &s) {
             const char *strCharArray = str.c_str();
             const char *sCharArray = s.c_str();
             return strncmp((char *)sCharArray, (char *)strCharArray, strlen(sCharArray)) == 0;
@@ -83,9 +84,9 @@ namespace naeem {
             return result;
           }
           static inline void Replace(std::string &s,
-                                            const std::string toReplace,
-                                            const std::string replaceWith,
-                                            uint32_t functionStatus) {
+                                     const std::string toReplace,
+                                     const std::string replaceWith,
+                                     uint32_t functionStatus) {
             if(functionStatus == 1){
               //std::string result = s;
               std::size_t index = s.find(toReplace);

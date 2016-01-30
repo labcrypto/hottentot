@@ -39,7 +39,7 @@ namespace naeem {
             : host_(host),
               port_(port) {
           }
-          ~TcpClient() {}
+          virtual ~TcpClient() {}
         public:
           virtual bool Connect() = 0;
           virtual void Write(unsigned char *         /* data */,

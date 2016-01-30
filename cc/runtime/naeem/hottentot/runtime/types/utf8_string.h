@@ -46,13 +46,21 @@ namespace naeem {
               FromByteArray(data);
             }
           }
+          Utf8String(const Utf8String &utf8String) 
+            : data_(0),
+              chars_(0),
+              length_(0) {
+            if (utf8String.data_) {
+              FromByteArray(utf8String.data_);
+            }
+          }
           virtual ~Utf8String() {
-            /*if (data_) {
+            if (data_) {
               delete [] data_;
             }
             if (chars_) {
               delete [] chars_;
-            }*/
+            }
           }
         public:
           uint32_t Length() const {
@@ -67,6 +75,11 @@ namespace naeem {
           std::wstring ToStdWString() {
             // TODO
             return std::wstring();
+          }
+        public:
+          inline Utf8String& operator=(const Utf8String &other) {
+            FromByteArray(other.data_);
+            return *this;
           }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {

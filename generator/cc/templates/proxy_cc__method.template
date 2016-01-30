@@ -66,8 +66,8 @@
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Written." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]delete sendData;
-[[[INDENT]]][[[INDENT]]]delete requestSerializedData;
+[[[INDENT]]][[[INDENT]]]delete [] sendData;
+[[[INDENT]]][[[INDENT]]]delete [] requestSerializedData;
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Read response from server
 [[[INDENT]]][[[INDENT]]] */
@@ -83,7 +83,7 @@
 [[[INDENT]]][[[INDENT]]] * Finalization
 [[[INDENT]]][[[INDENT]]] */
 [[[INDENT]]][[[INDENT]]]tcpClient->Close();
-[[[INDENT]]][[[INDENT]]]delete serializedData;
+[[[INDENT]]][[[INDENT]]]// delete serializedData;
 [[[INDENT]]][[[INDENT]]]delete protocol;
 [[[INDENT]]][[[INDENT]]]delete tcpClient;
 [[[INDENT]]]}
