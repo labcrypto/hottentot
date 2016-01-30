@@ -1,4 +1,4 @@
-module test.hotgen{
+module hotgen{
   struct Token{
     string value ord(1);
     uint8 id ord(2);
@@ -30,10 +30,10 @@ module test.hotgen{
   };
 
   struct Result{
-    unit8 statusCode ord(1);
+    uint8 statusCode ord(1);
   };
 
-  stateless service TestService{
+  stateless service Test{
     list<Token> auth(Credential credential);
     list<DataWrapper> test();
     list<StringWrapper> test2();
@@ -43,6 +43,6 @@ module test.hotgen{
     DataWrapper test6(list<DataWrapper> inputs);
     SampleStruct test7();
     StringWrapper test8(StringWrapper str);
-    Result test9(SampleStruct);
+    Result test9(SampleStruct sample);
   };  
 };
