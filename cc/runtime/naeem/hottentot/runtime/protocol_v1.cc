@@ -162,6 +162,10 @@ namespace naeem {
         for (unsigned int k = 0; k < (uint8_t)argCount; k++) {
           if (data[c] == 0x00) {
             request->AddArgument(0, 0);
+            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+              ::naeem::hottentot::runtime::Logger::GetOut() << "Argument[" << k << "] Length: " << argLength << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetOut() << "Argument has zero length." << std::endl;
+            }
           } else {
             uint32_t argLength = 0;
             if (data[c] > 127) {
@@ -198,6 +202,10 @@ namespace naeem {
         if (data[c] == 0x00) {
           response->SetData(0);
           response->SetDataLength(0);
+          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+            ::naeem::hottentot::runtime::Logger::GetOut() << "Response has zero length." << std::endl;
+          }
+          return response;
         } else {
           if (data[c] > 127) {
             uint32_t t = 1;
