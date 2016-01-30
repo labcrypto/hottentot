@@ -182,11 +182,12 @@ namespace naeem {
               deserializationSS << indent << indent << indent << "c++;\r\n";
               deserializationSS << indent << indent << "} else {\r\n";
               deserializationSS << indent << indent << indent << "uint8_t ll = data[c] & 0x0f;\r\n";
+              deserializationSS << indent << indent << indent << "c++;\r\n";
               deserializationSS << indent << indent << indent << "if (ll == 2) {\r\n";
-              deserializationSS << indent << indent << indent << indent << "elength == data[c] * 256 + data[c + 1];\r\n";
+              deserializationSS << indent << indent << indent << indent << "elength = data[c] * 256 + data[c + 1];\r\n";
               deserializationSS << indent << indent << indent << indent << "c += 2;\r\n";
               deserializationSS << indent << indent << indent << "} else if (ll == 3) {\r\n";
-              deserializationSS << indent << indent << indent << indent << "elength == data[c] * 256 * 256 + data[c + 1] * 256 + data[c + 2];\r\n";
+              deserializationSS << indent << indent << indent << indent << "elength = data[c] * 256 * 256 + data[c + 1] * 256 + data[c + 2];\r\n";
               deserializationSS << indent << indent << indent << indent << "c += 3;\r\n";
               deserializationSS << indent << indent << indent << "}\r\n";
               deserializationSS << indent << indent << "}\r\n";
