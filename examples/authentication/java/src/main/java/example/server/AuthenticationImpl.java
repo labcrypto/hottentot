@@ -124,4 +124,10 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
     return result;
   }
 
+  @Override
+  public StringWrapper test8(StringWrapper str) {
+    //
+    return null;
+  }
+
 }
