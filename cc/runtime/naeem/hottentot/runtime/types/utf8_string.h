@@ -96,10 +96,22 @@ namespace naeem {
           }
           inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
+            if (length == 0) {
+              FromByteArray(0);
+              return;
+            }
             FromByteArray((const char *)data);
           }
         protected:
           inline void FromByteArray(const char *data) {
+            if (!data) {
+              if (data_) {
+                delete [] data_;
+              }
+              data_ = 0;
+              length_ = 0;
+              return;
+            }
             uint32_t byteLength = strlen(data);
             if (data_) {
               delete [] data_;
