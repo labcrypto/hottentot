@@ -65,8 +65,8 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
       }
     }
     dataLength += credentialDataLength + credentialDataLengthByteArrayLength;
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -121,8 +121,8 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     request.setType(Request.RequestType.InvokeStateless);
     int dataLength = 0;
     //calculate data length for every argument
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -177,8 +177,8 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     request.setType(Request.RequestType.InvokeStateless);
     int dataLength = 0;
     //calculate data length for every argument
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -233,8 +233,8 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     request.setType(Request.RequestType.InvokeStateless);
     int dataLength = 0;
     //calculate data length for every argument
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -289,8 +289,8 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     request.setType(Request.RequestType.InvokeStateless);
     int dataLength = 0;
     //calculate data length for every argument
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -369,8 +369,8 @@ byte[] serializedInputList = serializableStringWrapperList.serialize();
       }
     }
     dataLength += inputListDataLength + inputListDataLengthByteArrayLength;
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -449,8 +449,8 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
       }
     }
     dataLength += inputsDataLength + inputsDataLengthByteArrayLength;
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{
@@ -505,8 +505,8 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
     request.setType(Request.RequestType.InvokeStateless);
     int dataLength = 0;
     //calculate data length for every argument
-    //arg count + request type + method ID + service ID = 18;
-    request.setLength(18 + dataLength);
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
     //connect to server
     TcpClient tcpClient = TcpClientFactory.create();
     try{

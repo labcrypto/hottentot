@@ -91,12 +91,12 @@ public class Main {
 //    System.out.println("TEST4 dataWrapper size : " + dataWrapper4.getDigi().length);
 //    System.out.println("TEST4 dataWrapper size : " + Arrays.toString(dataWrapper4.getDigi()));
 
-    List<DataWrapper> dataWrapperList = new ArrayList<DataWrapper>();
-    DataWrapper dr = new DataWrapper();
-    dr.setDigi(new byte[]{1});
-    dataWrapperList.add(dr);
-    DataWrapper dataWrapper1 = proxy.test6(dataWrapperList);
-    System.out.println("TEST6 : " + dataWrapper1);
+//    List<DataWrapper> dataWrapperList = new ArrayList<DataWrapper>();
+//    DataWrapper dr = new DataWrapper();
+//    dr.setDigi(new byte[]{1});
+//    dataWrapperList.add(dr);
+//    DataWrapper dataWrapper1 = proxy.test6(dataWrapperList);
+//    System.out.println("TEST6 : " + dataWrapper1);
     //
     AuthenticationServiceProxyBuilder.destroy();
   }
