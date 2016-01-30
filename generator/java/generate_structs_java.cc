@@ -111,12 +111,18 @@ namespace naeem {
                   ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                   std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
                   if(declarationPtr->type_.compare("data") == 0){
-                    serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = " + declarationPtr->variable_ + ";\n";
+                    serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.getData(" + declarationPtr->variable_ + ");\n";
                   }else{
                     //std::cout << "OKK";
                     serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.get";
                     declarationJavaType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
                     capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
+                    if(declarationPtr->type_[0] == 'u'){
+                      ::naeem::hottentot::generator::common::StringHelper::Replace(declarationPtr->type_ ,
+                                                                                   "u" ,
+                                                                                   "" ,
+                                                                                    1);
+                    }
                     std::string capitalizedDeclarationType  = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->type_);
                     serializeMethodStr += capitalizedDeclarationType + "(";
                     serializeMethodStr += declarationPtr->variable_ + ");\n";
@@ -175,11 +181,24 @@ namespace naeem {
                   deserializeMethodStr += indent_ + indent_ +
                   "if(( serializedByteArray[counter] & 0x80) == 0 ) {\n";
                   deserializeMethodStr += indent_ + indent_ + indent_ + "dataLength = serializedByteArray[counter++];\n";
-                  deserializeMethodStr += indent_ + indent_ + "}else{\n";             
+                  deserializeMethodStr += indent_ + indent_ + "}else{\n";   
+
+/*
+numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
+        //dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
+      */
+
                   deserializeMethodStr += indent_ + indent_ + indent_ + "numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;\n";
+                  deserializeMethodStr += indent_ + indent_ + indent_ + "byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];\n";
                   deserializeMethodStr += indent_ + indent_ + indent_ + "for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){\n";
-                  deserializeMethodStr += indent_ + indent_ + indent_ + indent_ + "dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];\n";
+                  deserializeMethodStr += indent_ + indent_ + indent_ + indent_ + "serializedByteArrayLength[i] = serializedByteArray[counter++];\n";
                   deserializeMethodStr += indent_ + indent_ + indent_ + "}\n";
+                  deserializeMethodStr += indent_ + indent_ + indent_ + "dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);\n";
                   deserializeMethodStr += indent_ + indent_ + "}\n";
                   deserializeMethodStr += indent_ + indent_ + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[dataLength];\n";
                   deserializeMethodStr += indent_ + indent_ + "System.arraycopy(serializedByteArray,counter," + declarationPtr->variable_.c_str() + "ByteArray,0,dataLength);\n";

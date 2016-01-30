@@ -61,6 +61,9 @@ namespace naeem {
           std::string structNameScreamingSnakeCase =
           ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(structNameSnakeCase);
           std::string structHeaderFilePath = generationConfig.GetOutDir() + "/" + structNameSnakeCase + ".h";
+          std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
+                              ::naeem::hottentot::generator::common::StringHelper::Split(
+                              structt->module_->GetPackage(), '.'), "::");
           /*
            * Making real values
            */
@@ -82,7 +85,7 @@ namespace naeem {
           for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
                it != structt->declarations_.end();
                ++it) {
-            fields += indent + indent +  TypeHelper::GetCCType(it->second->GetType());
+            fields += indent + indent +  TypeHelper::GetCCType(it->second->GetType(), ns);
             fields += (TypeHelper::IsUDT(it->second->GetType()) ? "*" : "");
             fields += " " + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
             fields += ";\r\n";
@@ -94,7 +97,7 @@ namespace naeem {
             getterAndSetterTemplate = 
               ::naeem::hottentot::generator::common::StringHelper::Replace(getterAndSetterTemplate,
                                                                            "[[[TYPE]]]",
-                                                                           TypeHelper::GetCCType(it->second->GetType()) + (TypeHelper::IsUDT(it->second->GetType()) ? "*" : ""));
+                                                                           TypeHelper::GetCCType(it->second->GetType(), ns) + (TypeHelper::IsUDT(it->second->GetType()) ? "*" : ""));
             getterAndSetterTemplate = 
               ::naeem::hottentot::generator::common::StringHelper::Replace(getterAndSetterTemplate,
                                                                            "[[[CAMEL_CASE_FC_FIELD]]]",

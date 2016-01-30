@@ -16,11 +16,13 @@ import ir.ntnaeem.hottentot.runtime.exception.HottentotRuntimeException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
+import ir.ntnaeem.hottentot.runtime.exception.TcpClientCloseException;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
+import java.util.List;
 
 public class [%SERVICE_NAME%]ServiceProxy extends Abstract[%SERVICE_NAME%]Service implements Proxy {
 	

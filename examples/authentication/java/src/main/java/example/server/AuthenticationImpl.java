@@ -20,20 +20,107 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-
 package example.server;
 
-import example.generated.AbstractAuthenticationService;
-import example.generated.Credential;
-import example.generated.Token;
+import example.generated.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AuthenticationImpl extends AbstractAuthenticationService {
-    public Token authenticate(Credential credential){
-        Token token = new Token();
-        token.setValue("uu-token");
-        token.setSampleData(new byte[]{2,2,3});
-        return token;
+
+  public List<Token> auth(Credential credential) {
+    Token token = new Token();
+    if(credential.getUsername().equals("a")) {
+      token.setId((byte)1);
+    }else{
+      token.setId((byte)-1);
+    }
+    List<Token> tokenList = new ArrayList<Token>();
+    tokenList.add(token);
+    return tokenList;
+  }
+
+  public List<DataWrapper> test() {
+    byte[] data = new byte[100000];
+    for(int i = 0 ; i < 10000; i++) {
+      data[i] = (byte)i;
+    }
+    DataWrapper dataWrapper = new DataWrapper();
+    dataWrapper.setDigi(data);
+    dataWrapper.setValue("ali");
+//    //
+//    byte[] data2 = new byte[100000];
+//    for(int i = 0 ; i < 100000 ; i++){
+//      data2[i] = (byte)i;
+//    }
+//    //byte[] data2 = new byte[]{1};
+//    DataWrapper dataWrapper2 = new DataWrapper();
+//    dataWrapper2.setValue("b");
+//    dataWrapper2.setDigi(data2);
+    //
+    List<DataWrapper> dataWrapperList = new ArrayList<DataWrapper>();
+    //
+    DataWrapper dataWrapper2 = new DataWrapper();
+    dataWrapperList.add(dataWrapper);
+    dataWrapperList.add(dataWrapper2);
+    return dataWrapperList;
+  }
+
+  public List<StringWrapper> test2() {
+//    StringWrapper stringWrapper = new StringWrapper();
+//    String str = "";
+//    for(int i = 0 ; i < 100000 ; i++){
+//      str += "a";
+//    }
+//    stringWrapper.setValue(str);
+//
+//    List<StringWrapper> stringWrapperList = new ArrayList<StringWrapper>();
+//    return stringWrapperList;
+    return null;
+  }
+
+  public StringWrapper test3() {
+    StringWrapper stringWrapper = new StringWrapper();
+    String str = "";
+    for(int i = 0 ; i < 100000 ; i++){
+      str += "a";
     }
 
+    stringWrapper.setValue(str);
+    return stringWrapper;
+  }
+
+  public DataWrapper test4() {
+    DataWrapper dataWrapper = new DataWrapper();
+    //dataWrapper.setDigi(data);
+    return dataWrapper;
+  }
+
+  public DataWrapper test5(List<StringWrapper> inputList) {
+    DataWrapper dataWrapper = new DataWrapper();
+    if(inputList.size() == 2){
+      dataWrapper.setDigi(new byte[]{0});
+    }else{
+      dataWrapper.setDigi(new byte[]{-1});
+    }
+    return dataWrapper;
+  }
+
+  public DataWrapper test6(List<DataWrapper> inputs) {
+    return null;
+  }
+
+  public Result test7() {
+    Result result = new Result();
+    result.setStatus8((byte) -100);
+    result.setStatus16((short) -1000);
+    result.setStatus32(-10000);
+    result.setStatus64(-100000);
+    result.setUstatus8((byte) -100);
+    result.setUstatus16((short) -1000);
+    result.setUstatus32(-10000);
+    result.setUstatus64(-100000);
+    return result;
+  }
 
 }

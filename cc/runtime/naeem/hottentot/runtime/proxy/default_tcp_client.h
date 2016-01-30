@@ -37,7 +37,7 @@ namespace naeem {
                            uint32_t    /* Port */);
           virtual ~DefaultTcpClient();
         public:
-          virtual void Connect();
+          virtual bool Connect();
           virtual void Write(unsigned char *         /* data */,
                              uint32_t                /* Length */);
           virtual uint32_t Read(unsigned char *          /* Buffer */,

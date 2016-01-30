@@ -1,3 +1,4 @@
-[[[INDENT]]][[[INDENT]]][[[RETURN_TYPE]]] [[[POINTER_SIGN]]]returnObject[[[NEW_CLAUSE]]];
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Utils::PrintArray("Response", protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
-[[[INDENT]]][[[INDENT]]]returnObject[[[ACCESS_OPERATOR]]]Deserialize(protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
+[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Utils::PrintArray("Response", protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
+[[[INDENT]]][[[INDENT]]]}
+[[[INDENT]]][[[INDENT]]]out[[[ACCESS_OPERATOR]]]Deserialize(protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());

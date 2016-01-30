@@ -1,9 +1,10 @@
 Declarations should be sorted according to their order.                               [DONE]
-Ids of methods and services should be hashed in 32 bits.                              [TODO]
+Ids of methods and services should be hashed in 32 bits.                              [DONE]
 Option for choosing end-of-line character: \r\n for Windows, \n for Unix.             [TODO]
-Serialization and deserialization for primitive data types.                           [TODO]
+Serialization and deserialization for primitive data types.                           [DONE]
 Producing each struct in its namespace directory.                                     [TODO]
-Support collection types: list, set and map                                           [TODO]
+Support collection types: list                                                        [DONE]
+Support collection types: set and map                                                 [TODO]
 Custom Encryption                                                                     [TODO]
 Compression                                                                           [TODO]
 Support SSL Sockets                                                                   [TODO]
@@ -13,4 +14,9 @@ compatibility.                                                                  
 Support for Date, Time and DateTime.                                                  [TODO]
 Embedding all templates in a single binary.                                           [DONE]
 Only structs option for those who wants serialization only.                           [TODO]
+Versioning mechanism for hottentot protocols                                          [TODO]
+Nested structs                                                                        [TODO]
+Enumerations                                                                          [TODO]
+Support for NULL values                                                               [TODO]
+
 

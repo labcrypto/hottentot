@@ -50,7 +50,11 @@ namespace naeem {
           inline static void SetTcpServerFactory(TcpServerFactory *tcpServerFactory) {
             tcpServerFactory_ = tcpServerFactory;
           }
+          inline static bool Verbose() {
+            return verbose_;
+          }
         private:
+          static bool verbose_;
           static TcpServerFactory *tcpServerFactory_;
           static std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> services_;
           static std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> requestHandlers_;

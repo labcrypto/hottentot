@@ -37,10 +37,9 @@ namespace naeem {
       namespace types {
         class ByteArray : public ::naeem::hottentot::runtime::Serializable {
         public:
-          ByteArray(uint32_t length = 0)
+          ByteArray()
             : data_(0),
-              length_(length) {
-            // TOOD(kamran): ??
+              length_(0) {
           }
           ByteArray(unsigned char *data,
                     uint32_t length)
@@ -63,12 +62,12 @@ namespace naeem {
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
             *length_ptr = length_;
-            unsigned char *data = 
+            /* unsigned char *data = 
               new unsigned char[length_ * sizeof(unsigned char)];
             for (uint32_t i = 0; i < length_; i++) {
               data[i] = data_[i];
-            }
-            return data;
+            } */
+            return data_;
           }
           inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {

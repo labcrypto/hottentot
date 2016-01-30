@@ -1,0 +1,9 @@
+module example.generated{
+  
+  struct Out{
+    string name ord(1);
+  };
+  stateless service Auth{
+    Out test();
+  };  
+};

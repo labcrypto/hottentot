@@ -78,12 +78,93 @@ namespace naeem {
           namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
           namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
           std::string fields = "";
-          std::string serialization = "return 0; // TODO(kamran)";
-          std::string deserialization = "return; // TODO(kamran)";
+          /*
+           * Serializarion
+           */
+          uint32_t counter = 0;
+          std::stringstream serializationSS;
+          serializationSS << indent << indent << "uint32_t totalLength = 0;\r\n";
           for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
                it != structt->declarations_.end();
                ++it) {
+            serializationSS << indent << indent << "uint32_t length" << counter << " = 0;\r\n";
+            serializationSS << indent << indent << "unsigned char *data" << counter << " = ";
+            serializationSS << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+            serializationSS << ".Serialize(&length" << counter << ");\r\n";
+            serializationSS << indent << indent << "if (length" << counter << " <= 127) {\r\n";
+            serializationSS << indent << indent << indent << "totalLength += 1 + length" << counter << ";\r\n";
+            serializationSS << indent << indent << "} else if (length" << counter << " <= (256 * 256 - 1)) {\r\n";
+            serializationSS << indent << indent << indent << "totalLength += 3 + length" << counter << ";\r\n";
+            serializationSS << indent << indent << "} else if (length" << counter << " <= (256 * 256 * 256 - 1)) {\r\n";
+            serializationSS << indent << indent << indent << "totalLength += 3 + length" << counter << ";\r\n";
+            serializationSS << indent << indent << "}\r\n";
+            counter++;
           }
+          serializationSS << indent << indent << "unsigned char *data = new unsigned char[totalLength];\r\n";
+          serializationSS << indent << indent << "uint32_t c = 0;\r\n";
+          counter = 0;
+          for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
+               it != structt->declarations_.end();
+               ++it) {
+            serializationSS << indent << indent << "if (length" << counter << " <= 127) {\r\n";
+            serializationSS << indent << indent << indent << "data[c] = length" << counter << ";\r\n";
+            serializationSS << indent << indent << indent << "c += 1;\r\n";
+            serializationSS << indent << indent << "} else if (length" << counter << " <= (256 * 256 - 1)) {\r\n";
+            serializationSS << indent << indent << indent << "data[c] = 0x82;\r\n";
+            serializationSS << indent << indent << indent << "data[c + 1] = length" << counter << " / 256;\r\n";
+            serializationSS << indent << indent << indent << "data[c + 2] = length" << counter << " % 256;\r\n";
+            serializationSS << indent << indent << indent << "c += 3;\r\n";
+            serializationSS << indent << indent << "} else if (length" << counter << " <= (256 * 256 * 256 - 1)) {\r\n";
+            serializationSS << indent << indent << indent << "data[c] = 0x83;\r\n";
+            serializationSS << indent << indent << indent << "data[c + 1] = length" << counter << " / (256 * 256);\r\n";
+            serializationSS << indent << indent << indent << "data[c + 2] = (length" << counter << " - data[c + 1] * (256 * 256)) / 256;\r\n";
+            serializationSS << indent << indent << indent << "data[c + 3] = length" << counter << " % (256 * 256);\r\n";
+            serializationSS << indent << indent << indent << "c += 4;\r\n";
+            serializationSS << indent << indent << "}\r\n";
+            serializationSS << indent << indent << "for (uint32_t i = 0; i < length" << counter << "; i++) {\r\n";
+            serializationSS << indent << indent << indent << "data[c++] = data" << counter << "[i];\r\n";
+            serializationSS << indent << indent << "}\r\n";
+            counter++;
+          }
+          serializationSS << indent << indent << "if (c != totalLength) {\r\n";
+          serializationSS << indent << indent << indent << "std::cout << \"Struct Serialization: Inconsistency in length of serialized byte array.\" << std::endl;\r\n";
+          serializationSS << indent << indent << indent << "exit(1);\r\n";
+          serializationSS << indent << indent << "};\r\n";
+          serializationSS << indent << indent << "if (length_ptr) {\r\n";
+          serializationSS << indent << indent << indent << "*length_ptr = totalLength;\r\n";
+          serializationSS << indent << indent << "}\r\n";
+          serializationSS << indent << indent << "return data;\r\n";
+          std::string serialization = serializationSS.str();
+          /*
+           * Deserialization
+           */
+          std::stringstream deserializationSS;
+          deserializationSS << indent << indent << "uint32_t c = 0, elength = 0;\r\n";
+          for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
+               it != structt->declarations_.end();
+               ++it) {
+            deserializationSS << indent << indent << "if ((data[c] & 0x80) == 0) {\r\n";
+            deserializationSS << indent << indent << indent << "elength = data[c];\r\n";
+            deserializationSS << indent << indent << indent << "c++;\r\n";
+            deserializationSS << indent << indent << "} else {\r\n";
+            deserializationSS << indent << indent << indent << "uint8_t ll = data[c] & 0x0f;\r\n";
+            deserializationSS << indent << indent << indent << "if (ll == 2) {\r\n";
+            deserializationSS << indent << indent << indent << indent << "elength == data[c] * 256 + data[c + 1];\r\n";
+            deserializationSS << indent << indent << indent << indent << "c += 2;\r\n";
+            deserializationSS << indent << indent << indent << "} else if (ll == 3) {\r\n";
+            deserializationSS << indent << indent << indent << indent << "elength == data[c] * 256 * 256 + data[c + 1] * 256 + data[c + 2];\r\n";
+            deserializationSS << indent << indent << indent << indent << "c += 3;\r\n";
+            deserializationSS << indent << indent << indent << "}\r\n";
+            deserializationSS << indent << indent << "}\r\n";
+            deserializationSS << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+            deserializationSS << ".Deserialize(data + c, elength);\r\n";
+            deserializationSS << indent << indent << "c += elength;\r\n";
+          }
+          deserializationSS << indent << indent << "if (c != length) {\r\n";
+          deserializationSS << indent << indent << indent << "std::cout << \"Struct Deserialization: Inconsistency in length of deserialized byte array.\" << std::endl;\r\n";
+          deserializationSS << indent << indent << indent << "exit(1);\r\n";
+          deserializationSS << indent << indent << "};\r\n";
+          std::string deserialization = deserializationSS.str();
           /*
            * Filling templates with real values
            */

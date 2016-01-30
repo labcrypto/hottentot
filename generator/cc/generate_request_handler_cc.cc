@@ -61,6 +61,9 @@ namespace naeem {
           std::string serviceNameScreamingSnakeCase =
           ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
           std::string requestHandlerCCFilePath = generationConfig.GetOutDir() + "/service/" + serviceNameSnakeCase + "_request_handler.cc";
+          std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
+                              ::naeem::hottentot::generator::common::StringHelper::Split(
+                              service->module_->GetPackage(), '.'), "::");
           /*
            * Making real values
            */
@@ -139,54 +142,42 @@ namespace naeem {
               service->GetName()) + "Service";
           std::stringstream methodHashSS;
           methodHashSS << method->GetHash();
-          std::string ns = 
-            ::naeem::hottentot::generator::common::StringHelper::Concat( 
-                ::naeem::hottentot::generator::common::StringHelper::Split(
-                    service->module_->GetPackage(), '.'), "::");
+          std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
+                              ::naeem::hottentot::generator::common::StringHelper::Split(
+                              service->module_->GetPackage(), '.'), "::");
           std::string inputVariables = "";
           for (uint32_t i = 0; i < method->arguments_.size(); i++) {
             if (TypeHelper::IsUDT(method->arguments_[i]->GetType())) {
-              inputVariables += indent + indent + indent + "::" + ns + "::" + method->arguments_[i]->GetType() + " " + method->arguments_[i]->GetVariable() + ";\r\n";
+              inputVariables += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[i]->GetType(), ns) + " " + method->arguments_[i]->GetVariable() + ";\r\n";
             } else {
-              inputVariables += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[i]->GetType()) + " " + method->arguments_[i]->GetVariable() + ";\r\n";
+              inputVariables += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[i]->GetType(), ns) + " " + method->arguments_[i]->GetVariable() + ";\r\n";
             }
             std::stringstream tempSS;
             tempSS << ".Deserialize(request.GetArgumentData(" << i << "), request.GetArgumentLength(" << i << "));";
             inputVariables += indent + indent + indent + method->arguments_[i]->GetVariable() + tempSS.str() + "\r\n";
           }
           std::string methodCall = indent + indent + indent;
-          if (TypeHelper::IsUDT(method->GetReturnType())) {
-            methodCall += "::" + ns + "::" + method->GetReturnType() + "* result = serviceObject->" 
-                          + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
-          } else {
-            if (TypeHelper::IsVoid(method->GetReturnType())) {
-              methodCall += "serviceObject->" + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
-            } else {
-              methodCall += TypeHelper::GetCCType(method->GetReturnType()) + " result = serviceObject->" 
-                          + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
-            }
+          if (!TypeHelper::IsVoid(method->GetReturnType())) {
+            methodCall += TypeHelper::GetCCType(method->GetReturnType(), ns) + " result;\r\n";
           }
+          methodCall += indent + indent + indent + "serviceObject->" + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
           std::string sep = "";
           for (uint32_t i = 0; i < method->arguments_.size(); i++) {
-            if (TypeHelper::IsUDT(method->arguments_[i]->GetType())) {
-              methodCall += sep + "&" + method->arguments_[i]->GetVariable();
-            } else {
-              methodCall += sep + method->arguments_[i]->GetVariable();
-            }
+            methodCall += sep + method->arguments_[i]->GetVariable();
             sep = ", ";
+          }
+          if (!TypeHelper::IsVoid(method->GetReturnType())) {
+            methodCall += sep + "result";
           }
           methodCall += ");\r\n";
           std::string resultSerialization = "";
-          if (TypeHelper::IsUDT(method->GetReturnType())) {
-            resultSerialization += indent + indent + indent + "unsigned char *serializedData = result->Serialize(&serializedDataLength);\r\n";
-            resultSerialization += indent + indent + indent + "delete result;";
-
+          // if (TypeHelper::IsUDT(method->GetReturnType())) {
+          //  resultSerialization += indent + indent + indent + "unsigned char *serializedData = result.Serialize(&serializedDataLength);\r\n";
+          // } else {
+          if (TypeHelper::IsVoid(method->GetReturnType())) {
+            resultSerialization += indent + indent + indent + "unsigned char *serializedData = 0;";
           } else {
-            if (TypeHelper::IsVoid(method->GetReturnType())) {
-              resultSerialization += indent + indent + indent + "unsigned char *serializedData = 0;";
-            } else {
-              resultSerialization += indent + indent + indent + "unsigned char *serializedData = result.Serialize(&serializedDataLength);\r\n";
-            }
+            resultSerialization += indent + indent + indent + "unsigned char *serializedData = result.Serialize(&serializedDataLength);\r\n";
           }
           resultSerialization += "\r\n";
           /*

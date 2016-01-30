@@ -26,6 +26,8 @@
 #include "tcp_client_factory.h"
 #include "default_tcp_client_factory.h"
 
+#include "../configuration.h"
+
 
 namespace naeem {
   namespace hottentot {
@@ -35,6 +37,7 @@ namespace naeem {
         void
         ProxyRuntime::Init(int argc,
                            char **argv) {
+          Configuration::Init(argc, argv);
         }
         TcpClientFactory*
         ProxyRuntime::GetTcpClientFactory() {
