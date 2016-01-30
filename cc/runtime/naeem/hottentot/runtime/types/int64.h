@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME__TYPES__INT32_H_
-#define _NAEEM_HOTTENTOT_RUNTIME__TYPES__INT32_H_
+#ifndef _NAEEM_HOTTENTOT_RUNTIME__TYPES__INT64_H_
+#define _NAEEM_HOTTENTOT_RUNTIME__TYPES__INT64_H_
 
 #include <iostream>
 #include <stdexcept>
