@@ -47,19 +47,26 @@ main(int argc, char **argv) {
     }
     */
     //TEST4
+    /*
     ::hotgen::DataWrapper test4out;
     proxy->Test4(test4out);
     ::naeem::hottentot::runtime::types::ByteArray bytes = test4out.GetDigi();
     std::cout << "test 4 : byte array out length : " << bytes.GetLength() << std::endl;
     ::naeem::hottentot::runtime::Utils::PrintArray("RES", bytes.GetValue(), bytes.GetLength());
+    */
     //
     //TEST5
     ::naeem::hottentot::runtime::types::List< ::hotgen::StringWrapper> inputList;
-    ::hotgen::StringWrapper stringWrapper;
-    stringWrapper.SetValue("a");
-    inputList.Add(&stringWrapper);
-    ::hotgen::DataWrapper out;
-    proxy->Test5(inputList,out);
+    ::hotgen::StringWrapper *stringWrapper = new ::hotgen::StringWrapper();
+    stringWrapper->SetValue("a");
+    inputList.Add(stringWrapper);
+    ::hotgen::StringWrapper *stringWrapper2 = new ::hotgen::StringWrapper();
+    stringWrapper2->SetValue("a");
+    inputList.Add(stringWrapper2);
+    ::hotgen::DataWrapper test5out;
+    proxy->Test5(inputList,test5out);
+    ::naeem::hottentot::runtime::types::ByteArray bytes2 = test5out.GetDigi();
+    ::naeem::hottentot::runtime::Utils::PrintArray("RES", bytes2.GetValue(), bytes2.GetLength());
     //
     ::hotgen::proxy::TestServiceProxyBuilder::Destroy(proxy);
     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
