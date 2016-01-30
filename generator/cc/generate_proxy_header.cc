@@ -61,6 +61,9 @@ namespace naeem {
           std::string serviceNameScreamingSnakeCase =
             ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
           std::string serviceProxyHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy.h";
+          std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
+                              ::naeem::hottentot::generator::common::StringHelper::Split(
+                              service->module_->GetPackage(), '.'), "::");
           /*
            * Making real values
            */
@@ -85,11 +88,14 @@ namespace naeem {
           std::string methodDefs = "";
           for (uint32_t i = 0; i < service->methods_.size(); i++) {
             ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
-            methodDefs += indent + indent + TypeHelper::GetCCType(method->GetReturnType()) + (!TypeHelper::IsVoid(method->GetReturnType()) ? "*" : "") + " " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
+            methodDefs += indent + indent + "virtual void " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
             std::string sep = "";
             for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-              methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType()) + " *" + method->arguments_[j]->GetVariable();
+              methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + method->arguments_[j]->GetVariable();
               sep = ", ";
+            }
+            if (!TypeHelper::IsVoid(method->GetReturnType())) {
+              methodDefs += sep + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &";
             }
             methodDefs += ");\r\n";
           }

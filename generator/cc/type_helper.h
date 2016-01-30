@@ -74,7 +74,72 @@ namespace naeem {
             }
             return true;
           }
-          static inline std::string GetCCType(std::string type) {
+          static inline bool IsFixedLength(std::string type) {
+            if (type == "int8") {
+              return true;
+            } else if (type == "int16") {
+              return true;
+            } else if (type == "int32") {
+              return true;
+            } else if (type == "int64") {
+              return true;
+            } else if (type == "uint8") {
+              return true;
+            } else if (type == "uint16") {
+              return true;
+            } else if (type == "uint32") {
+              return true;
+            } else if (type == "uint64") {
+              return true;
+            } else if (type == "bool") {
+              return true;
+            } else if (type == "char") {
+              return true;
+            } else if (type == "date") {
+              return true;
+            } else if (type == "time") {
+              return true;
+            } else if (type == "datetime") {
+              return true;
+            } else if (type == "double") {
+              return true;
+            } 
+            return false;
+          }
+          static inline uint16_t GetFixedLength(std::string type) {
+            if (type == "int8") {
+              return 1;
+            } else if (type == "int16") {
+              return 2;
+            } else if (type == "int32") {
+              return 4;
+            } else if (type == "int64") {
+              return 8;
+            } else if (type == "uint8") {
+              return 1;
+            } else if (type == "uint16") {
+              return 2;
+            } else if (type == "uint32") {
+              return 4;
+            } else if (type == "uint64") {
+              return 8;
+            } else if (type == "bool") {
+              return 1;
+            } else if (type == "char") {
+              return 1;
+            } else if (type == "date") {
+              return 8;
+            } else if (type == "time") {
+              return 8;
+            } else if (type == "datetime") {
+              return 8;
+            } else if (type == "double") {
+              return 8;
+            } 
+            throw std::runtime_error("Type is not length fixed.");
+          }
+          static inline std::string GetCCType(std::string type, std::string ns) {
+            std::string listStr = "list";
             if (type == "int8") {
               return "::naeem::hottentot::runtime::types::Int8";
             } else if (type == "int16") {
@@ -109,8 +174,14 @@ namespace naeem {
               return "::naeem::hottentot::runtime::types::Double";
             } else if (type == "void") {
               return "void";
+            } else if(::naeem::hottentot::generator::common::StringHelper::StartsWith(type, listStr)) {
+              return "::naeem::hottentot::runtime::types::List< " + GetCCType(type.substr(5, type.length() - 6), ns) + ">";
             }
-            return type;
+            if (ns.length() == 0) {
+              return type;
+            } else {
+              return ns + "::" + type;
+            }
           }
         };
       }

@@ -8,6 +8,7 @@
  
 #include <iostream>
 
+#include <naeem/hottentot/runtime/configuration.h>
 #include <naeem/hottentot/runtime/logger.h>
 #include <naeem/hottentot/runtime/service/service_runtime.h>
 
@@ -20,8 +21,10 @@ int
 main(int argc, char **argv) {
 [[[INDENT]]]try {
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::Init();
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Starting server ..." << std::endl;
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::ServiceRuntime::Init(argc, argv);
+[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Starting server ..." << std::endl;
+[[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl *service =
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]new [[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl;
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::ServiceRuntime::Register("0.0.0.0", 2000, service);

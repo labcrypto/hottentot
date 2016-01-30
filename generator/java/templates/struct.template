@@ -7,9 +7,9 @@
  ******************************************************************/
 package [%BASE_PACKAGE_NAME%];
 
-import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
-import static java.lang.StrictMath.pow;
+import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
+import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
 public class [%STRUCT_NAME%] {
 [%MEMBERS%]	
@@ -18,6 +18,8 @@ public class [%STRUCT_NAME%] {
 [%INDENT%]}
     
 [%INDENT%]public void deserialize(byte[] serializedByteArray) {
-[%DESERIALIZE_METHOD_BODY%]
+[%INDENT%][%INDENT%]if(serializedByteArray.length != 0){
+[%INDENT%][%DESERIALIZE_METHOD_BODY%]
+[%INDENT%][%INDENT%]}
 [%INDENT%]}
 }

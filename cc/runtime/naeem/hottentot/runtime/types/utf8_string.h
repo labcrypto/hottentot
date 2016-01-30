@@ -46,11 +46,15 @@ namespace naeem {
               FromByteArray(data);
             }
           }
-          virtual ~Utf8String() {
-            uint32_t byteLength = strlen(data_);
-            for (uint32_t i = 0; i < byteLength; i++) {
-              std::cout << "BYE: " << data_[i] << std::endl;
+          Utf8String(const Utf8String &utf8String) 
+            : data_(0),
+              chars_(0),
+              length_(0) {
+            if (utf8String.data_) {
+              FromByteArray(utf8String.data_);
             }
+          }
+          virtual ~Utf8String() {
             if (data_) {
               delete [] data_;
             }
@@ -65,6 +69,18 @@ namespace naeem {
           uint16_t CharAt(uint32_t index) const {
             return chars_[index];
           }
+          std::string ToStdString() {
+            return (const char*)Serialize(NULL);
+          }
+          std::wstring ToStdWString() {
+            // TODO
+            return std::wstring();
+          }
+        public:
+          inline Utf8String& operator=(const Utf8String &other) {
+            FromByteArray(other.data_);
+            return *this;
+          }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
             uint32_t byteLength = strlen(data_);
@@ -73,17 +89,30 @@ namespace naeem {
               data[i] = data_[i];
             }
             data[byteLength] = 0;
-            *length_ptr = byteLength + 1;
+            if (length_ptr) {
+              *length_ptr = byteLength + 1;
+            }
             return data;
           }
           inline virtual void Deserialize(unsigned char *data,
                                           uint32_t length) {
+            if (length == 0) {
+              FromByteArray(0);
+              return;
+            }
             FromByteArray((const char *)data);
           }
         protected:
           inline void FromByteArray(const char *data) {
+            if (!data) {
+              if (data_) {
+                delete [] data_;
+              }
+              data_ = 0;
+              length_ = 0;
+              return;
+            }
             uint32_t byteLength = strlen(data);
-            std::cout << "BL: " << byteLength << std::endl;
             if (data_) {
               delete [] data_;
             }
@@ -94,7 +123,6 @@ namespace naeem {
             data_[byteLength] = 0;
             length_ = 0;
             for (uint32_t i = 0; i < byteLength; i++) {
-              std::cout << "CHAR: " << data_[i] << std::endl;
               if ((data_[i] & 0x80) == 0x00) {
                 length_++;
               } else {
@@ -103,7 +131,6 @@ namespace naeem {
                 }
               }
             }
-            std::cout << "LLLL: " << length_ << std::endl;
             uint32_t c = 0;
             chars_ = new uint16_t[length_ + 1];
             for (uint32_t i = 0; i < byteLength; i++) {
@@ -119,7 +146,6 @@ namespace naeem {
               }
             }
             chars_[c] = 0;
-            std::cout << "LLLL ccc: " << c << std::endl;
           }
         private:
           char *data_;

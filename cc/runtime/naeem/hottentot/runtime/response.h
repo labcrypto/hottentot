@@ -33,6 +33,11 @@ namespace naeem {
     namespace runtime {
       class Response {
       public:
+        Response() {}
+        virtual ~Response() {
+          delete [] data_;
+        }
+      public:
         inline uint8_t GetStatusCode() const {
           return statusCode_;
         }

@@ -40,6 +40,7 @@ namespace naeem {
           ~Proxy() {}
         public:
           virtual void Destroy();
+          virtual bool IsServerAlive();
         protected:
           std::string host_;
           uint32_t port_;
