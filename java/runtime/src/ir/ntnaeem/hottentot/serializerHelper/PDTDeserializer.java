@@ -49,12 +49,14 @@ public class PDTDeserializer {
         dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * bytes[counter++];
       }
     }
-    byte[] valueByteArray = new byte[dataLength];
-    System.arraycopy(bytes,counter,valueByteArray,0,dataLength);
+    byte[] valueByteArray = new byte[dataLength - 1];
+    System.arraycopy(bytes,counter,valueByteArray,0,dataLength - 1);
     return new String(valueByteArray);
   }
-  public static String getString(byte[] bytes){
-    return new String(bytes);
+  public static String getString(byte[] bytes) {
+    byte[] realByteArray = new byte[bytes.length - 1];
+    System.arraycopy(bytes,0,realByteArray,0,bytes.length - 1);
+    return new String(realByteArray);
   }
 
   public static boolean getBool(byte b) {
