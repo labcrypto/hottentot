@@ -13,6 +13,9 @@
 #include <naeem/hottentot/runtime/proxy/proxy_runtime.h>
  #include <naeem/hottentot/runtime/utils.h>
 
+
+ #include <string>
+
 #include "../token.h"
 #include "../credential.h"
 #include "../data_wrapper.h"
@@ -58,7 +61,13 @@ main(int argc, char **argv) {
     //TEST5
     ::naeem::hottentot::runtime::types::List< ::hotgen::StringWrapper> inputList;
     ::hotgen::StringWrapper *stringWrapper = new ::hotgen::StringWrapper();
-    stringWrapper->SetValue("a");
+    std::string str = "";
+    for(int i = 0 ; i < 256 ; i++) {
+      str += "a";
+    }
+    ::naeem::hottentot::runtime::types::Utf8String *utf8str = 
+    new  ::naeem::hottentot::runtime::types::Utf8String(str);
+    stringWrapper->SetValue(&utf8str);
     inputList.Add(stringWrapper);
     ::hotgen::StringWrapper *stringWrapper2 = new ::hotgen::StringWrapper();
     stringWrapper2->SetValue("a");

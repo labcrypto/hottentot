@@ -81,7 +81,7 @@ namespace naeem {
                                         " = new " + pArg->type_ + "();\n";
                   methodConditionStr += indent_ + indent_ + indent_ +
                                         pArg->variable_ + ".deserialize(serialized" + 
-                                        pArg->type_ + ");\n";
+                                        capitalizedArgVar+ ");\n";
                 }else {
                   std::string javaType = 
                   ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pArg->type_);
