@@ -25,7 +25,6 @@ package client;
 
 import hotgen.StringWrapper;
 import hotgen.TestService;
-import hotgen.TestServiceProxy;
 import hotgen.TestServiceProxyBuilder;
 
 import java.util.List;
