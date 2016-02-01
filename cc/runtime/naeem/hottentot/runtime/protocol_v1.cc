@@ -391,7 +391,7 @@ namespace naeem {
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
                 if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Response length is " << readingLength_ << " Bytes." << std::endl;
                 }
               } else {
                 targetCounter_ = (data[i] & 0x0f) + 1;
@@ -413,7 +413,7 @@ namespace naeem {
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
                 if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Response length is " << readingLength_ << " Bytes." << std::endl;
                 }
                 // Variable 'i' shouldn't get incremented because no byte is processed here.
                 i--;

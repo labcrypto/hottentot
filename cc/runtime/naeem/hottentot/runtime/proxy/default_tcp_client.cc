@@ -100,7 +100,6 @@ namespace naeem {
           }
 #else
           WSADATA wsaData;
-          SOCKET clientSocket = INVALID_SOCKET;
           struct addrinfo *result = NULL,
                           hints;
           // Initialize Winsock
@@ -109,7 +108,7 @@ namespace naeem {
               printf("WSAStartup failed with error: %d\n", iResult);
               return false;
           }
-          ZeroMemory( &hints, sizeof(hints) );
+          ZeroMemory(&hints, sizeof(hints));
           hints.ai_family = AF_UNSPEC;
           hints.ai_socktype = SOCK_STREAM;
           hints.ai_protocol = IPPROTO_TCP;
@@ -123,17 +122,17 @@ namespace naeem {
               return false;
           }
           // Create a SOCKET for connecting to server
-          clientSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-          if (clientSocket == INVALID_SOCKET) {
+          socketFD_ = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+          if (socketFD_ == INVALID_SOCKET) {
               printf("socket failed with error: %ld\n", WSAGetLastError());
               WSACleanup();
               return false;
           }
           // Connect to server.
-          iResult = connect(clientSocket, result->ai_addr, (int)result->ai_addrlen);
+          iResult = connect(socketFD_, result->ai_addr, (int)result->ai_addrlen);
           if (iResult == SOCKET_ERROR) {
-              closesocket(clientSocket);
-              clientSocket = INVALID_SOCKET;
+              closesocket(socketFD_);
+              socketFD_ = INVALID_SOCKET;
               return false;
           }
           freeaddrinfo(result);

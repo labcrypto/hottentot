@@ -43,6 +43,7 @@ main(int argc, char **argv) {
       ::naeem::hottentot::runtime::Logger::GetOut() << "Proxy object is destroyed." << std::endl;
     }
     // Delete allocated objects
+    std::cin.get();
   } catch (...) {
     ::naeem::hottentot::runtime::Logger::GetOut() << "Error." << std::endl;
     return 1;
