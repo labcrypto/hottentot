@@ -40,6 +40,7 @@ typedef __int64 int64_t;
 typedef unsigned __int64 uint64_t;
 #else
 #include <stdint.h>
+#include <unistd.h>
 #endif
 
 #include "../logger.h"
@@ -163,8 +164,9 @@ namespace naeem {
 #ifndef _MSC_VER
           struct sockaddr_in clientAddr;
           socklen_t clientAddrLength = sizeof(clientAddr);
-#endif
+#else
           SOCKET clientSocketFD = INVALID_SOCKET;
+#endif
           DefaultTcpServer *ref = (DefaultTcpServer*)data;
           while (ok) {
 #ifndef _MSC_VER

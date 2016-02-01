@@ -28,7 +28,14 @@
 #include <iomanip>
 
 #ifdef _MSC_VER
+// #include <windows.h>
 #include <winsock2.h>
+#include <ws2tcpip.h>
+#else
+#include <sys/types.h> 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <pthread.h>
 #endif
 
 #ifdef _MSC_VER
@@ -42,6 +49,7 @@ typedef __int64 int64_t;
 typedef unsigned __int64 uint64_t;
 #else
 #include <stdint.h>
+#include <unistd.h>
 #endif
 
 #include "protocol_v1.h"
