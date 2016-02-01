@@ -59,13 +59,13 @@ namespace naeem {
                                            uint16_t port,
                                            std::map<uint8_t, RequestHandler*> *requestHandlers)
             : TcpServer(host, port, requestHandlers), 
-              serverSocketFD_(-1) {
+              serverSocketFD_(0) {
         }
         DefaultTcpServer::~DefaultTcpServer() {
         }
         void
         DefaultTcpServer::BindAndStart() {
-          if (serverSocketFD_ < 0) {
+          if (serverSocketFD_ == 0) {
 #ifndef _MSC_VER
             struct sockaddr_in servAddr;
             int serverSocketFD = socket(AF_INET, SOCK_STREAM, 0);
@@ -79,12 +79,6 @@ namespace naeem {
             }
             listen(serverSocketFD, 5);
             serverSocketFD_ = serverSocketFD;
-            pthread_t thread;
-            int ret = pthread_create(&thread, NULL, AcceptClients, (void *)this);
-            if (ret) {
-              ::naeem::hottentot::runtime::Logger::GetError() << "Error - pthread_create() return code: " << ret << std::endl;
-              exit(EXIT_FAILURE);
-            }
 #else
             WSADATA wsaData;
             struct addrinfo *result = NULL;
@@ -93,7 +87,7 @@ namespace naeem {
             int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
             if (iResult != 0) {
               printf("WSAStartup failed with error: %d\n", iResult);
-              exit(1);
+              exit(EXIT_FAILURE);
             }
             ZeroMemory(&hints, sizeof(hints));
             hints.ai_family = AF_INET;
@@ -107,7 +101,7 @@ namespace naeem {
             if (iResult != 0) {
               printf("getaddrinfo failed with error: %d\n", iResult);
               WSACleanup();
-              return;
+              exit(EXIT_FAILURE);
             }
             // Create a SOCKET for connecting to server
             serverSocketFD_ = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
@@ -115,7 +109,7 @@ namespace naeem {
               printf("socket failed with error: %ld\n", WSAGetLastError());
               freeaddrinfo(result);
               WSACleanup();
-              return;
+              exit(EXIT_FAILURE);
             }
             // Setup the TCP listening socket
             iResult = bind(serverSocketFD_, result->ai_addr, (int)result->ai_addrlen);
@@ -124,7 +118,7 @@ namespace naeem {
               freeaddrinfo(result);
               closesocket(serverSocketFD_);
               WSACleanup();
-                return;
+              exit(EXIT_FAILURE);
             }
             freeaddrinfo(result);
             iResult = listen(serverSocketFD_, SOMAXCONN);
@@ -132,9 +126,29 @@ namespace naeem {
               printf("listen failed with error: %d\n", WSAGetLastError());
               closesocket(serverSocketFD_);
               WSACleanup();
-              return;
+              exit(EXIT_FAILURE);
             }
-
+#endif
+#ifndef _MSC_VER
+            pthread_t thread;
+            int ret = pthread_create(&thread, NULL, AcceptClients, (void *)this);
+            if (ret) {
+              ::naeem::hottentot::runtime::Logger::GetError() << "Error - pthread_create() return code: " << ret << std::endl;
+              exit(EXIT_FAILURE);
+            }
+#else
+            HANDLE res = CreateThread(NULL,
+                                      0,
+                                      AcceptClients,
+                                      (LPVOID)this,
+                                      0,
+                                      NULL);
+            if (res == NULL) {
+              printf("Acceptor thread couldn't start: %d\n", WSAGetLastError());
+              closesocket(serverSocketFD_);
+              WSACleanup();
+              exit(EXIT_FAILURE);
+            }
 #endif
           }
         }
@@ -150,14 +164,14 @@ namespace naeem {
           struct sockaddr_in clientAddr;
           socklen_t clientAddrLength = sizeof(clientAddr);
 #endif
-          SOCKET clientSocket = INVALID_SOCKET;
+          SOCKET clientSocketFD = INVALID_SOCKET;
           DefaultTcpServer *ref = (DefaultTcpServer*)data;
           while (ok) {
 #ifndef _MSC_VER
             int clientSocketFD = accept(ref->serverSocketFD_, (struct sockaddr *) &clientAddr, &clientAddrLength);
 #else
-            clientSocket = accept(ref->serverSocketFD_, NULL, NULL);
-            if (clientSocket == INVALID_SOCKET) {
+            clientSocketFD = accept(ref->serverSocketFD_, NULL, NULL);
+            if (clientSocketFD == INVALID_SOCKET) {
                 printf("accept failed with error: %d\n", WSAGetLastError());
                 closesocket(ref->serverSocketFD_);
                 WSACleanup();
@@ -169,14 +183,25 @@ namespace naeem {
             }
             _HandleClientConnectionParams *params = new _HandleClientConnectionParams;
             params->tcpServer_ = ref;
-#ifndef _MSC_VER
             params->clientSocketFD_ = clientSocketFD;
-#endif
 #ifndef _MSC_VER
             pthread_t thread; // TODO(kamran): We need a thread pool here.
             int ret = pthread_create(&thread, NULL, HandleClientConnection, (void *)params);
             if (ret) {
               ::naeem::hottentot::runtime::Logger::GetError() << "Error - pthread_create() return code: " << ret << std::endl;
+              exit(EXIT_FAILURE);
+            }
+#else
+            HANDLE res = CreateThread(NULL,
+                                      0,
+                                      HandleClientConnection,
+                                      (LPVOID)params,
+                                      0,
+                                      NULL);
+            if (res == NULL) {
+              printf("Handler thread couldn't start: %d\n", WSAGetLastError());
+              closesocket(ref->serverSocketFD_);
+              WSACleanup();
               exit(EXIT_FAILURE);
             }
 #endif
@@ -195,13 +220,14 @@ namespace naeem {
           unsigned char buffer[256];
           ::naeem::hottentot::runtime::Protocol *protocol = 
             new ::naeem::hottentot::runtime::ProtocolV1(ref->clientSocketFD_);
-          DefaultRequestCallback *requestCallback = new DefaultRequestCallback(ref->tcpServer_->requestHandlers_);
+          DefaultRequestCallback *requestCallback = 
+            new DefaultRequestCallback(ref->tcpServer_->requestHandlers_);
           protocol->SetRequestCallback(requestCallback);
           while (ok) {
 #ifndef _MSC_VER
             uint32_t numOfReadBytes = read(ref->clientSocketFD_, buffer, 256);
 #else
-            uint32_t numOfReadBytes = 0; // TODO
+            uint32_t numOfReadBytes = recv(ref->clientSocketFD_, (char *)buffer, 256, 0);
 #endif
             if (numOfReadBytes <= 0) {
               ok = false;
@@ -218,6 +244,9 @@ namespace naeem {
           }
 #ifndef _MSC_VER
           close(ref->clientSocketFD_);
+#else
+          shutdown(ref->clientSocketFD_, SD_SEND);
+          closesocket(ref->clientSocketFD_);
 #endif
           delete requestCallback;
           delete protocol;

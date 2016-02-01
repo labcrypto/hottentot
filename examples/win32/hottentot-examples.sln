@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echo-client", "Z:\NTNAEEM-hottentot\examples\win32\echo-client\echo.vcproj", "{F8CCF234-D9FF-413D-956C-4DD5080B8534}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echo-server", "echo-server\echo-server.vcproj", "{000AA7FC-E9E2-4E14-9A12-5500D4C96521}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8CCF234-D9FF-413D-956C-4DD5080B8534}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F8CCF234-D9FF-413D-956C-4DD5080B8534}.Debug|Win32.Build.0 = Debug|Win32
+		{F8CCF234-D9FF-413D-956C-4DD5080B8534}.Release|Win32.ActiveCfg = Release|Win32
+		{F8CCF234-D9FF-413D-956C-4DD5080B8534}.Release|Win32.Build.0 = Release|Win32
+		{000AA7FC-E9E2-4E14-9A12-5500D4C96521}.Debug|Win32.ActiveCfg = Debug|Win32
+		{000AA7FC-E9E2-4E14-9A12-5500D4C96521}.Debug|Win32.Build.0 = Debug|Win32
+		{000AA7FC-E9E2-4E14-9A12-5500D4C96521}.Release|Win32.ActiveCfg = Release|Win32
+		{000AA7FC-E9E2-4E14-9A12-5500D4C96521}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

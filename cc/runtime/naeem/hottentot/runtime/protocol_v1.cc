@@ -28,6 +28,10 @@
 #include <iomanip>
 
 #ifdef _MSC_VER
+#include <winsock2.h>
+#endif
+
+#ifdef _MSC_VER
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
@@ -355,7 +359,11 @@ namespace naeem {
                     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
                       ::naeem::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
                     }
+#ifndef _MSC_VER
                     write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
+#else
+                    send(remoteSocketFD_, (char *)sendData, sendLength * sizeof(unsigned char), 0);
+#endif
                     delete [] sendData;
                     delete [] responseSerializedData;
                     delete response;

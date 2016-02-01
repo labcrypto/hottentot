@@ -21,15 +21,24 @@
  *  SOFTWARE.
  */
  
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ifdef _MSC_VER
+// #include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#else
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netdb.h> 
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include <iostream>
+#include <sstream>
 
 #ifdef _MSC_VER
 typedef __int8 int8_t;
@@ -60,6 +69,7 @@ namespace naeem {
         }
         bool 
         DefaultTcpClient::Connect() {
+#ifndef _MSC_VER
           struct sockaddr_in serverAddr;
           struct hostent *server;
           socketFD_ = socket(AF_INET, SOCK_STREAM, 0);
@@ -88,22 +98,74 @@ namespace naeem {
             // exit(1);
             return false;
           }
+#else
+          WSADATA wsaData;
+          SOCKET clientSocket = INVALID_SOCKET;
+          struct addrinfo *result = NULL,
+                          hints;
+          // Initialize Winsock
+          int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+          if (iResult != 0) {
+              printf("WSAStartup failed with error: %d\n", iResult);
+              return false;
+          }
+          ZeroMemory( &hints, sizeof(hints) );
+          hints.ai_family = AF_UNSPEC;
+          hints.ai_socktype = SOCK_STREAM;
+          hints.ai_protocol = IPPROTO_TCP;
+          // Resolve the server address and port
+          std::stringstream ss;
+          ss << port_;
+          iResult = getaddrinfo(host_.c_str(), ss.str().c_str(), &hints, &result);
+          if ( iResult != 0 ) {
+              printf("getaddrinfo failed with error: %d\n", iResult);
+              WSACleanup();
+              return false;
+          }
+          // Create a SOCKET for connecting to server
+          clientSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+          if (clientSocket == INVALID_SOCKET) {
+              printf("socket failed with error: %ld\n", WSAGetLastError());
+              WSACleanup();
+              return false;
+          }
+          // Connect to server.
+          iResult = connect(clientSocket, result->ai_addr, (int)result->ai_addrlen);
+          if (iResult == SOCKET_ERROR) {
+              closesocket(clientSocket);
+              clientSocket = INVALID_SOCKET;
+              return false;
+          }
+          freeaddrinfo(result);
+#endif
           return true;
         }
         void 
         DefaultTcpClient::Write(unsigned char *data,
                                 uint32_t       dataLength) {
+#ifndef _MSC_VER
           write(socketFD_, data, dataLength * sizeof(unsigned char));
+#else
+          send(socketFD_, (char *)data, dataLength * sizeof(unsigned char), 0);
+#endif
         }
         uint32_t 
         DefaultTcpClient::Read(unsigned char *buffer,
                                uint32_t bufferLength) {
+#ifndef _MSC_VER
           return read(socketFD_, buffer, bufferLength * sizeof(unsigned char));
+#else
+         return recv(socketFD_, (char *)buffer, bufferLength * sizeof(unsigned char), 0);
+#endif
         }
         void 
         DefaultTcpClient::Close() {
           if (socketFD_ > 0) {
+#ifndef _MSC_VER
             close(socketFD_);
+#else
+            closesocket(socketFD_);
+#endif
             socketFD_ = 0;
           }
         }
