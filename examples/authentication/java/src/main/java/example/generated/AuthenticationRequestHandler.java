@@ -45,7 +45,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
         serializableTokenList.setTokenList(tokenList);
         serializedTokenList = serializableTokenList.serialize();
       }
-      response.setStatusCode((byte) 100);
+      response.setStatusCode((byte) 0);
       response.setData(serializedTokenList);
       response.setLength(serializedTokenList.length + 1);
       return response;
@@ -62,7 +62,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
         serializableDataWrapperList.setDataWrapperList(datawrapperList);
         serializedDataWrapperList = serializableDataWrapperList.serialize();
       }
-      response.setStatusCode((byte) 100);
+      response.setStatusCode((byte) 0);
       response.setData(serializedDataWrapperList);
       response.setLength(serializedDataWrapperList.length + 1);
       return response;
@@ -79,7 +79,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
         serializableStringWrapperList.setStringWrapperList(stringwrapperList);
         serializedStringWrapperList = serializableStringWrapperList.serialize();
       }
-      response.setStatusCode((byte) 100);
+      response.setStatusCode((byte) 0);
       response.setData(serializedStringWrapperList);
       response.setLength(serializedStringWrapperList.length + 1);
       return response;
@@ -95,7 +95,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
       }else{
       serializedStringWrapper = stringWrapper.serialize();
       }
-      response.setStatusCode((byte) 100);
+      response.setStatusCode((byte) 0);
       response.setData(serializedStringWrapper);
       response.setLength(serializedStringWrapper.length + 1);
       return response;
@@ -111,7 +111,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
       }else{
       serializedDataWrapper = dataWrapper.serialize();
       }
-      response.setStatusCode((byte) 100);
+      response.setStatusCode((byte) 0);
       response.setData(serializedDataWrapper);
       response.setLength(serializedDataWrapper.length + 1);
       return response;
@@ -132,7 +132,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
       }else{
       serializedDataWrapper = dataWrapper.serialize();
       }
-      response.setStatusCode((byte) 100);
+      response.setStatusCode((byte) 0);
       response.setData(serializedDataWrapper);
       response.setLength(serializedDataWrapper.length + 1);
       return response;
@@ -153,7 +153,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
       }else{
       serializedDataWrapper = dataWrapper.serialize();
       }
-      response.setStatusCode((byte) 100);
+      response.setStatusCode((byte) 0);
       response.setData(serializedDataWrapper);
       response.setLength(serializedDataWrapper.length + 1);
       return response;
@@ -169,7 +169,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
       }else{
       serializedResult = result.serialize();
       }
-      response.setStatusCode((byte) 100);
+      response.setStatusCode((byte) 0);
       response.setData(serializedResult);
       response.setLength(serializedResult.length + 1);
       return response;
@@ -179,7 +179,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
       Argument arg0 = args.get(0);
       byte[] serializedStr = arg0.getData();
       StringWrapper str = new StringWrapper();
-      str.deserialize(serializedStringWrapper);
+      str.deserialize(serializedStr);
       StringWrapper stringWrapper = null;
       Response response = new Response();
       stringWrapper = authenticationImpl.test8(str);
@@ -189,7 +189,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
       }else{
       serializedStringWrapper = stringWrapper.serialize();
       }
-      response.setStatusCode((byte) 100);
+      response.setStatusCode((byte) 0);
       response.setData(serializedStringWrapper);
       response.setLength(serializedStringWrapper.length + 1);
       return response;
