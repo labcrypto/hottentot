@@ -195,7 +195,7 @@ namespace naeem {
                                       "byte[] serializedResult = PDTSerializer.get" + capitalizedReturnType + 
                                       "( result );\n";
               }
-              methodConditionStr += indent_ + indent_ + indent_ + "response.setStatusCode((byte) 100);\n";
+              methodConditionStr += indent_ + indent_ + indent_ + "response.setStatusCode((byte) 0);\n";
               
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +
