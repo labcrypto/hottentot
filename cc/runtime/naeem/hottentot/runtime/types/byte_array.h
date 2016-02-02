@@ -26,7 +26,19 @@
 
 #include <iostream>
 #include <stdexcept>
+
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
 #include <stdint.h>
+#endif
 
 #include "../serializable.h"
 
@@ -105,7 +117,7 @@ namespace naeem {
               delete [] data_;
             }
             data_ = new unsigned char[length_];
-            for (uint i = 0; i < length_; i++) {
+            for (uint32_t i = 0; i < length_; i++) {
               data_[i] = data[i];
             }
           }

@@ -1,0 +1,11 @@
+module ir.ntnaeem.hottentot.examples.win32.echo {
+  struct EchoRequest {
+    string name ord(1);
+  };
+  struct EchoResponse {
+    string message ord(2);
+  };
+  stateless service Echo {
+    EchoResponse doEcho(EchoRequest req);
+  };
+};
