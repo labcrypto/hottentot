@@ -37,9 +37,12 @@ public class Response {
         return length;
     }
 
+
     public void setLength(int length) {
         this.length = length;
     }
+
+
 
     public byte getStatusCode() {
         return statusCode;
