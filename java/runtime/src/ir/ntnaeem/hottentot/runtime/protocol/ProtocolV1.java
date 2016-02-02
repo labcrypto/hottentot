@@ -374,21 +374,10 @@ public class ProtocolV1 implements Protocol {
 //            response.setLength(responseLength);
 //        }
     response.setLength(serializedResponseBody.length);
-    int responseDataLength;
     response.setStatusCode(serializedResponseBody[counter++]);
-    if (((int) serializedResponseBody[counter] & 0x80) == 0) {
-      responseDataLength = serializedResponseBody[counter];
-      counter++;
-    }else {
-      int numOfBytesForLength = serializedResponseBody[counter++] & 0x0f;
-      byte[] responseDataLengthByteArray = new byte[numOfBytesForLength];
-      for(int i = 0 ; i <  numOfBytesForLength ; i++){
-        responseDataLengthByteArray[i] = serializedResponseBody[counter++];
-      }
-      responseDataLength = ByteArrayToInteger.getInt(responseDataLengthByteArray);
-    }
-    byte[] data = new byte[responseDataLength];
-    for (int i = 0; i < responseDataLength ; i++) {
+    byte[] data = new byte[response.getLength() - 1];
+    for (int i = 0; counter < serializedResponseBody.length; i++) {
+
       data[i] = serializedResponseBody[counter++];
     }
     response.setData(data);
@@ -400,23 +389,12 @@ public class ProtocolV1 implements Protocol {
     //tested ! :)
     int counter = 0;
     System.out.println("RESPONSE : \n" + response);
-    byte[] byteArrayFromSerializedResponseDataLength = DataLengthByteArrayMaker.getByteArray(response.getData().length);
-    //status code(1) + response length byte array + response data length
-    int responseLength = 1 + byteArrayFromSerializedResponseDataLength.length + response.getData().length;
-    byte[] byteArrayFromSerializedResponseLength = DataLengthByteArrayMaker.getByteArray(responseLength);
-    byte[] serializedResponse = new byte[responseLength + byteArrayFromSerializedResponseLength.length];
-    //changed
-    //response length
+    byte[] byteArrayFromSerializedResponseLength = DataLengthByteArrayMaker.getByteArray(response.getLength());
+    byte[] serializedResponse = new byte[response.getLength() + byteArrayFromSerializedResponseLength.length];
     for (byte b : byteArrayFromSerializedResponseLength) {
       serializedResponse[counter++] = b;
     }
-    //status code
     serializedResponse[counter++] = response.getStatusCode();
-    //response data length
-    for(byte b : byteArrayFromSerializedResponseDataLength){
-      serializedResponse[counter++] = b;
-    }
-    //
     for (byte b : response.getData()) {
       serializedResponse[counter++] = b;
     }
