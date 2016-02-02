@@ -25,8 +25,32 @@
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
-#include <unistd.h>
 #include <iomanip>
+
+#ifdef _MSC_VER
+// #include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#else
+#include <sys/types.h> 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <pthread.h>
+#endif
+
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#include <unistd.h>
+#endif
 
 #include "protocol_v1.h"
 #include "request.h"
@@ -343,7 +367,11 @@ namespace naeem {
                     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
                       ::naeem::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
                     }
+#ifndef _MSC_VER
                     write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
+#else
+                    send(remoteSocketFD_, (char *)sendData, sendLength * sizeof(unsigned char), 0);
+#endif
                     delete [] sendData;
                     delete [] responseSerializedData;
                     delete response;
@@ -371,7 +399,7 @@ namespace naeem {
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
                 if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Response length is " << readingLength_ << " Bytes." << std::endl;
                 }
               } else {
                 targetCounter_ = (data[i] & 0x0f) + 1;
@@ -393,7 +421,7 @@ namespace naeem {
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
                 if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Response length is " << readingLength_ << " Bytes." << std::endl;
                 }
                 // Variable 'i' shouldn't get incremented because no byte is processed here.
                 i--;
