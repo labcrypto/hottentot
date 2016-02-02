@@ -101,11 +101,13 @@ namespace naeem {
             if (TypeHelper::IsFixedLength(it->second->GetType())) {
               serializationSS << indent << indent << "totalLength += length" << counter << ";\r\n";
             } else {
-              serializationSS << indent << indent << "if (length" << counter << " <= 127) {\r\n";
+              serializationSS << indent << indent << "if (length" << counter << " < 128) {\r\n";
               serializationSS << indent << indent << indent << "totalLength += 1 + length" << counter << ";\r\n";
-              serializationSS << indent << indent << "} else if (length" << counter << " <= (256 * 256 - 1)) {\r\n";
+              serializationSS << indent << indent << "} else if (length" << counter << " < 256) {\r\n";
+              serializationSS << indent << indent << indent << "totalLength += 2 + length" << counter << ";\r\n";
+              serializationSS << indent << indent << "} else if (length" << counter << " < 256 * 256) {\r\n";
               serializationSS << indent << indent << indent << "totalLength += 3 + length" << counter << ";\r\n";
-              serializationSS << indent << indent << "} else if (length" << counter << " <= (256 * 256 * 256 - 1)) {\r\n";
+              serializationSS << indent << indent << "} else if (length" << counter << " < 256 * 256 * 256) {\r\n";
               serializationSS << indent << indent << indent << "totalLength += 3 + length" << counter << ";\r\n";
               serializationSS << indent << indent << "}\r\n";
             }
@@ -118,15 +120,19 @@ namespace naeem {
                it != structt->declarations_.end();
                ++it) {
             if (!TypeHelper::IsFixedLength(it->second->GetType())) {
-              serializationSS << indent << indent << "if (length" << counter << " <= 127) {\r\n";
+              serializationSS << indent << indent << "if (length" << counter << " < 128) {\r\n";
               serializationSS << indent << indent << indent << "data[c] = length" << counter << ";\r\n";
               serializationSS << indent << indent << indent << "c += 1;\r\n";
-              serializationSS << indent << indent << "} else if (length" << counter << " <= (256 * 256 - 1)) {\r\n";
+              serializationSS << indent << indent << "} else if (length" << counter << " < 256) {\r\n";
+              serializationSS << indent << indent << indent << "data[c] = 0x81;\r\n";
+              serializationSS << indent << indent << indent << "data[c + 1] = length" << counter << ";\r\n";
+              serializationSS << indent << indent << indent << "c += 2;\r\n";
+              serializationSS << indent << indent << "} else if (length" << counter << " < 256 * 256) {\r\n";
               serializationSS << indent << indent << indent << "data[c] = 0x82;\r\n";
               serializationSS << indent << indent << indent << "data[c + 1] = length" << counter << " / 256;\r\n";
               serializationSS << indent << indent << indent << "data[c + 2] = length" << counter << " % 256;\r\n";
               serializationSS << indent << indent << indent << "c += 3;\r\n";
-              serializationSS << indent << indent << "} else if (length" << counter << " <= (256 * 256 * 256 - 1)) {\r\n";
+              serializationSS << indent << indent << "} else if (length" << counter << " < 256 * 256 * 256) {\r\n";
               serializationSS << indent << indent << indent << "data[c] = 0x83;\r\n";
               serializationSS << indent << indent << indent << "data[c + 1] = length" << counter << " / (256 * 256);\r\n";
               serializationSS << indent << indent << indent << "data[c + 2] = (length" << counter << " - data[c + 1] * (256 * 256)) / 256;\r\n";
@@ -183,7 +189,10 @@ namespace naeem {
               deserializationSS << indent << indent << "} else {\r\n";
               deserializationSS << indent << indent << indent << "uint8_t ll = data[c] & 0x0f;\r\n";
               deserializationSS << indent << indent << indent << "c++;\r\n";
-              deserializationSS << indent << indent << indent << "if (ll == 2) {\r\n";
+              deserializationSS << indent << indent << indent << "if (ll == 1) {\r\n";
+              deserializationSS << indent << indent << indent << indent << "elength = data[c];\r\n";
+              deserializationSS << indent << indent << indent << indent << "c += 1;\r\n";
+              deserializationSS << indent << indent << indent << "} else if (ll == 2) {\r\n";
               deserializationSS << indent << indent << indent << indent << "elength = data[c] * 256 + data[c + 1];\r\n";
               deserializationSS << indent << indent << indent << indent << "c += 2;\r\n";
               deserializationSS << indent << indent << indent << "} else if (ll == 3) {\r\n";

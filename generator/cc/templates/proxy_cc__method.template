@@ -45,15 +45,30 @@
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Send request byte array
 [[[INDENT]]][[[INDENT]]] */
-[[[INDENT]]][[[INDENT]]]uint32_t sendLength = (requestSerializedDataLength > 127 ? 3 : 1) + requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]uint32_t sendLength = 0;
+[[[INDENT]]][[[INDENT]]]if (requestSerializedDataLength < 128) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 1 + requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 2 + requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 3 + requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256 * 256) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 4 + requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]unsigned char *sendData = new unsigned char[sendLength];
 [[[INDENT]]][[[INDENT]]]uint32_t c = 0;
-[[[INDENT]]][[[INDENT]]]if (requestSerializedDataLength > 127) {
+[[[INDENT]]][[[INDENT]]]if (requestSerializedDataLength < 128) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = 0x81;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = 0x82;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength / 256;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength % 256;
-[[[INDENT]]][[[INDENT]]]} else {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256 * 256) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]std::cout << "Proxy: Length is not supported." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]exit(1);
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]for (uint32_t i = 0; i < requestSerializedDataLength; i++) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedData[i];
