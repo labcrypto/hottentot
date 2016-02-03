@@ -433,7 +433,7 @@ public class ProtocolV1 implements Protocol {
     for (byte b : response.getData()) {
       serializedResponse[counter++] = b;
     }
-    if(Config.isVerboseMode){
+    if(Config.isVerboseMode) {
       System.out.println("SERIALIZED RESPONSE : \n" + bytesToHex(serializedResponse));
     }
     return serializedResponse;
