@@ -11,3 +11,5 @@ Release
 *.user
 cc/lib
 cc/libd
+templates.cc
+templates.h
