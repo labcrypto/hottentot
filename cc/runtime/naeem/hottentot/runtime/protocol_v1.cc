@@ -120,8 +120,11 @@ namespace naeem {
             data[c++] = request.GetArgumentLength(i) / 256;
             data[c++] = request.GetArgumentLength(i) % 256;
           } else if (request.GetArgumentLength(i) < 256 * 256 * 256) {
-            std::cout << "Protovol V1: Length is not supported." << std::endl;
-            exit(1);
+            data[c] = 0x83;
+            data[c + 1] = request.GetArgumentLength(i) / (256 * 256);
+            data[c + 2] = (request.GetArgumentLength(i) - data[c + 1] * 256 * 256) / 256;
+            data[c + 3] = request.GetArgumentLength(i) % (256 * 256);
+            c += 4;
           }
           unsigned char *argData = request.GetArgumentData(i);
           for (unsigned int j = 0; j < request.GetArgumentLength(i); j++) {
@@ -155,8 +158,11 @@ namespace naeem {
           data[c++] = response.GetDataLength() / 256;
           data[c++] = response.GetDataLength() % 256;
         } else if (response.GetDataLength() < 256 * 256 * 256) {
-          std::cout << "Protovol V1: Length is not supported." << std::endl;
-          exit(1);
+          data[c] = 0x83;
+          data[c + 1] = response.GetDataLength() / (256 * 256);
+          data[c + 2] = (response.GetDataLength() - data[c + 1] * 256 * 256) / 256;
+          data[c + 3] = response.GetDataLength() % (256 * 256);
+          c += 4;
         }
         unsigned char *argData = response.GetData();
         for (uint32_t i = 0; i < response.GetDataLength(); i++) {
@@ -214,8 +220,8 @@ namespace naeem {
               argLength = data[c + 1] * 256 + data[c + 2];
               c += 3;
             } else if (data[c] == 0x83) {
-              std::cout << "Protovol V1: Length is not supported." << std::endl;
-              exit(1);
+              argLength = data[c + 1] * 256 * 256 + data[c + 2] * 256 + data[c + 3];
+              c += 4;
             }
             unsigned char *argData = new unsigned char[argLength];
             for (uint32_t i = 0; i < argLength; i++) {
@@ -255,8 +261,8 @@ namespace naeem {
             resultLength = data[c + 1] * 256 + data[c + 2];
             c += 3;
           } else if (data[c] == 0x83) {
-            std::cout << "Protovol V1: Length is not supported." << std::endl;
-            exit(1);
+            resultLength = data[c + 1] * 256 * 256 + data[c + 2] * 256 + data[c + 3];
+            c += 4;
           }
           unsigned char *resultData = new unsigned char[resultLength];
           for (uint32_t i = 0; i < resultLength; i++) {
@@ -380,8 +386,11 @@ namespace naeem {
                       sendData[c++] = responseSerializedLength / 256;
                       sendData[c++] = responseSerializedLength % 256;
                     } else if (responseSerializedLength < 256 * 256 * 256) {
-                      std::cout << "Protovol V1: Length is not supported." << std::endl;
-                      exit(1);
+                      sendData[c] = 0x83;
+                      sendData[c + 1] = responseSerializedLength / (256 * 256);
+                      sendData[c + 2] = (responseSerializedLength - sendData[c + 1] * 256 * 256) / 256;
+                      sendData[c + 3] = responseSerializedLength % (256 * 256);
+                      c += 4;
                     }
                     for (unsigned int k = 0; k < responseSerializedLength; k++) {
                       sendData[c++] = responseSerializedData[k];
