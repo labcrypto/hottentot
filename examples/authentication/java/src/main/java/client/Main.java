@@ -9,7 +9,7 @@ package client;
 import example.generated.AuthenticationService;
 import example.generated.AuthenticationServiceProxyBuilder;
 import example.generated.StringWrapper;
-import ir.ntnaeem.hottentot.runtime.config.Config;
+
 import ir.ntnaeem.hottentot.runtime.exception.MainArgsNotCorrectException;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Main {
   public static void main(String[] args) throws IOException {
-    Config.setMainArgs(args);
+    ir.ntnaeem.hottentot.runtime.config.Config.setMainArgs(args);
     final AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 2000);
     //
 

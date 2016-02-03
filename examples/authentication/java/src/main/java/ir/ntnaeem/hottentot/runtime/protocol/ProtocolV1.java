@@ -28,7 +28,6 @@ import ir.ntnaeem.hottentot.runtime.config.Config;
 import ir.ntnaeem.hottentot.runtime.exception.*;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 import ir.ntnaeem.hottentot.serializerHelper.DataLengthByteArrayMaker;
-
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -384,11 +383,22 @@ public class ProtocolV1 implements Protocol {
 //            }
 //            response.setLength(responseLength);
 //        }
-    response.setLength(serializedResponseBody.length);
     response.setStatusCode(serializedResponseBody[counter++]);
-    byte[] data = new byte[response.getLength() - 1];
-    for (int i = 0; counter < serializedResponseBody.length; i++) {
-
+    //set response data length
+    int dataLength;
+    if((serializedResponseBody[counter] & 0x80) == 0){
+      dataLength = serializedResponseBody[counter++];
+    }else{
+      int numOfBytesForDataLength = serializedResponseBody[counter] & 0x0f;
+      counter++;
+      byte[] dataLengthByteArray = new byte[numOfBytesForDataLength];
+      for(int i = 0 ; i < numOfBytesForDataLength ; i++){
+        dataLengthByteArray[i] = serializedResponseBody[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(dataLengthByteArray);
+    }
+    byte[] data = new byte[dataLength];
+    for (int i = 0; i < dataLength; i++) {
       data[i] = serializedResponseBody[counter++];
     }
     response.setData(data);
@@ -404,12 +414,22 @@ public class ProtocolV1 implements Protocol {
     if(Config.isVerboseMode){
       System.out.println("RESPONSE : \n" + response);
     }
-    byte[] byteArrayFromSerializedResponseLength = DataLengthByteArrayMaker.getByteArray(response.getLength());
-    byte[] serializedResponse = new byte[response.getLength() + byteArrayFromSerializedResponseLength.length];
+    //
+    byte[] data = response.getData();
+    int responseDataLength = data.length;
+    byte[] responseDataLengthByteArray = DataLengthByteArrayMaker.getByteArray(responseDataLength);
+    //1 -- > status code
+    int responseLength = 1 + responseDataLengthByteArray.length + response.getData().length;
+    byte[] byteArrayFromSerializedResponseLength = DataLengthByteArrayMaker.getByteArray(responseLength);
+    byte[] serializedResponse = new byte[byteArrayFromSerializedResponseLength.length + responseLength];
     for (byte b : byteArrayFromSerializedResponseLength) {
       serializedResponse[counter++] = b;
     }
     serializedResponse[counter++] = response.getStatusCode();
+    //
+    for(byte b : responseDataLengthByteArray){
+      serializedResponse[counter++] = b;
+    }
     for (byte b : response.getData()) {
       serializedResponse[counter++] = b;
     }
