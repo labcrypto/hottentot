@@ -91,8 +91,19 @@ namespace naeem {
         actualLength += 4;  // Method Id
         actualLength += 1;  // Number of arguments
         for (unsigned int i = 0; i < request.GetArgumentCount(); i++) {
-          actualLength += request.GetArgumentLength(i) > 127 ? 3 : 1;
-          actualLength += request.GetArgumentLength(i);
+          if (request.GetArgumentLength(i) < 128) {
+            actualLength += 1;
+            actualLength += request.GetArgumentLength(i);
+          } else if (request.GetArgumentLength(i) < 256) {
+            actualLength += 2;
+            actualLength += request.GetArgumentLength(i);
+          } else if (request.GetArgumentLength(i) < 256 * 256) {
+            actualLength += 3;
+            actualLength += request.GetArgumentLength(i);
+          } else if (request.GetArgumentLength(i) < 256 * 256 * 256) {
+            actualLength += 4;
+            actualLength += request.GetArgumentLength(i);
+          }
         }
         *length = actualLength;
         unsigned char *data = new unsigned char[*length];
@@ -131,6 +142,7 @@ namespace naeem {
             data[c++] = argData[j];
           }
         }
+        std::cout << "C: " << c << ", AL: " << actualLength << std::endl;
         if (c != actualLength) {
           ::naeem::hottentot::runtime::Logger::GetError() << "Inconsistency in request serialization process." << std::endl;
           exit(1);
@@ -142,8 +154,19 @@ namespace naeem {
                                     uint32_t *length) {
         uint32_t actualLength = 0;
         actualLength += 1;  // Status Code
-        actualLength += response.GetDataLength() > 127 ? 3 : 1;
-        actualLength += response.GetDataLength();
+        if (response.GetDataLength() < 128) {
+          actualLength += 1;
+          actualLength += response.GetDataLength();
+        } else if (response.GetDataLength() < 256) {
+          actualLength += 2;
+          actualLength += response.GetDataLength();
+        } else if (response.GetDataLength() < 256 * 256) {
+          actualLength += 3;
+          actualLength += response.GetDataLength();
+        } else if (response.GetDataLength() < 256 * 256 * 256) {
+          actualLength += 4;
+          actualLength += response.GetDataLength();
+        }
         *length = actualLength;
         unsigned char *data = new unsigned char[*length];
         unsigned int c = 0;
