@@ -48,3 +48,22 @@ echo "std::string serializableStructListTmpStr(reinterpret_cast<char const *>(se
 							         serializableStructListByteArray_len);" >> ./java/templates/byte_arrays/serializableStructList.h
 
 
+cat ./java/templates/client_main.template > clientMainByteArray
+xxd -i clientMainByteArray > ./java/templates/byte_arrays/clientMain.h
+rm -rf clientMainByteArray
+echo "std::string clientMainTmpStr(reinterpret_cast<char const *>(clientMainByteArray),
+							         clientMainByteArray_len);" >> ./java/templates/byte_arrays/clientMain.h
+
+
+cat ./java/templates/server_main.template > serverMainByteArray
+xxd -i serverMainByteArray > ./java/templates/byte_arrays/serverMain.h
+rm -rf serverMainByteArray
+echo "std::string serverMainTmpStr(reinterpret_cast<char const *>(serverMainByteArray),
+							         serverMainByteArray_len);" >> ./java/templates/byte_arrays/serverMain.h
+
+
+cat ./java/templates/server_impl.template > serverImplByteArray
+xxd -i serverImplByteArray > ./java/templates/byte_arrays/serverImpl.h
+rm -rf serverImplByteArray
+echo "std::string serverImplTmpStr(reinterpret_cast<char const *>(serverImplByteArray),
+							         serverImplByteArray_len);" >> ./java/templates/byte_arrays/serverImpl.h

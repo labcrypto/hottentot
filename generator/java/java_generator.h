@@ -70,6 +70,9 @@ namespace naeem {
           void GenerateRequestHandler(::naeem::hottentot::generator::ds::Module*);
           void GenerateServiceProxy(::naeem::hottentot::generator::ds::Module*);
           void GenerateSerializableStructList(::naeem::hottentot::generator::ds::Module*);
+          void GenerateClientMain(::naeem::hottentot::generator::ds::Module*);
+          void GenerateServerMain(::naeem::hottentot::generator::ds::Module*);
+          void GenerateServerImpls(::naeem::hottentot::generator::ds::Module*);
           void SetTabStr(::naeem::hottentot::generator::GenerationConfig &);
           std::string ConvertType(std::string);
           uint32_t GetTypeLength(std::string);
@@ -85,6 +88,9 @@ namespace naeem {
           std::string requestHandlerTmpStr_;
           std::string serviceProxyTmpStr_;
           std::string serializableStructListTmpStr_;
+          std::string clientMainTmpStr_;
+          std::string serverMainTmpStr_;
+          std::string serverImplTmpStr_;
           std::string outDir_;
           std::string clientOutDir_;
           std::string serverOutDir_;

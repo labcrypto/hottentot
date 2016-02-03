@@ -23,8 +23,10 @@
 
 package ir.ntnaeem.hottentot.runtime;
 
+import ir.ntnaeem.hottentot.runtime.config.Config;
 import ir.ntnaeem.hottentot.runtime.exception.HottentotRuntimeException;
 import ir.ntnaeem.hottentot.runtime.factory.TcpServerFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,36 +35,38 @@ import java.util.Map;
 
 public class ServiceRuntime {
 
-    private Map<Endpoint,List<Service>> serviceMap = new HashMap<Endpoint, List<Service>>();
-    private Map<Endpoint , Map<Long , RequestHandler>> requestHandlerMap = new HashMap<Endpoint, Map<Long, RequestHandler>>();
-    public void register(String host , int port , Service service){
-        Endpoint endPoint = new Endpoint(host,port);
-        if(serviceMap.containsKey(endPoint)){
-            List<Service> serviceListInEndpoint = serviceMap.get(endPoint);
-            //TODO search in service list for duplicate service registered
-            serviceListInEndpoint.add(service);
-            Map<Long, RequestHandler> requestHandlerMapInEndpoint = requestHandlerMap.get(endPoint);
-            requestHandlerMapInEndpoint.put(service.getServiceId() , service.makeRequestHandler());
-        }else{
-            ArrayList<Service> serviceList = new ArrayList<Service>();
-            serviceList.add(service);
-            serviceMap.put(endPoint,serviceList);
-            HashMap<Long, RequestHandler> requestHandlers = new HashMap<Long , RequestHandler>();
-            requestHandlers.put(service.getServiceId() , service.makeRequestHandler());
-            requestHandlerMap.put(endPoint, requestHandlers);
-        }
+  private Map<Endpoint, List<Service>> serviceMap = new HashMap<Endpoint, List<Service>>();
+  private Map<Endpoint, Map<Long, RequestHandler>> requestHandlerMap = new HashMap<Endpoint, Map<Long, RequestHandler>>();
+
+  public void register(String host, int port, Service service) {
+    Endpoint endPoint = new Endpoint(host, port);
+    if (serviceMap.containsKey(endPoint)) {
+      List<Service> serviceListInEndpoint = serviceMap.get(endPoint);
+      //TODO search in service list for duplicate service registered
+      serviceListInEndpoint.add(service);
+      Map<Long, RequestHandler> requestHandlerMapInEndpoint = requestHandlerMap.get(endPoint);
+      requestHandlerMapInEndpoint.put(service.getServiceId(), service.makeRequestHandler());
+    } else {
+      ArrayList<Service> serviceList = new ArrayList<Service>();
+      serviceList.add(service);
+      serviceMap.put(endPoint, serviceList);
+      HashMap<Long, RequestHandler> requestHandlers = new HashMap<Long, RequestHandler>();
+      requestHandlers.put(service.getServiceId(), service.makeRequestHandler());
+      requestHandlerMap.put(endPoint, requestHandlers);
     }
-    public void start(){
-        for(Map.Entry<Endpoint , Map<Long , RequestHandler> > entry : requestHandlerMap.entrySet()){
-            Map<Long, RequestHandler> requestHandlerMapInEndpoint = entry.getValue();
-            Endpoint endpoint = entry.getKey();
-            TcpServer tcpServer = TcpServerFactory.create(endpoint.getHost(), endpoint.getPort(), requestHandlerMapInEndpoint);
-            try {
-                tcpServer.bindAndStart();
-            } catch (IOException e) {
-                throw new HottentotRuntimeException(e);
-            }
-        }
-        while(true);
+  }
+
+  public void start() {
+    for (Map.Entry<Endpoint, Map<Long, RequestHandler>> entry : requestHandlerMap.entrySet()) {
+      Map<Long, RequestHandler> requestHandlerMapInEndpoint = entry.getValue();
+      Endpoint endpoint = entry.getKey();
+      TcpServer tcpServer = TcpServerFactory.create(endpoint.getHost(), endpoint.getPort(), requestHandlerMapInEndpoint );
+      try {
+        tcpServer.bindAndStart();
+      } catch (IOException e) {
+        throw new HottentotRuntimeException(e);
+      }
     }
+    while (true) ;
+  }
 }
