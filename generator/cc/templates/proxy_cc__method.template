@@ -67,7 +67,7 @@
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength / 256;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength % 256;
 [[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256 * 256) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c] = 0x82;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c] = 0x83;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 1] = requestSerializedDataLength / (256 * 256);
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 2] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256) / 256;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 3] = requestSerializedDataLength % (256 * 256);
