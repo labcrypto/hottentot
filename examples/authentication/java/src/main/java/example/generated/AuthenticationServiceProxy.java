@@ -96,6 +96,7 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
     }
     //deserialize token part of response
     Response response = protocol.getResponse();
+
     //close everything
      try { 
        tcpClient.close(); 
