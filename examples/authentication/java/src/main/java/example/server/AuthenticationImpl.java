@@ -68,16 +68,16 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
   }
 
   public List<StringWrapper> test2() {
-//    StringWrapper stringWrapper = new StringWrapper();
-//    String str = "";
-//    for(int i = 0 ; i < 100000 ; i++){
-//      str += "a";
-//    }
-//    stringWrapper.setValue(str);
-//
-//    List<StringWrapper> stringWrapperList = new ArrayList<StringWrapper>();
-//    return stringWrapperList;
-    return null;
+    StringWrapper stringWrapper = new StringWrapper();
+    String str = "";
+    for(int i = 0 ; i < 200 ; i++){
+      str += "a";
+    }
+    stringWrapper.setValue(str);
+    List<StringWrapper> stringWrapperList = new ArrayList<StringWrapper>();
+    stringWrapperList.add(stringWrapper);
+    return stringWrapperList;
+    //return null;
   }
 
   public StringWrapper test3() {
@@ -87,7 +87,7 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
       str += "a";
     }
 
-    stringWrapper.setValue(str);
+    //stringWrapper.setValue("");
     return stringWrapper;
   }
 
