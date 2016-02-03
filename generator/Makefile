@@ -52,6 +52,9 @@ compile:
 	g++ -c -g java/generate_service_proxy_builder_java.cc -o .lib/generate_service_proxy_builder_java.o
 	g++ -c -g java/generate_service_proxy_java.cc -o .lib/generate_service_proxy_java.o
 	g++ -c -g java/generate_serializable_struct_list_java.cc -o .lib/generate_serializable_struct_list_java.o
+	g++ -c -g java/generate_client_main_java.cc -o .lib/generate_client_main_java.o
+	g++ -c -g java/generate_server_main_java.cc -o .lib/generate_server_main_java.o
+	g++ -c -g java/generate_server_impls_java.cc -o .lib/generate_server_impls_java.o
 	g++ -c -g dep/fasthash.cc -o .lib/fasthash.o
 	g++ -c -g ds/service.cc -o .lib/service.o
 	g++ -c -g ds/method.cc -o .lib/method.o
@@ -80,6 +83,9 @@ compile:
 	    .lib/generate_service_proxy_builder_java.o \
 	    .lib/generate_service_proxy_java.o \
 	    .lib/generate_serializable_struct_list_java.o \
+	    .lib/generate_client_main_java.o \
+	    .lib/generate_server_main_java.o \
+	    .lib/generate_server_impls_java.o \
 	    .lib/fasthash.o \
 	    .lib/service.o \
 	    .lib/method.o \

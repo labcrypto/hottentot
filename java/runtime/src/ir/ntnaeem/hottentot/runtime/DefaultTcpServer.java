@@ -22,15 +22,13 @@
  */
 package ir.ntnaeem.hottentot.runtime;
 
-
+import ir.ntnaeem.hottentot.runtime.config.Config;
 import ir.ntnaeem.hottentot.runtime.exception.HottentotRuntimeException;
 import ir.ntnaeem.hottentot.runtime.exception.ProtocolProcessException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpServerReadException;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.RequestCallbackFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -42,16 +40,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DefaultTcpServer implements TcpServer {
-
-
   private int port;
   private ExecutorService executor;
   private String host;
-  private final int THREAD_POOL_SIZE = 1000;
+  private int threadPoolSize;
   private Map<Long, RequestHandler> requestHandlers;
 
   public DefaultTcpServer(String host, int port, Map<Long, RequestHandler> requestHandlers) {
-    this.executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+    if(Config.isVerboseMode) {
+      System.out.println("THREAD POOL SIZE : " + Config.threadPoolSize);
+    }
+    this.executor = Executors.newFixedThreadPool(Config.threadPoolSize);
     this.requestHandlers = requestHandlers;
     this.host = host;
     this.port = port;

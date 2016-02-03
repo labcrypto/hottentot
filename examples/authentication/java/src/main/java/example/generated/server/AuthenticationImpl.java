@@ -20,9 +20,15 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package example.server;
+package example.generated.server;
 
-import example.generated.*;
+import example.generated.AbstractAuthenticationService;
+import example.generated.Credential;
+import example.generated.DataWrapper;
+import example.generated.Result;
+import example.generated.StringWrapper;
+import example.generated.Token;
+
 import java.util.ArrayList;
 import java.util.List;
 

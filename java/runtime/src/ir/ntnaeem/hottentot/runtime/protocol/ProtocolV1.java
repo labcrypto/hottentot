@@ -24,6 +24,7 @@
 package ir.ntnaeem.hottentot.runtime.protocol;
 
 import ir.ntnaeem.hottentot.runtime.*;
+import ir.ntnaeem.hottentot.runtime.config.Config;
 import ir.ntnaeem.hottentot.runtime.exception.*;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 import ir.ntnaeem.hottentot.serializerHelper.DataLengthByteArrayMaker;
@@ -228,7 +229,9 @@ public class ProtocolV1 implements Protocol {
 
   public byte[] serializeRequest(Request request) {
     //tested ! :)
-    System.out.println("REQUEST : \n" + request);
+    if(Config.isVerboseMode){
+      System.out.println("REQUEST : \n" + request);
+    }
     int counter = 0;
     byte[] byteArrayFromSerializedRequestLength = DataLengthByteArrayMaker.getByteArray(request.getLength());
     byte[] serializedRequest = new byte[request.getLength() + byteArrayFromSerializedRequestLength.length];
@@ -270,7 +273,9 @@ public class ProtocolV1 implements Protocol {
         serializedRequest[counter++] = b;
       }
     }
-    System.out.println("SERIALIZED REQUEST : \n" + bytesToHex(serializedRequest));
+    if(Config.isVerboseMode) {
+      System.out.println("SERIALIZED REQUEST : \n" + bytesToHex(serializedRequest));
+    }
     return serializedRequest;
   }
 
@@ -287,7 +292,9 @@ public class ProtocolV1 implements Protocol {
 
   public Request deserializeRequestBody(byte[] serializedRequestBody) {
     //tested :)
-    System.out.println("SERIALIZED REQ BODY : \n" + bytesToHex(serializedRequestBody));
+    if(Config.isVerboseMode){
+      System.out.println("SERIALIZED REQ BODY : \n" + bytesToHex(serializedRequestBody));
+    }
     int counter = 0;
     Request request = new Request();
     request.setLength(serializedRequestBody.length);
@@ -350,7 +357,9 @@ public class ProtocolV1 implements Protocol {
       arg.setData(argData);
       request.addArgument(arg);
     }
-    System.out.println("REQUEST : \n" + request);
+    if(Config.isVerboseMode) {
+      System.out.println("REQUEST : \n" + request);
+    }
     return request;
   }
 
@@ -358,7 +367,9 @@ public class ProtocolV1 implements Protocol {
 
     //tested :)
     int counter = 0;
-    System.out.println("SERIALIZED RESPONSE BODY : \n" + bytesToHex(serializedResponseBody));
+    if(Config.isVerboseMode){
+      System.out.println("SERIALIZED RESPONSE BODY : \n" + bytesToHex(serializedResponseBody));
+    }
     Response response = new Response();
 //        byte firstByte = serializedResponse[0];
 //        if (((int) firstByte & 0x80) == 0) {
@@ -381,14 +392,18 @@ public class ProtocolV1 implements Protocol {
       data[i] = serializedResponseBody[counter++];
     }
     response.setData(data);
-    System.out.println("RESPONSE :\n" + response);
+    if(Config.isVerboseMode){
+      System.out.println("RESPONSE :\n" + response);
+    }
     return response;
   }
 
   public byte[] serializeResponse(Response response) {
     //tested ! :)
     int counter = 0;
-    System.out.println("RESPONSE : \n" + response);
+    if(Config.isVerboseMode){
+      System.out.println("RESPONSE : \n" + response);
+    }
     byte[] byteArrayFromSerializedResponseLength = DataLengthByteArrayMaker.getByteArray(response.getLength());
     byte[] serializedResponse = new byte[response.getLength() + byteArrayFromSerializedResponseLength.length];
     for (byte b : byteArrayFromSerializedResponseLength) {
@@ -398,7 +413,9 @@ public class ProtocolV1 implements Protocol {
     for (byte b : response.getData()) {
       serializedResponse[counter++] = b;
     }
-    System.out.println("SERIALIZED RESPONSE : \n" + bytesToHex(serializedResponse));
+    if(Config.isVerboseMode){
+      System.out.println("SERIALIZED RESPONSE : \n" + bytesToHex(serializedResponse));
+    }
     return serializedResponse;
   }
 
