@@ -119,7 +119,6 @@ namespace naeem {
         data[c++] = ((unsigned char *)&methodId)[2];
         data[c++] = ((unsigned char *)&methodId)[1];
         data[c++] = ((unsigned char *)&methodId)[0];
-        std::cout << "JJJJJJJJJJJJJJJJJJJ " << request.GetArgumentCount() << std::endl;
         data[c++] = request.GetArgumentCount();
         for (unsigned int i = 0; i < request.GetArgumentCount(); i++) {
           if (request.GetArgumentLength(i) < 128) {
