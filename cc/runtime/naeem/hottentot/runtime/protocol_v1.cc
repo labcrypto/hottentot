@@ -142,7 +142,6 @@ namespace naeem {
             data[c++] = argData[j];
           }
         }
-        std::cout << "C: " << c << ", AL: " << actualLength << std::endl;
         if (c != actualLength) {
           ::naeem::hottentot::runtime::Logger::GetError() << "Inconsistency in request serialization process." << std::endl;
           exit(1);
@@ -396,7 +395,16 @@ namespace naeem {
                     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
                       ::naeem::hottentot::runtime::Utils::PrintArray("Serialized response: ", responseSerializedData, responseSerializedLength);
                     }
-                    uint32_t sendLength = (responseSerializedLength > 127 ? 3 : 1) +  responseSerializedLength;
+                    uint32_t sendLength = 0;
+                    if (responseSerializedLength < 128) {
+                      sendLength = 1 + responseSerializedLength;
+                    } else if (responseSerializedLength < 256) {
+                      sendLength = 2 + responseSerializedLength;
+                    } else if (responseSerializedLength < 256 * 256) {
+                      sendLength = 3 + responseSerializedLength;
+                    } else if (responseSerializedLength < 256 * 256 * 256) {
+                      sendLength = 4 + responseSerializedLength;
+                    }
                     unsigned char *sendData = new unsigned char[sendLength];
                     uint32_t c = 0;
                     if (responseSerializedLength < 128) {
