@@ -54,9 +54,9 @@ namespace naeem {
           List(){
           }
           virtual ~List() {
-            for (uint32_t i = 0; i < elements_.size(); i++) {
+            /* for (uint32_t i = 0; i < elements_.size(); i++) {
               delete elements_[i];
-            }
+            } */
           }
         public:
           inline void Add(T *e) {
