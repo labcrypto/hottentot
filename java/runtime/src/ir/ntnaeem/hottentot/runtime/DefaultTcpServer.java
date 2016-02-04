@@ -86,12 +86,10 @@ public class DefaultTcpServer implements TcpServer {
           try {
             numReadBytes = is.read(buffer, 0, buffer.length);
           } catch (IOException e) {
+            e.printStackTrace();
             try {
               clientSocket.close();
-            } catch (IOException e1) {
-              e1.printStackTrace();
-            }
-            e.printStackTrace();
+            } catch (IOException e1) {}
           }
           byte[] readDataChunk;
           if (numReadBytes < 256) {
@@ -111,10 +109,8 @@ public class DefaultTcpServer implements TcpServer {
               protocol.processDataForRequest(buffer);
             } catch (ProtocolProcessException e) {
               try {
-                serverSocket.close();
-              } catch (IOException e1) {
-                throw new HottentotRuntimeException(e);
-              }
+                clientSocket.close();
+              } catch (IOException e1) {}
               throw new HottentotRuntimeException(e);
             }
           }
@@ -127,6 +123,10 @@ public class DefaultTcpServer implements TcpServer {
           os = clientSocket.getOutputStream();
           os.write(serializedResponse, 0, serializedResponse.length);
           //DANGER
+          if(Config.isGCEnabledMode) {
+            System.out.println("System.gc() has been called !");
+            System.gc();
+          }
           clientSocket.close();
           if(Config.isVerboseMode) {
             System.out.println("client socket has been closed");

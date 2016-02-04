@@ -13,6 +13,7 @@ public class Config {
   public static boolean isVerboseMode = false;
   public static final String USAGE_HELP_STRING = "usage : -v --config-path /path/to/config/file ";
   public static int threadPoolSize = 5;
+  public static boolean isGCEnabledMode = false;
 
   public static void setConfigPropertiesFromConfigFile() throws IOException {
     if (!configPath.equals("")) {
@@ -35,6 +36,9 @@ public class Config {
         mainArgsCounter += 2;
       } else if (args[mainArgsCounter].equals("-v")) {
         isVerboseMode = true;
+        mainArgsCounter++;
+      } else if (args[mainArgsCounter].equals("-gc")) {
+        isGCEnabledMode = true;
         mainArgsCounter++;
       } else {
         mainArgsCounter++;
