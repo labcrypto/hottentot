@@ -57,7 +57,7 @@ public class DefaultTcpServer implements TcpServer {
   }
 
   public void bindAndStart() throws IOException {
-    ServerSocket serverSocket = new ServerSocket(port);
+    final ServerSocket serverSocket = new ServerSocket(port);
     class ClientHandler implements Runnable, ResponseCallback {
       private Socket clientSocket;
       private int tCounter;
@@ -87,6 +87,9 @@ public class DefaultTcpServer implements TcpServer {
             numReadBytes = is.read(buffer, 0, buffer.length);
           } catch (IOException e) {
             e.printStackTrace();
+            try {
+              clientSocket.close();
+            } catch (IOException e1) {}
           }
           byte[] readDataChunk;
           if (numReadBytes < 256) {
@@ -94,17 +97,24 @@ public class DefaultTcpServer implements TcpServer {
               readDataChunk = Arrays.copyOf(buffer, numReadBytes);
               protocol.processDataForRequest(readDataChunk);
             } catch (ProtocolProcessException e) {
+              try {
+                serverSocket.close();
+              } catch (IOException e1) {
+                throw new HottentotRuntimeException(e);
+              }
               throw new HottentotRuntimeException(e);
             }
           } else {
             try {
               protocol.processDataForRequest(buffer);
             } catch (ProtocolProcessException e) {
+              try {
+                clientSocket.close();
+              } catch (IOException e1) {}
               throw new HottentotRuntimeException(e);
             }
           }
         }
-
       }
 
       public void onResponse(byte[] serializedResponse) throws TcpServerReadException {
@@ -112,6 +122,15 @@ public class DefaultTcpServer implements TcpServer {
         try {
           os = clientSocket.getOutputStream();
           os.write(serializedResponse, 0, serializedResponse.length);
+          //DANGER
+          if(Config.isGCEnabledMode) {
+            System.out.println("System.gc() has been called !");
+            System.gc();
+          }
+          clientSocket.close();
+          if(Config.isVerboseMode) {
+            System.out.println("client socket has been closed");
+          }
         } catch (IOException e) {
           throw new TcpServerReadException();
         }
