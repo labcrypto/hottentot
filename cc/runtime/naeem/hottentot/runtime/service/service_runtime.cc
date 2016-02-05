@@ -46,6 +46,12 @@ namespace naeem {
           Configuration::Init(argc, argv);
         }
         void
+        ServiceRuntime::Shutdown() {
+          if (tcpServerFactory_) {
+            delete tcpServerFactory_;
+          }
+        }
+        void
         ServiceRuntime::Register(std::string   host, 
                                  uint32_t      port, 
                                  Service       *service) {

@@ -29,6 +29,8 @@ main(int argc, char **argv) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]new [[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl;
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::ServiceRuntime::Register("0.0.0.0", 2000, service);
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::ServiceRuntime::Start();
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::ServiceRuntime::Shutdown();
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::Shutdown();
 [[[INDENT]]]} catch (...) {
 [[[INDENT]]][[[INDENT]]]std::cout << "Error." << std::endl;
 [[[INDENT]]][[[INDENT]]]return 1;

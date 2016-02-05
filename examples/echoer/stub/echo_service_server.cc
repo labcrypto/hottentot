@@ -30,6 +30,7 @@ main(int argc, char **argv) {
         new ::ir::ntnaeem::hottentot::examples::echoer::EchoServiceImpl;
     ::naeem::hottentot::runtime::service::ServiceRuntime::Register("0.0.0.0", 2000, service);
     ::naeem::hottentot::runtime::service::ServiceRuntime::Start();
+    ::naeem::hottentot::runtime::service::ServiceRuntime::Shutdown();
   } catch (...) {
     std::cout << "Error." << std::endl;
     return 1;

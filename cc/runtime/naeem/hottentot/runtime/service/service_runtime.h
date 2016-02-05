@@ -54,6 +54,7 @@ namespace naeem {
         class ServiceRuntime {
         public:
           static void Init(int argc, char **argv);
+          static void Shutdown();
           static void Register(std::string   /* host */, 
                                uint32_t      /* port */, 
                                Service *     /* service implementation */);
