@@ -64,6 +64,11 @@ namespace naeem {
             return value_;
           }
         public:
+          friend std::ostream& operator <<(std::ostream& out, const UInt8& obj) {
+            out << (unsigned int)obj.value_;
+            return out;
+          }
+        public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
             *length_ptr = 1 * sizeof(unsigned char);
             unsigned char *data = 

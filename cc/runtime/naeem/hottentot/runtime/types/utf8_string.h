@@ -97,8 +97,8 @@ namespace naeem {
             FromByteArray(other.data_);
             return *this;
           }
-          friend std::ostream& operator <<(std::ostream& out, const Utf8String& str) {
-              out << str.data_;
+          friend std::ostream& operator <<(std::ostream& out, const Utf8String& obj) {
+              out << obj.data_;
               return out;
           }
         public:

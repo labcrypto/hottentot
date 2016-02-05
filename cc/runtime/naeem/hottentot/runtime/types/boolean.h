@@ -78,6 +78,10 @@ namespace naeem {
             }
             value_ = data[0] != 0;
           }
+          friend std::ostream& operator <<(std::ostream& out, const Boolean& obj) {
+            out << (obj.value_ ? "True" : "False");
+            return out;
+          }
         private:
           bool value_;
         };
