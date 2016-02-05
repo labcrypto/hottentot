@@ -25,6 +25,7 @@
 #define _NAEEM_HOTTENTOT_RUNTIME__TYPES__BYTE_ARRAY_H_
 
 #include <iostream>
+#include <iomanip>
 #include <stdexcept>
 
 #ifdef _MSC_VER
@@ -84,6 +85,23 @@ namespace naeem {
           inline ByteArray& operator=(const ByteArray &other) {
             FromByteArray(other.data_, other.length_);
             return *this;
+          }
+          friend std::ostream& operator <<(std::ostream& out, const ByteArray& obj) {
+            out << "BYTE ARRAY:" << std::endl;
+            bool newLineInserted = false;
+            for (uint32_t i = 0; i < obj.length_; i++) {
+              newLineInserted = false;
+              out << std::uppercase << std::hex << "0x" << 
+                std::setw(2) << std::setfill ('0') << (unsigned int)(obj.data_[i]) << " ";
+              if ((i + 1) % 8 == 0) {
+                out << std::endl;
+                newLineInserted = true;
+              }
+            }
+            if (!newLineInserted) {
+              out << std::endl;
+            }
+            out << std::dec;
           }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
