@@ -24,6 +24,10 @@
 #ifndef _NAEEM_HOTTENTOT_RUNTIME__HOT_PTR_H_
 #define _NAEEM_HOTTENTOT_RUNTIME__HOT_PTR_H_
 
+#ifndef NULL
+#define NULL 0
+#endif
+
 namespace naeem {
 namespace hottentot {
 namespace runtime {
@@ -40,7 +44,7 @@ namespace runtime {
     T* Get() {
       return ptr_;
     }
-    void Free() {
+    inline void Free() {
       if (ptr_) {
         delete ptr_;
       }
@@ -52,13 +56,31 @@ namespace runtime {
   private:
     T *ptr_;
   };
-  template<>
-  void
-  HotPtr<unsigned char, true>::Free() {
-    if (ptr_) {
-      delete [] ptr_;
+  template<typename T>
+  class HotPtr<T, true> {
+  public:
+    HotPtr(T *ptr = NULL)
+      : ptr_(ptr) {
     }
-  }
+    ~HotPtr() {
+      Free();
+    }
+  public:
+    T* Get() {
+      return ptr_;
+    }
+    inline void Free() {
+      if (ptr_) {
+        delete [] ptr_;
+      }
+    }
+  public:
+    void operator=(T *ptr) {
+      ptr_ = ptr;
+    }
+  private:
+    T *ptr_;
+  };
 }
 }
 }

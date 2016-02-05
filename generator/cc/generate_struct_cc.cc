@@ -88,8 +88,9 @@ namespace naeem {
                it != structt->declarations_.end();
                ++it) {
             serializationSS << indent << indent << "uint32_t length" << counter << " = 0;\r\n";
-            serializationSS << indent << indent << "unsigned char *data" << counter << " = ";
-            serializationSS << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+            // serializationSS << indent << indent << "unsigned char *data" << counter << " = ";
+            serializationSS << indent << indent << "::naeem::hottentot::runtime::HotPtr<unsigned char, true> ptr" << counter << " = \r\n";
+            serializationSS << indent << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
             serializationSS << ".Serialize(&length" << counter << ");\r\n";
             /* serializationSS << indent << indent << "if (length" << counter << " <= 127) {\r\n";
             serializationSS << indent << indent << indent << "totalLength += 1 + length" << counter << ";\r\n";
@@ -140,6 +141,7 @@ namespace naeem {
               serializationSS << indent << indent << indent << "c += 4;\r\n";
               serializationSS << indent << indent << "}\r\n";
             }
+            serializationSS << indent << indent << "unsigned char *data" << counter << " = ptr" << counter << ".Get();\r\n";
             serializationSS << indent << indent << "for (uint32_t i = 0; i < length" << counter << "; i++) {\r\n";
             serializationSS << indent << indent << indent << "data[c++] = data" << counter << "[i];\r\n";
             serializationSS << indent << indent << "}\r\n";
