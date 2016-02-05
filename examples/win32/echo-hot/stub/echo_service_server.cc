@@ -30,6 +30,11 @@ main(int argc, char **argv) {
         new ::ir::ntnaeem::hottentot::examples::win32::echo::EchoServiceImpl;
     ::naeem::hottentot::runtime::service::ServiceRuntime::Register("0.0.0.0", 2000, service);
     ::naeem::hottentot::runtime::service::ServiceRuntime::Start();
+    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+      ::naeem::hottentot::runtime::Logger::GetOut() << "Service runtime is shutdown." << std::endl;
+      ::naeem::hottentot::runtime::Logger::GetOut() << "About to disable logging system ..." << std::endl;
+    }
+    ::naeem::hottentot::runtime::Logger::Shutdown();
   } catch (...) {
     std::cout << "Error." << std::endl;
     return 1;

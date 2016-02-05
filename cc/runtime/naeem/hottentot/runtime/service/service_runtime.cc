@@ -63,8 +63,28 @@ namespace naeem {
             ::naeem::hottentot::runtime::Logger::GetOut() << "Killing all listener threads ..." << std::endl;
           }
           for (uint32_t i = 0; i < threads_.size(); i++) {
+            // TODO: Find a more proper way to kill a thread.
             pthread_kill(threads_[i], SIGKILL);
           }
+        }
+#else
+        BOOL 
+        ServiceRuntime::SigTermHanlder(DWORD fdwCtrlType) {
+          switch(fdwCtrlType) { 
+            case CTRL_C_EVENT: 
+            case CTRL_CLOSE_EVENT: 
+              if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                ::naeem::hottentot::runtime::Logger::GetOut() << "CONTROL signal is received ..." << std::endl;
+                ::naeem::hottentot::runtime::Logger::GetOut() << "Killing all listener threads ..." << std::endl;
+              }
+              for (uint32_t i = 0; i < threads_.size(); i++) {
+                // TODO: Find a more proper way to kill a thread.
+                TerminateThread(threads_[i], 0);
+              }
+              return TRUE;
+            default: 
+              return FALSE; 
+          } 
         }
 #endif
         void
@@ -77,6 +97,8 @@ namespace naeem {
           sigemptyset(&sigIntHandler.sa_mask);
           sigIntHandler.sa_flags = 0;
           sigaction(SIGINT, &sigIntHandler, NULL);
+#else
+          SetConsoleCtrlHandler((PHANDLER_ROUTINE)SigTermHanlder, TRUE);
 #endif
         }
         void
@@ -136,10 +158,8 @@ namespace naeem {
           }
           for (uint32_t i = 0; i < threads_.size(); i++) {
 #ifndef _MSC_VER
-            std::cout << "<<<<<<<<<<" << std::endl;
             pthread_join(threads_[i], NULL);
 #else
-            // TODO: Wait for all threads to exit.
             WaitForSingleObject(threads_[i], INFINITE);
 #endif
           }

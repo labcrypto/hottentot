@@ -24,11 +24,8 @@
 #ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_H_
 #define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_H_
 
-#include <string>
-#include <map>
-#include <vector>
-
 #ifdef _MSC_VER
+#include <windows.h>
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
@@ -40,6 +37,10 @@ typedef unsigned __int64 uint64_t;
 #else
 #include <stdint.h>
 #endif
+
+#include <string>
+#include <map>
+#include <vector>
 
 
 namespace naeem {

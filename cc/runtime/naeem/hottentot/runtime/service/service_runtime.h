@@ -24,11 +24,8 @@
 #ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__SERVICE_RUNTIME_H_
 #define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__SERVICE_RUNTIME_H_
 
-#include <vector>
-#include <map>
-#include <string>
-
 #ifdef _MSC_VER
+#include <windows.h>
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
@@ -40,6 +37,10 @@ typedef unsigned __int64 uint64_t;
 #else
 #include <stdint.h>
 #endif
+
+#include <vector>
+#include <map>
+#include <string>
 
 #include "endpoint.h"
 
@@ -69,6 +70,8 @@ namespace naeem {
           }
 #ifndef _MSC_VER
           static void SigTermHanlder(int);
+#else
+          static BOOL SigTermHanlder(DWORD);
 #endif
         private:
           static bool verbose_;

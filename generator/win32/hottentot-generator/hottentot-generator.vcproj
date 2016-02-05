@@ -421,7 +421,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="win_flex -ohot.lex.cpp ../../hot.l"
+						CommandLine="win_flex -ohot.lex.cpp ../../hot.l&#x0D;&#x0A;"
 						Outputs="hot.lex.cpp"
 					/>
 				</FileConfiguration>
@@ -443,7 +443,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="win_bison -d -ohot.tab.cpp ../../hot.y"
+						CommandLine="win_bison -d -ohot.tab.cpp ../../hot.y&#x0D;&#x0A;"
 						Outputs="hot.tab.cpp hot.tab.h"
 					/>
 				</FileConfiguration>
