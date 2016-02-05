@@ -25,6 +25,8 @@
 #define _NAEEM_HOTTENTOT_RUNTIME__REQUEST_H_
 
 #include <vector>
+#include <iostream>
+
 
 #ifdef _MSC_VER
 typedef __int8 int8_t;
@@ -62,6 +64,7 @@ namespace naeem {
         }
         ~Request() {
           for (uint32_t i = 0; i < args_.size(); i++) {
+            std::cout << "Deleting args ..." << std::endl;
             delete [] args_[i].data_;
           }
         }

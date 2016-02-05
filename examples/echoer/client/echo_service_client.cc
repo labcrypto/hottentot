@@ -36,12 +36,13 @@ main(int argc, char **argv) {
     req.SetName(name);
     ::ir::ntnaeem::hottentot::examples::echoer::ResponseMessage resp;
     proxy->EchoMessage(req, resp);
-    std::cout << resp.GetMessage().Serialize(NULL) << std::endl;
+    unsigned char *data = resp.GetMessage().Serialize(NULL);
+    std::cout << data << std::endl;
+    delete [] data;
     ::ir::ntnaeem::hottentot::examples::echoer::proxy::EchoServiceProxyBuilder::Destroy(proxy);
     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
       ::naeem::hottentot::runtime::Logger::GetOut() << "Proxy object is destroyed." << std::endl;
     }
-    // Delete allocated objects
   } catch (...) {
     ::naeem::hottentot::runtime::Logger::GetOut() << "Error." << std::endl;
     return 1;
