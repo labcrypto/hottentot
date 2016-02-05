@@ -71,6 +71,7 @@ namespace naeem {
           static bool verbose_;
           static TcpServerFactory *tcpServerFactory_;
           static std::vector<TcpServer*> tcpServers_;
+          static std::vector<uint32_t> threads_;
           static std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> services_;
           static std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> requestHandlers_;
         };

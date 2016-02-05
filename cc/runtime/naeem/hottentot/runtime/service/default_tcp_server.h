@@ -49,7 +49,7 @@ namespace naeem {
                            std::map<uint8_t, RequestHandler*> *);
           virtual ~DefaultTcpServer();
         public:
-          virtual void BindAndStart();
+          virtual uint32_t BindAndStart();
         private:
 #ifdef _MSC_VER
           static DWORD WINAPI AcceptClients(LPVOID);

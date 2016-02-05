@@ -59,7 +59,7 @@ namespace naeem {
           }
           ~TcpServer() {}
         public:
-          virtual void BindAndStart() = 0;
+          virtual uint32_t BindAndStart() = 0;
         protected:
           std::string host_;
           uint16_t port_;

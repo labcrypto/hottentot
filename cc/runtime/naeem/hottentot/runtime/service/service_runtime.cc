@@ -39,6 +39,7 @@ namespace naeem {
       namespace service {
         TcpServerFactory* ServiceRuntime::tcpServerFactory_ = 0;
         std::vector<TcpServer*> ServiceRuntime::tcpServers_;
+        std::vector<uint32_t> ServiceRuntime::threads_;
         std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> ServiceRuntime::services_;
         std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> ServiceRuntime::requestHandlers_;
         void
@@ -96,12 +97,16 @@ namespace naeem {
                                                                           it->first.GetPort(), 
                                                                           requestHandlers_.find(it->first)->second);
             tcpServers_.push_back(tcpServer);
-            tcpServer->BindAndStart();
+            threads_.push_back(tcpServer->BindAndStart());
             if (::naeem::hottentot::runtime::Configuration::Verbose()) {
               ::naeem::hottentot::runtime::Logger::GetOut() << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
             }
           }
-          // while(true);
+          // while (true);
+          for (uint32_t i = 0; i < threads_.size(); i++) {
+            void *t;
+            pthread_join(threads_[i], &t);
+          }
         }
         TcpServerFactory*
         ServiceRuntime::GetTcpServerFactory() {

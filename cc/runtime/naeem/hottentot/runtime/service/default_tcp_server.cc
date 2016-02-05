@@ -64,7 +64,7 @@ namespace naeem {
         }
         DefaultTcpServer::~DefaultTcpServer() {
         }
-        void
+        uint32_t
         DefaultTcpServer::BindAndStart() {
           if (serverSocketFD_ == 0) {
 #ifndef _MSC_VER
@@ -137,6 +137,8 @@ namespace naeem {
               ::naeem::hottentot::runtime::Logger::GetError() << "Error - pthread_create() return code: " << ret << std::endl;
               exit(EXIT_FAILURE);
             }
+            pthread_detach(ret);
+            return thread;
 #else
             HANDLE res = CreateThread(NULL,
                                       0,
@@ -150,6 +152,7 @@ namespace naeem {
               WSACleanup();
               exit(EXIT_FAILURE);
             }
+            return res;
 #endif
           }
         }

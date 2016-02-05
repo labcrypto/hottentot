@@ -6,6 +6,11 @@
  *   This file contains definitions of sample stub.
  ******************************************************************/
  
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+
 #include <iostream>
 
 #include <naeem/hottentot/runtime/configuration.h>
@@ -18,8 +23,19 @@
 #include "echo_service_impl.h"
 
 
+void sigTermHanlder(int s){
+  ::naeem::hottentot::runtime::service::ServiceRuntime::Shutdown();
+  ::naeem::hottentot::runtime::Logger::Shutdown();
+  exit(0); 
+}
+
 int
 main(int argc, char **argv) {
+  struct sigaction sigIntHandler;
+  sigIntHandler.sa_handler = sigTermHanlder;
+  sigemptyset(&sigIntHandler.sa_mask);
+  sigIntHandler.sa_flags = 0;
+  sigaction(SIGINT, &sigIntHandler, NULL);
   try {
     ::naeem::hottentot::runtime::Logger::Init();
     ::naeem::hottentot::runtime::service::ServiceRuntime::Init(argc, argv);
