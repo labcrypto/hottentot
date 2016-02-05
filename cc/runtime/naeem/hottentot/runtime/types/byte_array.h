@@ -82,7 +82,7 @@ namespace naeem {
             return length_;
           }
         public:
-          inline ByteArray& operator=(const ByteArray &other) {
+          inline ByteArray& operator =(const ByteArray &other) {
             FromByteArray(other.data_, other.length_);
             return *this;
           }
@@ -102,6 +102,7 @@ namespace naeem {
               out << std::endl;
             }
             out << std::dec;
+            return out;
           }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {

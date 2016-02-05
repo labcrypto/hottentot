@@ -89,11 +89,11 @@ namespace naeem {
             return std::wstring();
           }
         public:
-          inline Utf8String& operator=(const char *str) {
+          inline Utf8String& operator =(const char *str) {
             FromByteArray(str);
             return *this;
           }
-          inline Utf8String& operator=(const Utf8String &other) {
+          inline Utf8String& operator =(const Utf8String &other) {
             FromByteArray(other.data_);
             return *this;
           }
