@@ -39,6 +39,12 @@ namespace naeem {
                            char **argv) {
           Configuration::Init(argc, argv);
         }
+        void
+        ProxyRuntime::Shutdown() {
+          if (tcpClientFactory_) {
+            delete tcpClientFactory_;
+          }
+        }
         TcpClientFactory*
         ProxyRuntime::GetTcpClientFactory() {
           if (tcpClientFactory_ == 0) {

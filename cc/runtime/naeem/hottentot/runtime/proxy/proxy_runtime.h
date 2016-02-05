@@ -50,6 +50,7 @@ namespace naeem {
         class ProxyRuntime {
         public:
           static void Init(int argc, char **argv);
+          static void Shutdown();
           static TcpClientFactory* GetTcpClientFactory();
           inline static void SetTcpClientFactory(TcpClientFactory *tcpClientFactory) {
             tcpClientFactory_ = tcpClientFactory;

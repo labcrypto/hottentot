@@ -26,16 +26,23 @@ main(int argc, char **argv) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Proxy runtime is initialized." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]] *proxy = 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::proxy::[[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Create("127.0.0.1", 2000);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::proxy::[[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Create("127.0.0.1", 2000);
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Proxy object is created." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]// TODO Do whatever you want with proxy objects.
+[[[INDENT]]][[[INDENT]]]// ====================================================
+[[[INDENT]]][[[INDENT]]]// TODO: Do whatever you want with proxy objects.
+[[[INDENT]]][[[INDENT]]]// TODO: Delete allocated objects
+[[[INDENT]]][[[INDENT]]]// ====================================================
 [[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::proxy::[[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Destroy(proxy);
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Proxy object is destroyed." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]// Delete allocated objects
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::ProxyRuntime::Shutdown();
+[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Proxy runtime is shutdown." << std::endl;
+[[[INDENT]]][[[INDENT]]]}
+[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::Shutdown();  
 [[[INDENT]]]} catch (...) {
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Error." << std::endl;
 [[[INDENT]]][[[INDENT]]]return 1;

@@ -33,6 +33,7 @@ namespace naeem {
       class Logger {
       public:
         static void Init();
+        static void Shutdown();
         static std::ostream& GetOut();
         static std::ostream& GetError();
       private:
