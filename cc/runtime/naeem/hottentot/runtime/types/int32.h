@@ -52,8 +52,32 @@ namespace naeem {
           Int32()
             : value_(0) {
           }
+          Int32(bool value)
+            : value_(value ? 1 : 0) {
+          }
+          Int32(int8_t value)
+            : value_((int32_t)value) {
+          }
+          Int32(int16_t value)
+            : value_((int32_t)value) {
+          }
           Int32(int32_t value)
             : value_(value) {
+          }
+          Int32(int64_t value)
+            : value_((int32_t)value) {
+          }
+          Int32(uint8_t value)
+            : value_((int32_t)value) {
+          }
+          Int32(uint16_t value)
+            : value_((int32_t)value) {
+          }
+          Int32(uint32_t value)
+            : value_((int32_t)value) {
+          }
+          Int32(uint64_t value)
+            : value_((int32_t)value) {
           }
           virtual ~Int32() {}
         public:

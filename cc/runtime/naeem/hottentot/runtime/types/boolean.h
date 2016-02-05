@@ -56,6 +56,30 @@ namespace naeem {
           Boolean(bool value)
             : value_(value) {
           }
+          Boolean(int8_t value)
+            : value_(value != 0) {
+          }
+          Boolean(int16_t value)
+            : value_(value != 0) {
+          }
+          Boolean(int32_t value)
+            : value_(value != 0) {
+          }
+          Boolean(int64_t value)
+            : value_(value != 0) {
+          }
+          Boolean(uint8_t value)
+            : value_(value != 0) {
+          }
+          Boolean(uint16_t value)
+            : value_(value != 0) {
+          }
+          Boolean(uint32_t value)
+            : value_(value != 0) {
+          }
+          Boolean(uint64_t value)
+            : value_(value != 0) {
+          }
           virtual ~Boolean() {}
         public:
           inline void SetValue(bool value) {

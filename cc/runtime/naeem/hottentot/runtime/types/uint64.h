@@ -52,6 +52,30 @@ namespace naeem {
           UInt64()
             : value_(0) {
           }
+          UInt64(bool value)
+            : value_(value ? 1 : 0) {
+          }
+          UInt64(int8_t value)
+            : value_((uint64_t)value) {
+          }
+          UInt64(int16_t value)
+            : value_((uint64_t)value) {
+          }
+          UInt64(int32_t value)
+            : value_((uint64_t)value) {
+          }
+          UInt64(int64_t value)
+            : value_((uint64_t)value) {
+          }
+          UInt64(uint8_t value)
+            : value_((uint64_t)value) {
+          }
+          UInt64(uint16_t value)
+            : value_((uint64_t)value) {
+          }
+          UInt64(uint32_t value)
+            : value_((uint64_t)value) {
+          }
           UInt64(uint64_t value)
             : value_(value) {
           }
