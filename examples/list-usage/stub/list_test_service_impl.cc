@@ -42,7 +42,18 @@ namespace listtest {
     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
       ::naeem::hottentot::runtime::Logger::GetOut() << "ListTestServiceImpl::GetNames() is called." << std::endl;
     }
-    // TODO
+    ::naeem::hottentot::runtime::types::Utf8String *name1 = 
+      new ::naeem::hottentot::runtime::types::Utf8String("Kamran");
+    ::naeem::hottentot::runtime::types::Utf8String *name2 =
+      new ::naeem::hottentot::runtime::types::Utf8String("Ali");
+    ::naeem::hottentot::runtime::types::Utf8String *name3 =
+      new ::naeem::hottentot::runtime::types::Utf8String("Ashkan");
+    out.Add(name1);
+    out.Add(name2);
+    out.Add(name3);
+    out.Add(name1);
+    out.Add(name2);
+    out.Add(name3);
   }
   void
   ListTestServiceImpl::GetMessages(::naeem::hottentot::runtime::types::List< ::ir::ntnaeem::hottentot::examples::listtest::Message> &out) {

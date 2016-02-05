@@ -40,6 +40,11 @@ main(int argc, char **argv) {
       list.Add(&name2);
       list.Add(&name3);
       proxy->AddNames(list);
+      ::naeem::hottentot::runtime::types::List< ::naeem::hottentot::runtime::types::Utf8String> result;
+      proxy->GetNames(result);
+      for (uint32_t i = 0; i < result.Size(); i++) {
+        std::cout << ">> " << *(result.Get(i)) << std::endl;
+      }
       // ====================================================
     } catch (std::runtime_error &e) {
       ::naeem::hottentot::runtime::Logger::GetError() << e.what() << std::endl;
