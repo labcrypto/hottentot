@@ -97,6 +97,10 @@ namespace naeem {
             FromByteArray(other.data_);
             return *this;
           }
+          friend std::ostream& operator <<(std::ostream& out, const Utf8String& str) {
+              out << str.data_;
+              return out;
+          }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
             uint32_t byteLength = strlen(data_);

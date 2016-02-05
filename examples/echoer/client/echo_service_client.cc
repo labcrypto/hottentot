@@ -32,7 +32,11 @@ main(int argc, char **argv) {
       ::naeem::hottentot::runtime::Logger::GetOut() << "Proxy object is created." << std::endl;
     }
     // ====================================================
-    ::naeem::hottentot::runtime::types::Utf8String str = "Kamran";
+    ::ir::ntnaeem::hottentot::examples::echoer::RequestMessage req;
+    req.SetName("Kamran");
+    ::ir::ntnaeem::hottentot::examples::echoer::ResponseMessage resp;
+    proxy->EchoMessage(req, resp);
+    std::cout << resp.GetMessage() << std::endl;
     // ====================================================
     ::ir::ntnaeem::hottentot::examples::echoer::proxy::EchoServiceProxyBuilder::Destroy(proxy);
     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
