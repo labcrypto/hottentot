@@ -64,8 +64,13 @@ namespace naeem {
         }
         DefaultTcpServer::~DefaultTcpServer() {
         }
-        uint32_t
-        DefaultTcpServer::BindAndStart() {
+#ifndef _MSC_VER
+          pthread_t 
+          DefaultTcpServer::BindAndStart() {
+#else
+          HANDLE 
+          DefaultTcpServer::BindAndStart() {
+#endif
           if (serverSocketFD_ == 0) {
 #ifndef _MSC_VER
             struct sockaddr_in servAddr;

@@ -136,6 +136,7 @@ namespace naeem {
           }
           for (uint32_t i = 0; i < threads_.size(); i++) {
 #ifndef _MSC_VER
+            std::cout << "<<<<<<<<<<" << std::endl;
             pthread_join(threads_[i], NULL);
 #else
             // TODO: Wait for all threads to exit.
