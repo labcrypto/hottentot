@@ -70,6 +70,7 @@ namespace naeem {
           readingLength_(0),
           readingCounter_(0),
           targetCounter_(0),
+          response_(0),
           currentState_(ReadingLengthState) {
       }
       ProtocolV1::~ProtocolV1() {

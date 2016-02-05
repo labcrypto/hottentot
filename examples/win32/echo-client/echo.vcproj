@@ -214,10 +214,6 @@
 					>
 				</File>
 			</Filter>
-			<Filter
-				Name="client"
-				>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

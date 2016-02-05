@@ -36,10 +36,12 @@ namespace echoer {
     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
       ::naeem::hottentot::runtime::Logger::GetOut() << "EchoServiceImpl::EchoMessage() is called." << std::endl;
     }
+    unsigned char *str = req.GetName().Serialize(NULL);
     std::stringstream ss;
-    ss << "Hello " << req.GetName().Serialize(NULL) << "\r\n";
+    ss << "Hello " << str << "\r\n";
     ::naeem::hottentot::runtime::types::Utf8String responseString(ss.str().c_str());
     out.SetMessage(responseString);
+    delete [] str;
   }
 } // END OF NAMESPACE echoer
 } // END OF NAMESPACE examples

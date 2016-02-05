@@ -64,7 +64,6 @@ namespace naeem {
         }
         ~Request() {
           for (uint32_t i = 0; i < args_.size(); i++) {
-            std::cout << "Deleting args ..." << std::endl;
             delete [] args_[i].data_;
           }
         }
