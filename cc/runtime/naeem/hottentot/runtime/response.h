@@ -46,7 +46,9 @@ namespace naeem {
       public:
         Response() {}
         virtual ~Response() {
-          delete [] data_;
+          if (data_) {
+            delete [] data_;
+          }
         }
       public:
         inline uint8_t GetStatusCode() const {

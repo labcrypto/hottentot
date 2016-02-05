@@ -73,6 +73,9 @@ namespace naeem {
           currentState_(ReadingLengthState) {
       }
       ProtocolV1::~ProtocolV1() {
+        if (response_) {
+          delete response_;
+        }
       }
       bool
       ProtocolV1::IsResponseComplete() {
