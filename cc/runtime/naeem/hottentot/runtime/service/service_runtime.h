@@ -49,6 +49,7 @@ namespace naeem {
     namespace runtime {
       namespace service {
         class Service;
+        class TcpServer;
         class RequestHandler;
         class TcpServerFactory;
         class ServiceRuntime {
@@ -69,6 +70,7 @@ namespace naeem {
         private:
           static bool verbose_;
           static TcpServerFactory *tcpServerFactory_;
+          static std::vector<TcpServer*> tcpServers_;
           static std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> services_;
           static std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> requestHandlers_;
         };

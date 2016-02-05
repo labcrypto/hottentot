@@ -38,6 +38,7 @@ namespace naeem {
     namespace runtime {
       namespace service {
         TcpServerFactory* ServiceRuntime::tcpServerFactory_ = 0;
+        std::vector<TcpServer*> ServiceRuntime::tcpServers_;
         std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> ServiceRuntime::services_;
         std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> ServiceRuntime::requestHandlers_;
         void
@@ -47,6 +48,20 @@ namespace naeem {
         }
         void
         ServiceRuntime::Shutdown() {
+          for (std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator>::iterator it = services_.begin();
+               it != services_.end();
+               it++) {
+            for (uint32_t i = 0; i < it->second->size(); i++) {
+              Service *service = it->second->at(i);
+              service->OnShutdown();
+              delete service;
+            }
+            delete it->second;
+            delete requestHandlers_[it->first];
+          }
+          for (uint32_t i = 0; i < tcpServers_.size(); i++) {
+            delete tcpServers_[i];
+          }
           if (tcpServerFactory_) {
             delete tcpServerFactory_;
           }
@@ -80,12 +95,13 @@ namespace naeem {
             TcpServer *tcpServer = GetTcpServerFactory()->CreateTcpServer(it->first.GetHost(), 
                                                                           it->first.GetPort(), 
                                                                           requestHandlers_.find(it->first)->second);
+            tcpServers_.push_back(tcpServer);
             tcpServer->BindAndStart();
             if (::naeem::hottentot::runtime::Configuration::Verbose()) {
               ::naeem::hottentot::runtime::Logger::GetOut() << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
             }
           }
-          while(true);
+          // while(true);
         }
         TcpServerFactory*
         ServiceRuntime::GetTcpServerFactory() {

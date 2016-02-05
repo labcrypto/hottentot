@@ -39,18 +39,23 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
+#include "request_handler.h"
+
 
 namespace naeem {
   namespace hottentot {
     namespace runtime {
       namespace service {
-        class RequestHandler;
         class Service {
         public:
           Service() 
             : requestHandler_(0) {
           }
-          virtual ~Service() {}
+          virtual ~Service() {
+            if (requestHandler_) {
+              delete requestHandler_;
+            }
+          }
         public:
           virtual uint32_t GetServiceId() const = 0;
           virtual void OnInit() = 0;
