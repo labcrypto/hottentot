@@ -103,6 +103,12 @@ namespace naeem {
           }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
+            if (!data_) {
+              unsigned char *data = new unsigned char[1];
+              data[0] = 0;
+              *length_ptr = 1;
+              return data;
+            }
             uint32_t byteLength = strlen(data_);
             unsigned char *data = new unsigned char[byteLength + 1];
             for (uint32_t i = 0; i < byteLength; i++) {

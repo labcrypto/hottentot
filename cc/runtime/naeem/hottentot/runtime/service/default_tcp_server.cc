@@ -196,11 +196,17 @@ namespace naeem {
             params->clientSocketFD_ = clientSocketFD;
 #ifndef _MSC_VER
             pthread_t thread; // TODO(kamran): We need a thread pool here.
-            int ret = pthread_create(&thread, NULL, HandleClientConnection, (void *)params);
+            pthread_attr_t attr;
+
+            pthread_attr_init(&attr);
+            pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+            
+            int ret = pthread_create(&thread, &attr, HandleClientConnection, (void *)params);
             if (ret) {
               ::naeem::hottentot::runtime::Logger::GetError() << "Error - pthread_create() return code: " << ret << std::endl;
               exit(EXIT_FAILURE);
             }
+            // pthread_detach(ret);
 #else
             HANDLE res = CreateThread(NULL,
                                       0,
@@ -261,6 +267,9 @@ namespace naeem {
           delete requestCallback;
           delete protocol;
           delete ref;
+#ifndef _MSC_VER
+          pthread_exit(NULL);
+#endif
           return 0;
         }
       }
