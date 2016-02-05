@@ -21,6 +21,15 @@
  *  SOFTWARE.
  */
  
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#ifndef _MSC_VER
+#include <signal.h>
+#include <unistd.h>
+#endif
+
 #include <iostream>
 
 #include "../logger.h"
@@ -39,13 +48,36 @@ namespace naeem {
       namespace service {
         TcpServerFactory* ServiceRuntime::tcpServerFactory_ = 0;
         std::vector<TcpServer*> ServiceRuntime::tcpServers_;
-        std::vector<uint32_t> ServiceRuntime::threads_;
+#ifndef _MSC_VER
+        std::vector<pthread_t> ServiceRuntime::threads_;
+#else
+        std::vector<HANDLE> ServiceRuntime::threads_;
+#endif
         std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> ServiceRuntime::services_;
         std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> ServiceRuntime::requestHandlers_;
+#ifndef _MSC_VER
+        void 
+        ServiceRuntime::SigTermHanlder(int){
+          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+            ::naeem::hottentot::runtime::Logger::GetOut() << "SIG_TERM is received ..." << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() << "Killing all listener threads ..." << std::endl;
+          }
+          for (uint32_t i = 0; i < threads_.size(); i++) {
+            pthread_kill(threads_[i], SIGKILL);
+          }
+        }
+#endif
         void
         ServiceRuntime::Init(int argc,
                              char **argv) {
           Configuration::Init(argc, argv);
+#ifndef _MSC_VER
+          struct sigaction sigIntHandler;
+          sigIntHandler.sa_handler = ServiceRuntime::SigTermHanlder;
+          sigemptyset(&sigIntHandler.sa_mask);
+          sigIntHandler.sa_flags = 0;
+          sigaction(SIGINT, &sigIntHandler, NULL);
+#endif
         }
         void
         ServiceRuntime::Shutdown() {
@@ -102,10 +134,13 @@ namespace naeem {
               ::naeem::hottentot::runtime::Logger::GetOut() << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
             }
           }
-          // while (true);
           for (uint32_t i = 0; i < threads_.size(); i++) {
-            void *t;
-            pthread_join(threads_[i], &t);
+#ifndef _MSC_VER
+            pthread_join(threads_[i], NULL);
+#else
+            // TODO: Wait for all threads to exit.
+            WaitForSingleObject(threads_[i], INFINITE);
+#endif
           }
         }
         TcpServerFactory*

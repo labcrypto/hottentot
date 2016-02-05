@@ -67,11 +67,18 @@ namespace naeem {
           inline static bool Verbose() {
             return verbose_;
           }
+#ifndef _MSC_VER
+          static void SigTermHanlder(int);
+#endif
         private:
           static bool verbose_;
           static TcpServerFactory *tcpServerFactory_;
           static std::vector<TcpServer*> tcpServers_;
-          static std::vector<uint32_t> threads_;
+#ifndef _MSC_VER
+          static std::vector<pthread_t> threads_;
+#else
+          static std::vector<HANDLE> threads_;
+#endif
           static std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> services_;
           static std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> requestHandlers_;
         };
