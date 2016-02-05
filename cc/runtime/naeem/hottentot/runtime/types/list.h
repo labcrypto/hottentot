@@ -136,6 +136,7 @@ namespace naeem {
               for (uint32_t j = 0; j < lengths[i]; j++) {
                 data[c++] = datas[i][j];
               }
+              delete [] datas[i];
               // std::cout << "data(" << i << ")" << std::endl;
             }
             if (c != length) {
@@ -170,7 +171,7 @@ namespace naeem {
                 }
               }
               T *e = new T;
-              std::cout << "Length: " << elength << std::endl;
+              // std::cout << "Length: " << elength << std::endl;
               e->Deserialize(data + i, elength);
               Add(e);
               i += elength;
