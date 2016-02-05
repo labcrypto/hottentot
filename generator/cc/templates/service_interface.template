@@ -32,6 +32,9 @@ typedef unsigned __int64 uint64_t;
 [[[NAMESPACES_START]]]
 [[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]] {
 [[[INDENT]]]public:
+[[[INDENT]]][[[INDENT]]] [[[CAMEL_CASE_FC_SERVICE_NAME]]]() {}
+[[[INDENT]]][[[INDENT]]] virtual ~[[[CAMEL_CASE_FC_SERVICE_NAME]]]() {}
+[[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]][[[METHOD_DEFS]]]
 [[[INDENT]]]};
 [[[NAMESPACES_END]]]

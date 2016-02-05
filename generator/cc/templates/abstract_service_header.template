@@ -35,6 +35,9 @@ typedef unsigned __int64 uint64_t;
 namespace service {
 [[[INDENT]]]class Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]] : public [[[CAMEL_CASE_FC_SERVICE_NAME]]], public ::naeem::hottentot::runtime::service::Service {
 [[[INDENT]]]public:
+[[[INDENT]]][[[INDENT]]]Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]]() {}
+[[[INDENT]]][[[INDENT]]]virtual ~Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]]() {}
+[[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]]inline virtual uint32_t GetServiceId() const {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]return [[[SERVICE_HASH]]];
 [[[INDENT]]][[[INDENT]]]}
