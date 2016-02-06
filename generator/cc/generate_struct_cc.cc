@@ -199,7 +199,20 @@ namespace naeem {
           /*
            * Ctor assignments
            */
-           
+          std::string copyCtorAssign = "";
+          for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
+               it != structt->declarations_.end();
+               ++it) {
+            copyCtorAssign += indent + indent + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+            copyCtorAssign += " = other." + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_;\r\n";
+          }
+          std::string pointerCtorAssign = "";
+          for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
+               it != structt->declarations_.end();
+               ++it) {
+            pointerCtorAssign += indent + indent + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+            pointerCtorAssign += " = other->" + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_;\r\n";
+          }
           /*
            * Filling templates with real values
            */
