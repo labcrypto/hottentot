@@ -24,22 +24,24 @@
 #ifndef _NAEEM_HOTTENTOT_RUNTIME__HOT_CONTEXT_H_
 #define _NAEEM_HOTTENTOT_RUNTIME__HOT_CONTEXT_H_
 
-#include "gc.h"
+// #include "gc.h"
 
 
 namespace naeem {
 namespace hottentot {
 namespace runtime {
+namespace service {
   class HotContext {
   public:
     HotContext() {}
     ~HotContext() {}
-    inline GC& GC() {
+    /* inline GC& GetGC() {
       return gc_;
-    }
+    } */
   private:
-    GC gc_;
+    // GC gc_;
   };
+}
 }
 }
 }

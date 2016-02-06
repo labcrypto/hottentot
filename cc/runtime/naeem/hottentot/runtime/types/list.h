@@ -69,8 +69,11 @@ namespace naeem {
             return elements_.size();
           }
           inline void Purge() {
-            for (uint32_t i = 0; i < elements_.size(); i++) {
-              delete elements_[i];
+            typename std::vector<T*>::iterator it;
+            for (it = elements_.begin(); it != elements_.end();) {
+              T *t = *it;
+              delete t;
+              it = elements_.erase(it);
             }
           }
         public:

@@ -13,7 +13,7 @@
 #include <naeem/hottentot/runtime/proxy/proxy_runtime.h>
 
 [[[INCLUDE_STRUCT_HEADERS]]]
-#include "../[[[SNAKE_CASE_SERVICE_NAME]]].h"
+#include "../proxy/[[[SNAKE_CASE_SERVICE_NAME]]].h"
 #include "../proxy/[[[SNAKE_CASE_SERVICE_NAME]]]_proxy_builder.h"
 
 
@@ -25,7 +25,7 @@ main(int argc, char **argv) {
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Proxy runtime is initialized." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]] *proxy = 
+[[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::proxy::[[[CAMEL_CASE_FC_SERVICE_NAME]]] *proxy = 
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::proxy::[[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Create("127.0.0.1", 2000);
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Proxy object is created." << std::endl;

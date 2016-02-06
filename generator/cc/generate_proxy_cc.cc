@@ -147,15 +147,25 @@ namespace naeem {
             ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
               service->GetName()) + "Service";
           std::string arguments = "";
-          std::string sep = "";
           for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-            arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + method->arguments_[j]->GetVariable();
-            sep = ", ";
+            arguments += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + method->arguments_[j]->GetVariable();
+            if (j == (method->arguments_.size() - 1)) {
+                if (!TypeHelper::IsVoid(method->GetReturnType())) {
+                  arguments += ", ";
+                }
+              } else {
+                arguments += ", ";
+              }
+              arguments += "\r\n";
           }
           if (!TypeHelper::IsVoid(method->GetReturnType())) {
-            arguments += sep + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out";
+            arguments += indent + indent + indent + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out\r\n";
           }
           std::string argumentsSerialization = "";
+          if (method->arguments_.size() > 0) {
+            argumentsSerialization += indent + indent + "uint32_t serializedDataLength = 0;\r\n";
+            argumentsSerialization += indent + indent + "unsigned char *serializedData = 0;\r\n";
+          }
           for (uint32_t j = 0; j < method->arguments_.size(); j++) {
             std::string proxyCCMethodArgumentSerializationTemplate = templates["proxy_cc__method_argument_serialization"];
             proxyCCMethodArgumentSerializationTemplate =

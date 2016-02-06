@@ -36,7 +36,8 @@ namespace service {
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]virtual ~[[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler() {}
 [[[INDENT]]]public:
-[[[INDENT]]][[[INDENT]]]virtual void HandleRequest(::naeem::hottentot::runtime::Request &   /* Request object */, ::naeem::hottentot::runtime::Response &  /* Response object */);
+[[[INDENT]]][[[INDENT]]]virtual void HandleRequest(::naeem::hottentot::runtime::Request &request,
+                                                   ::naeem::hottentot::runtime::Response &response);
 [[[INDENT]]]};
 } // END OF NAMESPACE service
 [[[NAMESPACES_END]]]

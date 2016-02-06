@@ -26,8 +26,8 @@ typedef unsigned __int64 uint64_t;
 
 
 [[[NAMESPACES_START]]]
-class [[[CAMEL_CASE_FC_SERVICE_NAME]]];
 namespace proxy {
+class [[[CAMEL_CASE_FC_SERVICE_NAME]]];
 [[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder {
 [[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]]static [[[CAMEL_CASE_FC_SERVICE_NAME]]]* Create(std::string /* host */, uint32_t /* port */);

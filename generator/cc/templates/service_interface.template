@@ -25,6 +25,7 @@ typedef unsigned __int64 uint64_t;
 #include <string>
 
 #include <naeem/hottentot/runtime/types/primitives.h>
+#include <naeem/hottentot/runtime/service/hot_context.h>
 
 [[[INCLUDE_STRUCT_HEADERS]]]
 
@@ -38,7 +39,7 @@ namespace service {
 [[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]][[[METHOD_DEFS]]]
 [[[INDENT]]]};
-}
+} // END OF NAMESPACE service
 [[[NAMESPACES_END]]]
 
 #endif

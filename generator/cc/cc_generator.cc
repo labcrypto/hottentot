@@ -80,7 +80,7 @@ namespace naeem {
           templates.insert(std::pair<std::string, std::string>("request_handler_cc",requestHandlerCCTemplate));          
           templates.insert(std::pair<std::string, std::string>("request_handler_cc__method_if_clause",requestHandlerCCMethodIfClauseTemplate));
           templates.insert(std::pair<std::string, std::string>("request_handler_header",requestHandlerHeaderTemplate));
-          templates.insert(std::pair<std::string, std::string>("interface",serviceInterfaceTemplate));
+          templates.insert(std::pair<std::string, std::string>("interface",interfaceTemplate));
           templates.insert(std::pair<std::string, std::string>("service_interface",serviceInterfaceTemplate));
           templates.insert(std::pair<std::string, std::string>("struct_cc",structCCTemplate));
           templates.insert(std::pair<std::string, std::string>("struct_header",structHeaderTemplate));

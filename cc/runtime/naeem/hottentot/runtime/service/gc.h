@@ -27,6 +27,7 @@
 namespace naeem {
 namespace hottentot {
 namespace runtime {
+namespace service {
   class GC {
   public:
     GC() {}
@@ -55,9 +56,10 @@ namespace runtime {
       }
     }
   private:
-    std::vector<void*> pointers_;
-    std::vector<void*> arrayPointers_;
+    std::vector<void*> voidPointers_;
+    std::vector<void*> voidArrayPointers_;
   };
+}
 }
 }
 }

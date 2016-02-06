@@ -167,14 +167,15 @@ namespace naeem {
             sep = ", ";
           }
           if (!TypeHelper::IsVoid(method->GetReturnType())) {
-            methodCall += sep + "result";
+            methodCall += sep + "result, ";
           }
+          methodCall += sep + "hotContext";
           methodCall += ");\r\n";
           for (uint32_t i = 0; i < method->arguments_.size(); i++) {
             if (TypeHelper::IsList(method->arguments_[i]->GetType())) {
               methodCall += indent + indent + indent + method->arguments_[i]->GetVariable() + ".Purge();\r\n";
             }
-          }
+          }          
           std::string resultSerialization = "";
           // if (TypeHelper::IsUDT(method->GetReturnType())) {
           //  resultSerialization += indent + indent + indent + "unsigned char *serializedData = result.Serialize(&serializedDataLength);\r\n";
@@ -183,6 +184,11 @@ namespace naeem {
             resultSerialization += indent + indent + indent + "unsigned char *serializedData = 0;";
           } else {
             resultSerialization += indent + indent + indent + "unsigned char *serializedData = result.Serialize(&serializedDataLength);\r\n";
+            if (!TypeHelper::IsVoid(method->GetReturnType())) {
+              if (TypeHelper::IsList(method->GetReturnType())) {
+                resultSerialization += indent + indent + indent + "result.Purge();\r\n";
+              }
+            }
           }
           resultSerialization += "\r\n";
           /*

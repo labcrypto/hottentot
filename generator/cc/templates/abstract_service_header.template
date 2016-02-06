@@ -27,7 +27,8 @@ typedef unsigned __int64 uint64_t;
 #include <naeem/hottentot/runtime/service/service.h>
 
 [[[INCLUDE_STRUCT_HEADERS]]]
-#include "../[[[SNAKE_CASE_SERVICE_NAME]]].h"
+
+#include "[[[SNAKE_CASE_SERVICE_NAME]]].h"
 #include "[[[SNAKE_CASE_SERVICE_NAME]]]_request_handler.h"
 
 

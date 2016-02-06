@@ -27,13 +27,13 @@ typedef unsigned __int64 uint64_t;
 #include <naeem/hottentot/runtime/types/primitives.h>
 #include <naeem/hottentot/runtime/proxy/proxy.h>
 
-#include "../[[[SNAKE_CASE_SERVICE_NAME]]].h"
+#include "[[[SNAKE_CASE_SERVICE_NAME]]].h"
 
 
 [[[NAMESPACES_START]]]
 [[[STRUCT_CLASS_FORWARD_DECLARATIONS]]]
 namespace proxy {
-[[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy : public [[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]], 
+[[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy : public [[[CAMEL_CASE_FC_SERVICE_NAME]]], 
 [[[INDENT]]][[[INDENT]]]public ::naeem::hottentot::runtime::proxy::Proxy {
 [[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy(std::string host, uint32_t port) 

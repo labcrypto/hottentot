@@ -1,5 +1,6 @@
 [[[INDENT]]]void
-[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy::[[[METHOD_NAME]]]([[[ARGUMENTS]]]) {
+[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy::[[[METHOD_NAME]]](
+[[[ARGUMENTS]]][[[INDENT]]]) {
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Make request object
 [[[INDENT]]][[[INDENT]]] */
@@ -13,8 +14,6 @@
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Serialize arguments
 [[[INDENT]]][[[INDENT]]] */
-[[[INDENT]]][[[INDENT]]]uint32_t serializedDataLength = 0;
-[[[INDENT]]][[[INDENT]]]unsigned char *serializedData = 0;
 [[[ARGUMENTS_SERIALIZATION]]][[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Request object is fill with serialized arguments." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
