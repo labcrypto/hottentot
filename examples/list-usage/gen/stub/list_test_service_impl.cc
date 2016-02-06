@@ -57,9 +57,6 @@ namespace listtest {
     out.Add(name1);
     out.Add(name2);
     out.Add(name3);
-    out.Add(name1);
-    out.Add(name2);
-    out.Add(name3);
   }
   void
   ListTestServiceImpl::GetMessages(

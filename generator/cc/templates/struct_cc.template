@@ -15,6 +15,10 @@
 
 
 [[[NAMESPACES_START]]]
+[[[INDENT]]][[[STRUCT_NAME]]]::[[[STRUCT_NAME]]](const [[[STRUCT_NAME]]] other&) {
+[[[COPY_CTOR_ASSIGN]]][[[INDENT]]]}
+[[[INDENT]]][[[STRUCT_NAME]]]::[[[STRUCT_NAME]]]([[[STRUCT_NAME]]] *other) {
+[[[POINTER_CTOR_ASSIGN]]][[[INDENT]]]}
 [[[INDENT]]]unsigned char *
 [[[INDENT]]][[[STRUCT_NAME]]]::Serialize(uint32_t *length_ptr) {
 [[[SERIALIZATION]]][[[INDENT]]]}
