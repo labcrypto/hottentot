@@ -167,7 +167,8 @@ namespace naeem {
             sep = ", ";
           }
           if (!TypeHelper::IsVoid(method->GetReturnType())) {
-            methodCall += sep + "result, ";
+            methodCall += sep + "result";
+            sep = ", ";
           }
           methodCall += sep + "hotContext";
           methodCall += ");\r\n";
