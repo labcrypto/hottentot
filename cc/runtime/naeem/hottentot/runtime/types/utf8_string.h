@@ -82,7 +82,10 @@ namespace naeem {
             return chars_[index];
           }
           std::string ToStdString() {
-            return (const char*)Serialize(NULL);
+            const char *data = (const char*)Serialize(NULL);
+            std::string str(data);
+            delete [] data;
+            return str;
           }
           std::wstring ToStdWString() {
             // TODO

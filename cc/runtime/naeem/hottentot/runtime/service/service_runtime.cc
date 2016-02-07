@@ -57,15 +57,19 @@ namespace naeem {
         std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> ServiceRuntime::requestHandlers_;
 #ifndef _MSC_VER
         void 
-        ServiceRuntime::SigTermHanlder(int){
+        ServiceRuntime::SigTermHanlder(int flag){
           if (::naeem::hottentot::runtime::Configuration::Verbose()) {
             ::naeem::hottentot::runtime::Logger::GetOut() << "SIG_TERM is received ..." << std::endl;
             ::naeem::hottentot::runtime::Logger::GetOut() << "Killing all listener threads ..." << std::endl;
           }
           for (uint32_t i = 0; i < threads_.size(); i++) {
             // TODO: Find a more proper way to kill a thread.
-            pthread_kill(threads_[i], SIGKILL);
+            pthread_cancel(threads_[i]);
           }
+          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+            ::naeem::hottentot::runtime::Logger::GetOut() << "All threads are killed." << std::endl;
+          }
+          flag = 1;
         }
 #else
         BOOL 
