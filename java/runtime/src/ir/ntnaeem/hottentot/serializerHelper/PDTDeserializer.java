@@ -59,8 +59,8 @@ public class PDTDeserializer {
     return new String(realByteArray);
   }
 
-  public static boolean getBool(byte b) {
-    if (b == 1) {
+  public static boolean getBool(byte[] bytes) {
+    if (bytes[0] == 1) {
       return true;
     }
     return false;
