@@ -18,7 +18,7 @@ public class Main {
     ServiceRuntime serviceRuntime = new ServiceRuntime();
     Service authenticationService = new AuthenticationImpl();
     serviceRuntime.register("127.0.0.1",2000, authenticationService);
-    authenticationService = null;
+
     serviceRuntime.start();
   }
 }

@@ -40,14 +40,14 @@ public class PDTSerializer {
     return ArrayUtil.concat(strBytes , new byte[]{0});
   }
 
-  public static byte getBool(boolean bool) {
-    byte b;
+  public static byte[] getBool(boolean bool) {
+    byte[] bytes = new byte[1];
     if (bool) {
-      b = 1;
+      bytes[0] = 1;
     } else {
-      b = 0;
+      bytes[0] = 0;
     }
-    return b;
+    return bytes;
   }
 
   public static byte[] getInt8(byte number) {
