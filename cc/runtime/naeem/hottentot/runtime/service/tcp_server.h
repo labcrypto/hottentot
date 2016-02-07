@@ -24,7 +24,20 @@
 #ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_H_
 #define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_H_
 
+#ifdef _MSC_VER
+#include <windows.h>
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
 #include <stdint.h>
+#endif
+
 #include <string>
 #include <map>
 #include <vector>
@@ -47,7 +60,11 @@ namespace naeem {
           }
           ~TcpServer() {}
         public:
-          virtual void BindAndStart() = 0;
+#ifndef _MSC_VER
+          virtual pthread_t BindAndStart() = 0;
+#else
+          virtual HANDLE BindAndStart() = 0;
+#endif
         protected:
           std::string host_;
           uint16_t port_;

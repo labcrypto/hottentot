@@ -26,7 +26,19 @@
 
 #include <iostream>
 #include <stdexcept>
+
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
 #include <stdint.h>
+#endif
 
 #include "../serializable.h"
 
@@ -40,8 +52,32 @@ namespace naeem {
           Int8()
             : value_(0) {
           }
+          Int8(bool value)
+            : value_(value ? 1 : 0) {
+          }
           Int8(int8_t value)
             : value_(value) {
+          }
+          Int8(int16_t value)
+            : value_((int8_t)value) {
+          }
+          Int8(int32_t value)
+            : value_((int8_t)value) {
+          }
+          Int8(int64_t value)
+            : value_((int8_t)value) {
+          }
+          Int8(uint8_t value)
+            : value_((int8_t)value) {
+          }
+          Int8(uint16_t value)
+            : value_((int8_t)value) {
+          }
+          Int8(uint32_t value)
+            : value_((int8_t)value) {
+          }
+          Int8(uint64_t value)
+            : value_((int8_t)value) {
           }
           virtual ~Int8() {}
         public:
@@ -50,6 +86,11 @@ namespace naeem {
           }
           inline int8_t GetValue() const {
             return value_;
+          }
+        public:
+          friend std::ostream& operator <<(std::ostream& out, const Int8& obj) {
+            out << (int)obj.value_;
+            return out;
           }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {

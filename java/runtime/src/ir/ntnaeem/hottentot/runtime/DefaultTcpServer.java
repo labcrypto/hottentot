@@ -22,15 +22,13 @@
  */
 package ir.ntnaeem.hottentot.runtime;
 
-
+import ir.ntnaeem.hottentot.runtime.config.Config;
 import ir.ntnaeem.hottentot.runtime.exception.HottentotRuntimeException;
 import ir.ntnaeem.hottentot.runtime.exception.ProtocolProcessException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpServerReadException;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.RequestCallbackFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -42,23 +40,24 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DefaultTcpServer implements TcpServer {
-
-
   private int port;
   private ExecutorService executor;
   private String host;
-  private final int THREAD_POOL_SIZE = 1000;
+  private int threadPoolSize;
   private Map<Long, RequestHandler> requestHandlers;
 
   public DefaultTcpServer(String host, int port, Map<Long, RequestHandler> requestHandlers) {
-    this.executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+    if(Config.isVerboseMode) {
+      System.out.println("THREAD POOL SIZE : " + Config.threadPoolSize);
+    }
+    this.executor = Executors.newFixedThreadPool(Config.threadPoolSize);
     this.requestHandlers = requestHandlers;
     this.host = host;
     this.port = port;
   }
 
   public void bindAndStart() throws IOException {
-    ServerSocket serverSocket = new ServerSocket(port);
+    final ServerSocket serverSocket = new ServerSocket(port);
     class ClientHandler implements Runnable, ResponseCallback {
       private Socket clientSocket;
       private int tCounter;
@@ -88,6 +87,9 @@ public class DefaultTcpServer implements TcpServer {
             numReadBytes = is.read(buffer, 0, buffer.length);
           } catch (IOException e) {
             e.printStackTrace();
+            try {
+              clientSocket.close();
+            } catch (IOException e1) {}
           }
           byte[] readDataChunk;
           if (numReadBytes < 256) {
@@ -95,17 +97,24 @@ public class DefaultTcpServer implements TcpServer {
               readDataChunk = Arrays.copyOf(buffer, numReadBytes);
               protocol.processDataForRequest(readDataChunk);
             } catch (ProtocolProcessException e) {
+              try {
+                serverSocket.close();
+              } catch (IOException e1) {
+                throw new HottentotRuntimeException(e);
+              }
               throw new HottentotRuntimeException(e);
             }
           } else {
             try {
               protocol.processDataForRequest(buffer);
             } catch (ProtocolProcessException e) {
+              try {
+                clientSocket.close();
+              } catch (IOException e1) {}
               throw new HottentotRuntimeException(e);
             }
           }
         }
-
       }
 
       public void onResponse(byte[] serializedResponse) throws TcpServerReadException {
@@ -113,6 +122,15 @@ public class DefaultTcpServer implements TcpServer {
         try {
           os = clientSocket.getOutputStream();
           os.write(serializedResponse, 0, serializedResponse.length);
+          //DANGER
+          if(Config.isGCEnabledMode) {
+            System.out.println("System.gc() has been called !");
+            System.gc();
+          }
+          clientSocket.close();
+          if(Config.isVerboseMode) {
+            System.out.println("client socket has been closed");
+          }
         } catch (IOException e) {
           throw new TcpServerReadException();
         }

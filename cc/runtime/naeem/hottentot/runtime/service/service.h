@@ -24,21 +24,38 @@
 #ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__SERVICE_H_
 #define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__SERVICE_H_
 
-#include <stdint.h>
 #include <string>
+
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#endif
+
+#include "request_handler.h"
 
 
 namespace naeem {
   namespace hottentot {
     namespace runtime {
       namespace service {
-        class RequestHandler;
         class Service {
         public:
           Service() 
             : requestHandler_(0) {
           }
-          virtual ~Service() {}
+          virtual ~Service() {
+            if (requestHandler_) {
+              delete requestHandler_;
+            }
+          }
         public:
           virtual uint32_t GetServiceId() const = 0;
           virtual void OnInit() = 0;

@@ -48,7 +48,6 @@ namespace naeem {
         void
         CCGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
                               ::naeem::hottentot::generator::GenerationConfig &generationConfig) {                                
-          // std::cout << "asdasdasD" << std::endl;
           /*
            * Reading all needed templates and stroing them in a map
            */
@@ -64,26 +63,11 @@ namespace naeem {
           std::string requestHandlerCCTemplate((char *)__cc_templates_request_handler_cc_template, __cc_templates_request_handler_cc_template_len);
           std::string requestHandlerCCMethodIfClauseTemplate((char *)__cc_templates_request_handler_cc__method_if_clause_template, __cc_templates_request_handler_cc__method_if_clause_template_len);
           std::string requestHandlerHeaderTemplate((char *)__cc_templates_request_handler_header_template, __cc_templates_request_handler_header_template_len);
+          std::string interfaceTemplate((char *)__cc_templates_interface_template, __cc_templates_interface_template_len);
           std::string serviceInterfaceTemplate((char *)__cc_templates_service_interface_template, __cc_templates_service_interface_template_len);
           std::string structCCTemplate((char *)__cc_templates_struct_cc_template, __cc_templates_struct_cc_template_len);
           std::string structHeaderTemplate((char *)__cc_templates_struct_header_template, __cc_templates_struct_header_template_len);
           std::string structHeaderGetterAndSetterTemplate((char *)__cc_templates_struct_header__getter_and_setter_template, __cc_templates_struct_header__getter_and_setter_template_len);
-          // std::cout << "asdasdasD" << std::endl;
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/abstract_service_header.template", abstractServiceHeaderTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_builder_cc.template", proxyBuilderCCTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_builder_header.template", proxyBuilderHeaderTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc.template", proxyCCTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method.template", proxyCCMethodTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method_argument_serialization.template", proxyCCMethodArgumentSerializationTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_cc__method_response_deserialization.template", proxyCCMethodResponseDeserialization);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/proxy_header.template", proxyHeaderTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_cc.template", requestHandlerCCTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_cc__method_if_clause.template", requestHandlerCCMethodIfClauseTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/request_handler_header.template", requestHandlerHeaderTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_interface.template", serviceInterfaceTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_cc.template", structCCTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_header.template", structHeaderTemplate);
-          // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/struct_header__getter_and_setter.template", structHeaderGetterAndSetterTemplate);
           std::map<std::string, std::string> templates;
           templates.insert(std::pair<std::string, std::string>("abstract_service_header",abstractServiceHeaderTemplate));
           templates.insert(std::pair<std::string, std::string>("proxy_builder_cc",proxyBuilderCCTemplate));
@@ -96,6 +80,7 @@ namespace naeem {
           templates.insert(std::pair<std::string, std::string>("request_handler_cc",requestHandlerCCTemplate));          
           templates.insert(std::pair<std::string, std::string>("request_handler_cc__method_if_clause",requestHandlerCCMethodIfClauseTemplate));
           templates.insert(std::pair<std::string, std::string>("request_handler_header",requestHandlerHeaderTemplate));
+          templates.insert(std::pair<std::string, std::string>("interface",interfaceTemplate));
           templates.insert(std::pair<std::string, std::string>("service_interface",serviceInterfaceTemplate));
           templates.insert(std::pair<std::string, std::string>("struct_cc",structCCTemplate));
           templates.insert(std::pair<std::string, std::string>("struct_header",structHeaderTemplate));
@@ -103,10 +88,8 @@ namespace naeem {
           /*
            * Creating needed directories
            */
-          
           ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir() + "/proxy");
           ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir() + "/service");
-          // std::cout << "asdasdasD" << std::endl;
           /*
            * Proceed to generate files
            */
@@ -129,6 +112,9 @@ namespace naeem {
               GenerateAbstractServiceHeader(hot->modules_[moduleCounter]->services_[serviceCounter],
                                             generationConfig,
                                             templates);
+              GenerateInterface(hot->modules_[moduleCounter]->services_[serviceCounter],
+                                generationConfig,
+                                templates);
               GenerateServiceInterface(hot->modules_[moduleCounter]->services_[serviceCounter],
                                        generationConfig,
                                        templates);
@@ -152,7 +138,6 @@ namespace naeem {
                                        templates);
             }
           }
-          // std::cout << "C++ Generation done." << std::endl;
         }
       }
     }

@@ -156,10 +156,10 @@ namespace naeem {
             tempSS << ".Deserialize(request.GetArgumentData(" << i << "), request.GetArgumentLength(" << i << "));";
             inputVariables += indent + indent + indent + method->arguments_[i]->GetVariable() + tempSS.str() + "\r\n";
           }
-          std::string methodCall = indent + indent + indent;
+          std::string methodCall;
           if (!TypeHelper::IsVoid(method->GetReturnType())) {
-            methodCall += TypeHelper::GetCCType(method->GetReturnType(), ns) + " result;\r\n";
-          }
+            methodCall += indent + indent + indent + TypeHelper::GetCCType(method->GetReturnType(), ns) + " result;\r\n";
+          } 
           methodCall += indent + indent + indent + "serviceObject->" + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
           std::string sep = "";
           for (uint32_t i = 0; i < method->arguments_.size(); i++) {
@@ -168,8 +168,15 @@ namespace naeem {
           }
           if (!TypeHelper::IsVoid(method->GetReturnType())) {
             methodCall += sep + "result";
+            sep = ", ";
           }
+          methodCall += sep + "hotContext";
           methodCall += ");\r\n";
+          for (uint32_t i = 0; i < method->arguments_.size(); i++) {
+            if (TypeHelper::IsList(method->arguments_[i]->GetType())) {
+              methodCall += indent + indent + indent + method->arguments_[i]->GetVariable() + ".Purge();\r\n";
+            }
+          }          
           std::string resultSerialization = "";
           // if (TypeHelper::IsUDT(method->GetReturnType())) {
           //  resultSerialization += indent + indent + indent + "unsigned char *serializedData = result.Serialize(&serializedDataLength);\r\n";
@@ -178,6 +185,11 @@ namespace naeem {
             resultSerialization += indent + indent + indent + "unsigned char *serializedData = 0;";
           } else {
             resultSerialization += indent + indent + indent + "unsigned char *serializedData = result.Serialize(&serializedDataLength);\r\n";
+            if (!TypeHelper::IsVoid(method->GetReturnType())) {
+              if (TypeHelper::IsList(method->GetReturnType())) {
+                resultSerialization += indent + indent + indent + "result.Purge();\r\n";
+              }
+            }
           }
           resultSerialization += "\r\n";
           /*

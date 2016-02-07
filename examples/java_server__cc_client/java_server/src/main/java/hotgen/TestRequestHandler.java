@@ -45,7 +45,7 @@ public class TestRequestHandler extends RequestHandler {
         serializableTokenList.setTokenList(tokenList);
         serializedTokenList = serializableTokenList.serialize();
       }
-      response.setStatusCode((byte) 0);
+      response.setStatusCode((byte) 100);
       response.setData(serializedTokenList);
       response.setLength(serializedTokenList.length + 1);
       return response;
@@ -62,7 +62,7 @@ public class TestRequestHandler extends RequestHandler {
         serializableDataWrapperList.setDataWrapperList(datawrapperList);
         serializedDataWrapperList = serializableDataWrapperList.serialize();
       }
-      response.setStatusCode((byte) 0);
+      response.setStatusCode((byte) 100);
       response.setData(serializedDataWrapperList);
       response.setLength(serializedDataWrapperList.length + 1);
       return response;
@@ -79,7 +79,7 @@ public class TestRequestHandler extends RequestHandler {
         serializableStringWrapperList.setStringWrapperList(stringwrapperList);
         serializedStringWrapperList = serializableStringWrapperList.serialize();
       }
-      response.setStatusCode((byte) 0);
+      response.setStatusCode((byte) 100);
       response.setData(serializedStringWrapperList);
       response.setLength(serializedStringWrapperList.length + 1);
       return response;
@@ -95,7 +95,7 @@ public class TestRequestHandler extends RequestHandler {
       }else{
       serializedStringWrapper = stringWrapper.serialize();
       }
-      response.setStatusCode((byte) 0);
+      response.setStatusCode((byte) 100);
       response.setData(serializedStringWrapper);
       response.setLength(serializedStringWrapper.length + 1);
       return response;
@@ -111,7 +111,7 @@ public class TestRequestHandler extends RequestHandler {
       }else{
       serializedDataWrapper = dataWrapper.serialize();
       }
-      response.setStatusCode((byte) 0);
+      response.setStatusCode((byte) 100);
       response.setData(serializedDataWrapper);
       response.setLength(serializedDataWrapper.length + 1);
       return response;
@@ -132,7 +132,7 @@ public class TestRequestHandler extends RequestHandler {
       }else{
       serializedDataWrapper = dataWrapper.serialize();
       }
-      response.setStatusCode((byte) 0);
+      response.setStatusCode((byte) 100);
       response.setData(serializedDataWrapper);
       response.setLength(serializedDataWrapper.length + 1);
       return response;
@@ -153,7 +153,7 @@ public class TestRequestHandler extends RequestHandler {
       }else{
       serializedDataWrapper = dataWrapper.serialize();
       }
-      response.setStatusCode((byte) 0);
+      response.setStatusCode((byte) 100);
       response.setData(serializedDataWrapper);
       response.setLength(serializedDataWrapper.length + 1);
       return response;
@@ -169,7 +169,7 @@ public class TestRequestHandler extends RequestHandler {
       }else{
       serializedSampleStruct = sampleStruct.serialize();
       }
-      response.setStatusCode((byte) 0);
+      response.setStatusCode((byte) 100);
       response.setData(serializedSampleStruct);
       response.setLength(serializedSampleStruct.length + 1);
       return response;
@@ -179,7 +179,6 @@ public class TestRequestHandler extends RequestHandler {
       Argument arg0 = args.get(0);
       byte[] serializedStr = arg0.getData();
       StringWrapper str = new StringWrapper();
-      //changes  StringWrapper to Str
       str.deserialize(serializedStr);
       StringWrapper stringWrapper = null;
       Response response = new Response();
@@ -190,7 +189,7 @@ public class TestRequestHandler extends RequestHandler {
       }else{
       serializedStringWrapper = stringWrapper.serialize();
       }
-      response.setStatusCode((byte) 0);
+      response.setStatusCode((byte) 100);
       response.setData(serializedStringWrapper);
       response.setLength(serializedStringWrapper.length + 1);
       return response;
@@ -200,7 +199,6 @@ public class TestRequestHandler extends RequestHandler {
       Argument arg0 = args.get(0);
       byte[] serializedSample = arg0.getData();
       SampleStruct sample = new SampleStruct();
-      //changed serializedSampleStruct ---> serializedSample
       sample.deserialize(serializedSample);
       Result result = null;
       Response response = new Response();
@@ -211,7 +209,7 @@ public class TestRequestHandler extends RequestHandler {
       }else{
       serializedResult = result.serialize();
       }
-      response.setStatusCode((byte) 0);
+      response.setStatusCode((byte) 100);
       response.setData(serializedResult);
       response.setLength(serializedResult.length + 1);
       return response;

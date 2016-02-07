@@ -1,5 +1,6 @@
 [[[INDENT]]]void
-[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl::[[[METHOD_NAME]]]([[[ARGUMENTS]]]) {
+[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl::[[[METHOD_NAME]]](
+[[[ARGUMENTS]]][[[INDENT]]]) {
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl::[[[METHOD_NAME]]]() is called." << std::endl;
 [[[INDENT]]][[[INDENT]]]}

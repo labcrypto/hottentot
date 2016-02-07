@@ -9,19 +9,31 @@
 #ifndef [[[HEADER_GUARD]]]
 #define [[[HEADER_GUARD]]]
 
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
 #include <stdint.h>
+#endif
+
 #include <string>
 
 #include <naeem/hottentot/runtime/types/primitives.h>
 #include <naeem/hottentot/runtime/proxy/proxy.h>
 
-#include "../[[[SNAKE_CASE_SERVICE_NAME]]].h"
+#include "[[[SNAKE_CASE_SERVICE_NAME]]].h"
 
 
 [[[NAMESPACES_START]]]
 [[[STRUCT_CLASS_FORWARD_DECLARATIONS]]]
 namespace proxy {
-[[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy : public [[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]], 
+[[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy : public [[[CAMEL_CASE_FC_SERVICE_NAME]]], 
 [[[INDENT]]][[[INDENT]]]public ::naeem::hottentot::runtime::proxy::Proxy {
 [[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy(std::string host, uint32_t port) 

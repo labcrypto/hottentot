@@ -24,7 +24,20 @@
 #ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__SERVICE_RUNTIME_H_
 #define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__SERVICE_RUNTIME_H_
 
+#ifdef _MSC_VER
+#include <windows.h>
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
 #include <stdint.h>
+#endif
+
 #include <vector>
 #include <map>
 #include <string>
@@ -37,11 +50,13 @@ namespace naeem {
     namespace runtime {
       namespace service {
         class Service;
+        class TcpServer;
         class RequestHandler;
         class TcpServerFactory;
         class ServiceRuntime {
         public:
           static void Init(int argc, char **argv);
+          static void Shutdown();
           static void Register(std::string   /* host */, 
                                uint32_t      /* port */, 
                                Service *     /* service implementation */);
@@ -53,9 +68,20 @@ namespace naeem {
           inline static bool Verbose() {
             return verbose_;
           }
+#ifndef _MSC_VER
+          static void SigTermHanlder(int);
+#else
+          static BOOL SigTermHanlder(DWORD);
+#endif
         private:
           static bool verbose_;
           static TcpServerFactory *tcpServerFactory_;
+          static std::vector<TcpServer*> tcpServers_;
+#ifndef _MSC_VER
+          static std::vector<pthread_t> threads_;
+#else
+          static std::vector<HANDLE> threads_;
+#endif
           static std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> services_;
           static std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> requestHandlers_;
         };

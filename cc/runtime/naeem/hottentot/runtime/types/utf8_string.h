@@ -26,8 +26,20 @@
 
 #include <iostream>
 #include <stdexcept>
-#include <stdint.h>
 #include <string.h>
+
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#endif
 
 #include "../serializable.h"
 
@@ -70,19 +82,36 @@ namespace naeem {
             return chars_[index];
           }
           std::string ToStdString() {
-            return (const char*)Serialize(NULL);
+            const char *data = (const char*)Serialize(NULL);
+            std::string str(data);
+            delete [] data;
+            return str;
           }
           std::wstring ToStdWString() {
             // TODO
             return std::wstring();
           }
         public:
-          inline Utf8String& operator=(const Utf8String &other) {
+          inline Utf8String& operator =(const char *str) {
+            FromByteArray(str);
+            return *this;
+          }
+          inline Utf8String& operator =(const Utf8String &other) {
             FromByteArray(other.data_);
             return *this;
           }
+          friend std::ostream& operator <<(std::ostream& out, const Utf8String& obj) {
+              out << obj.data_;
+              return out;
+          }
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
+            if (!data_) {
+              unsigned char *data = new unsigned char[1];
+              data[0] = 0;
+              *length_ptr = 1;
+              return data;
+            }
             uint32_t byteLength = strlen(data_);
             unsigned char *data = new unsigned char[byteLength + 1];
             for (uint32_t i = 0; i < byteLength; i++) {

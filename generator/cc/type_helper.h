@@ -36,6 +36,10 @@ namespace naeem {
           static inline bool IsVoid(std::string type) {
             return ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(type) == "void";
           }
+          static inline bool IsList(std::string type) {
+            std::string listStr = "list";
+            return ::naeem::hottentot::generator::common::StringHelper::StartsWith(type, listStr);
+          }
           static inline bool IsUDT(std::string type) {
             if (type == "int8") {
               return false;

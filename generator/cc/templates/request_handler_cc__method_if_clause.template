@@ -7,6 +7,7 @@
 [[[INPUT_VARIABLES]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]][[[INDENT]]] * Calling service method
 [[[INDENT]]][[[INDENT]]][[[INDENT]]] */
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::HotContext hotContext;
 [[[METHOD_CALL]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]][[[INDENT]]] * Serializiation of returned object
 [[[INDENT]]][[[INDENT]]][[[INDENT]]] */

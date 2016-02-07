@@ -22,7 +22,6 @@
  */
 
 #include <sys/stat.h>
-
 #include <sstream>
 #include "java_generator.h"
 #include "../ds/hot.h"
@@ -36,6 +35,10 @@
 #include "templates/byte_arrays/serviceProxyBuilder.h" 
 #include "templates/byte_arrays/struct.h" 
 #include "templates/byte_arrays/serializableStructList.h" 
+#include "templates/byte_arrays/clientMain.h" 
+#include "templates/byte_arrays/serverMain.h" 
+#include "templates/byte_arrays/serverImpl.h" 
+
 
 namespace naeem {
   namespace hottentot {
@@ -56,6 +59,9 @@ namespace naeem {
           serviceProxyBuilderTmpStr_ = serviceProxyBuilderTmpStr;
           structTmpStr_ = structTmpStr;
           serializableStructListTmpStr_ = serializableStructListTmpStr;
+          clientMainTmpStr_ = clientMainTmpStr;
+          serverMainTmpStr_ = serverMainTmpStr;
+          serverImplTmpStr_ = serverImplTmpStr;
           //MakeStringsFromByteArrays();
           //ReadTemplateFiles();
         }
@@ -69,12 +75,11 @@ namespace naeem {
           ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/serviceProxy.template",serviceProxyTmpStr_);
           ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/serviceProxyBuilder.template",serviceProxyBuilderTmpStr_);
           ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/requestHandler.template",requestHandlerTmpStr_);
+          ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/client_main.template",clientMainTmpStr_);
         }
 
-      
         void
         JavaGenerator::SetTabStr(::naeem::hottentot::generator::GenerationConfig &generationConfig){
-          
           if(generationConfig.IsSpacesUsedInsteadOfTabsForIndentation()) {
             for (int i = 0; i < generationConfig.GetNumberOfSpacesUsedForIndentation() ; i++) {
               indent_ += " ";
@@ -94,6 +99,8 @@ namespace naeem {
           serverOutDir_ = outDir_ + "/server";
           //
           ::naeem::hottentot::generator::common::Os::MakeDir(outDir_.c_str());
+          ::naeem::hottentot::generator::common::Os::MakeDir(clientOutDir_.c_str());
+          ::naeem::hottentot::generator::common::Os::MakeDir(serverOutDir_.c_str());
           // std::string serviceFolder = outDir_ + "/service";
           // std::string proxyFolder = outDir_ + "/proxy";
           // ::naeem::hottentot::generator::common::Os::MakeDir(serviceFolder);
@@ -108,10 +115,12 @@ namespace naeem {
             GenerateServiceProxyBuilder(pModule);
             GenerateServiceProxy(pModule);
             GenerateSerializableStructList(pModule);
+            GenerateClientMain(pModule);
+            GenerateServerMain(pModule);
+            GenerateServerImpls(pModule);
           }
           Destroy();
         }
-        
       } // END NAMESPACE JAVA
     } // END NAMESPACE GENERATOR
   } // END NAMESPACE HOTTENTOT

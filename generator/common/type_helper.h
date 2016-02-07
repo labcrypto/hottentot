@@ -165,6 +165,8 @@ namespace naeem {
             } else if (type.compare("int64") == 0 ||
              type.compare("uint64") == 0) {
               return 8;
+            } else if (type.compare("bool") == 0) {
+              return 1;
             }
             return -1;
           }

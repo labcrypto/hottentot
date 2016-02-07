@@ -364,8 +364,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 19
-#define YY_END_OF_BUFFER 20
+#define YY_NUM_RULES 20
+#define YY_END_OF_BUFFER 21
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -375,7 +375,7 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[72] =
     {   0,
-        0,    0,   20,   18,   17,   17,   16,   15,   15,   15,
+        0,    0,   21,   19,   18,   17,   16,   15,   15,   15,
        15,   15,   15,   15,   15,   15,   15,   15,   15,   15,
        15,   15,   15,   15,   15,   15,   15,   15,   15,    8,
        15,    7,   15,   15,   15,    6,   15,   15,   11,   12,
@@ -528,9 +528,10 @@ char *yytext;
 #include "y.tab.h"
 #endif
 
+extern unsigned int lineCounter;
 
 extern "C" int yylex();
-#line 534 "hot.lex.cpp"
+#line 535 "hot.lex.cpp"
 
 #define INITIAL 0
 
@@ -712,9 +713,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 37 "../../hot.l"
+#line 38 "../../hot.l"
 
-#line 718 "hot.lex.cpp"
+#line 719 "hot.lex.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -799,17 +800,17 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 38 "../../hot.l"
+#line 39 "../../hot.l"
 {
   // fprintf(stdout, "ORD seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return ORD;
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 44 "../../hot.l"
+#line 45 "../../hot.l"
 {
   // fprintf(stdout, "STATELESS seen.\n");
   return STATELESS;
@@ -817,7 +818,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 48 "../../hot.l"
+#line 49 "../../hot.l"
 {
   // fprintf(stdout, "STATEFUL seen.\n");
   return STATEFUL;
@@ -825,7 +826,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 52 "../../hot.l"
+#line 53 "../../hot.l"
 {
   // fprintf(stdout, "SERVICE seen.\n");
   return SERVICE;
@@ -833,87 +834,87 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 56 "../../hot.l"
+#line 57 "../../hot.l"
 {
   // fprintf(stdout, "LIST seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return LIST;
 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 62 "../../hot.l"
+#line 63 "../../hot.l"
 {
   // fprintf(stdout, "SET seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return SET;
 }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 68 "../../hot.l"
+#line 69 "../../hot.l"
 {
   // fprintf(stdout, "MAP seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return MAP;
 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 74 "../../hot.l"
+#line 75 "../../hot.l"
 {
   // fprintf(stdout, "INT seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 80 "../../hot.l"
+#line 81 "../../hot.l"
 {
   // fprintf(stdout, "DOUBLE seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 86 "../../hot.l"
+#line 87 "../../hot.l"
 {
   // fprintf(stdout, "STRING seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 92 "../../hot.l"
+#line 93 "../../hot.l"
 {
   // fprintf(stdout, "BOOL seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 98 "../../hot.l"
+#line 99 "../../hot.l"
 {
   // fprintf(stdout, "DATE seen.\n");
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return TYPE;
 }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 104 "../../hot.l"
+#line 105 "../../hot.l"
 {
   // fprintf(stdout, "MODULE seen.\n");
   return MODULE;
@@ -921,7 +922,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 108 "../../hot.l"
+#line 109 "../../hot.l"
 {
   // fprintf(stdout, "STRUCT seen.\n");
   return STRUCT;
@@ -929,17 +930,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 112 "../../hot.l"
+#line 113 "../../hot.l"
 {
   // fprintf(stdout, "IDENTIFIER seen: %s\n", yytext);
-  yylval.string = (char *)malloc(yyleng); 
+  yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return IDENTIFIER;
 }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 118 "../../hot.l"
+#line 119 "../../hot.l"
 { 
   // fprintf(stdout, "'%c' seen.\n", *yytext);
   return *yytext; 
@@ -948,22 +949,29 @@ YY_RULE_SETUP
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 122 "../../hot.l"
-;
+#line 123 "../../hot.l"
+{
+  lineCounter++;
+}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 123 "../../hot.l"
-{ 
-  // fprintf(stderr, "Unknown token: %c\n", *yytext); 
-}
+#line 126 "../../hot.l"
+;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 126 "../../hot.l"
+#line 127 "../../hot.l"
+{ 
+  // fprintf(stderr, "Line %d: Unknown token: %c\n", lineCounter, *yytext); 
+}
+	YY_BREAK
+case 20:
+YY_RULE_SETUP
+#line 130 "../../hot.l"
 ECHO;
 	YY_BREAK
-#line 967 "hot.lex.cpp"
+#line 975 "hot.lex.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1957,6 +1965,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 125 "../../hot.l"
+#line 129 "../../hot.l"
 
 

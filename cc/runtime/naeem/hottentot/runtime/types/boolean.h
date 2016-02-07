@@ -27,7 +27,19 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdexcept>
+
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
 #include <stdint.h>
+#endif
 
 #include "../serializable.h"
 
@@ -43,6 +55,30 @@ namespace naeem {
           }
           Boolean(bool value)
             : value_(value) {
+          }
+          Boolean(int8_t value)
+            : value_(value != 0) {
+          }
+          Boolean(int16_t value)
+            : value_(value != 0) {
+          }
+          Boolean(int32_t value)
+            : value_(value != 0) {
+          }
+          Boolean(int64_t value)
+            : value_(value != 0) {
+          }
+          Boolean(uint8_t value)
+            : value_(value != 0) {
+          }
+          Boolean(uint16_t value)
+            : value_(value != 0) {
+          }
+          Boolean(uint32_t value)
+            : value_(value != 0) {
+          }
+          Boolean(uint64_t value)
+            : value_(value != 0) {
           }
           virtual ~Boolean() {}
         public:
@@ -65,6 +101,10 @@ namespace naeem {
               throw std::runtime_error("Boolean: Length is not correct for deserialization.");
             }
             value_ = data[0] != 0;
+          }
+          friend std::ostream& operator <<(std::ostream& out, const Boolean& obj) {
+            out << (obj.value_ ? "True" : "False");
+            return out;
           }
         private:
           bool value_;

@@ -25,8 +25,32 @@
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
-#include <unistd.h>
 #include <iomanip>
+
+#ifdef _MSC_VER
+// #include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#else
+#include <sys/types.h> 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <pthread.h>
+#endif
+
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#include <unistd.h>
+#endif
 
 #include "protocol_v1.h"
 #include "request.h"
@@ -46,9 +70,13 @@ namespace naeem {
           readingLength_(0),
           readingCounter_(0),
           targetCounter_(0),
+          response_(0),
           currentState_(ReadingLengthState) {
       }
       ProtocolV1::~ProtocolV1() {
+        if (response_) {
+          delete response_;
+        }
       }
       bool
       ProtocolV1::IsResponseComplete() {
@@ -67,8 +95,19 @@ namespace naeem {
         actualLength += 4;  // Method Id
         actualLength += 1;  // Number of arguments
         for (unsigned int i = 0; i < request.GetArgumentCount(); i++) {
-          actualLength += request.GetArgumentLength(i) > 127 ? 3 : 1;
-          actualLength += request.GetArgumentLength(i);
+          if (request.GetArgumentLength(i) < 128) {
+            actualLength += 1;
+            actualLength += request.GetArgumentLength(i);
+          } else if (request.GetArgumentLength(i) < 256) {
+            actualLength += 2;
+            actualLength += request.GetArgumentLength(i);
+          } else if (request.GetArgumentLength(i) < 256 * 256) {
+            actualLength += 3;
+            actualLength += request.GetArgumentLength(i);
+          } else if (request.GetArgumentLength(i) < 256 * 256 * 256) {
+            actualLength += 4;
+            actualLength += request.GetArgumentLength(i);
+          }
         }
         *length = actualLength;
         unsigned char *data = new unsigned char[*length];
@@ -86,12 +125,21 @@ namespace naeem {
         data[c++] = ((unsigned char *)&methodId)[0];
         data[c++] = request.GetArgumentCount();
         for (unsigned int i = 0; i < request.GetArgumentCount(); i++) {
-          if (request.GetArgumentLength(i) > 127) {
+          if (request.GetArgumentLength(i) < 128) {
+            data[c++] = request.GetArgumentLength(i);
+          } else if (request.GetArgumentLength(i) < 256) {
+            data[c++] = 0x81;
+            data[c++] = request.GetArgumentLength(i);
+          } else if (request.GetArgumentLength(i) < 256 * 256) {
             data[c++] = 0x82;
             data[c++] = request.GetArgumentLength(i) / 256;
             data[c++] = request.GetArgumentLength(i) % 256;
-          } else {
-            data[c++] = request.GetArgumentLength(i);
+          } else if (request.GetArgumentLength(i) < 256 * 256 * 256) {
+            data[c] = 0x83;
+            data[c + 1] = request.GetArgumentLength(i) / (256 * 256);
+            data[c + 2] = (request.GetArgumentLength(i) - data[c + 1] * 256 * 256) / 256;
+            data[c + 3] = request.GetArgumentLength(i) % (256 * 256);
+            c += 4;
           }
           unsigned char *argData = request.GetArgumentData(i);
           for (unsigned int j = 0; j < request.GetArgumentLength(i); j++) {
@@ -109,18 +157,38 @@ namespace naeem {
                                     uint32_t *length) {
         uint32_t actualLength = 0;
         actualLength += 1;  // Status Code
-        actualLength += response.GetDataLength() > 127 ? 3 : 1;
-        actualLength += response.GetDataLength();
+        if (response.GetDataLength() < 128) {
+          actualLength += 1;
+          actualLength += response.GetDataLength();
+        } else if (response.GetDataLength() < 256) {
+          actualLength += 2;
+          actualLength += response.GetDataLength();
+        } else if (response.GetDataLength() < 256 * 256) {
+          actualLength += 3;
+          actualLength += response.GetDataLength();
+        } else if (response.GetDataLength() < 256 * 256 * 256) {
+          actualLength += 4;
+          actualLength += response.GetDataLength();
+        }
         *length = actualLength;
         unsigned char *data = new unsigned char[*length];
         unsigned int c = 0;
         data[c++] = response.GetStatusCode();
-        if (response.GetDataLength() > 127) {
+        if (response.GetDataLength() < 128) {
+          data[c++] = response.GetDataLength();
+        } else if (response.GetDataLength() < 256) {
+          data[c++] = 0x81;
+          data[c++] = response.GetDataLength();
+        } else if (response.GetDataLength() < 256 * 256) {
           data[c++] = 0x82;
           data[c++] = response.GetDataLength() / 256;
           data[c++] = response.GetDataLength() % 256;
-        } else {
-          data[c++] = response.GetDataLength();
+        } else if (response.GetDataLength() < 256 * 256 * 256) {
+          data[c] = 0x83;
+          data[c + 1] = response.GetDataLength() / (256 * 256);
+          data[c + 2] = (response.GetDataLength() - data[c + 1] * 256 * 256) / 256;
+          data[c + 3] = response.GetDataLength() % (256 * 256);
+          c += 4;
         }
         unsigned char *argData = response.GetData();
         for (uint32_t i = 0; i < response.GetDataLength(); i++) {
@@ -168,16 +236,18 @@ namespace naeem {
             }
           } else {
             uint32_t argLength = 0;
-            if (data[c] > 127) {
-              uint32_t t = 1;
-              uint32_t n = data[c] & 0x0f;
-              for (uint32_t i = n; i > 0; i--) {
-                argLength += data[c + i] * t;
-                t *= 256;
-              }
-              c += n + 1;
-            } else {
-              argLength = data[c++];
+            if ((data[c] & 0x80) == 0) {
+              argLength = data[c];
+              c++;
+            } else if (data[c] == 0x81) {
+              argLength = data[c + 1];
+              c += 2;
+            } else if (data[c] == 0x82) {
+              argLength = data[c + 1] * 256 + data[c + 2];
+              c += 3;
+            } else if (data[c] == 0x83) {
+              argLength = data[c + 1] * 256 * 256 + data[c + 2] * 256 + data[c + 3];
+              c += 4;
             }
             unsigned char *argData = new unsigned char[argLength];
             for (uint32_t i = 0; i < argLength; i++) {
@@ -207,16 +277,18 @@ namespace naeem {
           }
           return response;
         } else {
-          if (data[c] > 127) {
-            uint32_t t = 1;
-            uint32_t n = data[c] & 0x0f;
-            for (uint32_t i = n; i > 0; i--) {
-              resultLength += data[c + i] * t;
-              t *= 256;
-            }
-            c += n + 1;
-          } else {
-            resultLength = data[c++];
+          if ((data[c] & 0x80) == 0) {
+            resultLength = data[c];
+            c++;
+          } else if (data[c] == 0x81) {
+            resultLength = data[c + 1];
+            c += 2;
+          } else if (data[c] == 0x82) {
+            resultLength = data[c + 1] * 256 + data[c + 2];
+            c += 3;
+          } else if (data[c] == 0x83) {
+            resultLength = data[c + 1] * 256 * 256 + data[c + 2] * 256 + data[c + 3];
+            c += 4;
           }
           unsigned char *resultData = new unsigned char[resultLength];
           for (uint32_t i = 0; i < resultLength; i++) {
@@ -327,15 +399,33 @@ namespace naeem {
                     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
                       ::naeem::hottentot::runtime::Utils::PrintArray("Serialized response: ", responseSerializedData, responseSerializedLength);
                     }
-                    uint32_t sendLength = (responseSerializedLength > 127 ? 3 : 1) +  responseSerializedLength;
+                    uint32_t sendLength = 0;
+                    if (responseSerializedLength < 128) {
+                      sendLength = 1 + responseSerializedLength;
+                    } else if (responseSerializedLength < 256) {
+                      sendLength = 2 + responseSerializedLength;
+                    } else if (responseSerializedLength < 256 * 256) {
+                      sendLength = 3 + responseSerializedLength;
+                    } else if (responseSerializedLength < 256 * 256 * 256) {
+                      sendLength = 4 + responseSerializedLength;
+                    }
                     unsigned char *sendData = new unsigned char[sendLength];
                     uint32_t c = 0;
-                    if (responseSerializedLength > 127) {
+                    if (responseSerializedLength < 128) {
+                      sendData[c++] = responseSerializedLength;
+                    } else if (responseSerializedLength < 256) {
+                      sendData[c++] = 0x81;
+                      sendData[c++] = responseSerializedLength;
+                    } else if (responseSerializedLength < 256 * 256) {
                       sendData[c++] = 0x82;
                       sendData[c++] = responseSerializedLength / 256;
                       sendData[c++] = responseSerializedLength % 256;
-                    } else {
-                      sendData[c++] = responseSerializedLength;
+                    } else if (responseSerializedLength < 256 * 256 * 256) {
+                      sendData[c] = 0x83;
+                      sendData[c + 1] = responseSerializedLength / (256 * 256);
+                      sendData[c + 2] = (responseSerializedLength - sendData[c + 1] * 256 * 256) / 256;
+                      sendData[c + 3] = responseSerializedLength % (256 * 256);
+                      c += 4;
                     }
                     for (unsigned int k = 0; k < responseSerializedLength; k++) {
                       sendData[c++] = responseSerializedData[k];
@@ -343,7 +433,11 @@ namespace naeem {
                     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
                       ::naeem::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
                     }
+#ifndef _MSC_VER
                     write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
+#else
+                    send(remoteSocketFD_, (char *)sendData, sendLength * sizeof(unsigned char), 0);
+#endif
                     delete [] sendData;
                     delete [] responseSerializedData;
                     delete response;
@@ -371,7 +465,7 @@ namespace naeem {
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
                 if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Response length is " << readingLength_ << " Bytes." << std::endl;
                 }
               } else {
                 targetCounter_ = (data[i] & 0x0f) + 1;
@@ -393,7 +487,7 @@ namespace naeem {
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
                 if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                  ::naeem::hottentot::runtime::Logger::GetOut() << "Response length is " << readingLength_ << " Bytes." << std::endl;
                 }
                 // Variable 'i' shouldn't get incremented because no byte is processed here.
                 i--;

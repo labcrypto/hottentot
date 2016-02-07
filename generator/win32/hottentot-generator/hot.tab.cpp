@@ -116,6 +116,7 @@ extern "C" {
   int yylex(void);
 }
 
+unsigned int lineCounter = 1;
 std::string lastType;
 std::stack<std::string> stack;
 ::naeem::hottentot::generator::ds::Hot *currentHot;
@@ -126,7 +127,7 @@ std::stack<std::string> stack;
 
 
 /* Line 371 of yacc.c  */
-#line 130 "hot.tab.cpp"
+#line 131 "hot.tab.cpp"
 
 # ifndef YY_NULL
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -181,13 +182,13 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 387 of yacc.c  */
-#line 85 "../../hot.y"
+#line 86 "../../hot.y"
 
   char *string;
 
 
 /* Line 387 of yacc.c  */
-#line 191 "hot.tab.cpp"
+#line 192 "hot.tab.cpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -215,7 +216,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 219 "hot.tab.cpp"
+#line 220 "hot.tab.cpp"
 
 #ifdef short
 # undef short
@@ -516,10 +517,10 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   103,   103,   107,   108,   111,   111,   140,   144,   148,
-     151,   154,   155,   158,   158,   173,   173,   187,   187,   202,
-     204,   205,   208,   214,   217,   218,   221,   221,   233,   234,
-     235,   238,   244,   251,   258,   267,   271
+       0,   104,   104,   108,   109,   112,   112,   141,   145,   149,
+     152,   155,   156,   159,   159,   174,   174,   188,   188,   203,
+     205,   206,   209,   215,   218,   219,   222,   222,   234,   235,
+     236,   239,   245,   252,   259,   268,   272
 };
 #endif
 
@@ -1458,14 +1459,14 @@ yyreduce:
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 103 "../../hot.y"
+#line 104 "../../hot.y"
     {                 
                 }
     break;
 
   case 5:
 /* Line 1792 of yacc.c  */
-#line 111 "../../hot.y"
+#line 112 "../../hot.y"
     {
                   if (currentHot == NULL) {
                     currentHot = new ::naeem::hottentot::generator::ds::Hot();
@@ -1488,7 +1489,7 @@ yyreduce:
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 128 "../../hot.y"
+#line 129 "../../hot.y"
     {
                   // printf("Module parsed.\n");
                   std::string package = "";
@@ -1503,7 +1504,7 @@ yyreduce:
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 140 "../../hot.y"
+#line 141 "../../hot.y"
     { 
                   // printf("Package seen: %s\n", $1);
                   stack.push((yyvsp[(1) - (2)].string));
@@ -1512,7 +1513,7 @@ yyreduce:
 
   case 8:
 /* Line 1792 of yacc.c  */
-#line 144 "../../hot.y"
+#line 145 "../../hot.y"
     { 
                   // printf("Package seen: %s\n", $1);
                   stack.push((yyvsp[(1) - (3)].string)); 
@@ -1521,7 +1522,7 @@ yyreduce:
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 158 "../../hot.y"
+#line 159 "../../hot.y"
     {
                   if (currentStruct == NULL) {
                     currentStruct = new ::naeem::hottentot::generator::ds::Struct(currentModule);
@@ -1529,7 +1530,7 @@ yyreduce:
                     currentModule->AddStruct(currentStruct);
                     // fprintf(stdout, ">>> GENERATOR: Struct object has been added to model.\n");
                   } else {
-                    fprintf(stdout, "SYNTAX ERROR: Structs can't be nested.\n");
+                    fprintf(stdout, "Line %d: Structs can't be nested.\n", lineCounter);
                     exit(1);
                   }
                 }
@@ -1537,7 +1538,7 @@ yyreduce:
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 168 "../../hot.y"
+#line 169 "../../hot.y"
     {
                   // printf("Struct seen: %s\n", $3);
                   currentStruct->SetName((yyvsp[(3) - (7)].string));
@@ -1547,7 +1548,7 @@ yyreduce:
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 173 "../../hot.y"
+#line 174 "../../hot.y"
     {
                     if (currentService == NULL) {
                       currentService = new ::naeem::hottentot::generator::ds::Service("stateless", "", currentModule);
@@ -1561,7 +1562,7 @@ yyreduce:
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 181 "../../hot.y"
+#line 182 "../../hot.y"
     {
                   // printf("Stateless service seen: %s\n", $4);
                   currentService->SetName((yyvsp[(4) - (8)].string));
@@ -1572,7 +1573,7 @@ yyreduce:
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 187 "../../hot.y"
+#line 188 "../../hot.y"
     {
                     if (currentService == NULL) {
                       currentService = new ::naeem::hottentot::generator::ds::Service("stateful", "",currentModule);
@@ -1586,7 +1587,7 @@ yyreduce:
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 195 "../../hot.y"
+#line 196 "../../hot.y"
     {
                   // printf("Stateful service seen: %s\n", $4);
                   currentService->SetName((yyvsp[(4) - (8)].string));
@@ -1597,7 +1598,7 @@ yyreduce:
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 208 "../../hot.y"
+#line 209 "../../hot.y"
     {
                   // printf("Declaration3 seen:    LIST<%s> %s %s\n", $3, $5, $6);
                   currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::Declaration((yyvsp[(1) - (4)].string), (yyvsp[(2) - (4)].string), (yyvsp[(3) - (4)].string)));
@@ -1606,7 +1607,7 @@ yyreduce:
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 221 "../../hot.y"
+#line 222 "../../hot.y"
     {
                   if (currentMethod == NULL) {
                     currentMethod = new ::naeem::hottentot::generator::ds::Method(currentService);
@@ -1617,7 +1618,7 @@ yyreduce:
 
   case 27:
 /* Line 1792 of yacc.c  */
-#line 226 "../../hot.y"
+#line 227 "../../hot.y"
     {
                   currentMethod->SetReturnType((yyvsp[(2) - (7)].string));
                   currentMethod->SetName((yyvsp[(3) - (7)].string));
@@ -1627,7 +1628,7 @@ yyreduce:
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 238 "../../hot.y"
+#line 239 "../../hot.y"
     {
                   currentMethod->AddArgument(new ::naeem::hottentot::generator::ds::Argument((yyvsp[(1) - (2)].string), (yyvsp[(2) - (2)].string)));
                   // printf("Argument has been added.\n");
@@ -1636,7 +1637,7 @@ yyreduce:
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 244 "../../hot.y"
+#line 245 "../../hot.y"
     {
                   (yyval.string) = (char*)malloc(strlen((yyvsp[(1) - (4)].string)) + strlen((yyvsp[(3) - (4)].string)) + 10);
                   strcpy((yyval.string), (yyvsp[(1) - (4)].string));
@@ -1648,7 +1649,7 @@ yyreduce:
 
   case 33:
 /* Line 1792 of yacc.c  */
-#line 251 "../../hot.y"
+#line 252 "../../hot.y"
     {
                   (yyval.string) = (char*)malloc(strlen((yyvsp[(1) - (4)].string)) + strlen((yyvsp[(3) - (4)].string)) + 10);
                   strcpy((yyval.string), (yyvsp[(1) - (4)].string));
@@ -1660,7 +1661,7 @@ yyreduce:
 
   case 34:
 /* Line 1792 of yacc.c  */
-#line 258 "../../hot.y"
+#line 259 "../../hot.y"
     {
                   (yyval.string) = (char*)malloc(strlen((yyvsp[(1) - (6)].string)) + strlen((yyvsp[(3) - (6)].string)) + strlen((yyvsp[(5) - (6)].string)) + 10);
                   strcpy((yyval.string), (yyvsp[(1) - (6)].string));
@@ -1674,7 +1675,7 @@ yyreduce:
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 267 "../../hot.y"
+#line 268 "../../hot.y"
     {
                   (yyval.string) = (char *)malloc(strlen((yyvsp[(1) - (1)].string)) + 2);
                   strcpy((yyval.string), (yyvsp[(1) - (1)].string));
@@ -1683,7 +1684,7 @@ yyreduce:
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 271 "../../hot.y"
+#line 272 "../../hot.y"
     {
                   (yyval.string) = (char *)malloc(strlen((yyvsp[(1) - (1)].string)) + 2);
                   strcpy((yyval.string), (yyvsp[(1) - (1)].string));
@@ -1692,7 +1693,7 @@ yyreduce:
 
 
 /* Line 1792 of yacc.c  */
-#line 1696 "hot.tab.cpp"
+#line 1697 "hot.tab.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1924,11 +1925,11 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 277 "../../hot.y"
+#line 278 "../../hot.y"
 
 
 void yyerror(char *s) {
-  fprintf(stderr, "ERROR: %s\n", s);
+  fprintf(stderr, "Line %d: ERROR: %s\n", lineCounter, s);
 }
 
 int yywrap(void) {
@@ -1938,7 +1939,7 @@ int yywrap(void) {
 extern FILE *yyin;
 
 void printHelpMessageAndExit() {
-  fprintf(stderr, "Usage: hot [--java] [--cc] [--indent-with-spaces = TRUE] [--indent-with-tabs] [--number-of-spaces-used-for-indentation NUMBER_OF_SPACES_USED_FOR_INDENTATION = 2] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
+  fprintf(stderr, "Usage: hot [--java] [--cc] [--makefile] [--client] [--stub] [--indent-with-spaces = TRUE] [--indent-with-tabs] [--number-of-spaces-used-for-indentation NUMBER_OF_SPACES_USED_FOR_INDENTATION = 2] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
   exit(1);
 }
 
@@ -1946,9 +1947,9 @@ int main(int argc, char **argv) {
   bool isJava = false;
   bool isCC = false;
   bool isSpacesUsedForIndentation = true;
-  bool makefileGenerated = false;
-  bool clientGenerated = false;
-  bool stubGenerated = false;
+  bool makefileGenerated = false;  // TODO(kamran): Change to false
+  bool clientGenerated = false; // TODO(kamran): Change to false
+  bool stubGenerated = false; // TODO(kamran): Change to false
   uint8_t numberOfSpacesUsedForIndentation = 2;
   bool hotsBegun = false;
   char *outputDir = 0;
@@ -1969,8 +1970,7 @@ int main(int argc, char **argv) {
       i++;
     } else if (strcmp(argv[i], "--indent-with-spaces") == 0) {
       if (hotsBegun) {
-        fprintf(stderr, "Usage: hot [--java] [--cc] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
-        exit(1);
+        printHelpMessageAndExit();
       }
       isSpacesUsedForIndentation = true;
       i++;
@@ -2019,7 +2019,7 @@ int main(int argc, char **argv) {
     isCC = true;
   }
   if (outputDir == 0) {
-    outputDir = "gen";
+    outputDir = "hotgen";
   }
   if (numOfHots == 0) {
     printHelpMessageAndExit();
@@ -2064,5 +2064,6 @@ int main(int argc, char **argv) {
     delete currentHot;
     currentHot = NULL;
   }
+  std::cout << "Generation OK." << std::endl;
   return 0;
 }

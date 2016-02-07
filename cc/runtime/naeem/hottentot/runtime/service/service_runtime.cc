@@ -21,6 +21,15 @@
  *  SOFTWARE.
  */
  
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#ifndef _MSC_VER
+#include <signal.h>
+#include <unistd.h>
+#endif
+
 #include <iostream>
 
 #include "../logger.h"
@@ -38,12 +47,83 @@ namespace naeem {
     namespace runtime {
       namespace service {
         TcpServerFactory* ServiceRuntime::tcpServerFactory_ = 0;
+        std::vector<TcpServer*> ServiceRuntime::tcpServers_;
+#ifndef _MSC_VER
+        std::vector<pthread_t> ServiceRuntime::threads_;
+#else
+        std::vector<HANDLE> ServiceRuntime::threads_;
+#endif
         std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> ServiceRuntime::services_;
         std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> ServiceRuntime::requestHandlers_;
+#ifndef _MSC_VER
+        void 
+        ServiceRuntime::SigTermHanlder(int flag){
+          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+            ::naeem::hottentot::runtime::Logger::GetOut() << "SIG_TERM is received ..." << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() << "Killing all listener threads ..." << std::endl;
+          }
+          for (uint32_t i = 0; i < threads_.size(); i++) {
+            // TODO: Find a more proper way to kill a thread.
+            pthread_cancel(threads_[i]);
+          }
+          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+            ::naeem::hottentot::runtime::Logger::GetOut() << "All threads are killed." << std::endl;
+          }
+          flag = 1;
+        }
+#else
+        BOOL 
+        ServiceRuntime::SigTermHanlder(DWORD fdwCtrlType) {
+          switch(fdwCtrlType) { 
+            case CTRL_C_EVENT: 
+            case CTRL_CLOSE_EVENT: 
+              if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+                ::naeem::hottentot::runtime::Logger::GetOut() << "CONTROL signal is received ..." << std::endl;
+                ::naeem::hottentot::runtime::Logger::GetOut() << "Killing all listener threads ..." << std::endl;
+              }
+              for (uint32_t i = 0; i < threads_.size(); i++) {
+                // TODO: Find a more proper way to kill a thread.
+                TerminateThread(threads_[i], 0);
+              }
+              return TRUE;
+            default: 
+              return FALSE; 
+          } 
+        }
+#endif
         void
         ServiceRuntime::Init(int argc,
                              char **argv) {
           Configuration::Init(argc, argv);
+#ifndef _MSC_VER
+          struct sigaction sigIntHandler;
+          sigIntHandler.sa_handler = ServiceRuntime::SigTermHanlder;
+          sigemptyset(&sigIntHandler.sa_mask);
+          sigIntHandler.sa_flags = 0;
+          sigaction(SIGINT, &sigIntHandler, NULL);
+#else
+          SetConsoleCtrlHandler((PHANDLER_ROUTINE)SigTermHanlder, TRUE);
+#endif
+        }
+        void
+        ServiceRuntime::Shutdown() {
+          for (std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator>::iterator it = services_.begin();
+               it != services_.end();
+               it++) {
+            for (uint32_t i = 0; i < it->second->size(); i++) {
+              Service *service = it->second->at(i);
+              service->OnShutdown();
+              delete service;
+            }
+            delete it->second;
+            delete requestHandlers_[it->first];
+          }
+          for (uint32_t i = 0; i < tcpServers_.size(); i++) {
+            delete tcpServers_[i];
+          }
+          if (tcpServerFactory_) {
+            delete tcpServerFactory_;
+          }
         }
         void
         ServiceRuntime::Register(std::string   host, 
@@ -74,12 +154,19 @@ namespace naeem {
             TcpServer *tcpServer = GetTcpServerFactory()->CreateTcpServer(it->first.GetHost(), 
                                                                           it->first.GetPort(), 
                                                                           requestHandlers_.find(it->first)->second);
-            tcpServer->BindAndStart();
+            tcpServers_.push_back(tcpServer);
+            threads_.push_back(tcpServer->BindAndStart());
             if (::naeem::hottentot::runtime::Configuration::Verbose()) {
               ::naeem::hottentot::runtime::Logger::GetOut() << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
             }
           }
-          while(true);
+          for (uint32_t i = 0; i < threads_.size(); i++) {
+#ifndef _MSC_VER
+            pthread_join(threads_[i], NULL);
+#else
+            WaitForSingleObject(threads_[i], INFINITE);
+#endif
+          }
         }
         TcpServerFactory*
         ServiceRuntime::GetTcpServerFactory() {

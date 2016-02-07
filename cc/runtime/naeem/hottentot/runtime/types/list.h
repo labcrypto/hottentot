@@ -28,7 +28,18 @@
 #include <stdexcept>
 #include <vector>
 
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
 #include <stdint.h>
+#endif
 
 #include "../serializable.h"
 
@@ -43,9 +54,9 @@ namespace naeem {
           List(){
           }
           virtual ~List() {
-            for (uint32_t i = 0; i < elements_.size(); i++) {
+            /* for (uint32_t i = 0; i < elements_.size(); i++) {
               delete elements_[i];
-            }
+            } */
           }
         public:
           inline void Add(T *e) {
@@ -58,8 +69,10 @@ namespace naeem {
             return elements_.size();
           }
           inline void Purge() {
-            for (uint32_t i = 0; i < elements_.size(); i++) {
-              delete elements_[i];
+            typename std::vector<T*>::iterator it;
+            for (it = elements_.begin(); it != elements_.end();) {
+              delete *it;
+              it = elements_.erase(it);
             }
           }
         public:
@@ -77,11 +90,13 @@ namespace naeem {
             }
             uint32_t length = 0;
             for (uint32_t i = 0; i < lengths.size(); i++) {
-              if (lengths[i] <= (128 - 1)) {
+              if (lengths[i] < 128) {
                 length += 1 + lengths[i];
-              } else if (lengths[i] <= (256 * 256 - 1)) {
+              } else if (lengths[i] < 256) {
+                length += 2 + lengths[i];
+              } else if (lengths[i] < 256 * 256) {
                 length += 3 + lengths[i];
-              } else if (lengths[i] <= (256 * 256 * 256 - 1)) {
+              } else if (lengths[i] < 256 * 256 * 256) {
                 length += 4 + lengths[i];
               } /* else if (lengths[i] <= (256 * 256 * 256 * 256 - 1)) {
                 length += 5 + lengths[i];
@@ -94,15 +109,19 @@ namespace naeem {
               *length_ptr = length;
             }
             for (uint32_t i = 0; i < lengths.size(); i++) {
-              if (lengths[i] <= (128 - 1)) {
+              if (lengths[i] < 128) {
                 data[c] = lengths[i];
                 c += 1;
-              } else if (lengths[i] <= (256 * 256 - 1)) {
+              } else if (lengths[i] < 256) {
+                data[c] = 0x81;
+                data[c + 1] = lengths[i];
+                c += 2;
+              } else if (lengths[i] < 256 * 256) {
                 data[c] = 0x82;
                 data[c + 1] = lengths[i] / 256;
                 data[c + 2] = lengths[i] % 256;
                 c += 3;
-              } else if (lengths[i] <= (256 * 256 * 256 - 1)) {
+              } else if (lengths[i] < 256 * 256 * 256) {
                 data[c] = 0x83;
                 data[c + 1] = lengths[i] / (256 * 256);
                 data[c + 2] = (lengths[i] - data[c + 1] * (256 * 256)) / 256;
@@ -119,6 +138,7 @@ namespace naeem {
               for (uint32_t j = 0; j < lengths[i]; j++) {
                 data[c++] = datas[i][j];
               }
+              delete [] datas[i];
               // std::cout << "data(" << i << ")" << std::endl;
             }
             if (c != length) {
@@ -141,7 +161,10 @@ namespace naeem {
               } else {
                 uint32_t count = data[i] & 0x0f;
                 i++;
-                if (count == 2) {
+                if (count == 1) {
+                  elength = data[i];
+                  i += 1;
+                } else if (count == 2) {
                   elength = data[i] * 256 + data[i + 1];
                   i += 2;
                 } else if (count == 3) {
@@ -150,6 +173,7 @@ namespace naeem {
                 }
               }
               T *e = new T;
+              // std::cout << "Length: " << elength << std::endl;
               e->Deserialize(data + i, elength);
               Add(e);
               i += elength;

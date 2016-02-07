@@ -23,6 +23,7 @@
 
 package ir.ntnaeem.hottentot.runtime;
 
+import ir.ntnaeem.hottentot.runtime.config.Config;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientCloseException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
@@ -80,6 +81,9 @@ public class DefaultTcpClient implements TcpClient {
 
     public void close() throws TcpClientCloseException {
       try {
+        if(Config.isVerboseMode){
+          System.out.println("client has closed its socket");
+        }
         socket.close();
       } catch (IOException e) {
         throw new TcpClientCloseException(e);

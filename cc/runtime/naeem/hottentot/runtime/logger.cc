@@ -34,6 +34,11 @@ namespace naeem {
         o_ = new std::ostream(std::cout.rdbuf());
         e_ = new std::ostream(std::cerr.rdbuf());
       }
+      void
+      Logger::Shutdown() {
+        delete o_;
+        delete e_;
+      }
       std::ostream& 
       Logger::GetOut() {
         return *o_;

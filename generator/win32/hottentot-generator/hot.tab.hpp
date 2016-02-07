@@ -65,7 +65,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 85 "../../hot.y"
+#line 86 "../../hot.y"
 
   char *string;
 

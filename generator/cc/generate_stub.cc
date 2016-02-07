@@ -94,42 +94,29 @@ namespace naeem {
               std::string methodDefs = "";
               for (uint32_t i = 0; i < service->methods_.size(); i++) {
                 ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
-                methodDefs += indent + indent + "virtual void " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
-                std::string sep = "";
+                methodDefs += indent + indent + "virtual void " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(\r\n";
                 for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-                  methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + method->arguments_[j]->GetVariable();
-                  sep = ", ";
+                  methodDefs += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + method->arguments_[j]->GetVariable() + ", \r\n";
                 }
                 if (!TypeHelper::IsVoid(method->GetReturnType())) {
-                  methodDefs += sep + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out";
+                  methodDefs += indent + indent + indent + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out, \r\n";
                 }
-                methodDefs += ");\r\n";
+                methodDefs += indent + indent + indent + "::naeem::hottentot::runtime::service::HotContext &hotContext\r\n";
+                methodDefs += indent + indent + ");\r\n";
               }
               methodDefs = ::naeem::hottentot::generator::common::StringHelper::Trim(methodDefs);
               std::string methods = "";
               for (uint32_t i = 0; i < service->methods_.size(); i++) {
                 ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
                 std::string arguments = "";
-                std::string sep = "";
                 for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-                  arguments += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + method->arguments_[j]->GetVariable();
-                  sep = ", ";
+                  arguments += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + method->arguments_[j]->GetVariable() + ", \r\n";
                 }
                 if (!TypeHelper::IsVoid(method->GetReturnType())) {
-                  arguments += sep + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out";
+                  arguments += indent + indent + indent + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out, \r\n";
                 }
-                /*std::string returnClause = "";
-                if (!TypeHelper::IsVoid(method->GetReturnType())) {
-                  // if (TypeHelper::IsUDT(method->GetReturnType())) {
-                    returnClause += indent + indent + "return NULL;";
-                  /* } else {
-                    returnClause += indent + indent + "return 0;";
-                  } */
-                /*} else {
-                  returnClause += indent + indent + "return;";
-                }*/
+                arguments += indent + indent + indent + "::naeem::hottentot::runtime::service::HotContext &hotContext\r\n";
                 std::string methodTemplate((char *)__cc_templates_service_impl_cc__method_template, __cc_templates_service_impl_cc__method_template_len);
-                // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_cc__method.template", methodTemplate);
                 methodTemplate = 
                   ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
                                                                                "[[[CAMEL_CASE_FC_SERVICE_NAME]]]", 
@@ -146,10 +133,6 @@ namespace naeem {
                   ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
                                                                                "[[[RETURN_TYPE]]]", 
                                                                                TypeHelper::GetCCType(method->GetReturnType(), ns) + (!TypeHelper::IsVoid(method->GetReturnType()) ? "*" : ""));
-                /*methodTemplate = 
-                  ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
-                                                                               "[[[RETURN_CLAUSE]]]", 
-                                                                               returnClause);*/
                 methodTemplate = 
                   ::naeem::hottentot::generator::common::StringHelper::Replace(methodTemplate, 
                                                                                "[[[INDENT]]]", 
@@ -179,7 +162,6 @@ namespace naeem {
               params.insert(std::pair<std::string, std::string>("METHODS", methods));
               params.insert(std::pair<std::string, std::string>("INDENT", indent));
               std::string implHeaderTemplate((char *)__cc_templates_service_impl_header_template, __cc_templates_service_impl_header_template_len);
-              // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_header.template", implHeaderTemplate);
               for (std::map<std::string, std::string>::iterator it = params.begin();
                    it != params.end();
                    ++it) {
@@ -201,7 +183,6 @@ namespace naeem {
               params["GENERATION_DATE"] = ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime();
               params["FILENAME"] = serviceNameSnakeCase + "_impl.cc";
               std::string implCCTemplate((char *)__cc_templates_service_impl_cc_template, __cc_templates_service_impl_cc_template_len);
-              // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/service_impl_cc.template", implCCTemplate);
               for (std::map<std::string, std::string>::iterator it = params.begin();
                    it != params.end();
                    ++it) {

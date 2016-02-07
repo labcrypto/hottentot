@@ -88,16 +88,22 @@ namespace naeem {
           std::string methodDefs = "";
           for (uint32_t i = 0; i < service->methods_.size(); i++) {
             ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
-            methodDefs += indent + indent + "virtual void " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
-            std::string sep = "";
+            methodDefs += indent + indent + "virtual void " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(\r\n";
             for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-              methodDefs += sep + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + method->arguments_[j]->GetVariable();
-              sep = ", ";
+              methodDefs += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + method->arguments_[j]->GetVariable();
+              if (j == (method->arguments_.size() - 1)) {
+                if (!TypeHelper::IsVoid(method->GetReturnType())) {
+                  methodDefs += ", ";
+                }
+              } else {
+                methodDefs += ", ";
+              }
+              methodDefs += "\r\n";
             }
             if (!TypeHelper::IsVoid(method->GetReturnType())) {
-              methodDefs += sep + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &";
+              methodDefs += indent + indent + indent + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out\r\n";
             }
-            methodDefs += ");\r\n";
+            methodDefs += indent + indent + ");\r\n";
           }
           methodDefs = ::naeem::hottentot::generator::common::StringHelper::Trim(methodDefs);
           /*

@@ -168,6 +168,34 @@
 				Name="java"
 				>
 				<File
+					RelativePath="..\..\java\generate_abstract_service_java.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\..\java\generate_request_handler_java.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\..\java\generate_serializable_struct_list_java.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\..\java\generate_service_interface_java.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\..\java\generate_service_proxy_builder_java.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\..\java\generate_service_proxy_java.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\..\java\generate_structs_java.cc"
+					>
+				</File>
+				<File
 					RelativePath="..\..\java\java_generator.cc"
 					>
 				</File>
@@ -384,7 +412,16 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="flex -ohot.lex.cpp ../../hot.l"
+						CommandLine="win_flex -ohot.lex.cpp ../../hot.l&#x0D;&#x0A;"
+						Outputs="hot.lex.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="win_flex -ohot.lex.cpp ../../hot.l&#x0D;&#x0A;"
 						Outputs="hot.lex.cpp"
 					/>
 				</FileConfiguration>
@@ -397,7 +434,16 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="bison -d -ohot.tab.cpp ../../hot.y&#x0D;&#x0A;"
+						CommandLine="win_bison -d -ohot.tab.cpp ../../hot.y&#x0D;&#x0A;"
+						Outputs="hot.tab.cpp hot.tab.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="win_bison -d -ohot.tab.cpp ../../hot.y&#x0D;&#x0A;"
 						Outputs="hot.tab.cpp hot.tab.h"
 					/>
 				</FileConfiguration>

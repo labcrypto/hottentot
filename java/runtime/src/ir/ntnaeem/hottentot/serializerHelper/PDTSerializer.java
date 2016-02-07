@@ -23,9 +23,7 @@
 package ir.ntnaeem.hottentot.serializerHelper;
 
 import ir.ntnaeem.hottentot.runtime.helper.ArrayUtil;
-
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 import static java.lang.StrictMath.pow;
 
@@ -38,17 +36,18 @@ public class PDTSerializer {
   }
 
   public static byte[] getString(String str) {
-    return ArrayUtil.concat(DataLengthByteArrayMaker.getByteArray(str.getBytes().length), str.getBytes());
+    byte[] strBytes =  ArrayUtil.concat(DataLengthByteArrayMaker.getByteArray(str.getBytes().length + 1), str.getBytes());
+    return ArrayUtil.concat(strBytes , new byte[]{0});
   }
 
-  public static byte getBool(boolean bool) {
-    byte b;
+  public static byte[] getBool(boolean bool) {
+    byte[] bytes = new byte[1];
     if (bool) {
-      b = 1;
+      bytes[0] = 1;
     } else {
-      b = 0;
+      bytes[0] = 0;
     }
-    return b;
+    return bytes;
   }
 
   public static byte[] getInt8(byte number) {

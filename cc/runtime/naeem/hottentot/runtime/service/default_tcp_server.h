@@ -24,6 +24,17 @@
 #ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_TCP_SERVER_H_
 #define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_TCP_SERVER_H_
 
+#ifdef _MSC_VER
+// #include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#else
+#include <sys/types.h> 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <pthread.h>
+#endif
+
 #include "tcp_server.h"
 
 
@@ -38,12 +49,25 @@ namespace naeem {
                            std::map<uint8_t, RequestHandler*> *);
           virtual ~DefaultTcpServer();
         public:
-          virtual void BindAndStart();
+#ifndef _MSC_VER
+          virtual pthread_t BindAndStart();
+#else
+          virtual HANDLE BindAndStart();
+#endif
         private:
+#ifdef _MSC_VER
+          static DWORD WINAPI AcceptClients(LPVOID);
+          static DWORD WINAPI HandleClientConnection(LPVOID);
+#else
           static void* AcceptClients(void *);
           static void* HandleClientConnection(void *);
+#endif
         private:
+#ifdef _MSC_VER
+          SOCKET serverSocketFD_;
+#else
           int serverSocketFD_;
+#endif
         };
         class _HandleClientConnectionParams {
         public:

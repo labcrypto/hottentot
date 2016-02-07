@@ -24,10 +24,10 @@
 package ir.ntnaeem.hottentot.runtime.protocol;
 
 import ir.ntnaeem.hottentot.runtime.*;
+import ir.ntnaeem.hottentot.runtime.config.Config;
 import ir.ntnaeem.hottentot.runtime.exception.*;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 import ir.ntnaeem.hottentot.serializerHelper.DataLengthByteArrayMaker;
-
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -228,22 +228,17 @@ public class ProtocolV1 implements Protocol {
 
   public byte[] serializeRequest(Request request) {
     //tested ! :)
-
+    if(Config.isVerboseMode){
+      System.out.println("REQUEST : \n" + request);
+    }
     int counter = 0;
     byte[] byteArrayFromSerializedRequestLength = DataLengthByteArrayMaker.getByteArray(request.getLength());
     byte[] serializedRequest = new byte[request.getLength() + byteArrayFromSerializedRequestLength.length];
+    //req length
     for (byte b : byteArrayFromSerializedRequestLength) {
       serializedRequest[counter++] = b;
     }
-
-    byte[] serviceIdByteArray = ByteBuffer.allocate(Long.SIZE / Byte.SIZE).putLong(request.getServiceId()).array();
-    byte[] methodIdByteArray = ByteBuffer.allocate(Long.SIZE / Byte.SIZE).putLong(request.getMethodId()).array();
-    System.arraycopy(serviceIdByteArray, 0, serializedRequest, counter, 8);
-    counter += 8;
-    System.arraycopy(methodIdByteArray, 0, serializedRequest, counter, 8);
-    counter += 8;
-    //serializedRequest[counter++] = request.getServiceId();
-    //serializedRequest[counter++] = request.getMethodId();
+    //req type
     if (request.getType().equals(Request.RequestType.Unknown)) {
       serializedRequest[counter++] = 1;
     } else if (request.getType().equals(Request.RequestType.InvokeStatefull)) {
@@ -253,6 +248,16 @@ public class ProtocolV1 implements Protocol {
     } else if (request.getType().equals(Request.RequestType.ServiceListQuery)) {
       serializedRequest[counter++] = 4;
     }
+
+    byte[] serviceIdByteArray = ByteBuffer.allocate(Long.SIZE / Byte.SIZE).putLong(request.getServiceId()).array();
+    byte[] methodIdByteArray = ByteBuffer.allocate(Long.SIZE / Byte.SIZE).putLong(request.getMethodId()).array();
+    System.arraycopy(serviceIdByteArray, 4, serializedRequest, counter, 4);
+    counter += 4;
+    System.arraycopy(methodIdByteArray, 4, serializedRequest, counter, 4);
+    counter += 4;
+    //serializedRequest[counter++] = request.getServiceId();
+    //serializedRequest[counter++] = request.getMethodId();
+
 
 
     serializedRequest[counter++] = request.getArgumentCount();
@@ -267,26 +272,32 @@ public class ProtocolV1 implements Protocol {
         serializedRequest[counter++] = b;
       }
     }
+    if(Config.isVerboseMode) {
+      System.out.println("SERIALIZED REQUEST : \n" + bytesToHex(serializedRequest));
+    }
     return serializedRequest;
+  }
+
+  private static char[] hexArray = "0123456789ABCDEF".toCharArray();
+  private static String bytesToHex(byte[] bytes) {
+    char[] hexChars = new char[bytes.length * 2];
+    for ( int j = 0; j < bytes.length; j++ ) {
+      int v = bytes[j] & 0xFF;
+      hexChars[j * 2] = hexArray[v >>> 4];
+      hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+    }
+    return new String(hexChars);
   }
 
   public Request deserializeRequestBody(byte[] serializedRequestBody) {
     //tested :)
+    if(Config.isVerboseMode){
+      System.out.println("SERIALIZED REQ BODY : \n" + bytesToHex(serializedRequestBody));
+    }
     int counter = 0;
     Request request = new Request();
     request.setLength(serializedRequestBody.length);
-    byte[] serviceIdByteArray = new byte[8];
-    for (int i = 0; i < 8; i++) {
-      serviceIdByteArray[i] = serializedRequestBody[counter++];
-    }
-    byte[] methodIdByteArray = new byte[8];
-    for (int i = 0; i < 8; i++) {
-      methodIdByteArray[i] = serializedRequestBody[counter++];
-    }
-    request.setServiceId(ByteBuffer.wrap(serviceIdByteArray).getLong());
-    request.setMethodId(ByteBuffer.wrap(methodIdByteArray).getLong());
-//    request.setServiceId(serializedRequestBody[counter++]);
-//    request.setMethodId(serializedRequestBody[counter++]);
+    //req type
     if (serializedRequestBody[counter] == 1) {
       request.setType(Request.RequestType.Unknown);
     } else if (serializedRequestBody[counter] == 2) {
@@ -297,6 +308,28 @@ public class ProtocolV1 implements Protocol {
       request.setType(Request.RequestType.ServiceListQuery);
     }
     counter++;
+    //
+    byte[] serviceIdByteArray = new byte[8];
+    serviceIdByteArray[0]=0;
+    serviceIdByteArray[1]=0;
+    serviceIdByteArray[2]=0;
+    serviceIdByteArray[3]=0;
+    for (int i = 4; i < 8; i++) {
+      serviceIdByteArray[i] = serializedRequestBody[counter++];
+    }
+    byte[] methodIdByteArray = new byte[8];
+    methodIdByteArray[0] = 0;
+    methodIdByteArray[1] = 0;
+    methodIdByteArray[2] = 0;
+    methodIdByteArray[3] = 0;
+    for (int i = 4; i < 8; i++) {
+      methodIdByteArray[i] = serializedRequestBody[counter++];
+    }
+    request.setServiceId(ByteBuffer.wrap(serviceIdByteArray).getLong());
+    request.setMethodId(ByteBuffer.wrap(methodIdByteArray).getLong());
+//    request.setServiceId(serializedRequestBody[counter++]);
+//    request.setMethodId(serializedRequestBody[counter++]);
+
     request.setArgumentCount(serializedRequestBody[counter++]);
     //make arguments
     while (counter < serializedRequestBody.length) {
@@ -323,6 +356,9 @@ public class ProtocolV1 implements Protocol {
       arg.setData(argData);
       request.addArgument(arg);
     }
+    if(Config.isVerboseMode) {
+      System.out.println("REQUEST : \n" + request);
+    }
     return request;
   }
 
@@ -330,6 +366,9 @@ public class ProtocolV1 implements Protocol {
 
     //tested :)
     int counter = 0;
+    if(Config.isVerboseMode){
+      System.out.println("SERIALIZED RESPONSE BODY : \n" + bytesToHex(serializedResponseBody));
+    }
     Response response = new Response();
 //        byte firstByte = serializedResponse[0];
 //        if (((int) firstByte & 0x80) == 0) {
@@ -344,28 +383,58 @@ public class ProtocolV1 implements Protocol {
 //            }
 //            response.setLength(responseLength);
 //        }
-    response.setLength(serializedResponseBody.length);
     response.setStatusCode(serializedResponseBody[counter++]);
-    byte[] data = new byte[response.getLength() - 1];
-    for (int i = 0; counter < serializedResponseBody.length; i++) {
-
+    //set response data length
+    int dataLength;
+    if((serializedResponseBody[counter] & 0x80) == 0){
+      dataLength = serializedResponseBody[counter++];
+    }else{
+      int numOfBytesForDataLength = serializedResponseBody[counter] & 0x0f;
+      counter++;
+      byte[] dataLengthByteArray = new byte[numOfBytesForDataLength];
+      for(int i = 0 ; i < numOfBytesForDataLength ; i++){
+        dataLengthByteArray[i] = serializedResponseBody[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(dataLengthByteArray);
+    }
+    byte[] data = new byte[dataLength];
+    for (int i = 0; i < dataLength; i++) {
       data[i] = serializedResponseBody[counter++];
     }
     response.setData(data);
+    if(Config.isVerboseMode){
+      System.out.println("RESPONSE :\n" + response);
+    }
     return response;
   }
 
   public byte[] serializeResponse(Response response) {
     //tested ! :)
     int counter = 0;
-    byte[] byteArrayFromSerializedResponseLength = DataLengthByteArrayMaker.getByteArray(response.getLength());
-    byte[] serializedResponse = new byte[response.getLength() + byteArrayFromSerializedResponseLength.length];
+    if(Config.isVerboseMode){
+      System.out.println("RESPONSE : \n" + response);
+    }
+    //
+    byte[] data = response.getData();
+    int responseDataLength = data.length;
+    byte[] responseDataLengthByteArray = DataLengthByteArrayMaker.getByteArray(responseDataLength);
+    //1 -- > status code
+    int responseLength = 1 + responseDataLengthByteArray.length + response.getData().length;
+    byte[] byteArrayFromSerializedResponseLength = DataLengthByteArrayMaker.getByteArray(responseLength);
+    byte[] serializedResponse = new byte[byteArrayFromSerializedResponseLength.length + responseLength];
     for (byte b : byteArrayFromSerializedResponseLength) {
       serializedResponse[counter++] = b;
     }
     serializedResponse[counter++] = response.getStatusCode();
+    //
+    for(byte b : responseDataLengthByteArray){
+      serializedResponse[counter++] = b;
+    }
     for (byte b : response.getData()) {
       serializedResponse[counter++] = b;
+    }
+    if(Config.isVerboseMode) {
+      System.out.println("SERIALIZED RESPONSE : \n" + bytesToHex(serializedResponse));
     }
     return serializedResponse;
   }

@@ -1,5 +1,6 @@
 [[[INDENT]]]void
-[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy::[[[METHOD_NAME]]]([[[ARGUMENTS]]]) {
+[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy::[[[METHOD_NAME]]](
+[[[ARGUMENTS]]][[[INDENT]]]) {
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Make request object
 [[[INDENT]]][[[INDENT]]] */
@@ -13,8 +14,6 @@
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Serialize arguments
 [[[INDENT]]][[[INDENT]]] */
-[[[INDENT]]][[[INDENT]]]uint32_t serializedDataLength = 0;
-[[[INDENT]]][[[INDENT]]]unsigned char *serializedData = 0;
 [[[ARGUMENTS_SERIALIZATION]]][[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Request object is fill with serialized arguments." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
@@ -26,7 +25,10 @@
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::TcpClient *tcpClient = 
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
-[[[INDENT]]][[[INDENT]]]if (!tcpClient->Connect()) { throw std::runtime_error("Could not connect.");}
+[[[INDENT]]][[[INDENT]]]if (!tcpClient->Connect()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("Could not connect.");
+[[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Connected." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
@@ -45,15 +47,33 @@
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Send request byte array
 [[[INDENT]]][[[INDENT]]] */
-[[[INDENT]]][[[INDENT]]]uint32_t sendLength = (requestSerializedDataLength > 127 ? 3 : 1) + requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]uint32_t sendLength = 0;
+[[[INDENT]]][[[INDENT]]]if (requestSerializedDataLength < 128) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 1 + requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 2 + requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 3 + requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256 * 256) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 4 + requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]unsigned char *sendData = new unsigned char[sendLength];
 [[[INDENT]]][[[INDENT]]]uint32_t c = 0;
-[[[INDENT]]][[[INDENT]]]if (requestSerializedDataLength > 127) {
+[[[INDENT]]][[[INDENT]]]if (requestSerializedDataLength < 128) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = 0x81;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = 0x82;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength / 256;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength % 256;
-[[[INDENT]]][[[INDENT]]]} else {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256 * 256) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c] = 0x83;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 1] = requestSerializedDataLength / (256 * 256);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 2] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256) / 256;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 3] = requestSerializedDataLength % (256 * 256);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]c += 4;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]for (uint32_t i = 0; i < requestSerializedDataLength; i++) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedData[i];
