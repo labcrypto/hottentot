@@ -82,6 +82,20 @@ namespace naeem {
             return length_;
           }
         public:
+          inline void Fill(unsigned char **bufferPointer,
+                           uint32_t *lengthPointer) {
+            if (!data_) {
+              *bufferPointer = 0;
+              *lengthPointer = 0;
+              return;
+            }
+            *lengthPointer = length_;
+            *(bufferPointer) = new unsigned char[length_];
+            for (uint32_t i = 0; i < length_; i++) {
+              *(bufferPointer)[i] = data_[i];
+            }
+          }
+        public:
           inline ByteArray& operator =(const ByteArray &other) {
             FromByteArray(other.data_, other.length_);
             return *this;
