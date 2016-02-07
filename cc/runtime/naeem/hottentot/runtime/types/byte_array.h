@@ -84,15 +84,18 @@ namespace naeem {
         public:
           inline void Fill(unsigned char **bufferPointer,
                            uint32_t *lengthPointer) {
+            std::cout << "length is " << length_ << std::endl;
             if (!data_) {
               *bufferPointer = 0;
               *lengthPointer = 0;
               return;
             }
             *lengthPointer = length_;
-            *(bufferPointer) = new unsigned char[length_];
+            *bufferPointer = new unsigned char[length_];
+            // *bufferPointer = (unsigned char *)malloc(length_ * sizeof(unsigned char));
             for (uint32_t i = 0; i < length_; i++) {
-              *(bufferPointer)[i] = data_[i];
+              std::cout << ">>> " << i << std::endl;
+              (*bufferPointer)[i] = data_[i];
             }
           }
         public:
