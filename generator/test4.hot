@@ -39,5 +39,6 @@ module example.generated{
     DataWrapper test6(list<DataWrapper> inputs);
     Result test7();
     StringWrapper test8(StringWrapper str);
+    uint8 test9(string str , bool flag , uint16 num , data d);
   };  
 };

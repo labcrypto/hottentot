@@ -22,6 +22,7 @@ import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
+import ir.ntnaeem.hottentot.type.*;
 import java.util.List;
 
 public class AuthenticationServiceProxy extends AbstractAuthenticationService implements Proxy {
@@ -94,7 +95,6 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
       }
       protocol.processDataForResponse(dataChunkRead);
     }
-    //deserialize token part of response
     Response response = protocol.getResponse();
     //close everything
      try { 
@@ -150,7 +150,6 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
       }
       protocol.processDataForResponse(dataChunkRead);
     }
-    //deserialize token part of response
     Response response = protocol.getResponse();
     //close everything
      try { 
@@ -206,7 +205,6 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
       }
       protocol.processDataForResponse(dataChunkRead);
     }
-    //deserialize token part of response
     Response response = protocol.getResponse();
     //close everything
      try { 
@@ -262,7 +260,6 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
       }
       protocol.processDataForResponse(dataChunkRead);
     }
-    //deserialize token part of response
     Response response = protocol.getResponse();
     //close everything
      try { 
@@ -318,7 +315,6 @@ public class AuthenticationServiceProxy extends AbstractAuthenticationService im
       }
       protocol.processDataForResponse(dataChunkRead);
     }
-    //deserialize token part of response
     Response response = protocol.getResponse();
     //close everything
      try { 
@@ -398,7 +394,6 @@ byte[] serializedInputList = serializableStringWrapperList.serialize();
       }
       protocol.processDataForResponse(dataChunkRead);
     }
-    //deserialize token part of response
     Response response = protocol.getResponse();
     //close everything
      try { 
@@ -478,7 +473,6 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
       }
       protocol.processDataForResponse(dataChunkRead);
     }
-    //deserialize token part of response
     Response response = protocol.getResponse();
     //close everything
      try { 
@@ -534,7 +528,6 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
       }
       protocol.processDataForResponse(dataChunkRead);
     }
-    //deserialize token part of response
     Response response = protocol.getResponse();
     //close everything
      try { 
@@ -612,7 +605,6 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
       }
       protocol.processDataForResponse(dataChunkRead);
     }
-    //deserialize token part of response
     Response response = protocol.getResponse();
     //close everything
      try { 
@@ -628,6 +620,152 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
     stringWrapper= new StringWrapper();
     stringWrapper.deserialize(response.getData());
     return stringWrapper;
+  }
+  public byte test9(String str,boolean flag,short num,byte[] d) { 
+    //serialize str
+    _String strWrapper = new _String(str);
+    byte[] serializedStr = strWrapper.serialize();
+    //serialize flag
+    _Boolean flagWrapper = new _Boolean(flag);
+    byte[] serializedFlag = flagWrapper.serialize();
+    //serialize num
+    _Int16 numWrapper = new _Int16(num);
+    byte[] serializedNum = numWrapper.serialize();
+    //serialize d
+    _Data dWrapper = new _Data(d);
+    byte[] serializedD = dWrapper.serialize();
+
+    //make request
+    Request request = new Request();
+    request.setServiceId(2072454237L);
+    request.setMethodId(1152274733L);
+    request.setArgumentCount((byte) 4);
+    request.setType(Request.RequestType.InvokeStateless);
+    Argument arg0 = new Argument();
+    arg0.setDataLength(serializedStr.length);
+    arg0.setData(serializedStr);
+    request.addArgument(arg0);
+    Argument arg1 = new Argument();
+    arg1.setDataLength(serializedFlag.length);
+    arg1.setData(serializedFlag);
+    request.addArgument(arg1);
+    Argument arg2 = new Argument();
+    arg2.setDataLength(serializedNum.length);
+    arg2.setData(serializedNum);
+    request.addArgument(arg2);
+    Argument arg3 = new Argument();
+    arg3.setDataLength(serializedD.length);
+    arg3.setData(serializedD);
+    request.addArgument(arg3);
+    int dataLength = 0;
+    //calculate data length for every argument
+    //calulate strDataLength
+    int strDataLength= serializedStr.length;
+    int strDataLengthByteArrayLength = 1;
+    if (strDataLength >= 0x80) {
+      if (strDataLength <= 0xff) {
+        //ex 0x81 0xff
+        strDataLengthByteArrayLength = 2;
+      } else if (strDataLength <= 0xffff) {
+        //ex 0x82 0xff 0xff
+        strDataLengthByteArrayLength = 3;
+      } else if (strDataLength <= 0xffffff) {
+        //ex 0x83 0xff 0xff 0xff
+        strDataLengthByteArrayLength = 4;
+      }
+    }
+    dataLength += strDataLength + strDataLengthByteArrayLength;
+    //calulate flagDataLength
+    int flagDataLength= serializedFlag.length;
+    int flagDataLengthByteArrayLength = 1;
+    if (flagDataLength >= 0x80) {
+      if (flagDataLength <= 0xff) {
+        //ex 0x81 0xff
+        flagDataLengthByteArrayLength = 2;
+      } else if (flagDataLength <= 0xffff) {
+        //ex 0x82 0xff 0xff
+        flagDataLengthByteArrayLength = 3;
+      } else if (flagDataLength <= 0xffffff) {
+        //ex 0x83 0xff 0xff 0xff
+        flagDataLengthByteArrayLength = 4;
+      }
+    }
+    dataLength += flagDataLength + flagDataLengthByteArrayLength;
+    //calulate numDataLength
+    int numDataLength= serializedNum.length;
+    int numDataLengthByteArrayLength = 1;
+    if (numDataLength >= 0x80) {
+      if (numDataLength <= 0xff) {
+        //ex 0x81 0xff
+        numDataLengthByteArrayLength = 2;
+      } else if (numDataLength <= 0xffff) {
+        //ex 0x82 0xff 0xff
+        numDataLengthByteArrayLength = 3;
+      } else if (numDataLength <= 0xffffff) {
+        //ex 0x83 0xff 0xff 0xff
+        numDataLengthByteArrayLength = 4;
+      }
+    }
+    dataLength += numDataLength + numDataLengthByteArrayLength;
+    //calulate dDataLength
+    int dDataLength= serializedD.length;
+    int dDataLengthByteArrayLength = 1;
+    if (dDataLength >= 0x80) {
+      if (dDataLength <= 0xff) {
+        //ex 0x81 0xff
+        dDataLengthByteArrayLength = 2;
+      } else if (dDataLength <= 0xffff) {
+        //ex 0x82 0xff 0xff
+        dDataLengthByteArrayLength = 3;
+      } else if (dDataLength <= 0xffffff) {
+        //ex 0x83 0xff 0xff 0xff
+        dDataLengthByteArrayLength = 4;
+      }
+    }
+    dataLength += dDataLength + dDataLengthByteArrayLength;
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
+    //connect to server
+    TcpClient tcpClient = TcpClientFactory.create();
+    try{
+      tcpClient.connect(host, port);
+    } catch (TcpClientConnectException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //serialize request according to HTNP
+    Protocol protocol = ProtocolFactory.create();
+    byte[] serializedRequest = protocol.serializeRequest(request);
+    //send request
+    try {
+      tcpClient.write(serializedRequest);
+    } catch (TcpClientWriteException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //read response from server
+    byte[] buffer = new byte[256];
+    while (!protocol.isResponseComplete()) {
+      byte[] dataChunkRead;
+      try {
+        dataChunkRead = tcpClient.read();
+      } catch (TcpClientReadException e) {
+        throw new HottentotRuntimeException(e);
+      }
+      protocol.processDataForResponse(dataChunkRead);
+    }
+    Response response = protocol.getResponse();
+    //close everything
+     try { 
+       tcpClient.close(); 
+    } catch (TcpClientCloseException e) { 
+      e.printStackTrace(); 
+    } 
+    //deserialize uint8part from response
+    if (response.getStatusCode() == -1) {
+      //TODO
+    }
+    _Int8 ret = new _Int8();
+    ret.deserialize(response.getData());
+    return ret.getValue();
   }
 
   public void destroy() {

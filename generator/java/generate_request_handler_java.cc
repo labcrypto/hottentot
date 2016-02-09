@@ -93,6 +93,8 @@ namespace naeem {
                   
                   if(capitalizedArgType == "String"){
                     capitalizedArgType = "FullString";
+                  }else if(capitalizedArgType == "Data"){
+                    capitalizedArgType = "FullData";
                   }
                   methodConditionStr += indent_ + indent_ + indent_ +
                                         javaType + " " + pArg->variable_.c_str() +
