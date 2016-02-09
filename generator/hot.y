@@ -26,6 +26,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <string>
+#include <vector>
 #include <sstream>
 #include <stack>
 #include <iostream>
@@ -328,51 +330,28 @@ int main(int argc, char **argv) {
   bool clientGenerated = false; // TODO(kamran): Change to false
   bool stubGenerated = false; // TODO(kamran): Change to false
   uint8_t numberOfSpacesUsedForIndentation = 2;
-  bool hotsBegun = false;
   char *outputDir = 0;
-  char **hots = 0;
-  uint16_t numOfHots = 0;
+  std::vector<char*> hots;
   for (uint16_t i = 1; i < argc;) {
     if (strcmp(argv[i], "--java") == 0) {
-      /* if (hotsBegun) {
-        printHelpMessageAndExit();
-      } */
       isJava = true;
       i++;
     } else if (strcmp(argv[i], "--cc") == 0) {
-      /* if (hotsBegun) {
-        printHelpMessageAndExit();
-      } */
       isCC = true;
       i++;
     } else if (strcmp(argv[i], "--indent-with-spaces") == 0) {
-      if (hotsBegun) {
-        printHelpMessageAndExit();
-      }
       isSpacesUsedForIndentation = true;
       i++;
     } else if (strcmp(argv[i], "--indent-with-tabs") == 0) {
-      if (hotsBegun) {
-        printHelpMessageAndExit();
-      }
       isSpacesUsedForIndentation = false;
       i++;
     } else if (strcmp(argv[i], "--makefile") == 0) {
-      if (hotsBegun) {
-        printHelpMessageAndExit();
-      }
       makefileGenerated = true;
       i++;
     } else if (strcmp(argv[i], "--client") == 0) {
-      if (hotsBegun) {
-        printHelpMessageAndExit();
-      }
       clientGenerated = true;
       i++;
     } else if (strcmp(argv[i], "--stub") == 0) {
-      if (hotsBegun) {
-        printHelpMessageAndExit();
-      }
       stubGenerated = true;
       i++;
     } else if (strcmp(argv[i], "--help") == 0) {
@@ -384,12 +363,12 @@ int main(int argc, char **argv) {
       outputDir = argv[i + 1];
       i += 2;
     } else {
-      // TODO(kamran) File names do not start with '--'. Consider this here.
-      if (hots == 0) {
-        hotsBegun = true;
-        hots = new char*[argc - i];
+      if (strlen(argv[i]) > 1 && strncmp(argv[i], "--", 2) == 0) {
+        printf("ERROR: Unknown option: %s\n", argv[i]);
+        printHelpMessageAndExit();
       }
-      hots[numOfHots++] = argv[i++];
+      hots.push_back(argv[i]);
+      i++;
     }
   }
   if (!isJava && !isCC) {
@@ -398,11 +377,12 @@ int main(int argc, char **argv) {
   if (outputDir == 0) {
     outputDir = "hotgen";
   }
-  if (numOfHots == 0) {
+  if (hots.size() == 0) {
+    std::cout << "ERROR: No hot file is selected for generation." << std::endl;
     printHelpMessageAndExit();
     exit(1);
   }
-  for (uint16_t i = 0; i < numOfHots; i++) {
+  for (uint16_t i = 0; i < hots.size(); i++) {
     yyin = fopen(hots[i],"r+");
     if (!yyin) {
       printf("ERROR: File can't be opened.\n");
