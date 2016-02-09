@@ -21,5 +21,6 @@ public interface AuthenticationService extends Service {
   DataWrapper test6(List<DataWrapper> inputs);
   Result test7();
   StringWrapper test8(StringWrapper str);
+  byte test9(String str,boolean flag,short num,byte[] d);
 
 }

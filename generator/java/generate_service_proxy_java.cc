@@ -77,11 +77,24 @@ namespace naeem {
                               fetchedArgTypeOfList + "List(" + pArg->variable_ + ");\n";
                 methodsStr += "byte[] serialized" +  capitalalizedArgVar + 
                               " = serializable" + fetchedArgTypeOfList + "List.serialize();\n";
-              }else{
+              } else if(
+                ::naeem::hottentot::generator::common::TypeHelper::IsUDT(
+                pArg->type_)) {
                 methodsStr += indent_ + indent_ +
                               "byte[] serialized" +
                               capitalalizedArgVar + " = " +
                               pArg->variable_ + ".serialize();\n";  
+              } else {
+                std::string pdtWrapperClass = 
+                ::naeem::hottentot::generator::common::TypeHelper::GetPdtWrapperClassName(
+                pArg->type_);
+                methodsStr += indent_ + indent_ + 
+                              pdtWrapperClass + " " + pArg->variable_ + "Wrapper = new " + 
+                              pdtWrapperClass + "(" + pArg->variable_ + ");\n";
+                methodsStr += indent_ + indent_ + 
+                              "byte[] serialized" +
+                              capitalalizedArgVar + " = " + 
+                              pArg->variable_ + "Wrapper.serialize();\n"; 
               }
             }
             methodsStr += "\n";
@@ -189,7 +202,6 @@ namespace naeem {
             methodsStr +=
             indent_ + indent_ + indent_ + "protocol.processDataForResponse(dataChunkRead);\n";
             methodsStr += indent_ + indent_ + "}\n";
-            methodsStr += indent_ + indent_ + "//deserialize token part of response\n";
             methodsStr += indent_ + indent_ + "Response response = protocol.getResponse();\n";
             methodsStr += indent_ + indent_ + "//close everything\n";
             methodsStr += indent_ + indent_ + " try { \n";
@@ -198,9 +210,6 @@ namespace naeem {
             methodsStr += indent_ + indent_ + indent_ + "e.printStackTrace(); \n";
             methodsStr += indent_ + indent_ + "} \n";
             methodsStr += indent_ + indent_ + "//deserialize " + pMethod->returnType_ + "part from response\n";
-            
-            
-         
             if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
               methodsStr += indent_ + indent_ +
                             "Serializable" + fetchedReturnTypeOfList + "List" + 
@@ -217,7 +226,9 @@ namespace naeem {
               methodsStr += indent_ + indent_ +
                             "return serializable" + fetchedReturnTypeOfList + 
                             "List.get" + fetchedReturnTypeOfList + "List();\n"; 
-            }else{
+            }else if(
+              ::naeem::hottentot::generator::common::TypeHelper::IsUDT(
+              pMethod->returnType_)){
               methodsStr += indent_ + indent_ +
                             returnType + " " + lowerCaseReturnType + "= null;\n"; 
               methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
@@ -228,7 +239,22 @@ namespace naeem {
               methodsStr += indent_ + indent_ + "" + lowerCaseReturnType +
                             ".deserialize(response.getData());\n";
               methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
+            } else {
+              methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
+              methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+              methodsStr += indent_ + indent_ + "}\n";
+              std::string pdtWrapperClassName = 
+              ::naeem::hottentot::generator::common::TypeHelper::GetPdtWrapperClassName(
+              pMethod->returnType_);
+              methodsStr += indent_ + indent_ + 
+                            pdtWrapperClassName + " ret = new " +
+                            pdtWrapperClassName + "();\n";
+              methodsStr += indent_ + indent_ +
+                            "ret.deserialize(response.getData());\n";
+              methodsStr += indent_ + indent_ +
+                            "return ret.getValue();\n";
             }
+
             
             methodsStr += indent_ + "}\n";
           }

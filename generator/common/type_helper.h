@@ -151,6 +151,42 @@ namespace naeem {
             }
             return type;
           }
+
+          static inline std::string GetPdtWrapperClassName(std::string type) {
+            if(IsUDT(type)) {
+                std::runtime_error("type is not PDT");
+            }
+            if (type == "int8") {
+              return "_Int8";
+            } else if (type == "int16") {
+              return "_Int16";
+            } else if (type == "int32") {
+              return "_Int32";
+            } else if (type == "int64") {
+              return "_Int32";
+            } else if (type == "uint8") {
+              return "_Int8";
+            } else if (type == "uint16") {
+              return "_Int16";
+            } else if (type == "uint32") {
+              return "_Int32";
+            } else if (type == "uint64") {
+              return "_Int64";
+            } else if (type == "bool") {
+              return "_Boolean";
+            } else if (type == "string") {
+              return "_String";
+            } else if (type == "char") {
+              return "_Char";
+            } else if (type == "data") {
+              return "_Data";
+            } else if (type == "date") {
+              return "_Date";
+            } else if (type == "double") {
+              return "_Double";
+            } 
+            return type;
+          }
         
           static inline uint32_t GetTypeLength(std::string type){
             if (type.compare("int8") == 0 ||
