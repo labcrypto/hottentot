@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__STRUCT_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__DS__STRUCT_H_
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__ENUM_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__DS__ENUM_H_
 
 #include <map>
 
@@ -40,19 +40,20 @@ namespace naeem {
       };
       namespace ds {
         class Module;
-        class Struct {
+        class Enum {
           friend class Hot;
           friend class ::naeem::hottentot::generator::cc::CCGenerator;
           friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
           public:
-          Struct(Module *module) 
+          Enum(Module *module) 
             :  module_(module) {
           }
-          virtual ~Struct() {}
+          virtual ~Enum() {}
         public:
-          inline virtual void AddDeclaration(Declaration *declaration) {
-            declarations_.insert(std::pair<uint32_t, Declaration*>(declaration->GetOrd(), declaration));
+          inline virtual void AddItem(std::string name, uint16_t value) {
+            items_[name] = value;
+            revItems_[value] = name;
           }
           inline virtual std::string GetName() const {
             return name_;
@@ -60,9 +61,16 @@ namespace naeem {
           inline virtual void SetName(std::string name) {
             name_ = name;
           }
+          inline virtual std::string GetItemName(uint16_t itemValue) {
+            return revItems_[itemValue];
+          }
+          inline virtual uint16_t GetItemValue(std::string itemName) {
+            return items_[itemName];
+          }
         private:
           std::string name_;
-          std::map<uint32_t, Declaration*> declarations_;
+          std::map<std::string, uint16_t> items_;
+          std::map<uint16_t, std::string> revItems_;
           Module *module_;
         };
       }

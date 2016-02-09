@@ -39,6 +39,7 @@ namespace naeem {
         class CCGenerator;
       };
       namespace ds {
+        class Enum;
         class Struct;
         class Service;
         class Module {
@@ -49,6 +50,9 @@ namespace naeem {
           Module() {}
           virtual ~Module() {}
         public:
+          inline void AddEnum(Enum *enumm) {
+            enums_.push_back(enumm);
+          }
           inline void AddStruct(Struct *struc) {
             structs_.push_back(struc);
           }
@@ -63,6 +67,7 @@ namespace naeem {
           }
         private:
           std::string package_;
+          std::vector<Enum*> enums_;
           std::vector<Struct*> structs_;
           std::vector<Service*> services_;
         };

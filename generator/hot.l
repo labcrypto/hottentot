@@ -110,13 +110,21 @@ struct {
   // fprintf(stdout, "STRUCT seen.\n");
   return STRUCT;
 }
+enum {
+  return ENUM;
+}
+[1-9]([0-9])* {
+  yylval.string = (char *)malloc(yyleng + 1); 
+  sprintf(yylval.string, "%s", yytext);
+  return NUMBER;
+}
 [a-zA-Z]([a-zA-Z0-9])* {
   // fprintf(stdout, "IDENTIFIER seen: %s\n", yytext);
   yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return IDENTIFIER;
 }
-[\{\}\;\.><,()] { 
+[\{\}\;\.><,()=] { 
   // fprintf(stdout, "'%c' seen.\n", *yytext);
   return *yytext; 
 }

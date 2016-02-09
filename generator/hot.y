@@ -49,6 +49,7 @@ typedef unsigned __int64 uint64_t;
 #include "../../ds/service.h"
 #include "../../ds/method.h"
 #include "../../ds/argument.h"
+#include "../../ds/enum.h"
 
 #include "../../dep/fasthash.h"
 
@@ -60,6 +61,7 @@ typedef unsigned __int64 uint64_t;
 #include "ds/service.h"
 #include "ds/method.h"
 #include "ds/argument.h"
+#include "ds/enum.h"
 
 #include "dep/fasthash.h"
 
@@ -78,6 +80,7 @@ std::string lastType;
 std::stack<std::string> stack;
 ::naeem::hottentot::generator::ds::Hot *currentHot;
 ::naeem::hottentot::generator::ds::Module *currentModule;
+::naeem::hottentot::generator::ds::Enum *currentEnum;
 ::naeem::hottentot::generator::ds::Struct *currentStruct;
 ::naeem::hottentot::generator::ds::Service *currentService;
 ::naeem::hottentot::generator::ds::Method *currentMethod;
@@ -88,6 +91,7 @@ std::stack<std::string> stack;
 }
 %token MODULE
 %token STRUCT
+%token ENUM
 %token <string> LIST
 %token <string> SET
 %token <string> MAP
@@ -95,6 +99,7 @@ std::stack<std::string> stack;
 %token STATEFUL
 %token SERVICE
 %token <string> ORD
+%token <string> NUMBER
 %token <string> IDENTIFIER
 %token <string> TYPE
 %start hot
@@ -179,7 +184,7 @@ item:           {
                       fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
                       exit(1);
                     } 
-                  } STATELESS SERVICE IDENTIFIER '{' service_body '}' ';' {
+                } STATELESS SERVICE IDENTIFIER '{' service_body '}' ';' {
                   // printf("Stateless service seen: %s\n", $4);
                   currentService->SetName($4);
                   currentService->SetServiceType("stateless");
@@ -193,12 +198,35 @@ item:           {
                       fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
                       exit(1);
                     } 
-                  } STATEFUL SERVICE IDENTIFIER '{' service_body '}' ';' {
+                } STATEFUL SERVICE IDENTIFIER '{' service_body '}' ';' {
                   // printf("Stateful service seen: %s\n", $4);
                   currentService->SetName($4);
                   currentService->SetServiceType("stateful");
                   currentService = NULL;
                 }
+                | {
+                    if (currentEnum == NULL) {
+                      currentEnum = new ::naeem::hottentot::generator::ds::Enum(currentModule);
+                      currentModule->AddEnum(currentEnum);
+                    } else {
+                      fprintf(stdout, "SYNTAX ERROR: Enums can't be nested.\n");
+                      exit(1);
+                    }
+                } ENUM IDENTIFIER '{' enum_body '}' ';' {
+                  currentEnum->SetName($3);
+                  currentEnum = NULL;
+                }
+
+enum_body:      enum_items;
+
+enum_items:     enum_item
+                | enum_items enum_item
+                ;
+
+enum_item:      NUMBER '=' IDENTIFIER ';' {
+                  currentEnum->AddItem($3, atol($1));
+                }
+                ;
 
 struct_body:    declarations;
 
@@ -306,15 +334,15 @@ int main(int argc, char **argv) {
   uint16_t numOfHots = 0;
   for (uint16_t i = 1; i < argc;) {
     if (strcmp(argv[i], "--java") == 0) {
-      if (hotsBegun) {
+      /* if (hotsBegun) {
         printHelpMessageAndExit();
-      }
+      } */
       isJava = true;
       i++;
     } else if (strcmp(argv[i], "--cc") == 0) {
-      if (hotsBegun) {
+      /* if (hotsBegun) {
         printHelpMessageAndExit();
-      }
+      } */
       isCC = true;
       i++;
     } else if (strcmp(argv[i], "--indent-with-spaces") == 0) {
@@ -381,7 +409,7 @@ int main(int argc, char **argv) {
       return 1;
     }
     yyparse();
-    // currentHot->Display();
+    currentHot->Display();
     ::naeem::hottentot::generator::GenerationConfig generationConfig;
     generationConfig.SetOutDir(outputDir);
     generationConfig.SetSpacesUsedInsteadOfTabsForIndentation(isSpacesUsedForIndentation);

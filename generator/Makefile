@@ -26,7 +26,7 @@ compile:
 	./java/templates/byte_array_maker.sh
 	./cc/templates/generate_templates_header.sh ./cc/templates/
 	yacc -d hot.y
-	g++ -c y.tab.c -o .lib/y.tab.o
+	g++ -c -g -Wno-write-strings y.tab.c -o .lib/y.tab.o
 	flex hot.l
 	g++ -c -g lex.yy.c -o .lib/lex.yy.o
 	g++ -c -g cc/cc_generator.cc -o .lib/cc_generator.o
