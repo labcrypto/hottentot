@@ -30,6 +30,7 @@ import example.generated.StringWrapper;
 import example.generated.Token;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AuthenticationImpl extends AbstractAuthenticationService {
@@ -136,4 +137,23 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
     return null;
   }
 
+  @Override
+  public byte test9(String str, boolean flag, short num, byte[] d) {
+    System.out.println("------------------");
+    System.out.println(str);
+    System.out.println("------------------");
+    System.out.println(flag);
+    System.out.println("------------------");
+    System.out.println(num);
+    System.out.println("------------------");
+    System.out.println(Arrays.toString(d));
+    System.out.println("------------------");
+    if(str.length() == 1 &&
+      flag &&
+      num == 10 &&
+      d.length == 1) {
+      return (byte)0;
+    }
+    return (byte)-1;
+  }
 }
