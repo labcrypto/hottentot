@@ -58,6 +58,12 @@ namespace naeem {
               FromByteArray(data);
             }
           }
+          Utf8String(std::string &str)
+            : data_(0),
+              chars_(0),
+              length_(0) {
+            FromByteArray(str.c_str());
+          }
           Utf8String(const Utf8String &utf8String) 
             : data_(0),
               chars_(0),
