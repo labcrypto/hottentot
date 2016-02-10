@@ -76,7 +76,19 @@ namespace naeem {
           namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
           std::string enums = "";
           for (uint32_t i = 0; i < module->enums_.size(); i++) {
-
+            enums += "enum " + module->enums_[i]->GetName() + " {\r\n";
+            for (std::map<uint16_t, std::string>::iterator it = module->enums_[i]->revItems_.begin();
+                 it != module->enums_[i]->revItems_.end();
+                 it++) {
+              std::stringstream ss;
+              ss << indent << "k" << 
+                ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
+                  module->enums_[i]->GetName()) << "_" << 
+                ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
+                  it->second) << " = " << it->first << ";" << std::endl;
+              enums += indent + ss.str();
+            }
+            enums += "}\r\n\r\n";
           }
           /*
            * Filling templates with real values
@@ -89,6 +101,7 @@ namespace naeem {
           params.insert(std::pair<std::string, std::string>("HEADER_GUARD", "_" +
             ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
               packageTokens) + "__ENUMS_H_"));
+          params.insert(std::pair<std::string, std::string>("ENUMS", enums));
           params.insert(std::pair<std::string, std::string>("INDENT", indent));
           std::string enumsTemplate = templates["enums"];
           for (std::map<std::string, std::string>::iterator it = params.begin();

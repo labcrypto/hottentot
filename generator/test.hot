@@ -25,13 +25,13 @@ module ir.ntnaeem.services {
     map<list<Person>, string> FFF(string abc);
   };
 };
-module org.apache.tests {
-  stateless service ApacheLicenseManager {
-    set<License> GetThem();
-    map<list<Person>, asdasdaasdasdsda> GetMap(list<string> names, set<map<list<int>, string>> s);
-  };
-  struct License {
-    int version ord(1);
-    map<int, list<string>> l ord(2);
-  };
-};
+// module org.apache.tests {
+//  stateless service ApacheLicenseManager {
+//    set<License> GetThem();
+//    map<list<Person>, asdasdaasdasdsda> GetMap(list<string> names, set<map<list<int>, string>> s);
+//  };
+//  struct License {
+//    int version ord(1);
+//    map<int, list<string>> l ord(2);
+//  };
+// };

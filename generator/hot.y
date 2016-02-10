@@ -101,6 +101,7 @@ std::stack<std::string> stack;
 %token STATEFUL
 %token SERVICE
 %token <string> ORD
+%token <string> COMMENT
 %token <string> NUMBER
 %token <string> IDENTIFIER
 %token <string> TYPE
@@ -108,7 +109,7 @@ std::stack<std::string> stack;
 %type<string> type
 %%
 
-hot:            modules {                 
+hot:            modules {
                 }
                 ;
 
