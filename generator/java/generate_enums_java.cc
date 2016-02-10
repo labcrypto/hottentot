@@ -7,6 +7,7 @@
 #include "../common/type_helper.h" 
 #include <map>
 #include <sstream>
+#include "runtime.h"
 
 
 namespace naeem {
@@ -29,7 +30,7 @@ namespace naeem {
             ::naeem::hottentot::generator::ds::Enum *pEnum = pModule->enums_.at(i);
             std::string basePackageName = pModule->package_;
             std::string replacableEnumTmpStr = enumTmpStr_;
-            ::naeem::hottentot::generator::Context.enums_.push_back(pEnum);
+            ::naeem::hottentot::generator::Runtime.enums_.push_back(pEnum);
             std::map<uint16_t, std::string>::iterator it;
             ::naeem::hottentot::generator::common::StringHelper::Replace(replacableEnumTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
             ::naeem::hottentot::generator::common::StringHelper::Replace(replacableEnumTmpStr , "[%INDENT%]" , indent_ , 1);
