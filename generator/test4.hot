@@ -1,4 +1,5 @@
 module example.generated{
+  
   enum GenderType {
     1 = Male;
     2 = Female;
@@ -34,6 +35,11 @@ module example.generated{
     int64 status64 ord(8);
   };
 
+  struct Gender{
+    GenderType genders ord(1);
+    int8 id ord(2);
+  };
+  
   stateless service Authentication{
     list<Token> auth(Credential credential);
     list<DataWrapper> test();
@@ -45,5 +51,6 @@ module example.generated{
     Result test7();
     StringWrapper test8(StringWrapper str);
     uint8 test9(string str , bool flag , uint16 num , data d);
+    data test10(Gender g);
   };  
 };

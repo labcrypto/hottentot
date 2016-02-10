@@ -767,6 +767,82 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
     ret.deserialize(response.getData());
     return ret.getValue();
   }
+  public byte[] test10(Gender g) { 
+    //serialize g
+    byte[] serializedG = g.serialize();
+
+    //make request
+    Request request = new Request();
+    request.setServiceId(2072454237L);
+    request.setMethodId(10819006L);
+    request.setArgumentCount((byte) 1);
+    request.setType(Request.RequestType.InvokeStateless);
+    Argument arg0 = new Argument();
+    arg0.setDataLength(serializedG.length);
+    arg0.setData(serializedG);
+    request.addArgument(arg0);
+    int dataLength = 0;
+    //calculate data length for every argument
+    //calulate gDataLength
+    int gDataLength= serializedG.length;
+    int gDataLengthByteArrayLength = 1;
+    if (gDataLength >= 0x80) {
+      if (gDataLength <= 0xff) {
+        //ex 0x81 0xff
+        gDataLengthByteArrayLength = 2;
+      } else if (gDataLength <= 0xffff) {
+        //ex 0x82 0xff 0xff
+        gDataLengthByteArrayLength = 3;
+      } else if (gDataLength <= 0xffffff) {
+        //ex 0x83 0xff 0xff 0xff
+        gDataLengthByteArrayLength = 4;
+      }
+    }
+    dataLength += gDataLength + gDataLengthByteArrayLength;
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
+    //connect to server
+    TcpClient tcpClient = TcpClientFactory.create();
+    try{
+      tcpClient.connect(host, port);
+    } catch (TcpClientConnectException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //serialize request according to HTNP
+    Protocol protocol = ProtocolFactory.create();
+    byte[] serializedRequest = protocol.serializeRequest(request);
+    //send request
+    try {
+      tcpClient.write(serializedRequest);
+    } catch (TcpClientWriteException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //read response from server
+    byte[] buffer = new byte[256];
+    while (!protocol.isResponseComplete()) {
+      byte[] dataChunkRead;
+      try {
+        dataChunkRead = tcpClient.read();
+      } catch (TcpClientReadException e) {
+        throw new HottentotRuntimeException(e);
+      }
+      protocol.processDataForResponse(dataChunkRead);
+    }
+    Response response = protocol.getResponse();
+    //close everything
+     try { 
+       tcpClient.close(); 
+    } catch (TcpClientCloseException e) { 
+      e.printStackTrace(); 
+    } 
+    //deserialize datapart from response
+    if (response.getStatusCode() == -1) {
+      //TODO
+    }
+    _Data ret = new _Data();
+    ret.deserialize(response.getData());
+    return ret.getValue();
+  }
 
   public void destroy() {
     //TODO

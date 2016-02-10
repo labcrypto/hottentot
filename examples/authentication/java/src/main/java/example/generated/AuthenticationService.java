@@ -22,5 +22,6 @@ public interface AuthenticationService extends Service {
   Result test7();
   StringWrapper test8(StringWrapper str);
   byte test9(String str,boolean flag,short num,byte[] d);
+  byte[] test10(Gender g);
 
 }

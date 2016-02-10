@@ -216,6 +216,20 @@ public class AuthenticationRequestHandler extends RequestHandler {
       response.setLength(serializedResult.length + 1);
       return response;
     }
+    if(methodId == 10819006L){
+      List <Argument> args = request.getArgs();
+      Argument arg0 = args.get(0);
+      byte[] serializedG = arg0.getData();
+      Gender g = new Gender();
+      g.deserialize(serializedG);
+      Response response = new Response();
+      byte[] result = authenticationImpl.test10(g);
+      byte[] serializedResult = PDTSerializer.getData( result );
+      response.setStatusCode((byte) 0);
+      response.setData(serializedResult);
+      response.setLength(serializedResult.length + 1);
+      return response;
+    }
 
     throw new MethodNotSupportException("method id is incorrect");
   }

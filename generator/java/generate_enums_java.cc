@@ -29,20 +29,11 @@ namespace naeem {
             ::naeem::hottentot::generator::ds::Enum *pEnum = pModule->enums_.at(i);
             std::string basePackageName = pModule->package_;
             std::string replacableEnumTmpStr = enumTmpStr_;
-            std::cout << "------------------" << std::endl;
-            std::cout << pEnum->GetName();
+            ::naeem::hottentot::generator::Context.enums_.push_back(pEnum);
             std::map<uint16_t, std::string>::iterator it;
-            for ( it = pEnum->revItems_.begin(); it != pEnum->revItems_.end(); it++ ) {
-              std::cout << it->first  // string (key)
-              << ':'
-              << it->second   // string's value 
-              << std::endl ;
-            }
-            std::cout << "------------------" << std::endl; 
             ::naeem::hottentot::generator::common::StringHelper::Replace(replacableEnumTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
             ::naeem::hottentot::generator::common::StringHelper::Replace(replacableEnumTmpStr , "[%INDENT%]" , indent_ , 1);
             ::naeem::hottentot::generator::common::StringHelper::Replace(replacableEnumTmpStr , "[%ENUM_NAME%]" , pEnum->GetName() , 1);
-            
             std::string membersStr = "";
             uint8_t mapCounter = 1;
             for (std::map<uint16_t, std::string>::iterator it 
@@ -60,7 +51,6 @@ namespace naeem {
                 membersStr += ";";
               }
               mapCounter++;
-              
             }
             ::naeem::hottentot::generator::common::StringHelper::Replace(replacableEnumTmpStr , "[%MEMBERS%]" , membersStr , 1);            std::string path = outDir_ + "/" + pEnum->GetName().c_str() + ".java";
             ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableEnumTmpStr);
