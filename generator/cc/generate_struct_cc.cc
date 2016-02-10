@@ -102,7 +102,7 @@ namespace naeem {
               serializationSS << indent << indent << "} else if (length" << counter << " < 256 * 256) {\r\n";
               serializationSS << indent << indent << indent << "totalLength += 3 + length" << counter << ";\r\n";
               serializationSS << indent << indent << "} else if (length" << counter << " < 256 * 256 * 256) {\r\n";
-              serializationSS << indent << indent << indent << "totalLength += 3 + length" << counter << ";\r\n";
+              serializationSS << indent << indent << indent << "totalLength += 4 + length" << counter << ";\r\n";
               serializationSS << indent << indent << "}\r\n";
             }
             counter++;
