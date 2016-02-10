@@ -432,6 +432,5 @@ int main(int argc, char **argv) {
     delete currentHot;
     currentHot = NULL;
   }
-  std::cout << "Generation OK." << std::endl;
   return 0;
 }
