@@ -32,10 +32,11 @@
 #include "../ds/hot.h"
 #include "../ds/service.h"
 #include "../ds/method.h"
- #include "../ds/module.h"
+#include "../ds/module.h"
 #include "../ds/argument.h"
 #include "../ds/struct.h"
 #include "../ds/declaration.h"
+#include "../ds/enum.h"
 
 #include "../common/os.h"
 #include "../common/string_helper.h"
@@ -52,9 +53,9 @@ namespace naeem {
            * Reading all needed templates and stroing them in a map
            */
           std::string abstractServiceHeaderTemplate((char *)__cc_templates_abstract_service_header_template, __cc_templates_abstract_service_header_template_len);
+          std::string enumsTemplate((char *)__cc_templates_enums_template, __cc_templates_enums_template_len);
           std::string proxyBuilderCCTemplate((char *)__cc_templates_proxy_builder_cc_template, __cc_templates_proxy_builder_cc_template_len);
           std::string proxyBuilderHeaderTemplate((char *)__cc_templates_proxy_builder_header_template, __cc_templates_proxy_builder_header_template_len);
-          // std::cout << "asdasdasD" << std::endl;
           std::string proxyCCTemplate((char *)__cc_templates_proxy_cc_template, __cc_templates_proxy_cc_template_len);
           std::string proxyCCMethodTemplate((char *)__cc_templates_proxy_cc__method_template, __cc_templates_proxy_cc__method_template_len);
           std::string proxyCCMethodArgumentSerializationTemplate((char *)__cc_templates_proxy_cc__method_argument_serialization_template, __cc_templates_proxy_cc__method_argument_serialization_template_len);
@@ -69,22 +70,23 @@ namespace naeem {
           std::string structHeaderTemplate((char *)__cc_templates_struct_header_template, __cc_templates_struct_header_template_len);
           std::string structHeaderGetterAndSetterTemplate((char *)__cc_templates_struct_header__getter_and_setter_template, __cc_templates_struct_header__getter_and_setter_template_len);
           std::map<std::string, std::string> templates;
-          templates.insert(std::pair<std::string, std::string>("abstract_service_header",abstractServiceHeaderTemplate));
-          templates.insert(std::pair<std::string, std::string>("proxy_builder_cc",proxyBuilderCCTemplate));
-          templates.insert(std::pair<std::string, std::string>("proxy_builder_header",proxyBuilderHeaderTemplate));
-          templates.insert(std::pair<std::string, std::string>("proxy_cc",proxyCCTemplate));
-          templates.insert(std::pair<std::string, std::string>("proxy_cc__method",proxyCCMethodTemplate));
-          templates.insert(std::pair<std::string, std::string>("proxy_cc__method_argument_serialization",proxyCCMethodArgumentSerializationTemplate));
-          templates.insert(std::pair<std::string, std::string>("proxy_cc__method_response_deserialization",proxyCCMethodResponseDeserialization));
-          templates.insert(std::pair<std::string, std::string>("proxy_header",proxyHeaderTemplate));
-          templates.insert(std::pair<std::string, std::string>("request_handler_cc",requestHandlerCCTemplate));          
-          templates.insert(std::pair<std::string, std::string>("request_handler_cc__method_if_clause",requestHandlerCCMethodIfClauseTemplate));
-          templates.insert(std::pair<std::string, std::string>("request_handler_header",requestHandlerHeaderTemplate));
-          templates.insert(std::pair<std::string, std::string>("interface",interfaceTemplate));
-          templates.insert(std::pair<std::string, std::string>("service_interface",serviceInterfaceTemplate));
-          templates.insert(std::pair<std::string, std::string>("struct_cc",structCCTemplate));
-          templates.insert(std::pair<std::string, std::string>("struct_header",structHeaderTemplate));
-          templates.insert(std::pair<std::string, std::string>("struct_header__getter_and_setter",structHeaderGetterAndSetterTemplate));
+          templates.insert(std::pair<std::string, std::string>("abstract_service_header", abstractServiceHeaderTemplate));
+          templates.insert(std::pair<std::string, std::string>("enums", enumsTemplate));
+          templates.insert(std::pair<std::string, std::string>("proxy_builder_cc", proxyBuilderCCTemplate));
+          templates.insert(std::pair<std::string, std::string>("proxy_builder_header", proxyBuilderHeaderTemplate));
+          templates.insert(std::pair<std::string, std::string>("proxy_cc", proxyCCTemplate));
+          templates.insert(std::pair<std::string, std::string>("proxy_cc__method", proxyCCMethodTemplate));
+          templates.insert(std::pair<std::string, std::string>("proxy_cc__method_argument_serialization", proxyCCMethodArgumentSerializationTemplate));
+          templates.insert(std::pair<std::string, std::string>("proxy_cc__method_response_deserialization", proxyCCMethodResponseDeserialization));
+          templates.insert(std::pair<std::string, std::string>("proxy_header", proxyHeaderTemplate));
+          templates.insert(std::pair<std::string, std::string>("request_handler_cc", requestHandlerCCTemplate));          
+          templates.insert(std::pair<std::string, std::string>("request_handler_cc__method_if_clause", requestHandlerCCMethodIfClauseTemplate));
+          templates.insert(std::pair<std::string, std::string>("request_handler_header", requestHandlerHeaderTemplate));
+          templates.insert(std::pair<std::string, std::string>("interface", interfaceTemplate));
+          templates.insert(std::pair<std::string, std::string>("service_interface", serviceInterfaceTemplate));
+          templates.insert(std::pair<std::string, std::string>("struct_cc", structCCTemplate));
+          templates.insert(std::pair<std::string, std::string>("struct_header", structHeaderTemplate));
+          templates.insert(std::pair<std::string, std::string>("struct_header__getter_and_setter", structHeaderGetterAndSetterTemplate));
           /*
            * Creating needed directories
            */
@@ -96,6 +98,9 @@ namespace naeem {
           for (uint32_t moduleCounter = 0; 
                moduleCounter < hot->modules_.size();
                moduleCounter++) {
+            GenerateEnums(hot->modules_[moduleCounter],
+                          generationConfig,
+                          templates);
             for (uint32_t structCounter = 0; 
                  structCounter < hot->modules_[moduleCounter]->structs_.size();
                  structCounter++) {

@@ -31,6 +31,7 @@ compile:
 	g++ -c -g lex.yy.c -o .lib/lex.yy.o
 	g++ -c -g cc/cc_generator.cc -o .lib/cc_generator.o
 	g++ -c -g cc/generate_abstract_service_header.cc -o .lib/generate_abstract_service_header.o
+	g++ -c -g cc/generate_enums.cc -o .lib/generate_enums.o
 	g++ -c -g cc/generate_interface.cc -o .lib/generate_interface.o
 	g++ -c -g cc/generate_service_interface.cc -o .lib/generate_service_interface.o
 	g++ -c -g cc/generate_proxy_header.cc -o .lib/generate_proxy_header.o
@@ -63,6 +64,7 @@ compile:
 	    .lib/lex.yy.o \
 	    .lib/cc_generator.o \
 	    .lib/generate_abstract_service_header.o \
+	    .lib/generate_enums.o \
 	    .lib/generate_service_interface.o \
 	    .lib/generate_interface.o \
 	    .lib/generate_proxy_header.o \
