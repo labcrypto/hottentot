@@ -131,8 +131,12 @@ namespace naeem {
                moduleCounter < hot->modules_.size();
                moduleCounter++) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             GenerateEnums(hot->modules_[moduleCounter],
+=======
+            GenerateEnums(hot->modules_,
+>>>>>>> 77372c12ab99a73aa659151078cb922b70967e65
                           generationConfig,
                           templates);
 >>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424

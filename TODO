@@ -16,7 +16,8 @@ Embedding all templates in a single binary.                                     
 Only structs option for those who wants serialization only.                           [TODO]
 Versioning mechanism for hottentot protocols                                          [TODO]
 Nested structs                                                                        [TODO]
-Enumerations                                                                          [TODO]
-Support for NULL values                                                               [TODO]
+Enumerations                                                                          [DONE]
+Support for NULL values                                                               [DONE]
+Generation of enumerations from more than one module in a single file                 [TODO]
 
 

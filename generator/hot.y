@@ -117,7 +117,11 @@ std::stack<std::string> stack;
 %token SERVICE
 %token <string> ORD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+%token <string> COMMENT
+>>>>>>> 77372c12ab99a73aa659151078cb922b70967e65
 %token <string> NUMBER
 >>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 %token <string> IDENTIFIER
@@ -126,7 +130,7 @@ std::stack<std::string> stack;
 %type<string> type
 %%
 
-hot:            modules {                 
+hot:            modules {
                 }
                 ;
 
@@ -347,7 +351,25 @@ int yywrap(void) {
 extern FILE *yyin;
 
 void printHelpMessageAndExit() {
-  fprintf(stderr, "Usage: hot [--java] [--cc] [--makefile] [--client] [--stub] [--indent-with-spaces = TRUE] [--indent-with-tabs] [--number-of-spaces-used-for-indentation NUMBER_OF_SPACES_USED_FOR_INDENTATION = 2] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
+  std::cout << std::endl;
+  std::cout << "Hottentot Serialization and RPC Framework" << std::endl;
+  std::cout << "NTNAEEM Co. 2016 Copyright" << std::endl;
+  std::cout << "Usage: hot [OPTION]... [HOT-FILE]..." << std::endl;
+  std::cout << "  OPTIONS:" << std::endl;
+  std::cout << "    --java                     Generate java sources. [Default: disabled]" << std::endl;
+  std::cout << "    --cc                       Generate C++ sources. [Default: enabled]" << std::endl;
+  std::cout << "    --makefile                 Generate Makefile for C++ sources. [Default: disabled]" << std::endl;
+  std::cout << "    --client                   Generate sources for C++ client. [Default: disabled]" << std::endl;
+  std::cout << "    --stub                     Generate a C++ stub for service. [Default: disabled]" << std::endl;
+  std::cout << "    --indent-with-spaces       Generator will produce indents using spaces. [Default: enabled]" << std::endl;
+  std::cout << "    --indent-with-tabs         Generator will produce indents using tabs. [Default: disabled]" << std::endl;
+  std::cout << "    --indent-space-count       Number of spaces for producing a single indent. [Default: 2]" << std::endl;
+  std::cout << "    --out                      Path to output directory. [Default: hotgen]" << std::endl;
+  std::cout << "    --parse                    Displays parse result in a tree format. [Default: disabled]" << std::endl;
+  std::cout << "    --dont-generate            Don't generate sources. [Default: disabled]" << std::endl;
+  std::cout << std::endl;
+  std::cout << "For more information and examples, please visit https://github.com/NTNAEEM/hottentot" << std::endl;
+  std::cout << std::endl;
   exit(1);
 }
 
@@ -355,9 +377,11 @@ int main(int argc, char **argv) {
   bool isJava = false;
   bool isCC = false;
   bool isSpacesUsedForIndentation = true;
-  bool makefileGenerated = false;  // TODO(kamran): Change to false
-  bool clientGenerated = false; // TODO(kamran): Change to false
-  bool stubGenerated = false; // TODO(kamran): Change to false
+  bool makefileGenerated = false;
+  bool clientGenerated = false;
+  bool stubGenerated = false;
+  bool dontGenerate = false;
+  bool parse = false;
   uint8_t numberOfSpacesUsedForIndentation = 2;
 <<<<<<< HEAD
   bool hotsBegun = false;
@@ -431,6 +455,12 @@ int main(int argc, char **argv) {
 >>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
       stubGenerated = true;
       i++;
+    } else if (strcmp(argv[i], "--dont-generate") == 0) {
+      dontGenerate = true;
+      i++;
+    } else if (strcmp(argv[i], "--parse") == 0) {
+      parse = true;
+      i++;
     } else if (strcmp(argv[i], "--help") == 0) {
       printHelpMessageAndExit();
     } else if (strcmp(argv[i], "--number-of-spaces-used-for-indentation") == 0) {
@@ -484,10 +514,16 @@ int main(int argc, char **argv) {
     }
     yyparse();
 <<<<<<< HEAD
+<<<<<<< HEAD
     // currentHot->Display();
 =======
     currentHot->Display();
 >>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
+=======
+    if (parse) {
+      currentHot->Display();
+    }
+>>>>>>> 77372c12ab99a73aa659151078cb922b70967e65
     ::naeem::hottentot::generator::GenerationConfig generationConfig;
     generationConfig.SetOutDir(outputDir);
     generationConfig.SetSpacesUsedInsteadOfTabsForIndentation(isSpacesUsedForIndentation);
@@ -496,7 +532,7 @@ int main(int argc, char **argv) {
     generationConfig.SetClientGenerated(clientGenerated);
     generationConfig.SetStubGenerated(stubGenerated);
     ::naeem::hottentot::generator::Generator *generator = 0;
-    if (isCC) {
+    if (!dontGenerate && isCC) {
       generator = new ::naeem::hottentot::generator::cc::CCGenerator();
       ::naeem::hottentot::generator::cc::CCGenerator* ccGenerator =
           dynamic_cast< ::naeem::hottentot::generator::cc::CCGenerator*>(generator);
@@ -511,7 +547,7 @@ int main(int argc, char **argv) {
         ccGenerator->GenerateStub(currentHot, generationConfig);
       }
     }
-    if (isJava) {
+    if (!dontGenerate && isJava) {
       generator = new ::naeem::hottentot::generator::java::JavaGenerator();
       generator->Generate(currentHot, generationConfig);
     }
@@ -519,6 +555,5 @@ int main(int argc, char **argv) {
     delete currentHot;
     currentHot = NULL;
   }
-  std::cout << "Generation OK." << std::endl;
   return 0;
 }
