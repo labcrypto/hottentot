@@ -63,6 +63,7 @@ namespace naeem {
 
           void FakeInsert();
           void GenerateStructs(::naeem::hottentot::generator::ds::Module*);
+          void GenerateEnums(::naeem::hottentot::generator::ds::Module*);
           void ReadTemplateFiles();
           void GenerateAbstractService(::naeem::hottentot::generator::ds::Module*);
           void GenerateServiceInterface(::naeem::hottentot::generator::ds::Module*);
@@ -82,6 +83,7 @@ namespace naeem {
           std::ofstream os;
           std::vector<naeem::hottentot::generator::ds::Module*>  modules_;
           std::string structTmpStr_;
+          std::string enumTmpStr_;
           std::string abstractServiceTmpStr_;
           std::string serviceTmpStr_;
           std::string serviceProxyBuilderTmpStr_;

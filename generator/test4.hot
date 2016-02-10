@@ -1,4 +1,9 @@
 module example.generated{
+  enum GenderType {
+    1 = Male;
+    2 = Female;
+  };
+
   struct Token{
     string value ord(1);
     uint8 id ord(2);

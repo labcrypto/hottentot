@@ -58,6 +58,7 @@ compile:
 	g++ -c -g java/generate_client_main_java.cc -o .lib/generate_client_main_java.o
 	g++ -c -g java/generate_server_main_java.cc -o .lib/generate_server_main_java.o
 	g++ -c -g java/generate_server_impls_java.cc -o .lib/generate_server_impls_java.o
+	g++ -c -g java/generate_enums_java.cc -o .lib/generate_enums_java.o
 	g++ -c -g dep/fasthash.cc -o .lib/fasthash.o
 	g++ -c -g ds/service.cc -o .lib/service.o
 	g++ -c -g ds/method.cc -o .lib/method.o
@@ -83,6 +84,7 @@ compile:
 	    .lib/templates.o \
 	    .lib/java_generator.o \
 	    .lib/generate_structs_java.o \
+	    .lib/generate_enums_java.o \
 	    .lib/generate_abstract_service_java.o \
 	    .lib/generate_service_interface_java.o \
 	    .lib/generate_request_handler_java.o \
