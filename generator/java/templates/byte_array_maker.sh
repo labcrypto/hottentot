@@ -67,3 +67,9 @@ xxd -i serverImplByteArray > ./java/templates/byte_arrays/serverImpl.h
 rm -rf serverImplByteArray
 echo "std::string serverImplTmpStr(reinterpret_cast<char const *>(serverImplByteArray),
 							         serverImplByteArray_len);" >> ./java/templates/byte_arrays/serverImpl.h
+
+cat ./java/templates/enum.template > enumByteArray
+xxd -i enumByteArray > ./java/templates/byte_arrays/enum.h
+rm -rf enumByteArray
+echo "std::string enumTmpStr(reinterpret_cast<char const *>(enumByteArray),
+							         enumByteArray_len);" >> ./java/templates/byte_arrays/enum.h

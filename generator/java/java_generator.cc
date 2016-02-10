@@ -38,6 +38,7 @@
 #include "templates/byte_arrays/clientMain.h" 
 #include "templates/byte_arrays/serverMain.h" 
 #include "templates/byte_arrays/serverImpl.h" 
+#include "templates/byte_arrays/enum.h" 
 
 
 namespace naeem {
@@ -62,6 +63,7 @@ namespace naeem {
           clientMainTmpStr_ = clientMainTmpStr;
           serverMainTmpStr_ = serverMainTmpStr;
           serverImplTmpStr_ = serverImplTmpStr;
+          enumTmpStr_ = enumTmpStr;
           //MakeStringsFromByteArrays();
           //ReadTemplateFiles();
         }
@@ -109,6 +111,7 @@ namespace naeem {
           for (int i = 0; i < modules_.size(); i++) {
             ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
             GenerateStructs(pModule);
+            GenerateEnums(pModule);
             GenerateAbstractService(pModule);
             GenerateServiceInterface(pModule);
             GenerateRequestHandler(pModule);
