@@ -319,7 +319,25 @@ int yywrap(void) {
 extern FILE *yyin;
 
 void printHelpMessageAndExit() {
-  fprintf(stderr, "Usage: hot [--java] [--cc] [--makefile] [--client] [--stub] [--indent-with-spaces = TRUE] [--indent-with-tabs] [--number-of-spaces-used-for-indentation NUMBER_OF_SPACES_USED_FOR_INDENTATION = 2] [--out OUTPUT_DIRECTORY] HOT_FILE [HOT FILE] [HOT_FILE] ...\n");
+  std::cout << std::endl;
+  std::cout << "Hottentot Serialization and RPC Framework" << std::endl;
+  std::cout << "NTNAEEM Co. 2016 Copyright" << std::endl;
+  std::cout << "Usage: hot [OPTION]... [HOT-FILE]..." << std::endl;
+  std::cout << "  OPTIONS:" << std::endl;
+  std::cout << "    --java                     Generate java sources. [Default: disabled]" << std::endl;
+  std::cout << "    --cc                       Generate C++ sources. [Default: enabled]" << std::endl;
+  std::cout << "    --makefile                 Generate Makefile for C++ sources. [Default: disabled]" << std::endl;
+  std::cout << "    --client                   Generate sources for C++ client. [Default: disabled]" << std::endl;
+  std::cout << "    --stub                     Generate a C++ stub for service. [Default: disabled]" << std::endl;
+  std::cout << "    --indent-with-spaces       Generator will produce indents using spaces. [Default: enabled]" << std::endl;
+  std::cout << "    --indent-with-tabs         Generator will produce indents using tabs. [Default: disabled]" << std::endl;
+  std::cout << "    --indent-space-count       Number of spaces for producing a single indent. [Default: 2]" << std::endl;
+  std::cout << "    --out                      Path to output directory. [Default: hotgen]" << std::endl;
+  std::cout << "    --parse                    Displays parse result in a tree format. [Default: disabled]" << std::endl;
+  std::cout << "    --dont-generate            Don't generate sources. [Default: disabled]" << std::endl;
+  std::cout << std::endl;
+  std::cout << "For more information and examples, please visit https://github.com/NTNAEEM/hottentot" << std::endl;
+  std::cout << std::endl;
   exit(1);
 }
 
