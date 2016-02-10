@@ -327,9 +327,11 @@ int main(int argc, char **argv) {
   bool isJava = false;
   bool isCC = false;
   bool isSpacesUsedForIndentation = true;
-  bool makefileGenerated = false;  // TODO(kamran): Change to false
-  bool clientGenerated = false; // TODO(kamran): Change to false
-  bool stubGenerated = false; // TODO(kamran): Change to false
+  bool makefileGenerated = false;
+  bool clientGenerated = false;
+  bool stubGenerated = false;
+  bool dontGenerate = false;
+  bool parse = false;
   uint8_t numberOfSpacesUsedForIndentation = 2;
   char *outputDir = 0;
   std::vector<char*> hots;
@@ -354,6 +356,12 @@ int main(int argc, char **argv) {
       i++;
     } else if (strcmp(argv[i], "--stub") == 0) {
       stubGenerated = true;
+      i++;
+    } else if (strcmp(argv[i], "--dont-generate") == 0) {
+      dontGenerate = true;
+      i++;
+    } else if (strcmp(argv[i], "--parse") == 0) {
+      parse = true;
       i++;
     } else if (strcmp(argv[i], "--help") == 0) {
       printHelpMessageAndExit();
@@ -390,7 +398,9 @@ int main(int argc, char **argv) {
       return 1;
     }
     yyparse();
-    currentHot->Display();
+    if (parse) {
+      currentHot->Display();
+    }
     ::naeem::hottentot::generator::GenerationConfig generationConfig;
     generationConfig.SetOutDir(outputDir);
     generationConfig.SetSpacesUsedInsteadOfTabsForIndentation(isSpacesUsedForIndentation);
@@ -399,7 +409,7 @@ int main(int argc, char **argv) {
     generationConfig.SetClientGenerated(clientGenerated);
     generationConfig.SetStubGenerated(stubGenerated);
     ::naeem::hottentot::generator::Generator *generator = 0;
-    if (isCC) {
+    if (!dontGenerate && isCC) {
       generator = new ::naeem::hottentot::generator::cc::CCGenerator();
       ::naeem::hottentot::generator::cc::CCGenerator* ccGenerator =
           dynamic_cast< ::naeem::hottentot::generator::cc::CCGenerator*>(generator);
@@ -414,7 +424,7 @@ int main(int argc, char **argv) {
         ccGenerator->GenerateStub(currentHot, generationConfig);
       }
     }
-    if (isJava) {
+    if (!dontGenerate && isJava) {
       generator = new ::naeem::hottentot::generator::java::JavaGenerator();
       generator->Generate(currentHot, generationConfig);
     }
