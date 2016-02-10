@@ -14,6 +14,8 @@
 #include <naeem/hottentot/runtime/types/primitives.h>
 #include <naeem/hottentot/runtime/serializable.h>
 
+#include "enums.h"
+
 
 [[[NAMESPACES_START]]]
 [[[INDENT]]]class [[[STRUCT_NAME]]] : public ::naeem::hottentot::runtime::Serializable {

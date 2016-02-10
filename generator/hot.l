@@ -125,7 +125,7 @@ struct {
 enum {
   return ENUM;
 }
-[1-9]([0-9])* {
+[0-9]([0-9])* {
   yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return NUMBER;

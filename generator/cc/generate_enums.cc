@@ -81,22 +81,30 @@ namespace naeem {
             namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
             namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
             std::string enums = "";
+            
             for (uint32_t i = 0; i < module->enums_.size(); i++) {
-              enums += "enum " + module->enums_[i]->GetName() + " {\r\n";
+              enums += indent + "enum " + module->enums_[i]->GetName() + " {\r\n";
+              std::map<uint16_t, std::string>::iterator finalItemIter = module->enums_[i]->revItems_.end();
+              --finalItemIter;
               for (std::map<uint16_t, std::string>::iterator it = module->enums_[i]->revItems_.begin();
                    it != module->enums_[i]->revItems_.end();
                    it++) {
                 std::stringstream ss;
-                ss << indent << "k" << 
-                  ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
-                    module->enums_[i]->GetName()) << "_" << 
-                  ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
-                    it->second) << " = " << it->first << ";" << std::endl;
-                enums += indent + ss.str();
+                ss << indent << indent << "k" << 
+                  /*::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
+                    ::naeem::hottentot::generator::common::StringHelper::ExplodeCamelCase(
+                    */module->enums_[i]->GetName() /*))*/ << "_" << 
+                  /*::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(*/
+                    it->second /*)*/ << " = " << it->first;
+                if (it != finalItemIter) {
+                  ss << ",";
+                }
+                ss << std::endl;
+                enums += ss.str();
               }
-              enums += "}\r\n";
+              enums += indent + "};\r\n";
             }
-            namespacesAndEnums += namespacesStart + "\r\n" + enums + "\r\n" + namespacesEnd + "\r\n\r\n"; 
+            namespacesAndEnums += namespacesStart + "\r\n" + enums + namespacesEnd; 
           }
           /*
            * Filling templates with real values
