@@ -122,8 +122,6 @@ struct {
   // fprintf(stdout, "STRUCT seen.\n");
   return STRUCT;
 }
-<<<<<<< HEAD
-=======
 enum {
   return ENUM;
 }
@@ -132,18 +130,13 @@ enum {
   sprintf(yylval.string, "%s", yytext);
   return NUMBER;
 }
->>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 [a-zA-Z]([a-zA-Z0-9])* {
   // fprintf(stdout, "IDENTIFIER seen: %s\n", yytext);
   yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return IDENTIFIER;
 }
-<<<<<<< HEAD
-[\{\}\;\.><,()] { 
-=======
 [\{\}\;\.><,()=] { 
->>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
   // fprintf(stdout, "'%c' seen.\n", *yytext);
   return *yytext; 
 }

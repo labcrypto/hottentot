@@ -54,10 +54,6 @@ namespace naeem {
           inline virtual void AddDeclaration(Declaration *declaration) {
             declarations_.insert(std::pair<uint32_t, Declaration*>(declaration->GetOrd(), declaration));
           }
-<<<<<<< HEAD
-
-=======
->>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
           inline virtual std::string GetName() const {
             return name_;
           }

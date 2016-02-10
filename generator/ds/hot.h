@@ -47,10 +47,7 @@ typedef unsigned __int64 uint64_t;
 #include "declaration.h"
 #include "method.h"
 #include "argument.h"
-<<<<<<< HEAD
-=======
 #include "enum.h"
->>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 
 
 namespace naeem {
@@ -78,8 +75,6 @@ namespace naeem {
             std::cout << "HOT {\n";
             for (uint32_t i = 0; i < modules_.size(); i++) {
               std::cout << "   MODULE " << modules_[i]->package_ << " {\n";
-<<<<<<< HEAD
-=======
               for (uint32_t j = 0; j < modules_[i]->enums_.size(); j++) {
                 std::cout << "      ENUM " <<  modules_[i]->enums_[j]->GetName() << " {\n";
                 for (std::map<uint16_t, std::string>::iterator it = modules_[i]->enums_[j]->revItems_.begin();
@@ -91,7 +86,6 @@ namespace naeem {
                 }
                 std::cout << "      }\n";
               }
->>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
               for (uint32_t j = 0; j < modules_[i]->structs_.size(); j++) {
                 std::cout << "      STRUCT " <<  modules_[i]->structs_[j]->GetName() << " {\n";
                 for (std::map<uint32_t, Declaration*>::iterator it = modules_[i]->structs_[j]->declarations_.begin();

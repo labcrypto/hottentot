@@ -20,22 +20,27 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
- 
-#ifndef _NAEEM_HOTTENTOT_RUNTIME__TYPES__PRIMITIVES_H_
-#define _NAEEM_HOTTENTOT_RUNTIME__TYPES__PRIMITIVES_H_
 
-#include "boolean.h"
-#include "byte_array.h"
-#include "int16.h"
-#include "int32.h"
-#include "int64.h"
-#include "int8.h"
-#include "uint16.h"
-#include "uint32.h"
-#include "uint64.h"
-#include "uint8.h"
-#include "utf8_string.h"
-#include "enum.h"
-#include "list.h"
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__CC__RUNTIME_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__CC__RUNTIME_H_
+
+#include <vector>
+
+ 
+namespace naeem {
+  namespace hottentot {
+    namespace generator {
+      namespace ds {
+        class Enum;
+      }
+      namespace cc {
+        class Runtime {
+        public:
+          static std::vector< ::naeem::hottentot::generator::ds::Enum*> enums_;
+        };
+      }
+    }
+  }
+}
 
 #endif

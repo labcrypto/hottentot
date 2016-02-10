@@ -24,7 +24,10 @@
 #ifndef _NAEEM_HOTTENTOT_GENERATOR__CC__TYPE_HELPER_H_
 #define _NAEEM_HOTTENTOT_GENERATOR__CC__TYPE_HELPER_H_
 
+#include "runtime.h"
+
 #include "../common/string_helper.h"
+#include "../ds/enum.h"
 
 
 namespace naeem {
@@ -75,6 +78,8 @@ namespace naeem {
               return false;
             } else if (type == "void") {
               return false;
+            } else if (IsEnum(type)) {
+              return false;
             }
             return true;
           }
@@ -108,6 +113,14 @@ namespace naeem {
             } else if (type == "double") {
               return true;
             } 
+            return false;
+          }
+          static inline bool IsEnum(std::string type) {
+            for (uint32_t i = 0; i < Runtime::enums_.size(); i++) {
+              if (Runtime::enums_[i]->GetName() == type) {
+                return true;
+              }
+            }
             return false;
           }
           static inline uint16_t GetFixedLength(std::string type) {
@@ -180,6 +193,8 @@ namespace naeem {
               return "void";
             } else if(::naeem::hottentot::generator::common::StringHelper::StartsWith(type, listStr)) {
               return "::naeem::hottentot::runtime::types::List< " + GetCCType(type.substr(5, type.length() - 6), ns) + ">";
+            } else if(IsEnum(type)) {
+              return "::naeem::hottentot::runtime::types::Enum< " + ns + "::" + type + ">";
             }
             if (ns.length() == 0) {
               return type;
