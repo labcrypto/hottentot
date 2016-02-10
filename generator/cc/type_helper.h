@@ -112,7 +112,9 @@ namespace naeem {
               return true;
             } else if (type == "double") {
               return true;
-            } 
+            } else if (IsEnum(type)) {
+              return true;
+            }
             return false;
           }
           static inline bool IsEnum(std::string type) {
@@ -152,7 +154,9 @@ namespace naeem {
               return 8;
             } else if (type == "double") {
               return 8;
-            } 
+            } else if (IsEnum(type)) {
+              return 2;
+            }
             throw std::runtime_error("Type is not length fixed.");
           }
           static inline std::string GetCCType(std::string type, std::string ns) {

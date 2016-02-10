@@ -92,13 +92,6 @@ namespace naeem {
             serializationSS << indent << indent << "::naeem::hottentot::runtime::HotPtr<unsigned char, true> ptr" << counter << " = \r\n";
             serializationSS << indent << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
             serializationSS << ".Serialize(&length" << counter << ");\r\n";
-            /* serializationSS << indent << indent << "if (length" << counter << " <= 127) {\r\n";
-            serializationSS << indent << indent << indent << "totalLength += 1 + length" << counter << ";\r\n";
-            serializationSS << indent << indent << "} else if (length" << counter << " <= (256 * 256 - 1)) {\r\n";
-            serializationSS << indent << indent << indent << "totalLength += 3 + length" << counter << ";\r\n";
-            serializationSS << indent << indent << "} else if (length" << counter << " <= (256 * 256 * 256 - 1)) {\r\n";
-            serializationSS << indent << indent << indent << "totalLength += 3 + length" << counter << ";\r\n";
-            serializationSS << indent << indent << "}\r\n"; */
             if (TypeHelper::IsFixedLength(it->second->GetType())) {
               serializationSS << indent << indent << "totalLength += length" << counter << ";\r\n";
             } else {
