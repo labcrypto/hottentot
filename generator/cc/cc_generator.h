@@ -48,6 +48,12 @@ namespace naeem {
           virtual void GenerateStub(::naeem::hottentot::generator::ds::Hot *,
                                     ::naeem::hottentot::generator::GenerationConfig &);
         protected:
+<<<<<<< HEAD
+=======
+          virtual void GenerateEnums(::naeem::hottentot::generator::ds::Module *,
+                                     ::naeem::hottentot::generator::GenerationConfig &,
+                                     std::map<std::string, std::string> &);
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
           virtual void GenerateInterface(::naeem::hottentot::generator::ds::Service *,
                                          ::naeem::hottentot::generator::GenerationConfig &,
                                          std::map<std::string, std::string> &);

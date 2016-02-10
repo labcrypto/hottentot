@@ -26,11 +26,19 @@ compile:
 	./java/templates/byte_array_maker.sh
 	./cc/templates/generate_templates_header.sh ./cc/templates/
 	yacc -d hot.y
+<<<<<<< HEAD
 	g++ -c y.tab.c -o .lib/y.tab.o
+=======
+	g++ -c -g -Wno-write-strings y.tab.c -o .lib/y.tab.o
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 	flex hot.l
 	g++ -c -g lex.yy.c -o .lib/lex.yy.o
 	g++ -c -g cc/cc_generator.cc -o .lib/cc_generator.o
 	g++ -c -g cc/generate_abstract_service_header.cc -o .lib/generate_abstract_service_header.o
+<<<<<<< HEAD
+=======
+	g++ -c -g cc/generate_enums.cc -o .lib/generate_enums.o
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 	g++ -c -g cc/generate_interface.cc -o .lib/generate_interface.o
 	g++ -c -g cc/generate_service_interface.cc -o .lib/generate_service_interface.o
 	g++ -c -g cc/generate_proxy_header.cc -o .lib/generate_proxy_header.o
@@ -63,6 +71,10 @@ compile:
 	    .lib/lex.yy.o \
 	    .lib/cc_generator.o \
 	    .lib/generate_abstract_service_header.o \
+<<<<<<< HEAD
+=======
+	    .lib/generate_enums.o \
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 	    .lib/generate_service_interface.o \
 	    .lib/generate_interface.o \
 	    .lib/generate_proxy_header.o \

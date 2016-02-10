@@ -22,10 +22,13 @@
  */
 package server;
 
-import example.generated.*;
-
+import example.generated.AbstractAuthenticationService;
+import example.generated.Credential;
+import example.generated.DataWrapper;
+import example.generated.Result;
+import example.generated.StringWrapper;
+import example.generated.Token;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class AuthenticationImpl extends AbstractAuthenticationService {
@@ -35,7 +38,7 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
     System.out.println(credential);
     if(credential.getUsername().equals("a")) {
       token.setId((byte)1);
-    }else{
+    }else {
       token.setId((byte)-1);
     }
     List<Token> tokenList = new ArrayList<Token>();
