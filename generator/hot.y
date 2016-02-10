@@ -26,8 +26,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+<<<<<<< HEAD
+=======
 #include <string>
 #include <vector>
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 #include <sstream>
 #include <stack>
 #include <iostream>
@@ -51,7 +54,10 @@ typedef unsigned __int64 uint64_t;
 #include "../../ds/service.h"
 #include "../../ds/method.h"
 #include "../../ds/argument.h"
+<<<<<<< HEAD
+=======
 #include "../../ds/enum.h"
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 
 #include "../../dep/fasthash.h"
 
@@ -63,7 +69,10 @@ typedef unsigned __int64 uint64_t;
 #include "ds/service.h"
 #include "ds/method.h"
 #include "ds/argument.h"
+<<<<<<< HEAD
+=======
 #include "ds/enum.h"
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 
 #include "dep/fasthash.h"
 
@@ -82,7 +91,10 @@ std::string lastType;
 std::stack<std::string> stack;
 ::naeem::hottentot::generator::ds::Hot *currentHot;
 ::naeem::hottentot::generator::ds::Module *currentModule;
+<<<<<<< HEAD
+=======
 ::naeem::hottentot::generator::ds::Enum *currentEnum;
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 ::naeem::hottentot::generator::ds::Struct *currentStruct;
 ::naeem::hottentot::generator::ds::Service *currentService;
 ::naeem::hottentot::generator::ds::Method *currentMethod;
@@ -93,7 +105,10 @@ std::stack<std::string> stack;
 }
 %token MODULE
 %token STRUCT
+<<<<<<< HEAD
+=======
 %token ENUM
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 %token <string> LIST
 %token <string> SET
 %token <string> MAP
@@ -101,8 +116,14 @@ std::stack<std::string> stack;
 %token STATEFUL
 %token SERVICE
 %token <string> ORD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
 %token <string> COMMENT
+>>>>>>> 77372c12ab99a73aa659151078cb922b70967e65
 %token <string> NUMBER
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 %token <string> IDENTIFIER
 %token <string> TYPE
 %start hot
@@ -187,7 +208,11 @@ item:           {
                       fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
                       exit(1);
                     } 
+<<<<<<< HEAD
+                  } STATELESS SERVICE IDENTIFIER '{' service_body '}' ';' {
+=======
                 } STATELESS SERVICE IDENTIFIER '{' service_body '}' ';' {
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
                   // printf("Stateless service seen: %s\n", $4);
                   currentService->SetName($4);
                   currentService->SetServiceType("stateless");
@@ -201,12 +226,18 @@ item:           {
                       fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
                       exit(1);
                     } 
+<<<<<<< HEAD
+                  } STATEFUL SERVICE IDENTIFIER '{' service_body '}' ';' {
+=======
                 } STATEFUL SERVICE IDENTIFIER '{' service_body '}' ';' {
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
                   // printf("Stateful service seen: %s\n", $4);
                   currentService->SetName($4);
                   currentService->SetServiceType("stateful");
                   currentService = NULL;
                 }
+<<<<<<< HEAD
+=======
                 | {
                     if (currentEnum == NULL) {
                       currentEnum = new ::naeem::hottentot::generator::ds::Enum(currentModule);
@@ -230,6 +261,7 @@ enum_item:      NUMBER '=' IDENTIFIER ';' {
                   currentEnum->AddItem($3, atol($1));
                 }
                 ;
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
 
 struct_body:    declarations;
 
@@ -351,6 +383,53 @@ int main(int argc, char **argv) {
   bool dontGenerate = false;
   bool parse = false;
   uint8_t numberOfSpacesUsedForIndentation = 2;
+<<<<<<< HEAD
+  bool hotsBegun = false;
+  char *outputDir = 0;
+  char **hots = 0;
+  uint16_t numOfHots = 0;
+  for (uint16_t i = 1; i < argc;) {
+    if (strcmp(argv[i], "--java") == 0) {
+      if (hotsBegun) {
+        printHelpMessageAndExit();
+      }
+      isJava = true;
+      i++;
+    } else if (strcmp(argv[i], "--cc") == 0) {
+      if (hotsBegun) {
+        printHelpMessageAndExit();
+      }
+      isCC = true;
+      i++;
+    } else if (strcmp(argv[i], "--indent-with-spaces") == 0) {
+      if (hotsBegun) {
+        printHelpMessageAndExit();
+      }
+      isSpacesUsedForIndentation = true;
+      i++;
+    } else if (strcmp(argv[i], "--indent-with-tabs") == 0) {
+      if (hotsBegun) {
+        printHelpMessageAndExit();
+      }
+      isSpacesUsedForIndentation = false;
+      i++;
+    } else if (strcmp(argv[i], "--makefile") == 0) {
+      if (hotsBegun) {
+        printHelpMessageAndExit();
+      }
+      makefileGenerated = true;
+      i++;
+    } else if (strcmp(argv[i], "--client") == 0) {
+      if (hotsBegun) {
+        printHelpMessageAndExit();
+      }
+      clientGenerated = true;
+      i++;
+    } else if (strcmp(argv[i], "--stub") == 0) {
+      if (hotsBegun) {
+        printHelpMessageAndExit();
+      }
+=======
   char *outputDir = 0;
   std::vector<char*> hots;
   for (uint16_t i = 1; i < argc;) {
@@ -373,6 +452,7 @@ int main(int argc, char **argv) {
       clientGenerated = true;
       i++;
     } else if (strcmp(argv[i], "--stub") == 0) {
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
       stubGenerated = true;
       i++;
     } else if (strcmp(argv[i], "--dont-generate") == 0) {
@@ -390,12 +470,21 @@ int main(int argc, char **argv) {
       outputDir = argv[i + 1];
       i += 2;
     } else {
+<<<<<<< HEAD
+      // TODO(kamran) File names do not start with '--'. Consider this here.
+      if (hots == 0) {
+        hotsBegun = true;
+        hots = new char*[argc - i];
+      }
+      hots[numOfHots++] = argv[i++];
+=======
       if (strlen(argv[i]) > 1 && strncmp(argv[i], "--", 2) == 0) {
         printf("ERROR: Unknown option: %s\n", argv[i]);
         printHelpMessageAndExit();
       }
       hots.push_back(argv[i]);
       i++;
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
     }
   }
   if (!isJava && !isCC) {
@@ -404,21 +493,37 @@ int main(int argc, char **argv) {
   if (outputDir == 0) {
     outputDir = "hotgen";
   }
+<<<<<<< HEAD
+  if (numOfHots == 0) {
+    printHelpMessageAndExit();
+    exit(1);
+  }
+  for (uint16_t i = 0; i < numOfHots; i++) {
+=======
   if (hots.size() == 0) {
     std::cout << "ERROR: No hot file is selected for generation." << std::endl;
     printHelpMessageAndExit();
     exit(1);
   }
   for (uint16_t i = 0; i < hots.size(); i++) {
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
     yyin = fopen(hots[i],"r+");
     if (!yyin) {
       printf("ERROR: File can't be opened.\n");
       return 1;
     }
     yyparse();
+<<<<<<< HEAD
+<<<<<<< HEAD
+    // currentHot->Display();
+=======
+    currentHot->Display();
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
+=======
     if (parse) {
       currentHot->Display();
     }
+>>>>>>> 77372c12ab99a73aa659151078cb922b70967e65
     ::naeem::hottentot::generator::GenerationConfig generationConfig;
     generationConfig.SetOutDir(outputDir);
     generationConfig.SetSpacesUsedInsteadOfTabsForIndentation(isSpacesUsedForIndentation);

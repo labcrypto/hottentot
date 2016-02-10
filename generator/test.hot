@@ -1,8 +1,11 @@
 module ir.ntnaeem.services {
+<<<<<<< HEAD
+=======
   enum GenderType {
     1 = Male;
     2 = Female;
   };
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
   struct Person {
     set<string> names ord(1);
     list<int> sum ord(2);
@@ -25,6 +28,22 @@ module ir.ntnaeem.services {
     map<list<Person>, string> FFF(string abc);
   };
 };
+<<<<<<< HEAD
+module org.apache.tests {
+  stateless service ApacheLicenseManager {
+    set<License> GetThem();
+    map<list<Person>, asdasdaasdasdsda> GetMap(list<string> names, set<map<list<int>, string>> s);
+  };
+  struct License {
+    int version ord(1);
+    map<int, list<string>> l ord(2);
+  };
+<<<<<<< HEAD
+};
+=======
+};
+>>>>>>> 1001869fea24a216c1a4a56668ea51c4abece424
+=======
 // module org.apache.tests {
 //  stateless service ApacheLicenseManager {
 //    set<License> GetThem();
@@ -35,3 +54,4 @@ module ir.ntnaeem.services {
 //    map<int, list<string>> l ord(2);
 //  };
 // };
+>>>>>>> 77372c12ab99a73aa659151078cb922b70967e65
