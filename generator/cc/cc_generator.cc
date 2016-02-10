@@ -98,7 +98,7 @@ namespace naeem {
           for (uint32_t moduleCounter = 0; 
                moduleCounter < hot->modules_.size();
                moduleCounter++) {
-            GenerateEnums(hot->modules_[moduleCounter],
+            GenerateEnums(hot->modules_,
                           generationConfig,
                           templates);
             for (uint32_t structCounter = 0; 
