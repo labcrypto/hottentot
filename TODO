@@ -15,10 +15,10 @@ Support for Date, Time and DateTime.                                            
 Embedding all templates in a single binary.                                           [DONE]
 Only structs option for those who wants serialization only.                           [TODO]
 Versioning mechanism for hottentot protocols                                          [TODO]
-Nested structs                                                                        [TODO]
+Nested structs                                                                        [DONE]
 Enumerations                                                                          [DONE]
 Support for NULL values                                                               [DONE]
-Generation of enumerations from more than one module in a single file                 [TODO]
+Generation of enumerations from more than one module in a single file                 [DONE]
 Ability to merge multiple hot files in order to generate a single source directory    [TODO]
 Adding another serialization method to support field tags for backward and forward
   compability                                                                         [TODO]
