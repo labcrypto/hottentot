@@ -35,19 +35,34 @@ extern unsigned int lineCounter;
 
 extern "C" int yylex();
 %}
+%x SINGLELINE_COMMENT MULTILINE_COMMENT
 %%
-\/\/([A-Za-z0-9])*\n {
-  fprintf(stdout, "COMMENT seen.\n");
-  yylval.string = (char *)malloc(yyleng + 1); 
-  sprintf(yylval.string, "%s", yytext);
-  return COMMENT;
+
+"//" {
+  BEGIN(SINGLELINE_COMMENT);
 }
-\/\/([A-Za-z0-9])*\r\n {
-  fprintf(stdout, "COMMENT seen.\n");
-  yylval.string = (char *)malloc(yyleng + 1); 
-  sprintf(yylval.string, "%s", yytext);
-  return COMMENT;
+<SINGLELINE_COMMENT>. {
+  fprintf(stdout, "SINGLE LINE COMMENT seen: %s.\n", yytext);
 }
+<SINGLELINE_COMMENT>"\r\n" {
+  lineCounter++;
+  BEGIN(INITIAL);
+}
+<SINGLELINE_COMMENT>"\n" {
+  lineCounter++;
+  BEGIN(INITIAL);
+}
+
+"/*" {
+  BEGIN(MULTILINE_COMMENT);
+}
+<MULTILINE_COMMENT>. {
+  fprintf(stdout, "MULTI LINE COMMENT seen: %s.\n", yytext);
+}
+<MULTILINE_COMMENT>"*/" {
+  BEGIN(INITIAL); 
+}
+
 ord\([1-9][0-9]*\) {
   // fprintf(stdout, "ORD seen.\n");
   yylval.string = (char *)malloc(yyleng + 1); 
