@@ -28,6 +28,7 @@ typedef unsigned __int64 uint64_t;
 #include <naeem/hottentot/runtime/proxy/proxy.h>
 
 #include "[[[SNAKE_CASE_SERVICE_NAME]]].h"
+#include "../enums.h"
 
 
 [[[NAMESPACES_START]]]

@@ -91,7 +91,12 @@ namespace naeem {
             // serializationSS << indent << indent << "unsigned char *data" << counter << " = ";
             serializationSS << indent << indent << "::naeem::hottentot::runtime::HotPtr<unsigned char, true> ptr" << counter << " = \r\n";
             serializationSS << indent << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
-            serializationSS << ".Serialize(&length" << counter << ");\r\n";
+            if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
+              serializationSS << "->";
+            } else {
+              serializationSS << ".";
+            }
+            serializationSS << "Serialize(&length" << counter << ");\r\n";
             if (TypeHelper::IsFixedLength(it->second->GetType())) {
               serializationSS << indent << indent << "totalLength += length" << counter << ";\r\n";
             } else {
@@ -152,14 +157,32 @@ namespace naeem {
           /*
            * Deserialization
            */
+          bool hasAnyVariableLengthField = false;
+          for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
+               it != structt->declarations_.end();
+               ++it) {
+            if (!TypeHelper::IsFixedLength(it->second->GetType())) {
+              hasAnyVariableLengthField = true;
+            }
+          }
           std::stringstream deserializationSS;
-          deserializationSS << indent << indent << "uint32_t c = 0, elength = 0;\r\n";
+          deserializationSS << indent << indent << "uint32_t c = 0";
+          if (hasAnyVariableLengthField) {
+            deserializationSS << ", elength = 0;\r\n";
+          } else {
+            deserializationSS << ";\r\n";
+          }
           for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
                it != structt->declarations_.end();
                ++it) {
             if (TypeHelper::IsFixedLength(it->second->GetType())) {
               deserializationSS << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
-              deserializationSS << ".Deserialize(data + c, " << TypeHelper::GetFixedLength(it->second->GetType()) << ");\r\n";
+              if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
+                deserializationSS << "->";
+              } else {
+                deserializationSS << ".";
+              }
+              deserializationSS << "Deserialize(data + c, " << TypeHelper::GetFixedLength(it->second->GetType()) << ");\r\n";
               deserializationSS << indent << indent << "c += " << TypeHelper::GetFixedLength(it->second->GetType()) << ";\r\n";
             } else {
               deserializationSS << indent << indent << "if ((data[c] & 0x80) == 0) {\r\n";
@@ -180,7 +203,12 @@ namespace naeem {
               deserializationSS << indent << indent << indent << "}\r\n";
               deserializationSS << indent << indent << "}\r\n";
               deserializationSS << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
-              deserializationSS << ".Deserialize(data + c, elength);\r\n";
+              if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
+                deserializationSS << "->";
+              } else {
+                deserializationSS << ".";
+              }
+              deserializationSS << "Deserialize(data + c, elength);\r\n";
               deserializationSS << indent << indent << "c += elength;\r\n";
             }
           }
