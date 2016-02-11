@@ -93,7 +93,7 @@ namespace naeem {
                 ss << indent << indent << "k" << 
                   /*::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
                     ::naeem::hottentot::generator::common::StringHelper::ExplodeCamelCase(
-                    */module->enums_[i]->GetName() /*))*/ << "_" << 
+                    */module->enums_[i]->GetName() /*))*/ << "___" << 
                   /*::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(*/
                     it->second /*)*/ << " = " << it->first;
                 if (it != finalItemIter) {
@@ -104,7 +104,7 @@ namespace naeem {
               }
               enums += indent + "};\r\n";
             }
-            namespacesAndEnums += namespacesStart + "\r\n" + enums + namespacesEnd; 
+            namespacesAndEnums += namespacesStart + "\r\n" + enums + namespacesEnd;
           }
           /*
            * Filling templates with real values

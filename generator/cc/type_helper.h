@@ -206,6 +206,9 @@ namespace naeem {
               return ns + "::" + type;
             }
           }
+          static inline std::string GetTypeOfList(std::string type) {
+            return type.substr(5, type.size() - 6);
+          }
         };
       }
     }

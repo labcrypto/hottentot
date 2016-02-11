@@ -82,11 +82,22 @@ namespace naeem {
           namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
           std::string fields = "";
           std::string gettersAndSetters = "";
+          std::vector<std::string> dependencies;
           for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
                it != structt->declarations_.end();
                ++it) {
+            if (TypeHelper::IsUDT(it->second->GetType())) {
+              if (TypeHelper::IsList(it->second->GetType())) {
+                std::string listType = TypeHelper::GetTypeOfList(it->second->GetType());
+                dependencies.push_back(listType);
+              } else {
+                dependencies.push_back(it->second->GetType());
+              }
+            }
             fields += indent + indent +  TypeHelper::GetCCType(it->second->GetType(), ns);
-            fields += (TypeHelper::IsUDT(it->second->GetType()) ? "*" : "");
+            if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
+              fields += "*";
+            }
             fields += " " + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
             fields += ";\r\n";
             std::string getterAndSetterTemplate = templates["struct_header__getter_and_setter"];
@@ -97,16 +108,25 @@ namespace naeem {
             getterAndSetterTemplate = 
               ::naeem::hottentot::generator::common::StringHelper::Replace(getterAndSetterTemplate,
                                                                            "[[[TYPE]]]",
-                                                                           TypeHelper::GetCCType(it->second->GetType(), ns) + (TypeHelper::IsUDT(it->second->GetType()) ? "*" : ""));
+                                                                           TypeHelper::GetCCType(it->second->GetType(), ns) + 
+                                                                            ((TypeHelper::IsUDT(it->second->GetType()) && 
+                                                                              !TypeHelper::IsList(it->second->GetType())) ? "*" : ""));
             getterAndSetterTemplate = 
               ::naeem::hottentot::generator::common::StringHelper::Replace(getterAndSetterTemplate,
                                                                            "[[[CAMEL_CASE_FC_FIELD]]]",
-                                                                           ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(it->second->GetVariable()));
+                                                                           ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
+                                                                              it->second->GetVariable()));
             getterAndSetterTemplate = 
               ::naeem::hottentot::generator::common::StringHelper::Replace(getterAndSetterTemplate,
                                                                            "[[[CAMEL_CASE_FS_FIELD]]]",
-                                                                           ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()));
+                                                                           ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(
+                                                                              it->second->GetVariable()));
               gettersAndSetters += getterAndSetterTemplate + "\r\n";
+          }
+          std::string includeDependencies = "";
+          for (uint32_t i = 0; i < dependencies.size(); i++) {
+            includeDependencies += "#include \"" + 
+              ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(dependencies[i]) + ".h\"";
           }
           /*
            * Filling templates with real values
@@ -114,6 +134,7 @@ namespace naeem {
           std::map<std::string, std::string> params;
           params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
           params.insert(std::pair<std::string, std::string>("FILENAME", structNameSnakeCase + ".h"));
+          params.insert(std::pair<std::string, std::string>("INCLUDE_DEPENDENCIES", includeDependencies));
           params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
           params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
           params.insert(std::pair<std::string, std::string>("GETTERS_AND_SETTERS", gettersAndSetters));

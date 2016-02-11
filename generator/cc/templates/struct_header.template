@@ -14,6 +14,7 @@
 #include <naeem/hottentot/runtime/types/primitives.h>
 #include <naeem/hottentot/runtime/serializable.h>
 
+[[[INCLUDE_DEPENDENCIES]]]
 #include "enums.h"
 
 
