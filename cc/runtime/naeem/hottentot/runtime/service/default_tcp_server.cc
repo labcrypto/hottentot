@@ -41,6 +41,7 @@ typedef unsigned __int64 uint64_t;
 #else
 #include <stdint.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 #endif
 
 #include "../logger.h"
@@ -77,7 +78,8 @@ namespace naeem {
             int serverSocketFD = socket(AF_INET, SOCK_STREAM, 0);
             memset((char *) &servAddr, 0, sizeof(servAddr));
             servAddr.sin_family = AF_INET;
-            servAddr.sin_addr.s_addr = INADDR_ANY;
+            // servAddr.sin_addr.s_addr = INADDR_ANY;
+            inet_pton(AF_INET, host_.c_str(), &(servAddr.sin_addr));
             servAddr.sin_port = htons(port_);
             if (bind(serverSocketFD, (struct sockaddr *) &servAddr, sizeof(servAddr)) < 0) {
               ::naeem::hottentot::runtime::Logger::GetError() << "Error on bind." << std::endl;

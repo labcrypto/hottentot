@@ -22,5 +22,6 @@ Generation of enumerations from more than one module in a single file           
 Ability to merge multiple hot files in order to generate a single source directory    [TODO]
 Adding another serialization method to support field tags for backward and forward
   compability                                                                         [TODO]
+Bind on a specific ip address                                                         [DONE]
 
 
