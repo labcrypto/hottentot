@@ -36,14 +36,14 @@ extern unsigned int lineCounter;
 extern "C" int yylex();
 %}
 %%
-\/\/([A-Za-z0-9]*)\n {
-  // fprintf(stdout, "COMMENT seen.\n");
+\/\/([A-Za-z0-9])*\n {
+  fprintf(stdout, "COMMENT seen.\n");
   yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return COMMENT;
 }
-\/\/([A-Za-z0-9]*)\r\n {
-  // fprintf(stdout, "COMMENT seen.\n");
+\/\/([A-Za-z0-9])*\r\n {
+  fprintf(stdout, "COMMENT seen.\n");
   yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
   return COMMENT;
