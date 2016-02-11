@@ -19,5 +19,8 @@ Nested structs                                                                  
 Enumerations                                                                          [DONE]
 Support for NULL values                                                               [DONE]
 Generation of enumerations from more than one module in a single file                 [TODO]
+Ability to merge multiple hot files in order to generate a single source directory    [TODO]
+Adding another serialization method to support field tags for backward and forward
+  compability                                                                         [TODO]
 
 

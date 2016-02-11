@@ -25,7 +25,7 @@
 #define _NAEEM_HOTTENTOT_GENERATOR__CC__RUNTIME_H_
 
 #include <vector>
-::naeem::hottentot::generator::ds::Runtime.enums_.push_back()
+
  
 namespace naeem {
   namespace hottentot {
