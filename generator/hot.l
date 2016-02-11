@@ -151,7 +151,7 @@ enum {
   sprintf(yylval.string, "%s", yytext);
   return NUMBER;
 }
-[a-zA-Z]([a-zA-Z0-9])* {
+[a-zA-Z_]([a-zA-Z0-9_])* {
   // fprintf(stdout, "IDENTIFIER seen: %s\n", yytext);
   yylval.string = (char *)malloc(yyleng + 1); 
   sprintf(yylval.string, "%s", yytext);
