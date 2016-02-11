@@ -42,7 +42,7 @@ extern "C" int yylex();
   BEGIN(SINGLELINE_COMMENT);
 }
 <SINGLELINE_COMMENT>. {
-  fprintf(stdout, "SINGLE LINE COMMENT seen: %s.\n", yytext);
+  // fprintf(stdout, "SINGLE LINE COMMENT seen: %s.\n", yytext);
 }
 <SINGLELINE_COMMENT>"\r\n" {
   lineCounter++;
@@ -57,7 +57,7 @@ extern "C" int yylex();
   BEGIN(MULTILINE_COMMENT);
 }
 <MULTILINE_COMMENT>. {
-  fprintf(stdout, "MULTI LINE COMMENT seen: %s.\n", yytext);
+  // fprintf(stdout, "MULTI LINE COMMENT seen: %s.\n", yytext);
 }
 <MULTILINE_COMMENT>"*/" {
   BEGIN(INITIAL); 
