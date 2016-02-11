@@ -59,6 +59,12 @@ extern "C" int yylex();
 <MULTILINE_COMMENT>. {
   // fprintf(stdout, "MULTI LINE COMMENT seen: %s.\n", yytext);
 }
+<MULTILINE_COMMENT>"\r\n" {
+  lineCounter++;
+}
+<MULTILINE_COMMENT>"\n" {
+  lineCounter++;
+}
 <MULTILINE_COMMENT>"*/" {
   BEGIN(INITIAL); 
 }
