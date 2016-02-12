@@ -3,7 +3,7 @@
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace cc {
+      namespace common {
         std::vector< ::naeem::hottentot::generator::ds::Enum*> Runtime::enums_;
       }
     }

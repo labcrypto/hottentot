@@ -29,6 +29,7 @@ compile:
 	g++ -c -g -Wno-write-strings y.tab.c -o .lib/y.tab.o
 	flex hot.l
 	g++ -c -g lex.yy.c -o .lib/lex.yy.o
+	g++ -c -g common/runtime.cc -o .lib/runtime_common.o
 	g++ -c -g cc/runtime.cc -o .lib/runtime.o
 	g++ -c -g cc/cc_generator.cc -o .lib/cc_generator.o
 	g++ -c -g cc/generate_abstract_service_header.cc -o .lib/generate_abstract_service_header.o
@@ -64,6 +65,7 @@ compile:
 	g++ -c -g ds/method.cc -o .lib/method.o
 	g++ -g .lib/y.tab.o \
 	    .lib/lex.yy.o \
+	    .lib/runtime_common.o \
 	    .lib/runtime.o \
 	    .lib/cc_generator.o \
 	    .lib/generate_abstract_service_header.o \

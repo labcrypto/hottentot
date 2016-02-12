@@ -22,12 +22,8 @@
  */
 package server;
 
-import example.generated.AbstractAuthenticationService;
-import example.generated.Credential;
-import example.generated.DataWrapper;
-import example.generated.Result;
-import example.generated.StringWrapper;
-import example.generated.Token;
+import example.generated.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,5 +141,15 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
       return (byte)0;
     }
     return (byte)-1;
+  }
+
+  @Override
+  public byte[] test10(Gender g) {
+    GenderType genders = g.getGenders();
+    System.out.println(genders.getValue());
+    if(genders.equals(GenderType.Male)){
+      return new byte[]{0};
+    }
+    return new byte[]{-1};
   }
 }

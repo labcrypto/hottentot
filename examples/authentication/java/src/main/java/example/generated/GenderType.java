@@ -11,10 +11,14 @@ import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 
 public enum GenderType {
+
+  Empty(),
   Male((short) 1),
   Female((short) 2);	
 
   private short value;
+
+  GenderType() {}
 
   GenderType(short value) {
     this.value = value;
@@ -32,8 +36,16 @@ public enum GenderType {
     return PDTSerializer.getInt16(value);
   }
   
-  public void deserialize(byte[] bytes){
-    value = PDTDeserializer.getInt16(bytes);
+  public static GenderType deserialize(byte[] bytes){
+    short value = PDTDeserializer.getInt16(bytes);
+    if(value == 1){
+      return GenderType.Male;
+    }
+    if(value == 2){
+      return GenderType.Female;
+    }
+
+    return null;
   }
 
 }

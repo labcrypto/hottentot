@@ -110,8 +110,8 @@ namespace naeem {
           modules_ = hot->modules_;
           for (int i = 0; i < modules_.size(); i++) {
             ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
-            GenerateStructs(pModule);
             GenerateEnums(pModule);
+            GenerateStructs(pModule);
             GenerateAbstractService(pModule);
             GenerateServiceInterface(pModule);
             GenerateRequestHandler(pModule);

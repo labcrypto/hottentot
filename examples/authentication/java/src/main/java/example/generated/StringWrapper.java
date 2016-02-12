@@ -40,9 +40,9 @@ public class StringWrapper {
   public void deserialize(byte[] serializedByteArray) {
     if(serializedByteArray.length != 0){
       int counter = 0;
-    int dataLength = 0;
-    int numbersOfBytesForDataLength;
-    //do for every property
+      int dataLength = 0;
+      int numbersOfBytesForDataLength;
+      //do for every property
     //value : String
     dataLength = 0;
     if(( serializedByteArray[counter] & 0x80) == 0 ) {

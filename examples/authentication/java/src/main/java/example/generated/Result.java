@@ -124,9 +124,9 @@ public class Result {
   public void deserialize(byte[] serializedByteArray) {
     if(serializedByteArray.length != 0){
       int counter = 0;
-    int dataLength = 0;
-    int numbersOfBytesForDataLength;
-    //do for every property
+      int dataLength = 0;
+      int numbersOfBytesForDataLength;
+      //do for every property
     //ustatus8 : byte
     byte[] ustatus8ByteArray = new byte[1];
     for(int i = 0 ; i < 1 ; i++){

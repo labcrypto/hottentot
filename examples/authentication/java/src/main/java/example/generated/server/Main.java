@@ -9,6 +9,8 @@ package example.generated.server;
 
 import ir.ntnaeem.hottentot.runtime.Service;
 import ir.ntnaeem.hottentot.runtime.ServiceRuntime;
+import server.AuthenticationImpl;
+
 import java.io.IOException;
 
 public class Main {

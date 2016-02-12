@@ -25,6 +25,7 @@
 #define _NAEEM_HOTTENTOT_GENERATOR__COMMON__TYPE_HELPER_H_
 
 #include <stdexcept>
+#include "runtime.h"
 
 namespace naeem {
   namespace hottentot {
@@ -189,7 +190,9 @@ namespace naeem {
           }
         
           static inline uint32_t GetTypeLength(std::string type){
-            if (type.compare("int8") == 0 ||
+            if(IsEnum(type)) {
+              return 2;
+            }else if (type.compare("int8") == 0 ||
               type.compare("uint8") == 0) {
               return 1;
             } else if (type.compare("int16") == 0 ||
@@ -205,6 +208,19 @@ namespace naeem {
               return 1;
             }
             return -1;
+          }
+
+          static inline bool IsVoid(std::string type) {
+            return ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(type) == "void";
+          }
+        
+          static inline bool IsEnum(std::string type) {
+            for (uint32_t i = 0; i < Runtime::enums_.size(); i++) {
+              if (Runtime::enums_[i]->GetName() == type) {
+                return true;
+              }
+            }
+            return false;
           }
           
         };

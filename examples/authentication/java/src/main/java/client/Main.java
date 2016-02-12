@@ -9,15 +9,20 @@ package client;
 
 import example.generated.AuthenticationService;
 import example.generated.AuthenticationServiceProxyBuilder;
-
+import example.generated.Gender;
+import example.generated.GenderType;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Main {
   public static void main(String[] args) throws IOException {
     ir.ntnaeem.hottentot.runtime.config.Config.setMainArgs(args);
     final AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 2000);
-    byte a = proxy.test9("a", true, (short) 10, new byte[]{1});
-    System.out.println(a);
-
+    //byte a = proxy.test9("a", true, (short) 10, new byte[]{1});
+    Gender gender = new Gender();
+    gender.setGenders(GenderType.Male);
+    gender.setId((byte) 12);
+    byte[] bytes = proxy.test10(gender);
+    System.out.println(Arrays.toString(bytes));
   }
 }

@@ -6,7 +6,6 @@
 #include "../common/os.h" 
 #include "../common/type_helper.h" 
 
-
 namespace naeem {
   namespace hottentot {
     namespace generator {
@@ -110,7 +109,11 @@ namespace naeem {
                 ++it) {
                   ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                   std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
-                  if(declarationPtr->type_.compare("data") == 0){
+                  if(::naeem::hottentot::generator::common::TypeHelper::IsEnum(declarationPtr->type_)) {
+                     serializeMethodStr += indent_ + indent_ + 
+                                          "byte[] serialized" + capitalizedDeclarationName + " = " +
+                                          declarationPtr->variable_ + ".serialize();\n";
+                  }else if(declarationPtr->type_.compare("data") == 0){
                     serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.getData(" + declarationPtr->variable_ + ");\n";
                   }else{
                     //std::cout << "OKK";
@@ -162,10 +165,10 @@ namespace naeem {
             replacableStructTmpStr.replace(replacableStructTmpStr.find("[%SERIALIZE_METHOD_BODY%]"), 25, serializeMethodStr);
             //deserialize method
             std::string deserializeMethodStr;
-            deserializeMethodStr += indent_ + indent_ + "int counter = 0;\n";
-            deserializeMethodStr += indent_ + indent_ + "int dataLength = 0;\n";
-            deserializeMethodStr += indent_ + indent_ + "int numbersOfBytesForDataLength;\n";
-            deserializeMethodStr += indent_ + indent_ + "//do for every property\n";
+            deserializeMethodStr += indent_ + indent_ + indent_ +  "int counter = 0;\n";
+            deserializeMethodStr += indent_ + indent_ + indent_ + "int dataLength = 0;\n";
+            deserializeMethodStr += indent_ + indent_ + indent_ + "int numbersOfBytesForDataLength;\n";
+            deserializeMethodStr += indent_ + indent_ + indent_ + "//do for every property\n";
             for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
              = pStruct->declarations_.begin();
              it != pStruct->declarations_.end();
@@ -181,18 +184,7 @@ namespace naeem {
                   deserializeMethodStr += indent_ + indent_ +
                   "if(( serializedByteArray[counter] & 0x80) == 0 ) {\n";
                   deserializeMethodStr += indent_ + indent_ + indent_ + "dataLength = serializedByteArray[counter++];\n";
-                  deserializeMethodStr += indent_ + indent_ + "}else{\n";   
-
-/*
-numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
-      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
-      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
-        serializedByteArrayLength[i] = serializedByteArray[counter++];
-        //dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * serializedByteArray[counter++];
-      }
-      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
-      */
-
+                  deserializeMethodStr += indent_ + indent_ + "}else{\n";  
                   deserializeMethodStr += indent_ + indent_ + indent_ + "numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;\n";
                   deserializeMethodStr += indent_ + indent_ + indent_ + "byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];\n";
                   deserializeMethodStr += indent_ + indent_ + indent_ + "for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){\n";
@@ -217,7 +209,17 @@ numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
                   deserializeMethodStr += indent_ + indent_ + "for(int i = 0 ; i < " + dataLengthStr.str() + " ; i++){\n";
                   deserializeMethodStr += indent_ + indent_ + indent_ + declarationPtr->variable_.c_str() + "ByteArray[i] = serializedByteArray[counter++];\n";            
                   deserializeMethodStr += indent_ + indent_ + "}\n";
-                  deserializeMethodStr += indent_ + indent_ + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
+                  if(::naeem::hottentot::generator::common::TypeHelper::IsEnum(declarationPtr->type_)) {
+                    deserializeMethodStr += indent_ + indent_ + 
+                                            "set" + capitalizedDeclarationName + "(" + 
+                                            declarationPtr->type_ + ".deserialize(" + 
+                                            declarationPtr->variable_ + "ByteArray));\n";
+                  }else {
+                    deserializeMethodStr += indent_ + indent_ +
+                                            "set" + capitalizedDeclarationName + 
+                                            "(PDTDeserializer.get" + capitalizedDeclarationType + "(" +
+                                             declarationPtr->variable_.c_str() + "ByteArray));\n";  
+                  }
                 }
             }
             replacableStructTmpStr.replace(replacableStructTmpStr.find("[%DESERIALIZE_METHOD_BODY%]"), 27, deserializeMethodStr);

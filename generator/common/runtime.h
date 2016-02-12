@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__CC__RUNTIME_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__CC__RUNTIME_H_
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__COMMON__RUNTIME_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__COMMON__RUNTIME_H_
 
 #include <vector>
 
@@ -33,7 +33,7 @@ namespace naeem {
       namespace ds {
         class Enum;
       }
-      namespace java {
+      namespace common {
         class Runtime {
         public:
           static std::vector< ::naeem::hottentot::generator::ds::Enum*> enums_;
