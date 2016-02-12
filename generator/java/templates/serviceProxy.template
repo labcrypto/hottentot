@@ -5,7 +5,7 @@
  * Description:
  *   
  ******************************************************************/
-package [%BASE_PACKAGE_NAME%];
+package [%BASE_PACKAGE_NAME%].hotgen;
 
 import ir.ntnaeem.hottentot.runtime.Argument;
 import ir.ntnaeem.hottentot.runtime.Proxy;

@@ -96,7 +96,7 @@ namespace naeem {
           ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
           SetTabStr(generationConfig);
           //set out dir
-          outDir_ = generationConfig.outDir_;
+          outDir_ = generationConfig.outDir_ + "/hotgen";
           clientOutDir_ = outDir_ + "/client";
           serverOutDir_ = outDir_ + "/server";
           //

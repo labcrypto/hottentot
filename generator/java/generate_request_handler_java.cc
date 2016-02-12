@@ -122,11 +122,15 @@ namespace naeem {
                                       lowerCaseServiceName +
                                       "Impl." + pMethod->name_ + "(";
      
-              }else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
+              }else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)) {
                 methodConditionStr += indent_ + indent_ + indent_ +
                                     lowerCaseReturnType + " = " + lowerCaseServiceName +
                                     "Impl." + pMethod->name_ + "(";
-              }else{
+              }else if(::naeem::hottentot::generator::common::TypeHelper::IsVoid(pMethod->returnType_)) {
+                methodConditionStr += indent_ + indent_ + indent_ +
+                                      lowerCaseServiceName +
+                                      "Impl." + pMethod->name_ + "(";
+              }else {
                 std::string javaReturnType = 
                 ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
                 methodConditionStr += indent_ + indent_ + indent_ +
@@ -135,6 +139,7 @@ namespace naeem {
                 lowerCaseServiceName +
                 "Impl." + pMethod->name_ + "(";
               }
+                
               for (int i = 0; i < pMethod->arguments_.size(); i++) {
                 pArg = pMethod->arguments_.at(i);
                 if (i < pMethod->arguments_.size() - 1) {
@@ -188,7 +193,7 @@ namespace naeem {
                 methodConditionStr += indent_ + indent_ + indent_ + "serialized" + pMethod->returnType_ + " = " +
                 lowerCaseReturnType + ".serialize();\n"; 
                 methodConditionStr += indent_ + indent_ + indent_ + "}\n";   
-              }else{
+              }else if(!::naeem::hottentot::generator::common::TypeHelper::IsVoid(pMethod->returnType_)){
                 std::string javaReturnType = 
                 ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
                 std::string capitalizedReturnType = 
@@ -206,6 +211,11 @@ namespace naeem {
                 methodConditionStr += indent_ + indent_ + indent_ +
                                       "response.setLength(serialized" + 
                                       fetchedReturnTypeOfList + "List.length + 1);\n";  
+              }else if(::naeem::hottentot::generator::common::TypeHelper::IsVoid(pMethod->returnType_)){
+                methodConditionStr += indent_ + indent_ + indent_ + 
+                                      "response.setData(new byte[]{0});\n";
+                methodConditionStr += indent_ + indent_ + indent_ + 
+                                      "response.setLength(0);\n";
               }else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +
                                       "response.setData(serialized" + pMethod->returnType_ + ");\n";

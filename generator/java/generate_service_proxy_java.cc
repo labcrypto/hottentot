@@ -189,74 +189,76 @@ namespace naeem {
             methodsStr += indent_ + indent_ + "} catch (TcpClientWriteException e) {\n";
             methodsStr += indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
             methodsStr += indent_ + indent_ + "}\n";
-            methodsStr += indent_ + indent_ + "//read response from server\n";
-            methodsStr += indent_ + indent_ + "byte[] buffer = new byte[256];\n";
-            methodsStr += indent_ + indent_ + "while (!protocol.isResponseComplete()) {\n";
-            methodsStr += indent_ + indent_ + indent_ + "byte[] dataChunkRead;\n";
-            methodsStr += indent_ + indent_ + indent_ + "try {\n";
-            methodsStr += indent_ + indent_ + indent_ + indent_ + "dataChunkRead = tcpClient.read();\n";
-            methodsStr += indent_ + indent_ + indent_ + "} catch (TcpClientReadException e) {\n";
-            methodsStr +=
-            indent_ + indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
-            methodsStr += indent_ + indent_ + indent_ + "}\n";
-            methodsStr +=
-            indent_ + indent_ + indent_ + "protocol.processDataForResponse(dataChunkRead);\n";
-            methodsStr += indent_ + indent_ + "}\n";
-            methodsStr += indent_ + indent_ + "Response response = protocol.getResponse();\n";
-            methodsStr += indent_ + indent_ + "//close everything\n";
-            methodsStr += indent_ + indent_ + " try { \n";
-            methodsStr += indent_ + indent_ + indent_ + " tcpClient.close(); \n";
-            methodsStr += indent_ + indent_ + "} catch (TcpClientCloseException e) { \n";
-            methodsStr += indent_ + indent_ + indent_ + "e.printStackTrace(); \n";
-            methodsStr += indent_ + indent_ + "} \n";
-            methodsStr += indent_ + indent_ + "//deserialize " + pMethod->returnType_ + "part from response\n";
-            if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
-              methodsStr += indent_ + indent_ +
-                            "Serializable" + fetchedReturnTypeOfList + "List" + 
-                            " serializable" + fetchedReturnTypeOfList + "List = null;\n"; 
-              methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-              methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
-              methodsStr += indent_ + indent_ + "}\n";
-              methodsStr += indent_ + indent_ + 
-                            "serializable" + fetchedReturnTypeOfList + "List = " 
-                            "new Serializable" + fetchedReturnTypeOfList + "List();\n";
-              methodsStr += indent_ + indent_ + 
-                            "serializable" + fetchedReturnTypeOfList + "List." + 
-                            "deserialize(response.getData());\n";
-              methodsStr += indent_ + indent_ +
-                            "return serializable" + fetchedReturnTypeOfList + 
-                            "List.get" + fetchedReturnTypeOfList + "List();\n"; 
-            }else if(
-              ::naeem::hottentot::generator::common::TypeHelper::IsUDT(
-              pMethod->returnType_)){
-              methodsStr += indent_ + indent_ +
-                            returnType + " " + lowerCaseReturnType + "= null;\n"; 
-              methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-              methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
-              methodsStr += indent_ + indent_ + "}\n";
-              methodsStr += indent_ + indent_ + "" + lowerCaseReturnType + "= new " +
-                            pMethod->returnType_ + "();\n";
-              methodsStr += indent_ + indent_ + "" + lowerCaseReturnType +
-                            ".deserialize(response.getData());\n";
-              methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
-            } else {
-              methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-              methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
-              methodsStr += indent_ + indent_ + "}\n";
-              std::string pdtWrapperClassName = 
-              ::naeem::hottentot::generator::common::TypeHelper::GetPdtWrapperClassName(
-              pMethod->returnType_);
-              methodsStr += indent_ + indent_ + 
-                            pdtWrapperClassName + " ret = new " +
-                            pdtWrapperClassName + "();\n";
-              methodsStr += indent_ + indent_ +
-                            "ret.deserialize(response.getData());\n";
-              methodsStr += indent_ + indent_ +
-                            "return ret.getValue();\n";
-            }
 
-            
-            methodsStr += indent_ + "}\n";
+            if(!::naeem::hottentot::generator::common::TypeHelper::IsVoid(pMethod->returnType_)){
+                methodsStr += indent_ + indent_ + "//read response from server\n";
+                methodsStr += indent_ + indent_ + "byte[] buffer = new byte[256];\n";
+                methodsStr += indent_ + indent_ + "while (!protocol.isResponseComplete()) {\n";
+                methodsStr += indent_ + indent_ + indent_ + "byte[] dataChunkRead;\n";
+                methodsStr += indent_ + indent_ + indent_ + "try {\n";
+                methodsStr += indent_ + indent_ + indent_ + indent_ + "dataChunkRead = tcpClient.read();\n";
+                methodsStr += indent_ + indent_ + indent_ + "} catch (TcpClientReadException e) {\n";
+                methodsStr +=
+                indent_ + indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
+                methodsStr += indent_ + indent_ + indent_ + "}\n";
+                methodsStr +=
+                indent_ + indent_ + indent_ + "protocol.processDataForResponse(dataChunkRead);\n";
+                methodsStr += indent_ + indent_ + "}\n";
+                methodsStr += indent_ + indent_ + "Response response = protocol.getResponse();\n";
+                methodsStr += indent_ + indent_ + "//close everything\n";
+                methodsStr += indent_ + indent_ + " try { \n";
+                methodsStr += indent_ + indent_ + indent_ + " tcpClient.close(); \n";
+                methodsStr += indent_ + indent_ + "} catch (TcpClientCloseException e) { \n";
+                methodsStr += indent_ + indent_ + indent_ + "e.printStackTrace(); \n";
+                methodsStr += indent_ + indent_ + "} \n";
+                methodsStr += indent_ + indent_ + "//deserialize " + pMethod->returnType_ + "part from response\n";
+                if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+                  methodsStr += indent_ + indent_ +
+                                "Serializable" + fetchedReturnTypeOfList + "List" + 
+                                " serializable" + fetchedReturnTypeOfList + "List = null;\n"; 
+                  methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
+                  methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+                  methodsStr += indent_ + indent_ + "}\n";
+                  methodsStr += indent_ + indent_ + 
+                                "serializable" + fetchedReturnTypeOfList + "List = " 
+                                "new Serializable" + fetchedReturnTypeOfList + "List();\n";
+                  methodsStr += indent_ + indent_ + 
+                                "serializable" + fetchedReturnTypeOfList + "List." + 
+                                "deserialize(response.getData());\n";
+                  methodsStr += indent_ + indent_ +
+                                "return serializable" + fetchedReturnTypeOfList + 
+                                "List.get" + fetchedReturnTypeOfList + "List();\n"; 
+                }else if(
+                  ::naeem::hottentot::generator::common::TypeHelper::IsUDT(
+                  pMethod->returnType_)){
+                  methodsStr += indent_ + indent_ +
+                                returnType + " " + lowerCaseReturnType + "= null;\n"; 
+                  methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
+                  methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+                  methodsStr += indent_ + indent_ + "}\n";
+                  methodsStr += indent_ + indent_ + "" + lowerCaseReturnType + "= new " +
+                                pMethod->returnType_ + "();\n";
+                  methodsStr += indent_ + indent_ + "" + lowerCaseReturnType +
+                                ".deserialize(response.getData());\n";
+                  methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
+                } else {
+                  methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
+                  methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+                  methodsStr += indent_ + indent_ + "}\n";
+                  std::string pdtWrapperClassName = 
+                  ::naeem::hottentot::generator::common::TypeHelper::GetPdtWrapperClassName(
+                  pMethod->returnType_);
+                  methodsStr += indent_ + indent_ + 
+                                pdtWrapperClassName + " ret = new " +
+                                pdtWrapperClassName + "();\n";
+                  methodsStr += indent_ + indent_ +
+                                "ret.deserialize(response.getData());\n";
+                  methodsStr += indent_ + indent_ +
+                                "return ret.getValue();\n";
+                }
+
+              }
+              methodsStr += indent_ + "}\n";
           }
           replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%METHODS%]"), 11,
            methodsStr);

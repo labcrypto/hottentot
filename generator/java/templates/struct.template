@@ -5,7 +5,7 @@
  * Description:
  *   This file contains definition of an abstract service class.
  ******************************************************************/
-package [%BASE_PACKAGE_NAME%];
+package [%BASE_PACKAGE_NAME%].hotgen;
 
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
