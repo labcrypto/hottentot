@@ -6,7 +6,7 @@
  *   
  ******************************************************************/
 
-package [%BASE_PACKAGE_NAME%];
+package [%BASE_PACKAGE_NAME%].hotgen;
 
 import ir.ntnaeem.hottentot.runtime.Service;
 import java.util.List;

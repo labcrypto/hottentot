@@ -96,7 +96,7 @@ namespace naeem {
           ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
           SetTabStr(generationConfig);
           //set out dir
-          outDir_ = generationConfig.outDir_;
+          outDir_ = generationConfig.outDir_ + "/hotgen";
           clientOutDir_ = outDir_ + "/client";
           serverOutDir_ = outDir_ + "/server";
           //
@@ -110,8 +110,8 @@ namespace naeem {
           modules_ = hot->modules_;
           for (int i = 0; i < modules_.size(); i++) {
             ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
-            GenerateStructs(pModule);
             GenerateEnums(pModule);
+            GenerateStructs(pModule);
             GenerateAbstractService(pModule);
             GenerateServiceInterface(pModule);
             GenerateRequestHandler(pModule);

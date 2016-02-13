@@ -74,5 +74,6 @@ module example.generated{
     StringWrapper test8(StringWrapper str);
     uint8 test9(string str , bool flag , uint16 num , data d);
     data test10(Gender g);
+    void test11(uint16 in);
   };  
 };

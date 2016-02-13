@@ -22,16 +22,12 @@
  */
 package server;
 
-import example.generated.AbstractAuthenticationService;
-import example.generated.Credential;
-import example.generated.DataWrapper;
-import example.generated.Result;
-import example.generated.StringWrapper;
-import example.generated.Token;
+import example.generated.hotgen.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthenticationImpl extends AbstractAuthenticationService {
+class AuthenticationImpl extends AbstractAuthenticationService {
 
   public List<Token> auth(Credential credential) {
     Token token = new Token();
@@ -146,4 +142,20 @@ public class AuthenticationImpl extends AbstractAuthenticationService {
     }
     return (byte)-1;
   }
+
+  @Override
+  public byte[] test10(Gender g) {
+    GenderType genders = g.getGenders();
+    if(genders.equals(GenderType.Female) && g.getId() == 12){
+      return new byte[]{0};
+    }
+    return new byte[]{-1};
+  }
+
+  @Override
+  public void test11(short in) {
+    System.out.println("in" + in);
+  }
+
+
 }

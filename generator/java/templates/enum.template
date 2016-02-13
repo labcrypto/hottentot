@@ -5,15 +5,19 @@
  * Description:
  *   This file contains definition of an abstract service class.
  ******************************************************************/
-package [%BASE_PACKAGE_NAME%];
+package [%BASE_PACKAGE_NAME%].hotgen;
 
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 
 public enum [%ENUM_NAME%] {
+
+[%INDENT%]Empty(),
 [%MEMBERS%]	
 
 [%INDENT%]private short value;
+
+[%INDENT%]GenderType() {}
 
 [%INDENT%]GenderType(short value) {
 [%INDENT%][%INDENT%]this.value = value;
@@ -31,8 +35,10 @@ public enum [%ENUM_NAME%] {
 [%INDENT%][%INDENT%]return PDTSerializer.getInt16(value);
 [%INDENT%]}
   
-[%INDENT%]public void deserialize(byte[] bytes){
-[%INDENT%][%INDENT%]value = PDTDeserializer.getInt16(bytes);
+[%INDENT%]public static [%ENUM_NAME%] deserialize(byte[] bytes){
+[%INDENT%][%INDENT%]short value = PDTDeserializer.getInt16(bytes);
+[%DESERIALIZE_METHOD_BODY%]
+[%INDENT%][%INDENT%]return null;
 [%INDENT%]}
 
 }

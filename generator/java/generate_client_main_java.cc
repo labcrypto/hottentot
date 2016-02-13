@@ -23,9 +23,9 @@ namespace naeem {
           for (int i = 0; i < pModule->services_.size(); i++) {
             pService = pModule->services_.at(i);
             std::string serviceName = pService->GetName();
-            importProxiesStr += "import " + basePackageName + "." +
+            importProxiesStr += "import " + basePackageName + ".hotgen." +
                                 serviceName +  "Service;\n";
-            importProxiesStr += "import " + basePackageName + "." +
+            importProxiesStr += "import " + basePackageName + ".hotgen." +
                                 serviceName  + "ServiceProxyBuilder;\n";
             allProxiesStr += "final " + serviceName + "Service proxy = " + 
                               serviceName + "ServiceProxyBuilder.create(\"127.0.0.1\", 2000);\n";

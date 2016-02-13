@@ -5,7 +5,7 @@
  * Description:
  *   
  ******************************************************************/
-package [%BASE_PACKAGE_NAME%];
+package [%BASE_PACKAGE_NAME%].hotgen;
 
 public class [%SERVICE_NAME%]ServiceProxyBuilder {
 

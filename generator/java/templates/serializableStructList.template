@@ -4,7 +4,7 @@
  * Name:
  * Description:
  ******************************************************************/
-package [%BASE_PACKAGE_NAME%];
+package [%BASE_PACKAGE_NAME%].hotgen;
 
 import ir.ntnaeem.hottentot.serializerHelper.DataLengthByteArrayMaker;
 import java.util.ArrayList;

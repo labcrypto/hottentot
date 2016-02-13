@@ -7,17 +7,20 @@
  ******************************************************************/
 package client;
 
-import example.generated.AuthenticationService;
-import example.generated.AuthenticationServiceProxyBuilder;
+import example.generated.hotgen.AuthenticationService;
+import example.generated.hotgen.AuthenticationServiceProxyBuilder;
+import example.generated.hotgen.Gender;
+import example.generated.hotgen.GenderType;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Main {
   public static void main(String[] args) throws IOException {
     ir.ntnaeem.hottentot.runtime.config.Config.setMainArgs(args);
     final AuthenticationService proxy = AuthenticationServiceProxyBuilder.create("127.0.0.1", 2000);
-    byte a = proxy.test9("a", true, (short) 10, new byte[]{1});
-    System.out.println(a);
+    //byte a = proxy.test9("a", true, (short) 10, new byte[]{1});
+    proxy.test11((short) 1);
 
   }
 }
