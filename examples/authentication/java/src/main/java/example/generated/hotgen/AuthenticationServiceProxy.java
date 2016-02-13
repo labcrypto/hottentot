@@ -895,6 +895,109 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
       throw new HottentotRuntimeException(e);
     }
   }
+  public GenderType test12() { 
+
+    //make request
+    Request request = new Request();
+    request.setServiceId(2072454237L);
+    request.setMethodId(3532401802L);
+    request.setArgumentCount((byte) 0);
+    request.setType(Request.RequestType.InvokeStateless);
+    int dataLength = 0;
+    //calculate data length for every argument
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
+    //connect to server
+    TcpClient tcpClient = TcpClientFactory.create();
+    try{
+      tcpClient.connect(host, port);
+    } catch (TcpClientConnectException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //serialize request according to HTNP
+    Protocol protocol = ProtocolFactory.create();
+    byte[] serializedRequest = protocol.serializeRequest(request);
+    //send request
+    try {
+      tcpClient.write(serializedRequest);
+    } catch (TcpClientWriteException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //read response from server
+    byte[] buffer = new byte[256];
+    while (!protocol.isResponseComplete()) {
+      byte[] dataChunkRead;
+      try {
+        dataChunkRead = tcpClient.read();
+      } catch (TcpClientReadException e) {
+        throw new HottentotRuntimeException(e);
+      }
+      protocol.processDataForResponse(dataChunkRead);
+    }
+    Response response = protocol.getResponse();
+    //close everything
+     try { 
+       tcpClient.close(); 
+    } catch (TcpClientCloseException e) { 
+      e.printStackTrace(); 
+    } 
+    //deserialize GenderTypepart from response
+    if (response.getStatusCode() == -1) {
+      //TODO
+    }
+    return GenderType.deserialize(response.getData());
+  }
+  public void test13(GenderType gt) { 
+    //serialize gt
+    byte[] serializedGt = gt.serialize();
+
+    //make request
+    Request request = new Request();
+    request.setServiceId(2072454237L);
+    request.setMethodId(2335128147L);
+    request.setArgumentCount((byte) 1);
+    request.setType(Request.RequestType.InvokeStateless);
+    Argument arg0 = new Argument();
+    arg0.setDataLength(serializedGt.length);
+    arg0.setData(serializedGt);
+    request.addArgument(arg0);
+    int dataLength = 0;
+    //calculate data length for every argument
+    //calulate gtDataLength
+    int gtDataLength= serializedGt.length;
+    int gtDataLengthByteArrayLength = 1;
+    if (gtDataLength >= 0x80) {
+      if (gtDataLength <= 0xff) {
+        //ex 0x81 0xff
+        gtDataLengthByteArrayLength = 2;
+      } else if (gtDataLength <= 0xffff) {
+        //ex 0x82 0xff 0xff
+        gtDataLengthByteArrayLength = 3;
+      } else if (gtDataLength <= 0xffffff) {
+        //ex 0x83 0xff 0xff 0xff
+        gtDataLengthByteArrayLength = 4;
+      }
+    }
+    dataLength += gtDataLength + gtDataLengthByteArrayLength;
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
+    //connect to server
+    TcpClient tcpClient = TcpClientFactory.create();
+    try{
+      tcpClient.connect(host, port);
+    } catch (TcpClientConnectException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //serialize request according to HTNP
+    Protocol protocol = ProtocolFactory.create();
+    byte[] serializedRequest = protocol.serializeRequest(request);
+    //send request
+    try {
+      tcpClient.write(serializedRequest);
+    } catch (TcpClientWriteException e) {
+      throw new HottentotRuntimeException(e);
+    }
+  }
 
   public void destroy() {
     //TODO

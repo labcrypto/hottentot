@@ -228,7 +228,13 @@ namespace naeem {
                   methodsStr += indent_ + indent_ +
                                 "return serializable" + fetchedReturnTypeOfList + 
                                 "List.get" + fetchedReturnTypeOfList + "List();\n"; 
-                }else if(
+                }else if(::naeem::hottentot::generator::common::TypeHelper::IsEnum(pMethod->returnType_)) {
+                  methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
+                  methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+                  methodsStr += indent_ + indent_ + "}\n";
+                  methodsStr += indent_ + indent_ +
+                                "return " + pMethod->returnType_ + ".deserialize(response.getData());\n";
+                } else if(
                   ::naeem::hottentot::generator::common::TypeHelper::IsUDT(
                   pMethod->returnType_)){
                   methodsStr += indent_ + indent_ +

@@ -157,5 +157,16 @@ class AuthenticationImpl extends AbstractAuthenticationService {
     System.out.println("in" + in);
   }
 
+  @Override
+  public GenderType test12() {
+    return GenderType.Female;
+  }
+
+  @Override
+  public void test13(GenderType gt) {
+    if(gt == GenderType.Female){
+      System.out.println("ppppppppppp");
+    }
+  }
 
 }

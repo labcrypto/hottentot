@@ -24,5 +24,7 @@ public interface AuthenticationService extends Service {
   byte test9(String str,boolean flag,short num,byte[] d);
   byte[] test10(Gender g);
   void test11(short in);
+  GenderType test12();
+  void test13(GenderType gt);
 
 }

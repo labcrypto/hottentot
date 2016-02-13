@@ -74,8 +74,12 @@ namespace naeem {
                                         "List<" + fetchedArgTypeOfList + "> " +  pArg->variable_ + " = " + 
                                         "serializable" + fetchedArgTypeOfList + "List." +
                                         "get" + fetchedArgTypeOfList + "List();\n"; 
-                }
-                else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)){
+                }else if(::naeem::hottentot::generator::common::TypeHelper::IsEnum(pArg->type_)){
+                  methodConditionStr += indent_ + indent_ + indent_ +
+                                        pArg->type_ + " " + pArg->variable_ +  " = " + 
+                                        pArg->type_ + ".deserialize(serialized" +
+                                        capitalizedArgVar + ");\n";
+                }else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)){
                   methodConditionStr += indent_ + indent_ + indent_ +
                                         pArg->type_ + " " + pArg->variable_ +
                                         " = new " + pArg->type_ + "();\n";

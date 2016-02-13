@@ -57,8 +57,8 @@ module example.generated{
     int64 status64 ord(8);
   };
 
-  struct Gender{
-    GenderType genders ord(1);
+  struct GenderWrapper{
+    GenderType gender ord(1);
     int8 id ord(2);
   };
   
@@ -75,5 +75,7 @@ module example.generated{
     uint8 test9(string str , bool flag , uint16 num , data d);
     data test10(Gender g);
     void test11(uint16 in);
+    GenderType test12();
+    void test13(GenderType gt);
   };  
 };
