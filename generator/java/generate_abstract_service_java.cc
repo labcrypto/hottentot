@@ -15,6 +15,7 @@ namespace naeem {
           ::naeem::hottentot::generator::ds::Service *pService;
           std::string replacableAbstractServiceTmpStr;
           //loop for every services
+          std::cout << "---------------" << pModule->services_.size() << std::endl;
           for (int i = 0; i < pModule->services_.size(); i++) {
             //write abstractService.template
             std::string basePackageName = pModule->package_;

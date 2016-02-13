@@ -767,38 +767,38 @@ byte[] serializedInputs = serializableDataWrapperList.serialize();
     ret.deserialize(response.getData());
     return ret.getValue();
   }
-  public byte[] test10(Gender g) { 
-    //serialize g
-    byte[] serializedG = g.serialize();
+  public byte[] test10(GenderWrapper gwr) { 
+    //serialize gwr
+    byte[] serializedGwr = gwr.serialize();
 
     //make request
     Request request = new Request();
     request.setServiceId(2072454237L);
-    request.setMethodId(10819006L);
+    request.setMethodId(2384755374L);
     request.setArgumentCount((byte) 1);
     request.setType(Request.RequestType.InvokeStateless);
     Argument arg0 = new Argument();
-    arg0.setDataLength(serializedG.length);
-    arg0.setData(serializedG);
+    arg0.setDataLength(serializedGwr.length);
+    arg0.setData(serializedGwr);
     request.addArgument(arg0);
     int dataLength = 0;
     //calculate data length for every argument
-    //calulate gDataLength
-    int gDataLength= serializedG.length;
-    int gDataLengthByteArrayLength = 1;
-    if (gDataLength >= 0x80) {
-      if (gDataLength <= 0xff) {
+    //calulate gwrDataLength
+    int gwrDataLength= serializedGwr.length;
+    int gwrDataLengthByteArrayLength = 1;
+    if (gwrDataLength >= 0x80) {
+      if (gwrDataLength <= 0xff) {
         //ex 0x81 0xff
-        gDataLengthByteArrayLength = 2;
-      } else if (gDataLength <= 0xffff) {
+        gwrDataLengthByteArrayLength = 2;
+      } else if (gwrDataLength <= 0xffff) {
         //ex 0x82 0xff 0xff
-        gDataLengthByteArrayLength = 3;
-      } else if (gDataLength <= 0xffffff) {
+        gwrDataLengthByteArrayLength = 3;
+      } else if (gwrDataLength <= 0xffffff) {
         //ex 0x83 0xff 0xff 0xff
-        gDataLengthByteArrayLength = 4;
+        gwrDataLengthByteArrayLength = 4;
       }
     }
-    dataLength += gDataLength + gDataLengthByteArrayLength;
+    dataLength += gwrDataLength + gwrDataLengthByteArrayLength;
     //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
     request.setLength(10 + dataLength);
     //connect to server

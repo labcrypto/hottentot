@@ -216,14 +216,14 @@ public class AuthenticationRequestHandler extends RequestHandler {
       response.setLength(serializedResult.length + 1);
       return response;
     }
-    if(methodId == 10819006L){
+    if(methodId == 2384755374L){
       List <Argument> args = request.getArgs();
       Argument arg0 = args.get(0);
-      byte[] serializedG = arg0.getData();
-      Gender g = new Gender();
-      g.deserialize(serializedG);
+      byte[] serializedGwr = arg0.getData();
+      GenderWrapper gwr = new GenderWrapper();
+      gwr.deserialize(serializedGwr);
       Response response = new Response();
-      byte[] result = authenticationImpl.test10(g);
+      byte[] result = authenticationImpl.test10(gwr);
       byte[] serializedResult = PDTSerializer.getData( result );
       response.setStatusCode((byte) 0);
       response.setData(serializedResult);

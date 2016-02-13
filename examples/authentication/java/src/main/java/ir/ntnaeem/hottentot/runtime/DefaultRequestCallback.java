@@ -23,7 +23,6 @@
 package ir.ntnaeem.hottentot.runtime;
 
 import ir.ntnaeem.hottentot.runtime.exception.*;
-
 import java.util.Map;
 
 public class DefaultRequestCallback implements RequestCallback {

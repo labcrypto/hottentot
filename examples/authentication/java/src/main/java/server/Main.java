@@ -11,6 +11,7 @@ import ir.ntnaeem.hottentot.runtime.Service;
 import ir.ntnaeem.hottentot.runtime.ServiceRuntime;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 
 public class Main {
   public static void main(String[] args) throws IOException {
@@ -18,7 +19,10 @@ public class Main {
     ir.ntnaeem.hottentot.runtime.config.Config.setConfigPropertiesFromConfigFile();
     ServiceRuntime serviceRuntime = new ServiceRuntime();
     Service authenticationService = new AuthenticationImpl();
-    serviceRuntime.register("127.0.0.1",2000, authenticationService);
+    Service secondService = new SecondImpl();
+    serviceRuntime.register("127.0.0.1", 2000, authenticationService);
+    serviceRuntime.register("127.0.0.1",2000, secondService);
+    serviceRuntime.register("20.30.40.52",3000, secondService);
     serviceRuntime.start();
   }
 }

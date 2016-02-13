@@ -144,9 +144,8 @@ class AuthenticationImpl extends AbstractAuthenticationService {
   }
 
   @Override
-  public byte[] test10(Gender g) {
-    GenderType genders = g.getGenders();
-    if(genders.equals(GenderType.Female) && g.getId() == 12){
+  public byte[] test10(GenderWrapper g) {
+    if(g.equals(GenderType.Female) && g.getId() == 12){
       return new byte[]{0};
     }
     return new byte[]{-1};

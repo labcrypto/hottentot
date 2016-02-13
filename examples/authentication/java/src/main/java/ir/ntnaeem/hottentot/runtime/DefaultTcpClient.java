@@ -48,7 +48,6 @@ public class DefaultTcpClient implements TcpClient {
         }
     }
 
-
     public void write(byte[] data) throws TcpClientWriteException {
         OutputStream os = null;
         try {
