@@ -24,6 +24,7 @@ package ir.ntnaeem.hottentot.serializerHelper;
 
 import ir.ntnaeem.hottentot.runtime.helper.ArrayUtil;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import static java.lang.StrictMath.pow;
 
@@ -32,6 +33,8 @@ public class PDTSerializer {
     if(bytes == null){
       return new byte[]{0};
     }
+//    byte[] concat = ArrayUtil.concat(DataLengthByteArrayMaker.getByteArray(bytes.length), bytes);
+//    System.out.println(Arrays.toString(concat));
     return ArrayUtil.concat(DataLengthByteArrayMaker.getByteArray(bytes.length), bytes);
   }
 
@@ -54,48 +57,31 @@ public class PDTSerializer {
     return new byte[]{number};
   }
 
-  public static byte[] getInt16(short number){
+  public static byte[] getUint8(byte number) {
+    return new byte[]{number};
+  }
+
+  public static byte[] getInt16(short number) {
     return ByteBuffer.allocate(2).putShort(number).array();
   }
 
   public static byte[] getUint16(short number) {
-    byte[] byteArray = new byte[2];
-    short temp;
-    for (short i = 0; i < byteArray.length; i++) {
-      temp = (short) (number / pow(256, byteArray.length - i - 1));
-      byteArray[i] = (byte) temp;
-      number = (short) (number - (temp * pow(256, byteArray.length - i - 1)));
-    }
-    return byteArray;
-  }
-
-  public static byte[] getUint32(int number) {
-    byte[] byteArray = new byte[4];
-    int temp;
-    for (int i = 0; i < byteArray.length; i++) {
-      temp = (int) (number / pow(256, byteArray.length - i - 1));
-      byteArray[i] = (byte) temp;
-      number = (int) (number - (temp * pow(256, byteArray.length - i - 1)));
-    }
-    return byteArray;
+    return ByteBuffer.allocate(2).putShort(number).array();
   }
 
   public static byte[] getInt32(int number){
     return ByteBuffer.allocate(4).putInt(number).array();
   }
 
-  public static byte[] getUint64(long number) {
-    byte[] byteArray = new byte[8];
-    long temp;
-    for (short j = 0; j < byteArray.length; j++) {
-      temp = (long) (number / pow(256, byteArray.length - j - 1));
-      byteArray[j] = (byte) temp;
-      number = number - (long) (temp * pow(256, byteArray.length - j - 1));
-    }
-    return byteArray;
+  public static byte[] getUint32(int number){
+    return ByteBuffer.allocate(4).putInt(number).array();
   }
 
-  public static byte[] getInt64(long number){
+  public static byte[] getInt64(long number) {
+    return ByteBuffer.allocate(8).putLong(number).array();
+  }
+
+  public static byte[] getUint64(long number){
     return ByteBuffer.allocate(8).putLong(number).array();
   }
 }

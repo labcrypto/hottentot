@@ -22,9 +22,7 @@
  */
 package ir.ntnaeem.hottentot.serializerHelper;
 
-import com.sun.org.apache.xalan.internal.xsltc.dom.SortingIterator;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 import static java.lang.StrictMath.pow;
 

@@ -8,7 +8,6 @@ package example.generated.hotgen;
 
 import ir.ntnaeem.hottentot.serializerHelper.DataLengthByteArrayMaker;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 

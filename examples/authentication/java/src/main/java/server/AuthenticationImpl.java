@@ -23,7 +23,6 @@
 package server;
 
 import example.generated.hotgen.*;
-
 import java.util.ArrayList;
 import java.util.List;
 

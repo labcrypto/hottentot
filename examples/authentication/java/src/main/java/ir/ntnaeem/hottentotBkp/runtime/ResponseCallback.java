@@ -20,19 +20,12 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-
-package ir.ntnaeem.hottentot.runtime.factory;
-
-import ir.ntnaeem.hottentot.runtime.DefaultTcpServer;
-import ir.ntnaeem.hottentot.runtime.RequestHandler;
-import ir.ntnaeem.hottentot.runtime.TcpServer;
-import ir.ntnaeem.hottentot.runtime.config.Config;
-
-import java.util.Map;
+package ir.ntnaeem.hottentot.runtime;
 
 
-public class TcpServerFactory {
-    public static TcpServer create(String host , int port , Map<Long , RequestHandler> requestHandlers) {
-        return new DefaultTcpServer(host,port,requestHandlers);
-    }
+import ir.ntnaeem.hottentot.runtime.exception.TcpServerReadException;
+
+public interface ResponseCallback {
+
+    void onResponse(byte[] serializedResponse) throws TcpServerReadException;
 }

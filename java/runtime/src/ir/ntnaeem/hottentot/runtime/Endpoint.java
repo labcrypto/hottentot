@@ -49,4 +49,23 @@ public class Endpoint {
     public void setPort(int port) {
         this.port = port;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if(!(o instanceof Endpoint)){
+            return false;
+        }
+        Endpoint e = (Endpoint) o;
+        if (host.equals(e.host) && port == e.port) return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = host != null ? host.hashCode() : 0;
+        result = 31 * result + port;
+        return result;
+    }
 }

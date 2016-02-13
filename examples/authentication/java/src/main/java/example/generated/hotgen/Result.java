@@ -9,7 +9,6 @@ package example.generated.hotgen;
 
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
-import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
 public class Result {
   private byte ustatus8;

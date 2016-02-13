@@ -25,7 +25,7 @@ namespace naeem {
               ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(serviceName);
             registerServicesStr += indent_ + indent_ + "Service " + lowerCaseServiceName + "Service = new " +
                                    serviceName + "Impl();\n";
-            registerServicesStr += indent_ + indent_ + "serviceRuntime.register(\"127.0.0.1\",2000, " + 
+            registerServicesStr += indent_ + indent_ + "serviceRuntime.register(\"127.0.0.1\",8080, " + 
                             lowerCaseServiceName + "Service);\n";              
           }          
           ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServerMainTmpStr ,

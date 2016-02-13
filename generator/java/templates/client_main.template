@@ -13,6 +13,7 @@ import java.io.IOException;
 public class Main {
 [%INDENT%]public static void main(String[] args) throws IOException {
 [%INDENT%][%INDENT%]ir.ntnaeem.hottentot.runtime.config.Config.setMainArgs(args);
-[%INDENT%][%INDENT%][%ALL_PROXIES%]
+[%ALL_PROXIES%]
+[%INDENT%][%INDENT%]//use server methods on proxies
 [%INDENT%]}
 }

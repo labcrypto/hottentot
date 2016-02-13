@@ -1,10 +1,7 @@
 package ir.ntnaeem.hottentot.runtime.config;
 
 
-import ir.ntnaeem.hottentot.runtime.exception.MainArgsNotCorrectException;
-
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 

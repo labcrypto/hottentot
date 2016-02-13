@@ -23,12 +23,16 @@ namespace naeem {
           for (int i = 0; i < pModule->services_.size(); i++) {
             pService = pModule->services_.at(i);
             std::string serviceName = pService->GetName();
+            std::string lowerCaseServiceName = 
+            ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(
+              serviceName);
             importProxiesStr += "import " + basePackageName + ".hotgen." +
                                 serviceName +  "Service;\n";
             importProxiesStr += "import " + basePackageName + ".hotgen." +
                                 serviceName  + "ServiceProxyBuilder;\n";
-            allProxiesStr += "final " + serviceName + "Service proxy = " + 
-                              serviceName + "ServiceProxyBuilder.create(\"127.0.0.1\", 2000);\n";
+            allProxiesStr += indent_ + indent_ + "final " + serviceName + "Service " +
+                              lowerCaseServiceName + "Proxy = " + serviceName +
+                              "ServiceProxyBuilder.create(\"127.0.0.1\", 8080);\n";
           }
           ::naeem::hottentot::generator::common::StringHelper::Replace(replacableClientMainTmpStr ,
                                                                       "[%ALL_PROXIES%]" , 

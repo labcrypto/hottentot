@@ -23,7 +23,6 @@
 package ir.ntnaeem.hottentot.serializerHelper;
 
 import com.sun.org.apache.xalan.internal.xsltc.dom.SortingIterator;
-
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -44,10 +43,12 @@ public class PDTDeserializer {
     if((bytes[0] & 0x80) == 0) {
       dataLength = bytes[counter++];
     }else {
-      int numbersOfBytesForDataLength = bytes[0] & 0x0f;
+      int numbersOfBytesForDataLength = bytes[counter++] & 0x0f;
+      byte[] dataLengthByteArray = new byte[numbersOfBytesForDataLength];
       for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
-        dataLength += pow(256, numbersOfBytesForDataLength - i - 1) * bytes[counter++];
+        dataLengthByteArray[i] = bytes[counter++];
       }
+      dataLength = ByteArrayToInteger.getInt(dataLengthByteArray);
     }
     byte[] valueByteArray = new byte[dataLength - 1];
     System.arraycopy(bytes,counter,valueByteArray,0,dataLength - 1);
@@ -66,6 +67,23 @@ public class PDTDeserializer {
     return false;
   }
 
+  public static byte[] getFullData(byte[] bytes) {
+    int dataLength = 0;
+    int counter = 0;
+    if((bytes[0] & 0x80) == 0) {
+      dataLength = bytes[counter++];
+    }else {
+      int numbersOfBytesForDataLength = bytes[counter++] & 0x0f;
+      byte[] dataLengthByteArray = new byte[numbersOfBytesForDataLength];
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+        dataLengthByteArray[i] = bytes[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(dataLengthByteArray);
+    }
+    byte[] valueByteArray = new byte[dataLength];
+    return valueByteArray;
+  }
+
   public static byte getInt8(byte[] bytes) {
     return bytes[0];
   }
@@ -81,6 +99,7 @@ public class PDTDeserializer {
     }
     return number;
   }
+
 
   public static short getInt16(byte[] bytes) {
     return  ByteBuffer.allocate(2).wrap(bytes).getShort();

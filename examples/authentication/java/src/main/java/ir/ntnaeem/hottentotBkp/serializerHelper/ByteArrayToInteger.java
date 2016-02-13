@@ -1,8 +1,6 @@
 package ir.ntnaeem.hottentot.serializerHelper;
 
 
-import java.util.Arrays;
-
 public class ByteArrayToInteger {
     public static int getInt(byte[] bytes){
         int output = 0;

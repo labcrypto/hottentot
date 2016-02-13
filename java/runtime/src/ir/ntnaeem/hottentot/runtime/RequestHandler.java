@@ -23,12 +23,9 @@
 
 package ir.ntnaeem.hottentot.runtime;
 
-
 import ir.ntnaeem.hottentot.runtime.exception.*;
 
 public abstract class RequestHandler {
-
-
     protected Service service;
     public RequestHandler(Service service) {
         this.service = service;

@@ -9,7 +9,6 @@
 package example.generated.hotgen;
 
 import ir.ntnaeem.hottentot.runtime.Service;
-import java.util.List;
 
 public interface SecondService extends Service {
   int f();
