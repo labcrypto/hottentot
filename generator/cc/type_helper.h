@@ -68,11 +68,7 @@ namespace naeem {
               return false;
             } else if (type == "data") {
               return false;
-            } else if (type == "date") {
-              return false;
-            } else if (type == "time") {
-              return false;
-            } else if (type == "datetime") {
+            } else if (type == "utc_timestamp") {
               return false;
             } else if (type == "double") {
               return false;
@@ -104,11 +100,7 @@ namespace naeem {
               return true;
             } else if (type == "char") {
               return true;
-            } else if (type == "date") {
-              return true;
-            } else if (type == "time") {
-              return true;
-            } else if (type == "datetime") {
+            } else if (type == "utc_timestamp") {
               return true;
             } else if (type == "double") {
               return true;
@@ -146,11 +138,7 @@ namespace naeem {
               return 1;
             } else if (type == "char") {
               return 1;
-            } else if (type == "date") {
-              return 8;
-            } else if (type == "time") {
-              return 8;
-            } else if (type == "datetime") {
+            } else if (type == "utc_timestamp") {
               return 8;
             } else if (type == "double") {
               return 8;
@@ -185,12 +173,8 @@ namespace naeem {
               return "::naeem::hottentot::runtime::types::Char";
             } else if (type == "data") {
               return "::naeem::hottentot::runtime::types::ByteArray";
-            } else if (type == "date") {
-              return "::naeem::hottentot::runtime::types::Date";
-            } else if (type == "time") {
-              return "::naeem::hottentot::runtime::types::Time";
-            } else if (type == "datetime") {
-              return "::naeem::hottentot::runtime::types::DateTime";
+            } else if (type == "utc_timestamp") {
+              return "::naeem::hottentot::runtime::types::UtcTimestamp";
             } else if (type == "double") {
               return "::naeem::hottentot::runtime::types::Double";
             } else if (type == "void") {
