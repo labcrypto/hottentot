@@ -7,6 +7,7 @@
  ******************************************************************/
 package example.generated.hotgen;
 
+import ir.ntnaeem.hottentot.runtime.Argument;
 import ir.ntnaeem.hottentot.runtime.Proxy;
 import ir.ntnaeem.hottentot.runtime.Request;
 import ir.ntnaeem.hottentot.runtime.Response;
@@ -19,7 +20,10 @@ import ir.ntnaeem.hottentot.runtime.exception.TcpClientCloseException;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
+import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
+import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.type.*;
+import java.util.List;
 
 public class SecondServiceProxy extends AbstractSecondService implements Proxy {
 	
