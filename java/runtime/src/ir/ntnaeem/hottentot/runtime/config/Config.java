@@ -1,20 +1,14 @@
 package ir.ntnaeem.hottentot.runtime.config;
 
-
-import ir.ntnaeem.hottentot.runtime.exception.MainArgsNotCorrectException;
-
-import javax.net.ssl.SSLServerSocketFactory;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.Properties;
 
 public class Config {
   public static String configPath = "";
   public static boolean isVerboseMode = false;
-  public static final String USAGE_HELP_STRING = "usage : -v --config-path /path/to/config/file ";
+  public static final String USAGE_HELP_STRING = "usage : -v -ssl --server-cert-file path/to/cert/file --server-cert-pass 123456 --config-path /path/to/config/file ";
   public static int threadPoolSize = 5;
   public static boolean isGCEnabledMode = false;
   public static boolean isSslEnabledMode = false;
@@ -65,5 +59,4 @@ public class Config {
       }
     }
   }
-
 }

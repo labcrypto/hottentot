@@ -81,6 +81,9 @@ public class PDTDeserializer {
       dataLength = ByteArrayToInteger.getInt(dataLengthByteArray);
     }
     byte[] valueByteArray = new byte[dataLength];
+    for(int i = 0 ; i < dataLength ; i++){
+      valueByteArray[i] = bytes[counter++];
+    }
     return valueByteArray;
   }
 
