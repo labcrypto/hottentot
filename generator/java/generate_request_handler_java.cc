@@ -94,18 +94,17 @@ namespace naeem {
                   std::string capitalizedArgVar = 
                   ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_);
 
-                  
-                  if(capitalizedArgType == "String"){
-                    capitalizedArgType = "FullString";
-                  }else if(capitalizedArgType == "Data"){
-                    capitalizedArgType = "FullData";
-                  }
+                  // if(capitalizedArgType == "String"){
+                  //   capitalizedArgType = "FullString";
+                  // }else if(capitalizedArgType == "Data"){
+                  //   capitalizedArgType = "FullData";
+                  // }
                   methodConditionStr += indent_ + indent_ + indent_ +
                                         javaType + " " + pArg->variable_.c_str() +
                                         " = PDTDeserializer.get" + capitalizedArgType +
                                         "(serialized" + capitalizedArgVar + ");\n";
                 }
-
+                
               }
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +

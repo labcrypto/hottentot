@@ -198,7 +198,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
       List <Argument> args = request.getArgs();
       Argument arg0 = args.get(0);
       byte[] serializedStr = arg0.getData();
-      String str = PDTDeserializer.getFullString(serializedStr);
+      String str = PDTDeserializer.getString(serializedStr);
       Argument arg1 = args.get(1);
       byte[] serializedFlag = arg1.getData();
       boolean flag = PDTDeserializer.getBool(serializedFlag);
@@ -207,7 +207,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
       short num = PDTDeserializer.getUint16(serializedNum);
       Argument arg3 = args.get(3);
       byte[] serializedD = arg3.getData();
-      byte[] d = PDTDeserializer.getFullData(serializedD);
+      byte[] d = PDTDeserializer.getData(serializedD);
       Response response = new Response();
       byte result = authenticationImpl.test9(str,flag,num,d);
       byte[] serializedResult = PDTSerializer.getUint8( result );

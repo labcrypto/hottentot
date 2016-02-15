@@ -87,6 +87,12 @@ public class PDTDeserializer {
     return valueByteArray;
   }
 
+  public static byte[] getData(byte[] bytes) {
+    return bytes;
+  }
+
+
+
   public static byte getInt8(byte[] bytes) {
     return bytes[0];
   }

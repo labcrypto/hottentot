@@ -23,30 +23,34 @@ public class _Data {
   }
 
   public byte[] serialize() {
-    return PDTSerializer.getData(value);
+    if(value == null) {
+      return new byte[]{0};
+    }
+    return value;
   }
 
   public void deserialize(byte[] serializedByteArray) {
     if (serializedByteArray.length != 0) {
-      int counter = 0;
-      int dataLength = 0;
-      int numbersOfBytesForDataLength;
-      //value : bytes
-      dataLength = 0;
-      if ((serializedByteArray[counter] & 0x80) == 0) {
-        dataLength = serializedByteArray[counter++];
-      } else {
-        numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
-        byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
-        for (byte i = 0; i < numbersOfBytesForDataLength; i++) {
-          serializedByteArrayLength[i] = serializedByteArray[counter++];
-        }
-        dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
-      }
-      byte[] valueByteArray = new byte[dataLength];
-      System.arraycopy(serializedByteArray, counter, valueByteArray, 0, dataLength);
-      counter += dataLength;
-      setValue(valueByteArray);
+//      int counter = 0;
+//      int dataLength = 0;
+//      int numbersOfBytesForDataLength;
+//      //value : bytes
+//      dataLength = 0;
+//      if ((serializedByteArray[counter] & 0x80) == 0) {
+//        dataLength = serializedByteArray[counter++];
+//      } else {
+//        numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+//        byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+//        for (byte i = 0; i < numbersOfBytesForDataLength; i++) {
+//          serializedByteArrayLength[i] = serializedByteArray[counter++];
+//        }
+//        dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
+//      }
+//      byte[] valueByteArray = new byte[dataLength];
+//      System.arraycopy(serializedByteArray, counter, valueByteArray, 0, dataLength);
+//      counter += dataLength;
+//      setValue(valueByteArray);
+      setValue(serializedByteArray);
     }
   }
 }
