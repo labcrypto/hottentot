@@ -72,7 +72,7 @@ public class DefaultTcpServer implements TcpServer {
         serverSocket = serverSocketFactory.createServerSocket(port, 50, addr);
       }
       if(Config.isVerboseMode){
-        System.out.println("SSL server socket ( host : " + host + " , port : " + port + ") has been opened ... ");
+        System.out.println("SSL server socket (host : " + host + " , port : " + port + ") has been opened ... ");
       }
     }else {
       if(host.equals("0.0.0.0")) {
@@ -81,7 +81,7 @@ public class DefaultTcpServer implements TcpServer {
         serverSocket = new ServerSocket(port, 50, addr);
       }
       if(Config.isVerboseMode){
-        System.out.println("server socket ( host : " + host + " , port : " + port + ") has been opened ... ");
+        System.out.println("server socket (host : " + host + " , port : " + port + ") has been opened ... ");
       }
     }
 
