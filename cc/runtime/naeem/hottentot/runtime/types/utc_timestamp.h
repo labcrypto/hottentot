@@ -67,7 +67,7 @@ namespace naeem {
             return value_;
           }
         public:
-          friend std::ostream& operator <<(std::ostream& out, const UInt64& obj) {
+          friend std::ostream& operator <<(std::ostream& out, const UtcTimestamp& obj) {
             out << obj.value_;
             return out;
           }
@@ -91,7 +91,7 @@ namespace naeem {
                                           uint32_t length) {
             // std::cout << "<<<<<>>>>> " << length << std::endl;
             if (length != 8) {
-              throw std::runtime_error("UInt64: Length is not correct for deserialization.");
+              throw std::runtime_error("UtcTimestamp: Length is not correct for deserialization.");
             }
             unsigned char *ptr = (unsigned char*)(&value_);
             ptr[0] = data[7];
