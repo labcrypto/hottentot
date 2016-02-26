@@ -28,6 +28,8 @@ import ir.ntnaeem.hottentot.runtime.exception.TcpClientCloseException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
+
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,10 +42,14 @@ public class DefaultTcpClient implements TcpClient {
     private final int BUFFER_SIZE = 10;
 
     public void connect(String host, int port) throws TcpClientConnectException {
-        //TODO
         try {
-            socket = new Socket(host, port);
-        } catch (IOException e) {
+          SSLSocketFactory sslSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+            if(Config.isSslEnabledMode) {
+              socket = sslSocketFactory.createSocket(host, port);
+            }else {
+              socket = new Socket(host, port);
+            }
+        } catch (Exception e) {
             throw new TcpClientConnectException(e);
         }
     }

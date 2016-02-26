@@ -29,6 +29,9 @@ import ir.ntnaeem.hottentot.runtime.exception.TcpServerReadException;
 import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
 import ir.ntnaeem.hottentot.runtime.factory.RequestCallbackFactory;
 import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
+
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -58,16 +61,30 @@ public class DefaultTcpServer implements TcpServer {
   }
 
   public void bindAndStart() throws IOException {
-    if(Config.isVerboseMode){
-      System.out.println("server socket ( host : " + host + " , port : " + port + ") has been opened ... ");
-    }
+
     final ServerSocket serverSocket;
-    if(host.equals("0.0.0.0")){
-      serverSocket = new ServerSocket(port);
+    InetAddress addr = InetAddress.getByName(host);
+    if(Config.isSslEnabledMode){
+      SSLServerSocketFactory serverSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+      if(host.equals("0.0.0.0")) {
+        serverSocket = serverSocketFactory.createServerSocket(port);
+      }else {
+        serverSocket = serverSocketFactory.createServerSocket(port, 50, addr);
+      }
+      if(Config.isVerboseMode){
+        System.out.println("SSL server socket (host : " + host + " , port : " + port + ") has been opened ... ");
+      }
     }else {
-      InetAddress addr = InetAddress.getByName(host);
-      serverSocket = new ServerSocket(port, 50, addr);
+      if(host.equals("0.0.0.0")) {
+        serverSocket = new ServerSocket(port);
+      }else {
+        serverSocket = new ServerSocket(port, 50, addr);
+      }
+      if(Config.isVerboseMode){
+        System.out.println("server socket (host : " + host + " , port : " + port + ") has been opened ... ");
+      }
     }
+
     class ClientHandler implements Runnable, ResponseCallback {
       private Socket clientSocket;
       private int tCounter;

@@ -54,9 +54,7 @@ public class ServiceRuntime {
 
     serviceId_requestHandler_map.put(service.getServiceId(), service.makeRequestHandler());
     //
-
     endpoint_service_map.put(endPoint, serviceId_requestHandler_map);
-
   }
 
   public void start() {

@@ -1,5 +1,6 @@
 package ir.ntnaeem.hottentot.type;
 
+import ir.ntnaeem.hottentot.runtime.helper.ArrayUtil;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
@@ -23,30 +24,34 @@ public class _String {
   }
 
   public byte[] serialize() {
-    return PDTSerializer.getString(value);
+    return ArrayUtil.concat(value.getBytes(), new byte[]{0});
   }
 
   public void deserialize(byte[] serializedByteArray) {
     if (serializedByteArray.length != 0) {
-      int counter = 0;
-      int dataLength = 0;
-      int numbersOfBytesForDataLength;
-      //value : String
-      dataLength = 0;
-      if ((serializedByteArray[counter] & 0x80) == 0) {
-        dataLength = serializedByteArray[counter++];
-      } else {
-        numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
-        byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
-        for (byte i = 0; i < numbersOfBytesForDataLength; i++) {
-          serializedByteArrayLength[i] = serializedByteArray[counter++];
-        }
-        dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
-      }
-      byte[] valueByteArray = new byte[dataLength];
-      System.arraycopy(serializedByteArray, counter, valueByteArray, 0, dataLength);
-      counter += dataLength;
-      setValue(PDTDeserializer.getString(valueByteArray));
+//      int counter = 0;
+//      int dataLength = 0;
+//      int numbersOfBytesForDataLength;
+//      //value : String
+//      dataLength = 0;
+//      if ((serializedByteArray[counter] & 0x80) == 0) {
+//        dataLength = serializedByteArray[counter++];
+//      } else {
+//        numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+//        byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+//        for (byte i = 0; i < numbersOfBytesForDataLength; i++) {
+//          serializedByteArrayLength[i] = serializedByteArray[counter++];
+//        }
+//        dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
+//      }
+//      byte[] valueByteArray = new byte[dataLength];
+//      System.arraycopy(serializedByteArray, counter, valueByteArray, 0, dataLength);
+//      counter += dataLength;
+//      setValue(PDTDeserializer.getString(valueByteArray));
+
+      //
+      setValue(PDTDeserializer.getString(serializedByteArray));
+
     }
   }
 }

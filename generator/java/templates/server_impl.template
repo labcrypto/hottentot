@@ -1,6 +1,6 @@
 package [%BASE_PACKAGE_NAME%].hotgen.server;
 
-import example.generated.hotgen.*;
+import [%BASE_PACKAGE_NAME%].hotgen.*;
 
 class [%SERVICE_NAME%]Impl extends Abstract[%SERVICE_NAME%]Service {
 	//implementation

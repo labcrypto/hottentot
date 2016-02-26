@@ -1,19 +1,17 @@
 package ir.ntnaeem.hottentot.runtime.config;
 
-
-import ir.ntnaeem.hottentot.runtime.exception.MainArgsNotCorrectException;
-
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Properties;
 
 public class Config {
   public static String configPath = "";
   public static boolean isVerboseMode = false;
-  public static final String USAGE_HELP_STRING = "usage : -v --config-path /path/to/config/file ";
+  public static final String USAGE_HELP_STRING = "usage : -v -ssl --server-cert-file path/to/cert/file --server-cert-pass 123456 --config-path /path/to/config/file ";
   public static int threadPoolSize = 5;
   public static boolean isGCEnabledMode = false;
+  public static boolean isSslEnabledMode = false;
 
   public static void setConfigPropertiesFromConfigFile() throws IOException {
     if (!configPath.equals("")) {
@@ -31,6 +29,7 @@ public class Config {
   public static void setMainArgs(String[] args) {
     int mainArgsCounter = 0;
     while (mainArgsCounter < args.length) {
+      Properties props = System.getProperties();
       if (args[mainArgsCounter].equals("--config-path")) {
         configPath = args[mainArgsCounter + 1];
         mainArgsCounter += 2;
@@ -40,10 +39,24 @@ public class Config {
       } else if (args[mainArgsCounter].equals("-gc")) {
         isGCEnabledMode = true;
         mainArgsCounter++;
-      } else {
+      }else if(args[mainArgsCounter].equals("-ssl")) {
+        isSslEnabledMode = true;
+        mainArgsCounter++;
+      } else if (args[mainArgsCounter].equals("--server-cert-file")) {
+        props.setProperty("javax.net.ssl.keyStore", args[mainArgsCounter + 1]);
+        mainArgsCounter += 2;
+      } else if (args[mainArgsCounter].equals("--server-cert-pass")) {
+        props.setProperty("javax.net.ssl.keyStorePassword", args[mainArgsCounter + 1]);
+        mainArgsCounter += 2;
+      } else if (args[mainArgsCounter].equals("--client-cert-file")) {
+        props.setProperty("javax.net.ssl.trustStore", args[mainArgsCounter + 1]);
+        mainArgsCounter += 2;
+      } else if (args[mainArgsCounter].equals("--client-cert-pass")) {
+        props.setProperty("javax.net.ssl.trustStorePassword", args[mainArgsCounter + 1]);
+        mainArgsCounter += 2;
+      }else {
         mainArgsCounter++;
       }
     }
   }
-
 }
