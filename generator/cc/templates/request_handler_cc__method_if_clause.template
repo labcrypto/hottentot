@@ -11,8 +11,9 @@
 [[[METHOD_CALL]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]][[[INDENT]]] * Serializiation of returned object
 [[[INDENT]]][[[INDENT]]][[[INDENT]]] */
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]unsigned char *serializedData = 0;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]uint32_t serializedDataLength = 0;
-[[[RESULT_SERIALIZATION]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]response.SetStatusCode(0);
+[[[RESULT_SERIALIZATION]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]response.SetStatusCode(hotContext.GetResponseStatusCode());
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]response.SetData(serializedData);
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]response.SetDataLength(serializedDataLength);
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]return;

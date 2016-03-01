@@ -24,6 +24,7 @@
 #ifndef _NAEEM_HOTTENTOT_RUNTIME__HOT_CONTEXT_H_
 #define _NAEEM_HOTTENTOT_RUNTIME__HOT_CONTEXT_H_
 
+#include <string>
 // #include "gc.h"
 
 
@@ -33,13 +34,36 @@ namespace runtime {
 namespace service {
   class HotContext {
   public:
-    HotContext() {}
+    HotContext()
+      : reponseStatusCode_(0),
+        faultMessage_("Fault Occurred.") {
+    }
     ~HotContext() {}
     /* inline GC& GetGC() {
       return gc_;
     } */
+  public:
+    inline uint8_t GetResponseStatusCode() const {
+      return reponseStatusCode_;
+    }
+    inline void SetResponseStatusCode(uint8_t responseStatusCode) {
+      reponseStatusCode_ = responseStatusCode;
+    }
+    inline std::string& GetFaultMessage() {
+      return faultMessage_;
+    }
+    inline void SetFaultMessage(std::string &faultMessage) {
+      faultMessage_ = faultMessage;
+    }
+  public:
+    inline void SetFaultyResponse(std::string faultMessage) {
+      reponseStatusCode_ = 1;
+      faultMessage_ = faultMessage;
+    }
   private:
     // GC gc_;
+    uint8_t reponseStatusCode_;
+    std::string faultMessage_;
   };
 }
 }

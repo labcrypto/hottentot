@@ -181,17 +181,21 @@ namespace naeem {
           // if (TypeHelper::IsUDT(method->GetReturnType())) {
           //  resultSerialization += indent + indent + indent + "unsigned char *serializedData = result.Serialize(&serializedDataLength);\r\n";
           // } else {
+          resultSerialization += indent + indent + indent + "if (hotContext.GetResponseStatusCode() == 0) {\r\n";
           if (TypeHelper::IsVoid(method->GetReturnType())) {
-            resultSerialization += indent + indent + indent + "unsigned char *serializedData = 0;";
+            resultSerialization += indent + indent + indent + indent + "serializedData = 0;\r\n";
           } else {
-            resultSerialization += indent + indent + indent + "unsigned char *serializedData = result.Serialize(&serializedDataLength);\r\n";
+            resultSerialization += indent + indent + indent + indent + "serializedData = result.Serialize(&serializedDataLength);\r\n";
             if (!TypeHelper::IsVoid(method->GetReturnType())) {
               if (TypeHelper::IsList(method->GetReturnType())) {
                 resultSerialization += indent + indent + indent + "result.Purge();\r\n";
               }
             }
           }
-          resultSerialization += "\r\n";
+          resultSerialization += indent + indent + indent + "} else {\r\n";
+          resultSerialization += indent + indent + indent + indent + "::naeem::hottentot::runtime::types::Utf8String faultMessage(hotContext.GetFaultMessage());\r\n";
+          resultSerialization += indent + indent + indent + indent + "serializedData = faultMessage.Serialize(&serializedDataLength);\r\n";
+          resultSerialization += indent + indent + indent + "}\r\n";
           /*
            * Filling template
            */
