@@ -191,9 +191,9 @@ namespace naeem {
           }
           std::string responseDeserialization = "";
           if (!TypeHelper::IsVoid(method->GetReturnType())) {
-            responseDeserialization += indent + indent + "/*\r\n";
-            responseDeserialization += indent + indent + " * Response deserialization\r\n";
-            responseDeserialization += indent + indent + " */\r\n";
+            responseDeserialization += indent + indent + indent + "/*\r\n";
+            responseDeserialization += indent + indent + indent + " * Response deserialization\r\n";
+            responseDeserialization += indent + indent + indent + " */\r\n";
             std::string proxyCCMethodResponseDeserializationTemplate = templates["proxy_cc__method_response_deserialization"];
             proxyCCMethodResponseDeserializationTemplate =
               ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodResponseDeserializationTemplate,
