@@ -21,7 +21,8 @@
 [[[NAMESPACES_START]]]
 [[[INDENT]]]class [[[STRUCT_NAME]]] : public ::naeem::hottentot::runtime::Serializable {
 [[[INDENT]]]public:
-[[[INDENT]]][[[INDENT]]][[[STRUCT_NAME]]]() {}
+[[[INDENT]]][[[INDENT]]][[[STRUCT_NAME]]]() {
+[[[INITIALIZATIONS]]][[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]][[[STRUCT_NAME]]](const [[[STRUCT_NAME]]] &);
 [[[INDENT]]][[[INDENT]]][[[STRUCT_NAME]]]([[[STRUCT_NAME]]] *);
 [[[INDENT]]][[[INDENT]]]virtual ~[[[STRUCT_NAME]]]() {}

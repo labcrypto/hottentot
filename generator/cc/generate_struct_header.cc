@@ -80,6 +80,7 @@ namespace naeem {
           }
           namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
           namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
+          std::string initializations = "";
           std::string fields = "";
           std::string gettersAndSetters = "";
           std::vector<std::string> dependencies;
@@ -97,6 +98,7 @@ namespace naeem {
             fields += indent + indent +  TypeHelper::GetCCType(it->second->GetType(), ns);
             if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
               fields += "*";
+              initializations += indent + indent + indent + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_ = NULL;\r\n";
             }
             fields += " " + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
             fields += ";\r\n";
@@ -147,6 +149,7 @@ namespace naeem {
                   structt->module_->GetPackage(), '.'), "::")));
           params.insert(std::pair<std::string, std::string>("STRUCT_NAME", structNameCamelCaseFirstCapital));
           params.insert(std::pair<std::string, std::string>("FIELDS", fields));
+          params.insert(std::pair<std::string, std::string>("INITIALIZATIONS", initializations));
           params.insert(std::pair<std::string, std::string>("INDENT", indent));
           std::string structHeaderTemplate = templates["struct_header"];
           for (std::map<std::string, std::string>::iterator it = params.begin();
