@@ -89,7 +89,7 @@ namespace naeem {
                ++it) {
             serializationSS << indent << indent << "uint32_t length" << counter << " = 0;\r\n";
             // serializationSS << indent << indent << "unsigned char *data" << counter << " = ";
-          serializationSS << indent << indent << "::naeem::hottentot::runtime::HotPtr<unsigned char, true> ptr" << counter << ";\r\n";
+            serializationSS << indent << indent << "::naeem::hottentot::runtime::HotPtr<unsigned char, true> ptr" << counter << ";\r\n";
             if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
               serializationSS << indent << indent << "if (" << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_" << ") {\r\n";
               serializationSS << indent << indent << indent << "ptr" << counter << " = ";
