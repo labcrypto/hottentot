@@ -208,13 +208,20 @@ namespace naeem {
               deserializationSS << indent << indent << indent << indent << "c += 3;\r\n";
               deserializationSS << indent << indent << indent << "}\r\n";
               deserializationSS << indent << indent << "}\r\n";
-              deserializationSS << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+              
               if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
+                deserializationSS << indent << indent << "if (elength > 0) {\r\n";
+                deserializationSS << indent << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
                 deserializationSS << "->";
+                deserializationSS << "Deserialize(data + c, elength);\r\n";
+                deserializationSS << indent << indent << "} else {\r\n";
+                deserializationSS << indent << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_ = NULL;\r\n";
+                deserializationSS << indent << indent << "}\r\n";
               } else {
+                deserializationSS << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
                 deserializationSS << ".";
+                deserializationSS << "Deserialize(data + c, elength);\r\n";
               }
-              deserializationSS << "Deserialize(data + c, elength);\r\n";
               deserializationSS << indent << indent << "c += elength;\r\n";
             }
           }
