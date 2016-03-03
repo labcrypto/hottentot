@@ -12,6 +12,7 @@ Custom C++ File Extension                                                       
 We have to consider a length for header in request and response for backward
 compatibility.                                                                        [TODO]
 Support for Date, Time and DateTime.                                                  [TODO]
+Support for UTC Timestamp                                                             [DONE]
 Embedding all templates in a single binary.                                           [DONE]
 Only structs option for those who wants serialization only.                           [TODO]
 Versioning mechanism for hottentot protocols                                          [TODO]
@@ -23,5 +24,5 @@ Ability to merge multiple hot files in order to generate a single source directo
 Adding another serialization method to support field tags for backward and forward
   compability                                                                         [TODO]
 Bind on a specific ip address                                                         [DONE]
-
+Passing server-side exceptions as faults                                              [DONE]
 
