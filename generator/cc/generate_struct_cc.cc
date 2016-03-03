@@ -89,14 +89,20 @@ namespace naeem {
                ++it) {
             serializationSS << indent << indent << "uint32_t length" << counter << " = 0;\r\n";
             // serializationSS << indent << indent << "unsigned char *data" << counter << " = ";
-            serializationSS << indent << indent << "::naeem::hottentot::runtime::HotPtr<unsigned char, true> ptr" << counter << " = \r\n";
-            serializationSS << indent << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+          serializationSS << indent << indent << "::naeem::hottentot::runtime::HotPtr<unsigned char, true> ptr" << counter << ";\r\n";
             if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
-              serializationSS << "->";
+              serializationSS << indent << indent << "if (" << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_" << ") {\r\n";
+              serializationSS << indent << indent << indent << "ptr" << counter << " = ";
+              serializationSS << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+                serializationSS << "->";
+              serializationSS << "Serialize(&length" << counter << ");\r\n";
+              serializationSS << indent << indent << "}\r\n";
             } else {
+              serializationSS << indent << indent << "ptr" << counter << " = ";
+              serializationSS << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
               serializationSS << ".";
+              serializationSS << "Serialize(&length" << counter << ");\r\n";
             }
-            serializationSS << "Serialize(&length" << counter << ");\r\n";
             if (TypeHelper::IsFixedLength(it->second->GetType())) {
               serializationSS << indent << indent << "totalLength += length" << counter << ";\r\n";
             } else {
