@@ -13,5 +13,8 @@ module naeem.hottentot.examples.auth {
   };
   stateless service Authenticate {
     Token authenticate(Credential credential);
+    string f();
+    int32 g();
+    data h();
   };
 };

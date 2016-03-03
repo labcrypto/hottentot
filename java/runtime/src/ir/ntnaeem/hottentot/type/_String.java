@@ -50,7 +50,7 @@ public class _String {
 //      setValue(PDTDeserializer.getString(valueByteArray));
 
       //
-      setValue(PDTDeserializer.getString(serializedByteArray));
+      setValue(PDTDeserializer.getFullString(serializedByteArray));
 
     }
   }
