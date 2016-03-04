@@ -60,6 +60,9 @@ namespace naeem {
               structNameCamelCaseFirstCapital);
           std::string structNameScreamingSnakeCase =
           ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(structNameSnakeCase);
+          std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
+                              ::naeem::hottentot::generator::common::StringHelper::Split(
+                              structt->module_->GetPackage(), '.'), "::");
           std::string structCCFilePath = generationConfig.GetOutDir() + "/" + structNameSnakeCase + ".cc";
           /*
            * Making real values
@@ -211,6 +214,7 @@ namespace naeem {
               
               if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
                 deserializationSS << indent << indent << "if (elength > 0) {\r\n";
+                deserializationSS << indent << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) << "_ = new " << TypeHelper::GetCCType(it->second->GetType(), ns) << ";\r\n";
                 deserializationSS << indent << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
                 deserializationSS << "->";
                 deserializationSS << "Deserialize(data + c, elength);\r\n";
