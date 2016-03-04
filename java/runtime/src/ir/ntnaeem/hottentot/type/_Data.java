@@ -50,7 +50,8 @@ public class _Data {
 //      System.arraycopy(serializedByteArray, counter, valueByteArray, 0, dataLength);
 //      counter += dataLength;
 //      setValue(valueByteArray);
-      setValue(serializedByteArray);
+      setValue(PDTDeserializer.getFullData(serializedByteArray));
+      //setValue(serializedByteArray);
     }
   }
 }
