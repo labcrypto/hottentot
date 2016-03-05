@@ -17,9 +17,9 @@ public enum [%ENUM_NAME%] {
 
 [%INDENT%]private short value;
 
-[%INDENT%]GenderType() {}
+[%INDENT%][%ENUM_NAME%]() {}
 
-[%INDENT%]GenderType(short value) {
+[%INDENT%][%ENUM_NAME%](short value) {
 [%INDENT%][%INDENT%]this.value = value;
 [%INDENT%]}
 
