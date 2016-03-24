@@ -114,7 +114,12 @@
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]if (numOfReadBytes == 0) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete protocol;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("Server is gone.");
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("Service is gone.");
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]}
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]if (numOfReadBytes < 0) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete protocol;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("Read from service failed.");
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]protocol->ProcessDataForResponse(buffer, numOfReadBytes);
 [[[INDENT]]][[[INDENT]]]}

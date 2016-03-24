@@ -172,9 +172,9 @@ namespace naeem {
             int result = write(socketFD_, &data[i], sizeof(unsigned char));
             std::cout << "Write result: " << result << std::endl;
             if (result <= 0) {
-              throw std::runtime_error("Write to server is failed.");
+              throw std::runtime_error("Write to service failed.");
             }
-            sleep(5);
+            sleep(2);
           }
 #else
           send(socketFD_, (char *)data, dataLength * sizeof(unsigned char), 0);

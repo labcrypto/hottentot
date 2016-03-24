@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 #include <iomanip>
 
 #ifdef _MSC_VER
@@ -434,10 +435,23 @@ namespace naeem {
                       ::naeem::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
                     }
 #ifndef _MSC_VER
-                    write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
+                    try {
+                    // write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
+                      for (uint32_t i = 0; i < sendLength; i++) {
+                        std::cout << "Writing ..." << std::endl;
+                        int result = write(remoteSocketFD_, &sendData[i], sizeof(unsigned char));
+                        std::cout << "Write result: " << result << std::endl;
+                        if (result <= 0) {
+                          throw std::runtime_error("Write to proxy failed.");
+                        }
+                        sleep(2);
+                      }
 #else
-                    send(remoteSocketFD_, (char *)sendData, sendLength * sizeof(unsigned char), 0);
+                      send(remoteSocketFD_, (char *)sendData, sendLength * sizeof(unsigned char), 0);
 #endif
+                    } catch (std::exception &e) {
+                      ::naeem::hottentot::runtime::Logger::GetError() << e.what() << std::endl;
+                    }
                     delete [] sendData;
                     delete [] responseSerializedData;
                     delete response;
