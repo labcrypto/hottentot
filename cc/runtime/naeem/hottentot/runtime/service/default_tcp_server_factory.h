@@ -33,6 +33,8 @@ namespace naeem {
       namespace service {
         class DefaultTcpServerFactory : public TcpServerFactory {
         public:
+          virtual ~DefaultTcpServerFactory() {}
+        public:
           virtual TcpServer* CreateTcpServer(std::string                           /* Host */,
                                              uint16_t                              /* Port */,
                                              std::map<uint8_t, RequestHandler*> *  /* Request handlers */);

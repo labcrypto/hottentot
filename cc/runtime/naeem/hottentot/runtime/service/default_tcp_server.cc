@@ -108,6 +108,7 @@ namespace naeem {
             iResult = getaddrinfo(NULL, ss.str().c_str(), &hints, &result);
             if (iResult != 0) {
               printf("getaddrinfo failed with error: %d\n", iResult);
+              closesocket(serverSocketFD_);
               WSACleanup();
               exit(EXIT_FAILURE);
             }
@@ -116,6 +117,7 @@ namespace naeem {
             if (serverSocketFD_ == INVALID_SOCKET) {
               printf("socket failed with error: %ld\n", WSAGetLastError());
               freeaddrinfo(result);
+              closesocket(serverSocketFD_);
               WSACleanup();
               exit(EXIT_FAILURE);
             }
@@ -132,8 +134,9 @@ namespace naeem {
             iResult = listen(serverSocketFD_, SOMAXCONN);
             if (iResult == SOCKET_ERROR) {
               printf("listen failed with error: %d\n", WSAGetLastError());
-              closesocket(serverSocketFD_);
-              WSACleanup();
+              // freeaddrinfo(result);
+              // closesocket(serverSocketFD_);
+              // WSACleanup();
               exit(EXIT_FAILURE);
             }
 #endif
@@ -162,6 +165,9 @@ namespace naeem {
             return res;
 #endif
           }
+          printf("Error: Calling BindAndStart() method for second time.");
+          exit(EXIT_FAILURE);
+          return 0;
         }
 #ifndef _MSC_VER
         void*
@@ -187,11 +193,24 @@ namespace naeem {
                 printf("accept failed with error: %d\n", WSAGetLastError());
                 closesocket(ref->serverSocketFD_);
                 WSACleanup();
-                return 1;
+                exit(EXIT_FAILURE);
             }
 #endif
             if (::naeem::hottentot::runtime::Configuration::Verbose()) {
               ::naeem::hottentot::runtime::Logger::GetOut() << "A new client is connected." << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetOut() << "Setting socket read timeout ..." << std::endl;
+            }
+            if (::naeem::hottentot::runtime::Configuration::SocketReadTimeout() > 0) {
+  #ifndef _MSC_VER
+              struct timeval tv;
+              tv.tv_sec = ::naeem::hottentot::runtime::Configuration::SocketReadTimeout();
+              tv.tv_usec = 0;
+              if (setsockopt(clientSocketFD, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval)) < 0) {
+                ::naeem::hottentot::runtime::Logger::GetError() << "ERROR setting read timeout." << std::endl;
+                exit(EXIT_FAILURE);
+              }
+  #else
+  #endif
             }
             _HandleClientConnectionParams *params = new _HandleClientConnectionParams;
             params->tcpServer_ = ref;

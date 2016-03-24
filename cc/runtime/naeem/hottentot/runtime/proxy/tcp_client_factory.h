@@ -47,6 +47,8 @@ namespace naeem {
         class TcpClient;
         class TcpClientFactory {
         public:
+          virtual ~TcpClientFactory() {}
+        public:
           virtual TcpClient* CreateTcpClient(std::string           /* Host */,
                                              uint32_t              /* Port */) = 0;
         };

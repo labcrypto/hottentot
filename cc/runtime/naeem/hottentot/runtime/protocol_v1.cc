@@ -67,10 +67,10 @@ namespace naeem {
       ProtocolV1::ProtocolV1(int remoteSocketFD) 
         : Protocol(remoteSocketFD),
           isResponseComplete_(false),
+          response_(0),
           readingLength_(0),
           readingCounter_(0),
           targetCounter_(0),
-          response_(0),
           currentState_(ReadingLengthState) {
       }
       ProtocolV1::~ProtocolV1() {
