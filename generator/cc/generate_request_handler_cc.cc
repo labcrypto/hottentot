@@ -160,7 +160,8 @@ namespace naeem {
           if (!TypeHelper::IsVoid(method->GetReturnType())) {
             methodCall += indent + indent + indent + TypeHelper::GetCCType(method->GetReturnType(), ns) + " result;\r\n";
           } 
-          methodCall += indent + indent + indent + "serviceObject->" + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
+          methodCall += indent + indent + indent + "try {\r\n";
+          methodCall += indent + indent + indent + indent + "serviceObject->" + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
           std::string sep = "";
           for (uint32_t i = 0; i < method->arguments_.size(); i++) {
             methodCall += sep + method->arguments_[i]->GetVariable();
@@ -171,7 +172,7 @@ namespace naeem {
             sep = ", ";
           }
           methodCall += sep + "hotContext";
-          methodCall += ");\r\n";
+          methodCall += ");";
           for (uint32_t i = 0; i < method->arguments_.size(); i++) {
             if (TypeHelper::IsList(method->arguments_[i]->GetType())) {
               methodCall += indent + indent + indent + method->arguments_[i]->GetVariable() + ".Purge();\r\n";
