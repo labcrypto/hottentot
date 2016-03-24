@@ -434,23 +434,28 @@ namespace naeem {
                     if (::naeem::hottentot::runtime::Configuration::Verbose()) {
                       ::naeem::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
                     }
+                    if (sendLength > 0) {
 #ifndef _MSC_VER
-                    try {
-                    // write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
-                      for (uint32_t i = 0; i < sendLength; i++) {
-                        std::cout << "Writing ..." << std::endl;
-                        int result = write(remoteSocketFD_, &sendData[i], sizeof(unsigned char));
-                        std::cout << "Write result: " << result << std::endl;
+                      try {
+                        int result = write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
                         if (result <= 0) {
                           throw std::runtime_error("Write to proxy failed.");
                         }
-                        sleep(2);
-                      }
+                        /* for (uint32_t i = 0; i < sendLength; i++) {
+                          std::cout << "Writing ..." << std::endl;
+                          int result = write(remoteSocketFD_, &sendData[i], sizeof(unsigned char));
+                          std::cout << "Write result: " << result << std::endl;
+                          if (result <= 0) {
+                            throw std::runtime_error("Write to proxy failed.");
+                          }
+                          sleep(2);
+                        } */
 #else
-                      send(remoteSocketFD_, (char *)sendData, sendLength * sizeof(unsigned char), 0);
+                        send(remoteSocketFD_, (char *)sendData, sendLength * sizeof(unsigned char), 0);
 #endif
-                    } catch (std::exception &e) {
-                      ::naeem::hottentot::runtime::Logger::GetError() << e.what() << std::endl;
+                      } catch (std::exception &e) {
+                        ::naeem::hottentot::runtime::Logger::GetError() << e.what() << std::endl;
+                      }
                     }
                     delete [] sendData;
                     delete [] responseSerializedData;
