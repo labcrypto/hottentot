@@ -144,10 +144,16 @@ namespace proxy {
     unsigned char buffer[256];
     while (!protocol->IsResponseComplete()) {
       int numOfReadBytes = tcpClient->Read(buffer, 256);
+      std::cout << "Read from socket: " << numOfReadBytes << std::endl;
       if (numOfReadBytes == 0) {
         delete protocol;
         delete tcpClient;
         throw std::runtime_error("Server is gone.");
+      }
+      if (numOfReadBytes < 0) {
+        delete protocol;
+        delete tcpClient;
+        throw std::runtime_error("Socket read timeout has been reached.");
       }
       protocol->ProcessDataForResponse(buffer, numOfReadBytes);
     }
