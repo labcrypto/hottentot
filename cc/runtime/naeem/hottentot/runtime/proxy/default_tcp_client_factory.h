@@ -33,6 +33,8 @@ namespace naeem {
       namespace proxy {
         class DefaultTcpClientFactory : public TcpClientFactory {
         public:
+          virtual ~DefaultTcpClientFactory() {}
+        public:
           virtual TcpClient* CreateTcpClient(std::string           /* Host */,
                                              uint32_t              /* Port */);
         };

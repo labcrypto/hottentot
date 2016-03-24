@@ -58,7 +58,7 @@ namespace naeem {
               port_(port),
               requestHandlers_(requestHandlers) {
           }
-          ~TcpServer() {}
+          virtual ~TcpServer() {}
         public:
 #ifndef _MSC_VER
           virtual pthread_t BindAndStart() = 0;

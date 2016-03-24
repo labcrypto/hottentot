@@ -49,6 +49,8 @@ namespace naeem {
         class RequestHandler;
         class TcpServerFactory {
         public:
+          virtual ~TcpServerFactory() {}
+        public:
           virtual TcpServer* CreateTcpServer(std::string                           /* Host */,
                                              uint16_t                              /* Port */,
                                              std::map<uint8_t, RequestHandler*> *  /* Request handlers */) = 0;
