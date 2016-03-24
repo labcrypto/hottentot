@@ -31,7 +31,7 @@ namespace naeem {
   namespace hottentot {
     namespace runtime {
       bool Configuration::verbose_ = false;
-      uint32_t Configuration::socketReadingTimeout_ = 30;
+      uint32_t Configuration::socketReadTimeout_ = 30;
       std::vector<std::string> Configuration::options_;
       std::map<std::string, std::string> Configuration::values_;
       void 
