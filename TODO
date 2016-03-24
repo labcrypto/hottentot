@@ -28,3 +28,5 @@ Passing server-side exceptions as faults                                        
 Timeout for socket reads on proxy side                                                [DONE]
 Timeout for socket reads on service side                                              [TODO]
 Service side thread pooling                                                           [TODO]
+Handle errors while writing data to service                                           [DONE]
+Handle errors while writing data to proxy                                             [TODO]
