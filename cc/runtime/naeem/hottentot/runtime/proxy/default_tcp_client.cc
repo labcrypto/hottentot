@@ -37,6 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <stdexcept>
 #include <iostream>
 #include <sstream>
 
@@ -158,12 +159,21 @@ namespace naeem {
         void 
         DefaultTcpClient::Write(unsigned char *data,
                                 uint32_t       dataLength) {
+          if (dataLength == 0) {
+            return;
+          }
 #ifndef _MSC_VER
-          // write(socketFD_, data, dataLength * sizeof(unsigned char));
+          /* int result = write(socketFD_, data, dataLength * sizeof(unsigned char));
+          if (result <= 0) {
+            throw std::runtime_error("Write to server is failed.");
+          } */
           for (uint32_t i = 0; i < dataLength; i++) {
             std::cout << "Writing ..." << std::endl;
             int result = write(socketFD_, &data[i], sizeof(unsigned char));
             std::cout << "Write result: " << result << std::endl;
+            if (result <= 0) {
+              throw std::runtime_error("Write to server is failed.");
+            }
             sleep(5);
           }
 #else

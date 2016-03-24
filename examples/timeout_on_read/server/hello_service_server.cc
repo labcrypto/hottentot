@@ -36,6 +36,8 @@ main(int argc, char **argv) {
     ::naeem::hottentot::runtime::service::ServiceRuntime::Shutdown();
     ::naeem::hottentot::runtime::Logger::Shutdown();
   } catch (...) {
+    ::naeem::hottentot::runtime::service::ServiceRuntime::Shutdown();
+    ::naeem::hottentot::runtime::Logger::Shutdown();
     std::cout << "Error." << std::endl;
     return 1;
   }
