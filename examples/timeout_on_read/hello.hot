@@ -1,0 +1,5 @@
+module ir.ntnaeem.hottentot.examples.timeout_on_read {
+  stateless service Hello {
+    string SayHelloTo(string name);
+  };
+};
