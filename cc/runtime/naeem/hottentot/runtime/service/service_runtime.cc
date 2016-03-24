@@ -54,7 +54,7 @@ namespace naeem {
         std::vector<HANDLE> ServiceRuntime::threads_;
 #endif
         std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> ServiceRuntime::services_;
-        std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator> ServiceRuntime::requestHandlers_;
+        std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator2> ServiceRuntime::requestHandlers_;
 #ifndef _MSC_VER
         void 
         ServiceRuntime::SigTermHanlder(int flag){
@@ -115,8 +115,8 @@ namespace naeem {
               service->OnShutdown();
               delete service;
             }
-            delete it->second;
-            delete requestHandlers_[it->first];
+            // delete requestHandlers_[it->first];
+            delete it->second;            
           }
           for (uint32_t i = 0; i < tcpServers_.size(); i++) {
             delete tcpServers_[i];
@@ -148,12 +148,16 @@ namespace naeem {
         }
         void
         ServiceRuntime::Start() {
+          for (std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator2>::iterator it = requestHandlers_.begin();
+               it != requestHandlers_.end();
+               it++) {
+          }
           for (std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator>::iterator it = services_.begin();
                it != services_.end();
                it++) {
             TcpServer *tcpServer = GetTcpServerFactory()->CreateTcpServer(it->first.GetHost(), 
                                                                           it->first.GetPort(), 
-                                                                          requestHandlers_.find(it->first)->second);
+                                                                          requestHandlers_[it->first]);
             tcpServers_.push_back(tcpServer);
             threads_.push_back(tcpServer->BindAndStart());
             if (::naeem::hottentot::runtime::Configuration::Verbose()) {

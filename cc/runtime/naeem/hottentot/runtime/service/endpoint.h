@@ -50,10 +50,16 @@ namespace naeem {
           class Comparator {
           public:
             bool operator()(const Endpoint &left, const Endpoint &right) const {
-              if (left.host_ < right.host_) {
+              if (left.host_.compare(right.host_) < 0) {
                 return true;
               }
               return left.port_ < right.port_;
+            }
+          };
+          class Comparator2 {
+          public:
+            bool operator()(const Endpoint &left, const Endpoint &right) const {
+              return left.host_.compare(right.host_) < 0 && left.port_ < right.port_;
             }
           };
         public:
@@ -74,7 +80,12 @@ namespace naeem {
           inline void SetPort(uint32_t port) {
             port_ = port;
           }
-          
+        public:
+          inline Endpoint& operator =(const Endpoint& other) {
+            host_ = other.host_;
+            port_ = other.port_;
+            return *this;
+          }
         private:
           std::string host_;
           uint32_t port_;

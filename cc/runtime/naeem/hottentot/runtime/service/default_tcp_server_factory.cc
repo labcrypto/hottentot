@@ -21,6 +21,8 @@
  *  SOFTWARE.
  */
  
+#include <iostream>
+
 #include "default_tcp_server_factory.h"
 #include "default_tcp_server.h"
 
