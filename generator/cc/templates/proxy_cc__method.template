@@ -97,6 +97,11 @@
 [[[INDENT]]][[[INDENT]]]unsigned char buffer[256];
 [[[INDENT]]][[[INDENT]]]while (!protocol->IsResponseComplete()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]int numOfReadBytes = tcpClient->Read(buffer, 256);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]if (numOfReadBytes == 0) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete protocol;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("Server is gone.");
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]protocol->ProcessDataForResponse(buffer, numOfReadBytes);
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]if (protocol->GetResponse()->GetStatusCode() == 0) {
