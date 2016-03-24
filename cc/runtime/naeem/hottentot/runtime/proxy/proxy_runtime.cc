@@ -20,6 +20,11 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
+
+#ifndef _MSC_VER
+#include <signal.h>
+#include <unistd.h>
+#endif
  
 #include "proxy_runtime.h"
 #include "tcp_client.h"
@@ -38,6 +43,9 @@ namespace naeem {
         ProxyRuntime::Init(int argc,
                            char **argv) {
           Configuration::Init(argc, argv);
+#ifndef _MSC_VER
+          signal(SIGPIPE, SIG_IGN);
+#endif
         }
         void
         ProxyRuntime::Shutdown() {

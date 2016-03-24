@@ -159,7 +159,13 @@ namespace naeem {
         DefaultTcpClient::Write(unsigned char *data,
                                 uint32_t       dataLength) {
 #ifndef _MSC_VER
-          write(socketFD_, data, dataLength * sizeof(unsigned char));
+          // write(socketFD_, data, dataLength * sizeof(unsigned char));
+          for (uint32_t i = 0; i < dataLength; i++) {
+            std::cout << "Writing ..." << std::endl;
+            int result = write(socketFD_, &data[i], sizeof(unsigned char));
+            std::cout << "Write result: " << result << std::endl;
+            sleep(5);
+          }
 #else
           send(socketFD_, (char *)data, dataLength * sizeof(unsigned char), 0);
 #endif
