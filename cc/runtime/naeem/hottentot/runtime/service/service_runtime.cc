@@ -101,6 +101,7 @@ namespace naeem {
           sigemptyset(&sigIntHandler.sa_mask);
           sigIntHandler.sa_flags = 0;
           sigaction(SIGINT, &sigIntHandler, NULL);
+          signal(SIGPIPE, SIG_IGN);
 #else
           SetConsoleCtrlHandler((PHANDLER_ROUTINE)SigTermHanlder, TRUE);
 #endif
