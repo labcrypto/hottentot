@@ -56,8 +56,12 @@ namespace naeem {
         static bool Verbose() {
           return verbose_;
         }
+        static uint32_t SocketReadTimeout() {
+          return socketReadTimeout_;
+        }
       private:
         static bool verbose_;
+        static uint32_t socketReadTimeout_;
         static std::vector<std::string> options_;
         static std::map<std::string, std::string> values_;
       };

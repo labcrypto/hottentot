@@ -31,6 +31,7 @@ namespace naeem {
   namespace hottentot {
     namespace runtime {
       bool Configuration::verbose_ = false;
+      uint32_t Configuration::socketReadingTimeout_ = 30;
       std::vector<std::string> Configuration::options_;
       std::map<std::string, std::string> Configuration::values_;
       void 
@@ -50,6 +51,8 @@ namespace naeem {
             verbose_ = true;
           } else if (strncmp(argv[i], "--verbose", 9) == 0) {
             verbose_ = true;
+          } else if (strncmp(argv[i], "--socket-read-timeout", 21) == 0) {
+            socketReadTimeout_ = atoi(argv[i]);
           }
         }
       }
