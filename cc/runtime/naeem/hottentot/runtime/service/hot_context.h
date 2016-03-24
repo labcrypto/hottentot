@@ -25,7 +25,6 @@
 #define _NAEEM_HOTTENTOT_RUNTIME__HOT_CONTEXT_H_
 
 #include <string>
-// #include "gc.h"
 
 
 namespace naeem {
@@ -39,9 +38,6 @@ namespace service {
         faultMessage_("Fault Occurred.") {
     }
     ~HotContext() {}
-    /* inline GC& GetGC() {
-      return gc_;
-    } */
   public:
     inline uint8_t GetResponseStatusCode() const {
       return responseStatusCode_;
@@ -61,7 +57,6 @@ namespace service {
       faultMessage_ = faultMessage;
     }
   private:
-    // GC gc_;
     uint8_t responseStatusCode_;
     std::string faultMessage_;
   };
