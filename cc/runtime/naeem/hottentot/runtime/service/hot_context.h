@@ -34,10 +34,11 @@ namespace service {
   class HotContext {
   public:
     HotContext()
-      : reponseStatusCode_(0),
+      : responseStatusCode_(0),
         faultMessage_("Fault Occurred.") {
     }
-    ~HotContext() {}
+    ~HotContext() {
+    }
   public:
     inline uint8_t GetResponseStatusCode() const {
       return responseStatusCode_;
@@ -52,7 +53,7 @@ namespace service {
       faultMessage_ = faultMessage;
     }
   public:
-    inline void SetFaultyResponse(std::string faultMessage, uint8_t responseStatusCode = 1) {
+    inline void SetFaultyResponse(std::string faultMessage, uint8_t responseStatusCode = 50) {
       responseStatusCode_ = responseStatusCode;
       faultMessage_ = faultMessage;
     }
