@@ -38,7 +38,13 @@ namespace service {
        */
       ::naeem::hottentot::runtime::service::HotContext hotContext;
       ::naeem::hottentot::runtime::types::Utf8String result;
-      serviceObject->SayHelloTo(name, result, hotContext);
+      try {
+        serviceObject->SayHelloTo(name, result, hotContext);
+      } catch (std::exception &e) {
+        hotContext.SetFaultyResponse(e.what(), 50);
+      } catch (...) {
+        hotContext.SetFaultyResponse("Uknown server side error.", 51);
+      }
       /*
        * Serializiation of returned object
        */
