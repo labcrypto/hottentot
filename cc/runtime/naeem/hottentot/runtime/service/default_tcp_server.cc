@@ -243,9 +243,9 @@ namespace naeem {
           protocol->SetRequestCallback(requestCallback);
           while (ok) {
 #ifndef _MSC_VER
-            uint32_t numOfReadBytes = read(ref->clientSocketFD_, buffer, 256);
+            int numOfReadBytes = read(ref->clientSocketFD_, buffer, 256);
 #else
-            uint32_t numOfReadBytes = recv(ref->clientSocketFD_, (char *)buffer, 256, 0);
+            int numOfReadBytes = recv(ref->clientSocketFD_, (char *)buffer, 256, 0);
 #endif
             if (numOfReadBytes <= 0) {
               ok = false;
