@@ -129,12 +129,25 @@ namespace proxy {
       ::naeem::hottentot::runtime::Logger::GetOut() << "Writing " << sendLength << "    Bytes to socket ..." << std::endl;
       ::naeem::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
     }
-    tcpClient->Write(sendData, sendLength);
-    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-      ::naeem::hottentot::runtime::Logger::GetOut() << "Written." << std::endl;
+    try {
+      tcpClient->Write(sendData, sendLength);
+      if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+        ::naeem::hottentot::runtime::Logger::GetOut() << "Written." << std::endl;
+      }
+    } catch (std::exception &e) {
+      delete protocol;
+      delete tcpClient;
+      delete [] sendData;
+      delete [] requestSerializedData;
+      throw std::runtime_error(e.what());
+    } catch (...) {
+      delete protocol;
+      delete tcpClient; 
+      delete [] sendData;
+      delete [] requestSerializedData;
+      throw std::runtime_error("Exception occurred while writing to server socket.");
     }
-    delete [] sendData;
-    delete [] requestSerializedData;
+    
     /*
      * Read response from server
      */
