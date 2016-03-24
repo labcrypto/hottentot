@@ -163,11 +163,11 @@ namespace naeem {
             return;
           }
 #ifndef _MSC_VER
-          /* int result = write(socketFD_, data, dataLength * sizeof(unsigned char));
+          int result = write(socketFD_, data, dataLength * sizeof(unsigned char));
           if (result <= 0) {
-            throw std::runtime_error("Write to server is failed.");
-          } */
-          for (uint32_t i = 0; i < dataLength; i++) {
+            throw std::runtime_error("Write to service failed.");
+          }
+          /* for (uint32_t i = 0; i < dataLength; i++) {
             std::cout << "Writing ..." << std::endl;
             int result = write(socketFD_, &data[i], sizeof(unsigned char));
             std::cout << "Write result: " << result << std::endl;
@@ -175,7 +175,7 @@ namespace naeem {
               throw std::runtime_error("Write to service failed.");
             }
             sleep(2);
-          }
+          } */
 #else
           send(socketFD_, (char *)data, dataLength * sizeof(unsigned char), 0);
 #endif
