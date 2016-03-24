@@ -25,4 +25,4 @@ Adding another serialization method to support field tags for backward and forwa
   compability                                                                         [TODO]
 Bind on a specific ip address                                                         [DONE]
 Passing server-side exceptions as faults                                              [DONE]
-
+Timeout for socket reads                                                              [TODO]
