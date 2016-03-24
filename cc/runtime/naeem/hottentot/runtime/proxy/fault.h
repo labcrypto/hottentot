@@ -25,6 +25,7 @@
 #define _NAEEM_HOTTENTOT_RUNTIME_PROXY__FAULT_H_
 
 #include <string>
+#include <stdexcept>
 
 #ifdef _MSC_VER
 typedef __int8 int8_t;
@@ -50,7 +51,7 @@ namespace naeem {
             : std::runtime_error(faultMessage),
               responseStatusCode_(responseStatusCode) {
           }
-          virtual ~Fault() {}
+          virtual ~Fault() throw() {}
         public:
           inline uint8_t GetResponseStatusCode() const {
             return responseStatusCode_;
