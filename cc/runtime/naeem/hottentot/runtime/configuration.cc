@@ -52,7 +52,7 @@ namespace naeem {
           } else if (strncmp(argv[i], "--verbose", 9) == 0) {
             verbose_ = true;
           } else if (strncmp(argv[i], "--socket-read-timeout", 21) == 0) {
-            socketReadTimeout_ = atoi(argv[i]);
+            socketReadTimeout_ = atoi(argv[i + 1]);
           }
         }
       }
