@@ -55,7 +55,6 @@ main(int argc, char **argv) {
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::Shutdown();  
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetError() << e.what() << std::endl;
 [[[INDENT]]][[[INDENT]]]return 1;
-[[[INDENT]]]}
 [[[INDENT]]]} catch (...) {
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::ProxyRuntime::Shutdown();
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {

@@ -47,7 +47,20 @@ main(int argc, char **argv) {
       ::naeem::hottentot::runtime::Logger::GetOut() << "Proxy runtime is shutdown." << std::endl;
     }
     ::naeem::hottentot::runtime::Logger::Shutdown();  
+  } catch (std::exception &e) {
+    ::naeem::hottentot::runtime::proxy::ProxyRuntime::Shutdown();
+    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+      ::naeem::hottentot::runtime::Logger::GetOut() << "Proxy runtime is shutdown." << std::endl;
+    }
+    ::naeem::hottentot::runtime::Logger::Shutdown();  
+    ::naeem::hottentot::runtime::Logger::GetError() << e.what() << std::endl;
+    return 1;
   } catch (...) {
+    ::naeem::hottentot::runtime::proxy::ProxyRuntime::Shutdown();
+    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+      ::naeem::hottentot::runtime::Logger::GetOut() << "Proxy runtime is shutdown." << std::endl;
+    }
+    ::naeem::hottentot::runtime::Logger::Shutdown();  
     ::naeem::hottentot::runtime::Logger::GetError() << "Error." << std::endl;
     return 1;
   }
