@@ -40,9 +40,12 @@ namespace timeout_on_read {
       ::naeem::hottentot::runtime::Logger::GetOut() << "HelloServiceImpl::SayHelloTo() is called." << std::endl;
     }
     std::string response = "Hello World " + name.ToStdString();
+    for (int i = 0; i < 100000; i++) {
+      response += "a";
+    }
     out = response;
     // throw std::runtime_error("Exception is occurred!");
-    int x = 5 / 0;
+    // int x = 5 / 0;
   }
 } // END OF NAMESPACE timeout_on_read
 } // END OF NAMESPACE examples
