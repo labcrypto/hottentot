@@ -53,7 +53,7 @@ namespace naeem {
         static bool HasValue(std::string optionShortName, std::string optionCompleteName = "");
         static uint32_t AsUInt32(std::string optionShortName, std::string optionCompleteName);
         static std::string AsString(std::string optionShortName, std::string optionCompleteName);
-        static void SetDefaults() {
+        static void SetDefaultValues() {
           verbose_ = false;
           socketReadTimeout_ = 30;
         }

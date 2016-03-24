@@ -56,6 +56,8 @@ typedef unsigned __int64 uint64_t;
 
 #include "default_tcp_client.h"
 
+#include "../configuration.h"
+
 
 namespace naeem {
   namespace hottentot {
@@ -94,17 +96,19 @@ namespace naeem {
             // exit(1);
             return false;
           }
+          if (::naeem::hottentot::runtime::Configuration::SocketReadTimeout() > 0) {
 #ifdef _MSC_VER
 #else
-          struct timeval tv;
-          tv.tv_sec = 3;
-          tv.tv_usec = 0;
-          if (setsockopt(socketFD_, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval)) < 0) {
-            std::cerr << "ERROR setting read timeout." << std::endl;
-            // exit(1);
-            return false;
-          }
+            struct timeval tv;
+            tv.tv_sec = ::naeem::hottentot::runtime::Configuration::SocketReadTimeout();
+            tv.tv_usec = 0;
+            if (setsockopt(socketFD_, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval)) < 0) {
+              std::cerr << "ERROR setting read timeout." << std::endl;
+              // exit(1);
+              return false;
+            }
 #endif
+          }
           if (connect(socketFD_, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
             std::cerr << "ERROR connecting" << std::endl;
             // exit(1);
