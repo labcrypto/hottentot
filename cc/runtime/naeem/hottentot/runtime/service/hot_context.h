@@ -44,10 +44,10 @@ namespace service {
     } */
   public:
     inline uint8_t GetResponseStatusCode() const {
-      return reponseStatusCode_;
+      return responseStatusCode_;
     }
     inline void SetResponseStatusCode(uint8_t responseStatusCode) {
-      reponseStatusCode_ = responseStatusCode;
+      responseStatusCode_ = responseStatusCode;
     }
     inline std::string& GetFaultMessage() {
       return faultMessage_;
@@ -56,13 +56,13 @@ namespace service {
       faultMessage_ = faultMessage;
     }
   public:
-    inline void SetFaultyResponse(std::string faultMessage) {
-      reponseStatusCode_ = 1;
+    inline void SetFaultyResponse(std::string faultMessage, uint8_t responseStatusCode = 1) {
+      responseStatusCode_ = responseStatusCode;
       faultMessage_ = faultMessage;
     }
   private:
     // GC gc_;
-    uint8_t reponseStatusCode_;
+    uint8_t responseStatusCode_;
     std::string faultMessage_;
   };
 }
