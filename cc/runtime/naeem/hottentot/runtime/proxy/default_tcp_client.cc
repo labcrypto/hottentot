@@ -94,6 +94,21 @@ namespace naeem {
             // exit(1);
             return false;
           }
+
+
+#ifndef _MSC_VER
+#else
+          // struct timeval tv;
+          // tv.tv_sec = 15;  /* 30 Secs Timeout */
+          // tv.tv_usec = 0;  // Not init'ing this can cause strange errors
+          // if (setsockopt(socketFD_, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval)) < 0) {
+          //   std::cerr << "ERROR setting read timeout." << std::endl;
+          //   // exit(1);
+          //   return false;
+          // }
+#endif
+
+
           if (connect(socketFD_, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
             std::cerr << "ERROR connecting" << std::endl;
             // exit(1);
@@ -155,7 +170,7 @@ namespace naeem {
 #ifndef _MSC_VER
           return read(socketFD_, buffer, bufferLength * sizeof(unsigned char));
 #else
-         return recv(socketFD_, (char *)buffer, bufferLength * sizeof(unsigned char), 0);
+          return recv(socketFD_, (char *)buffer, bufferLength * sizeof(unsigned char), 0);
 #endif
         }
         void 
