@@ -44,7 +44,7 @@ namespace timeout_on_read {
     out = response;
     // throw std::runtime_error("Exception is occurred!");
     // int x = 5 / 0;
-    std::this_thread::sleep_for(std::chrono::seconds(31));
+    std::this_thread::sleep_for(std::chrono::seconds(10));
   }
 } // END OF NAMESPACE timeout_on_read
 } // END OF NAMESPACE examples
