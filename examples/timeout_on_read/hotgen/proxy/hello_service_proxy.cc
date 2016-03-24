@@ -143,9 +143,12 @@ namespace proxy {
     }
     unsigned char buffer[256];
     while (!protocol->IsResponseComplete()) {
-      std::cout << "Reading ..." << std::endl;
       int numOfReadBytes = tcpClient->Read(buffer, 256);
-      std::cout << "Read: " << numOfReadBytes << std::endl;
+      if (numOfReadBytes == 0) {
+        delete protocol;
+        delete tcpClient;
+        throw std::runtime_error("Server is gone.");
+      }
       protocol->ProcessDataForResponse(buffer, numOfReadBytes);
     }
     if (protocol->GetResponse()->GetStatusCode() == 0) {
