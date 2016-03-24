@@ -41,7 +41,8 @@ namespace timeout_on_read {
     }
     std::string response = "Hello World " + name.ToStdString();
     out = response;
-    throw std::runtime_error("Exception is occurred!");
+    // throw std::runtime_error("Exception is occurred!");
+    // int x = 5 / 0;
   }
 } // END OF NAMESPACE timeout_on_read
 } // END OF NAMESPACE examples
