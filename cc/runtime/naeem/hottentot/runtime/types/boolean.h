@@ -91,7 +91,7 @@ namespace naeem {
         public:
           inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
             *length_ptr = 1 * sizeof(unsigned char);
-            unsigned char *data = (unsigned char *)malloc(1 * sizeof(unsigned char));
+            unsigned char *data = new unsigned char[1];
             data[0] = value_ ? 1 : 0;
             return data;
           }
