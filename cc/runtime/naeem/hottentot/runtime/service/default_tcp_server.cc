@@ -210,6 +210,13 @@ namespace naeem {
                 exit(EXIT_FAILURE);
               }
   #else
+              int nTimeout = ::naeem::hottentot::runtime::Configuration::SocketReadTimeout() * 1000;
+              if (setsockopt(clientSocketFD, SOL_SOCKET, SO_RCVTIMEO, (const char*)&nTimeout, sizeof(int)) != 0) {
+                printf("setsockopt failed with error: %ld\n", WSAGetLastError());
+                closesocket(ref->serverSocketFD_);
+                WSACleanup();
+                exit(EXIT_FAILURE);
+              }
   #endif
             }
             _HandleClientConnectionParams *params = new _HandleClientConnectionParams;

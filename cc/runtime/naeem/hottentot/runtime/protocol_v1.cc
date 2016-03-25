@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <sstream>
+#include <exception>
 #include <stdexcept>
 #include <iomanip>
 
@@ -451,7 +452,11 @@ namespace naeem {
                           sleep(2);
                         } */
 #else
-                        send(remoteSocketFD_, (char *)sendData, sendLength * sizeof(unsigned char), 0);
+                      try {
+                        int result = send(remoteSocketFD_, (char *)sendData, sendLength * sizeof(unsigned char), 0);
+                        if (result == SOCKET_ERROR) {
+                          throw std::runtime_error("Write to proxy failed.");
+                        }
 #endif
                       } catch (std::exception &e) {
                         ::naeem::hottentot::runtime::Logger::GetError() << e.what() << std::endl;
