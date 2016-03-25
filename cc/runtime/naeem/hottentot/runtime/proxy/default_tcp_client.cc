@@ -98,8 +98,6 @@ namespace naeem {
             return false;
           }
           if (::naeem::hottentot::runtime::Configuration::SocketReadTimeout() > 0) {
-#ifdef _MSC_VER
-#else
             struct timeval tv;
             tv.tv_sec = ::naeem::hottentot::runtime::Configuration::SocketReadTimeout();
             tv.tv_usec = 0;
@@ -108,7 +106,6 @@ namespace naeem {
               // exit(1);
               return false;
             }
-#endif
           }
           if (connect(socketFD_, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
             std::cerr << "ERROR connecting" << std::endl;
@@ -145,12 +142,21 @@ namespace naeem {
               WSACleanup();
               return false;
           }
+          // Set recv timeout
+          if (::naeem::hottentot::runtime::Configuration::SocketReadTimeout() > 0) {
+            int nTimeout = ::naeem::hottentot::runtime::Configuration::SocketReadTimeout() * 1000;
+            if (setsockopt(socketFD_, SOL_SOCKET, SO_RCVTIMEO, (const char*)&nTimeout, sizeof(int)) != 0) {
+              printf("setsockopt failed with error: %ld\n", WSAGetLastError());
+              WSACleanup();
+              return false;
+            }
+          }
           // Connect to server.
           iResult = connect(socketFD_, result->ai_addr, (int)result->ai_addrlen);
           if (iResult == SOCKET_ERROR) {
-              closesocket(socketFD_);
-              socketFD_ = INVALID_SOCKET;
-              return false;
+            closesocket(socketFD_);
+            socketFD_ = INVALID_SOCKET;
+            return false;
           }
           freeaddrinfo(result);
 #endif
@@ -177,7 +183,10 @@ namespace naeem {
             sleep(2);
           } */
 #else
-          send(socketFD_, (char *)data, dataLength * sizeof(unsigned char), 0);
+          int result = send(socketFD_, (char *)data, dataLength * sizeof(unsigned char), 0);
+          if (result == SOCKET_ERROR) {
+            throw std::runtime_error("Write to service failed.");
+          }
 #endif
         }
         uint32_t 
