@@ -116,9 +116,7 @@ namespace naeem {
               service->OnShutdown();
               delete service;
             }
-            // std::map<uint8_t, RequestHandler*> *m = requestHandlers_[it->first];
-            // m->clear();
-            // delete m;
+            delete requestHandlers_[it->first];
             delete it->second;
           }
           for (uint32_t i = 0; i < tcpServers_.size(); i++) {
