@@ -87,6 +87,17 @@ namespace naeem {
         }
         return 0;
       }
+      uint64_t 
+      Configuration::AsUInt64(std::string optionShortName, std::string optionCompleteName) {
+        for (std::map<std::string, std::string>::iterator it = values_.begin();
+             it != values_.end();
+             it++) {
+          if (it->first == optionShortName || it->first == optionCompleteName) {
+            return atoll(it->second.c_str());
+          }
+        }
+        return 0;
+      }
       std::string 
       Configuration::AsString(std::string optionShortName, std::string optionCompleteName) {
         for (std::map<std::string, std::string>::iterator it = values_.begin();
