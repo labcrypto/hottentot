@@ -52,6 +52,7 @@ namespace naeem {
         static bool Exists(std::string optionShortName, std::string optionCompleteName = "");
         static bool HasValue(std::string optionShortName, std::string optionCompleteName = "");
         static uint32_t AsUInt32(std::string optionShortName, std::string optionCompleteName);
+        static uint64_t AsUInt64(std::string optionShortName, std::string optionCompleteName);
         static std::string AsString(std::string optionShortName, std::string optionCompleteName);
         static void SetDefaultValues() {
           verbose_ = false;
