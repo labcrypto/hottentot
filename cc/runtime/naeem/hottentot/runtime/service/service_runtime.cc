@@ -110,14 +110,20 @@ namespace naeem {
         ServiceRuntime::Shutdown() {
           for (std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator>::iterator it = services_.begin();
                it != services_.end();
-               it++) {
+              ) {
             for (uint32_t i = 0; i < it->second->size(); i++) {
               Service *service = it->second->at(i);
               service->OnShutdown();
               delete service;
             }
-            delete requestHandlers_[it->first];
             delete it->second;
+            services_.erase(it++);
+          }
+          for (std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator2>::iterator it = requestHandlers_.begin();
+               it != requestHandlers_.end();
+              ) {
+            delete it->second;
+            requestHandlers_.erase(it++);
           }
           for (uint32_t i = 0; i < tcpServers_.size(); i++) {
             delete tcpServers_[i];
