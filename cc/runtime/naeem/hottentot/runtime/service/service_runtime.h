@@ -75,6 +75,7 @@ namespace naeem {
 #endif
         private:
           static bool verbose_;
+          static bool initialized_;
           static TcpServerFactory *tcpServerFactory_;
           static std::vector<TcpServer*> tcpServers_;
 #ifndef _MSC_VER
