@@ -27,15 +27,23 @@
 namespace naeem {
   namespace hottentot {
     namespace runtime {
-      std::ostream *Logger::o_ = 0;
-      std::ostream *Logger::e_ = 0;
+      std::ostream* Logger::o_ = 0;
+      std::ostream* Logger::e_ = 0;
+      bool Logger::initialized_ = false;
       void 
       Logger::Init() {
+        if (initialized_) {
+          return;
+        }
         o_ = new std::ostream(std::cout.rdbuf());
         e_ = new std::ostream(std::cerr.rdbuf());
+        initialized_ = true;
       }
       void
       Logger::Shutdown() {
+        if (!initialized_) {
+          return;
+        }
         delete o_;
         delete e_;
       }

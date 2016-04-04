@@ -47,6 +47,7 @@ namespace naeem {
     namespace runtime {
       namespace service {
         TcpServerFactory* ServiceRuntime::tcpServerFactory_ = 0;
+        bool ServiceRuntime::initialized_ = false;
         std::vector<TcpServer*> ServiceRuntime::tcpServers_;
 #ifndef _MSC_VER
         std::vector<pthread_t> ServiceRuntime::threads_;
@@ -94,6 +95,9 @@ namespace naeem {
         void
         ServiceRuntime::Init(int argc,
                              char **argv) {
+          if (initialized_) {
+            return;
+          }
           Configuration::Init(argc, argv);
 #ifndef _MSC_VER
           struct sigaction sigIntHandler;
@@ -105,9 +109,13 @@ namespace naeem {
 #else
           SetConsoleCtrlHandler((PHANDLER_ROUTINE)SigTermHanlder, TRUE);
 #endif
+          initialized_ = true;
         }
         void
         ServiceRuntime::Shutdown() {
+          if (!initialized_) {
+            return;
+          }
           for (std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator>::iterator it = services_.begin();
                it != services_.end();
               ) {
