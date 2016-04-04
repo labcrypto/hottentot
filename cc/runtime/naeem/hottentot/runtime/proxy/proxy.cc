@@ -88,7 +88,7 @@ namespace naeem {
             return false;
           }
           if (connect(socketFD, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
-            std::cerr << "ERROR connecting to host" << std::endl;
+            // std::cerr << "ERROR connecting to host" << std::endl;
             return false;
           }
           close(socketFD);

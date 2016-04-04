@@ -108,7 +108,7 @@ namespace naeem {
             }
           }
           if (connect(socketFD_, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
-            std::cerr << "ERROR connecting" << std::endl;
+            // std::cerr << "ERROR connecting" << std::endl;
             // exit(1);
             return false;
           }

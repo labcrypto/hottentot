@@ -39,6 +39,7 @@ namespace naeem {
       private:
         static std::ostream *o_;
         static std::ostream *e_;
+        static bool initialized_;
       };
     }
   }
