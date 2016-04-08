@@ -46,6 +46,7 @@ namespace naeem {
         }
         delete o_;
         delete e_;
+        initialized_ = false;
       }
       std::ostream& 
       Logger::GetOut() {
