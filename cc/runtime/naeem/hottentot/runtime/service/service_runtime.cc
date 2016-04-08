@@ -58,7 +58,7 @@ namespace naeem {
         std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator2> ServiceRuntime::requestHandlers_;
 #ifndef _MSC_VER
         void 
-        ServiceRuntime::SigTermHanlder(int flag){
+        ServiceRuntime::SigTermHanlder(int flag) {
           if (::naeem::hottentot::runtime::Configuration::Verbose()) {
             ::naeem::hottentot::runtime::Logger::GetOut() << "SIG_TERM is received ..." << std::endl;
             ::naeem::hottentot::runtime::Logger::GetOut() << "Killing all listener threads ..." << std::endl;
@@ -139,6 +139,7 @@ namespace naeem {
           if (tcpServerFactory_) {
             delete tcpServerFactory_;
           }
+          initialized_ = false;
         }
         void
         ServiceRuntime::Register(std::string   host, 
