@@ -57,7 +57,7 @@ namespace naeem {
           }
         private:
           static TcpClientFactory *tcpClientFactory_;
-          static bool initalized_;
+          static bool initialized_;
         };
       }
     }

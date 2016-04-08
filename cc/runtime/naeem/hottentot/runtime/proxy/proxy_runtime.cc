@@ -39,27 +39,28 @@ namespace naeem {
     namespace runtime {
       namespace proxy {
         TcpClientFactory* ProxyRuntime::tcpClientFactory_ = 0;
-        bool ProxyRuntime::initalized_ = false;
+        bool ProxyRuntime::initialized_ = false;
         void
         ProxyRuntime::Init(int argc,
                            char **argv) {
-          if (ProxyRuntime::initalized_) {
+          if (initialized_) {
             return;
           }
           Configuration::Init(argc, argv);
 #ifndef _MSC_VER
           signal(SIGPIPE, SIG_IGN);
 #endif
-          ProxyRuntime::initalized_ = true;
+          ProxyRuntime::initialized_ = true;
         }
         void
         ProxyRuntime::Shutdown() {
-          if (!ProxyRuntime::initalized_) {
+          if (!initialized_) {
             return;
           }
           if (tcpClientFactory_) {
             delete tcpClientFactory_;
           }
+          initialized_ = false;
         }
         TcpClientFactory*
         ProxyRuntime::GetTcpClientFactory() {
