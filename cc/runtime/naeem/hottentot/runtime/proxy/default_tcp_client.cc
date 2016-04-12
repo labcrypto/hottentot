@@ -58,6 +58,7 @@ typedef unsigned __int64 uint64_t;
 #include "default_tcp_client.h"
 
 #include "../configuration.h"
+#include "../utils.h"
 
 
 namespace naeem {
@@ -78,13 +79,17 @@ namespace naeem {
           struct hostent *server;
           socketFD_ = socket(AF_INET, SOCK_STREAM, 0);
           if (socketFD_ < 0) {
-            std::cerr << "ERROR opening socket" << std::endl;
+            std::cerr << 
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "ERROR opening socket" << std::endl;
             // exit(1);
             return false;
           }
           server = gethostbyname(host_.c_str());
           if (server == NULL) {
-            std::cerr << "ERROR, no such host" << std::endl;
+            std::cerr << 
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "ERROR, no such host" << std::endl;
             // exit(1);
             return false;
           }
@@ -93,7 +98,9 @@ namespace naeem {
           // bcopy((char *)&serverAddr.sin_addr.s_addr, (char *)server->h_addr, server->h_length);
           serverAddr.sin_port = htons(port_);
           if (inet_pton(AF_INET, host_.c_str(), &serverAddr.sin_addr) <= 0) {
-            std::cerr << "ERROR setting host" << std::endl;
+            std::cerr << 
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "ERROR setting host" << std::endl;
             // exit(1);
             return false;
           }
@@ -102,13 +109,17 @@ namespace naeem {
             tv.tv_sec = ::naeem::hottentot::runtime::Configuration::SocketReadTimeout();
             tv.tv_usec = 0;
             if (setsockopt(socketFD_, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval)) < 0) {
-              std::cerr << "ERROR setting read timeout." << std::endl;
+              std::cerr << 
+                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                  "ERROR setting read timeout." << std::endl;
               // exit(1);
               return false;
             }
           }
           if (connect(socketFD_, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
-            // std::cerr << "ERROR connecting" << std::endl;
+            std::cerr << 
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "ERROR connecting" << std::endl;
             // exit(1);
             return false;
           }
@@ -171,7 +182,7 @@ namespace naeem {
 #ifndef _MSC_VER
           int result = write(socketFD_, data, dataLength * sizeof(unsigned char));
           if (result <= 0) {
-            throw std::runtime_error("Write to service failed.");
+            throw std::runtime_error("[" + ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Write to service failed.");
           }
           /* for (uint32_t i = 0; i < dataLength; i++) {
             std::cout << "Writing ..." << std::endl;
@@ -185,7 +196,7 @@ namespace naeem {
 #else
           int result = send(socketFD_, (char *)data, dataLength * sizeof(unsigned char), 0);
           if (result == SOCKET_ERROR) {
-            throw std::runtime_error("Write to service failed.");
+            throw std::runtime_error("[" + ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Write to service failed.");
           }
 #endif
         }

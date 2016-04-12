@@ -149,7 +149,9 @@ namespace naeem {
           }
         }
         if (c != actualLength) {
-          ::naeem::hottentot::runtime::Logger::GetError() << "Inconsistency in request serialization process." << std::endl;
+          ::naeem::hottentot::runtime::Logger::GetError() << 
+            "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+              "Inconsistency in request serialization process." << std::endl;
           exit(1);
         }
         return data;
@@ -205,7 +207,9 @@ namespace naeem {
         Request *request = new Request;
         request->SetType((Request::RequestType)data[c++]);
         if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-          ::naeem::hottentot::runtime::Logger::GetOut() << "Request Type: " << request->GetType() << std::endl;
+          ::naeem::hottentot::runtime::Logger::GetOut() << 
+            "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+              "Request Type: " << request->GetType() << std::endl;
         }
         uint32_t serviceId = 0;
         ((unsigned char *)(&serviceId))[3] = data[c++];
@@ -214,7 +218,9 @@ namespace naeem {
         ((unsigned char *)(&serviceId))[0] = data[c++];
         request->SetServiceId(serviceId);
         if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-          ::naeem::hottentot::runtime::Logger::GetOut() << "Service Id: " << serviceId << std::endl;
+          ::naeem::hottentot::runtime::Logger::GetOut() << 
+            "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+              "Service Id: " << serviceId << std::endl;
         }
         uint32_t methodId = 0;
         ((unsigned char *)(&methodId))[3] = data[c++];
@@ -223,18 +229,26 @@ namespace naeem {
         ((unsigned char *)(&methodId))[0] = data[c++];
         request->SetMethodId(methodId);
         if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-          ::naeem::hottentot::runtime::Logger::GetOut() << "Method Id: " << methodId << std::endl;
+          ::naeem::hottentot::runtime::Logger::GetOut() << 
+            "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+              "Method Id: " << methodId << std::endl;
         }
         uint8_t argCount = data[c++];
         if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-          ::naeem::hottentot::runtime::Logger::GetOut() << "Arg. Count: " << (uint8_t)argCount << std::endl;
+          ::naeem::hottentot::runtime::Logger::GetOut() << 
+            "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+              "Arg. Count: " << (uint8_t)argCount << std::endl;
         }
         for (unsigned int k = 0; k < (uint8_t)argCount; k++) {
           if (data[c] == 0x00) {
             request->AddArgument(0, 0);
             if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              ::naeem::hottentot::runtime::Logger::GetOut() << "Argument[" << k << "] Length: " << 0 << std::endl;
-              ::naeem::hottentot::runtime::Logger::GetOut() << "Argument has zero length." << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetOut() << 
+                "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                  "Argument[" << k << "] Length: " << 0 << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetOut() <<  
+                "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                  "Argument has zero length." << std::endl;
             }
           } else {
             uint32_t argLength = 0;
@@ -256,7 +270,9 @@ namespace naeem {
               argData[i] = data[c++];
             }
             if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              ::naeem::hottentot::runtime::Logger::GetOut() << "Argument[" << k << "] Length: " << argLength << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetOut() << 
+                "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                  "Argument[" << k << "] Length: " << argLength << std::endl;
               ::naeem::hottentot::runtime::Utils::PrintArray("Argument Data", argData, argLength);
             }
             request->AddArgument(argData, argLength);
@@ -275,7 +291,9 @@ namespace naeem {
           response->SetData(0);
           response->SetDataLength(0);
           if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-            ::naeem::hottentot::runtime::Logger::GetOut() << "Response has zero length." << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() << 
+              "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                "Response has zero length." << std::endl;
           }
           return response;
         } else {
@@ -308,7 +326,9 @@ namespace naeem {
       ProtocolV1::ProcessDataForRequest(unsigned char *data,
                                         uint32_t       dataLength) {
         if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-          ::naeem::hottentot::runtime::Logger::GetOut() << "We have data with length " << dataLength << " Bytes." << std::endl;
+          ::naeem::hottentot::runtime::Logger::GetOut() << 
+            "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+              "We have data with length " << dataLength << " Bytes." << std::endl;
         }
         for (unsigned int i = 0; i < dataLength;) {
           if (currentState_ == ReadingLengthState) {
@@ -319,14 +339,18 @@ namespace naeem {
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
                 if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                  ::naeem::hottentot::runtime::Logger::GetOut() << 
+                    "[" << Utils::GetCurrentUTCTimeString() << "]: " <<  
+                      "Request length is " << readingLength_ << " Bytes." << std::endl;
                 }
               } else {
                 targetCounter_ = (data[i] & 0x0f);
                 readingBuffer_.push_back(data[i]);
                 readingCounter_++;
                 if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Length is more than 127." << std::endl;
+                  ::naeem::hottentot::runtime::Logger::GetOut() << 
+                    "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                      "Length is more than 127." << std::endl;
                 }
               }
             } else {
@@ -345,7 +369,9 @@ namespace naeem {
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
                 if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Request length is " << readingLength_ << " Bytes." << std::endl;
+                  ::naeem::hottentot::runtime::Logger::GetOut() << 
+                    "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                      "Request length is " << readingLength_ << " Bytes." << std::endl;
                 }
                 // Variable 'i' shouldn't get incremented because no byte is processed here.
                 i--;
@@ -359,7 +385,9 @@ namespace naeem {
               // ::naeem::hottentot::runtime::Logger::GetOut() << ">>>>> " << readingCounter_ << " from " << targetCounter_ << " : " << (unsigned int)data[i] << std::endl;
               targetCounter_ = readingLength_;
               if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                ::naeem::hottentot::runtime::Logger::GetOut() << "Preparing for reading the request body ..." << std::endl;
+                ::naeem::hottentot::runtime::Logger::GetOut() << 
+                  "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                    "Preparing for reading the request body ..." << std::endl;
               }
             } else {
               if (readingCounter_ < targetCounter_) {
@@ -369,7 +397,9 @@ namespace naeem {
                 // ::naeem::hottentot::runtime::Logger::GetOut() << ">>>>> " << readingCounter_ << " from " << targetCounter_ << " : " << (unsigned int)data[i] << std::endl;
                 if (readingCounter_ == targetCounter_) {
                   if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                    ::naeem::hottentot::runtime::Logger::GetOut() << "We have read " << readingCounter_ << " Bytes of request body ..." << std::endl;
+                    ::naeem::hottentot::runtime::Logger::GetOut() << 
+                      "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                        "We have read " << readingCounter_ << " Bytes of request body ..." << std::endl;
                   }
                   uint32_t requestLength = readingLength_;
                   unsigned char *requestData = new unsigned char[requestLength];
@@ -381,19 +411,27 @@ namespace naeem {
                   currentState_ = ReadingLengthState;
                   // Request deserialization
                   if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                    ::naeem::hottentot::runtime::Logger::GetOut() << "Deserializing request ..." << std::endl;
+                    ::naeem::hottentot::runtime::Logger::GetOut() << 
+                      "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                        "Deserializing request ..." << std::endl;
                   }
                   Request *request = DeserializeRequest(requestData, requestLength);
                   if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                    ::naeem::hottentot::runtime::Logger::GetOut() << "Deserialized." << std::endl;
+                    ::naeem::hottentot::runtime::Logger::GetOut() << 
+                      "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                        "Deserialized." << std::endl;
                   }
                   
                   if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                    ::naeem::hottentot::runtime::Logger::GetOut() << "Calling callback ..." << std::endl;
+                    ::naeem::hottentot::runtime::Logger::GetOut() << 
+                      "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                        "Calling callback ..." << std::endl;
                   }
                   Response *response = requestCallback_->OnRequest(this, *request);
                   if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                    ::naeem::hottentot::runtime::Logger::GetOut() << "Callback was successful." << std::endl;
+                    ::naeem::hottentot::runtime::Logger::GetOut() << 
+                      "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                        "Callback was successful." << std::endl;
                   }
                   if (response) {
                     uint32_t responseSerializedLength = 0;
@@ -440,7 +478,7 @@ namespace naeem {
                       try {
                         int result = write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
                         if (result <= 0) {
-                          throw std::runtime_error("Write to proxy failed.");
+                          throw std::runtime_error("[" + Utils::GetCurrentUTCTimeString() + "]: Write to proxy failed.");
                         }
                         /* for (uint32_t i = 0; i < sendLength; i++) {
                           std::cout << "Writing ..." << std::endl;
@@ -455,18 +493,22 @@ namespace naeem {
                       try {
                         int result = send(remoteSocketFD_, (char *)sendData, sendLength * sizeof(unsigned char), 0);
                         if (result == SOCKET_ERROR) {
-                          throw std::runtime_error("Write to proxy failed.");
+                          throw std::runtime_error("[" + Utils::GetCurrentUTCTimeString() + "]: Write to proxy failed.");
                         }
 #endif
                       } catch (std::exception &e) {
-                        ::naeem::hottentot::runtime::Logger::GetError() << e.what() << std::endl;
+                        ::naeem::hottentot::runtime::Logger::GetError() <<
+                          "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                             e.what() << std::endl;
                       }
                     }
                     delete [] sendData;
                     delete [] responseSerializedData;
                     delete response;
                   } else {
-                    ::naeem::hottentot::runtime::Logger::GetError() << "No handler is found." << std::endl;
+                    ::naeem::hottentot::runtime::Logger::GetError() << 
+                      "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                        "No handler is found." << std::endl;
                   }
                   delete request;
                   delete [] requestData;
@@ -489,7 +531,9 @@ namespace naeem {
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
                 if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Response length is " << readingLength_ << " Bytes." << std::endl;
+                  ::naeem::hottentot::runtime::Logger::GetOut() << 
+                    "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                      "Response length is " << readingLength_ << " Bytes." << std::endl;
                 }
               } else {
                 targetCounter_ = (data[i] & 0x0f) + 1;
@@ -511,7 +555,9 @@ namespace naeem {
                 readingCounter_ = 0;
                 currentState_ = ReadingDataState;
                 if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Logger::GetOut() << "Response length is " << readingLength_ << " Bytes." << std::endl;
+                  ::naeem::hottentot::runtime::Logger::GetOut() << 
+                    "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                      "Response length is " << readingLength_ << " Bytes." << std::endl;
                 }
                 // Variable 'i' shouldn't get incremented because no byte is processed here.
                 i--;
