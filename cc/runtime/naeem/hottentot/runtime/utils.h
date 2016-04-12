@@ -24,9 +24,12 @@
 #ifndef _NAEEM_HOTTENTOT_RUNTIME__UTILS_H_
 #define _NAEEM_HOTTENTOT_RUNTIME__UTILS_H_
 
+#include <time.h>
+
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <sstream>
 
 #ifdef _MSC_VER
 typedef __int8 int8_t;
@@ -49,6 +52,7 @@ namespace naeem {
     namespace runtime {
       class Utils {
       public:
+#ifndef _MSC_VER
         static std::string GetCurrentUTCTimeString() {
           time_t     now = time(0);
           struct tm  tstruct;
@@ -57,6 +61,31 @@ namespace naeem {
           strftime(buffer, sizeof(buffer), "%Y-%m-%d.%X UTC", &tstruct);
           return buffer;
         }
+#else
+        static std::string GetCurrentUTCTimeString(void) {
+          time_t seconds_since_the_epoch;
+          struct tm tm_struct;
+          errno_t err;
+          std::ostringstream buf;
+          time(&seconds_since_the_epoch);
+          if (seconds_since_the_epoch == -1) {
+              return "";
+          }
+          err = gmtime_s(&tm_struct, &seconds_since_the_epoch);
+          if (err) {
+              return "";
+          }
+          buf
+              <<        std::setw(4) << std::setfill('0') << tm_struct.tm_year + 1900
+              << "-" << std::setw(2) << std::setfill('0') << tm_struct.tm_mon + 1
+              << "-" << std::setw(2) << std::setfill('0') << tm_struct.tm_mday
+              << "T" << std::setw(2) << std::setfill('0') << tm_struct.tm_hour
+              << ":" << std::setw(2) << std::setfill('0') << tm_struct.tm_min
+              << ":" << std::setw(2) << std::setfill('0') << tm_struct.tm_sec
+              << "Z";
+          return buf.str();
+        }
+#endif
         static void PrintArray(std::string label,
                                unsigned char *buffer, 
                                uint32_t length) {

@@ -93,7 +93,11 @@ namespace naeem {
              it != values_.end();
              it++) {
           if (it->first == optionShortName || it->first == optionCompleteName) {
+#ifndef _MSC_VER
             return atoll(it->second.c_str());
+#else
+            return _atoi64(it->second.c_str());
+#endif
           }
         }
         return 0;
