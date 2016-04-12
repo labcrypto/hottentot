@@ -2,7 +2,9 @@
 [[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl::[[[METHOD_NAME]]](
 [[[ARGUMENTS]]][[[INDENT]]]) {
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl::[[[METHOD_NAME]]]() is called." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl::[[[METHOD_NAME]]]() is called." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]// TODO
 [[[INDENT]]]}

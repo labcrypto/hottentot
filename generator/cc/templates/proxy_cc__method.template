@@ -5,7 +5,9 @@
 [[[INDENT]]][[[INDENT]]] * Make request object
 [[[INDENT]]][[[INDENT]]] */
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Making request object ..." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Making request object ..." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Request request;
 [[[INDENT]]][[[INDENT]]]request.SetServiceId([[[SERVICE_HASH]]]);
@@ -15,22 +17,28 @@
 [[[INDENT]]][[[INDENT]]] * Serialize arguments
 [[[INDENT]]][[[INDENT]]] */
 [[[ARGUMENTS_SERIALIZATION]]][[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Request object is fill with serialized arguments." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Request object is fill with serialized arguments." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Connect to server
 [[[INDENT]]][[[INDENT]]] */
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Connecting to server " << host_ << ":" << port_ << " ..." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Connecting to server " << host_ << ":" << port_ << " ..." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::TcpClient *tcpClient = 
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
 [[[INDENT]]][[[INDENT]]]if (!tcpClient->Connect()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("Could not connect.");
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("[" + ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Could not connect.");
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Connected." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Connected." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Serialize request according to HOTP
@@ -38,11 +46,15 @@
 [[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Protocol *protocol = new ::naeem::hottentot::runtime::ProtocolV1(tcpClient->GetRemoteSocketFD()); // TODO(kamran): Use factory.
 [[[INDENT]]][[[INDENT]]]uint32_t requestSerializedDataLength = 0;
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Serializing request object ..." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Serializing request object ..." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]unsigned char *requestSerializedData = protocol->SerializeRequest(request, &requestSerializedDataLength);
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Request object is serialized." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Request object is serialized." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Send request byte array
@@ -79,26 +91,30 @@
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedData[i];
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Writing " << sendLength << "[[[INDENT]]][[[INDENT]]]Bytes to socket ..." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Writing " << sendLength << "[[[INDENT]]][[[INDENT]]]Bytes to socket ..." << std::endl;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]try {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]tcpClient->Write(sendData, sendLength);
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Written." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Written." << std::endl;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]} catch (std::exception &e) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]delete protocol;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]delete [] sendData;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]delete [] requestSerializedData;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error(e.what());
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("[" + ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: " + e.what());
 [[[INDENT]]][[[INDENT]]]} catch (...) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]delete protocol;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]delete [] sendData;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]delete [] requestSerializedData;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("Exception occurred while writing to server socket.");
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("[" + ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Exception occurred while writing to server socket.");
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]delete [] sendData;
 [[[INDENT]]][[[INDENT]]]delete [] requestSerializedData;
@@ -106,7 +122,9 @@
 [[[INDENT]]][[[INDENT]]] * Read response from server
 [[[INDENT]]][[[INDENT]]] */
 [[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << "Waiting for response ..." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Waiting for response ..." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]unsigned char buffer[256];
 [[[INDENT]]][[[INDENT]]]while (!protocol->IsResponseComplete()) {
@@ -114,12 +132,12 @@
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]if (numOfReadBytes == 0) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete protocol;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("Service is gone.");
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("[" + ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Service is gone.");
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]if (numOfReadBytes < 0) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete protocol;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("Read from service failed.");
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("[" + ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Read from service failed.");
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]protocol->ProcessDataForResponse(buffer, numOfReadBytes);
 [[[INDENT]]][[[INDENT]]]}
