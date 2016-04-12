@@ -55,6 +55,7 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #include "proxy.h"
+#include "../utils.h"
 
 
 namespace naeem {
@@ -72,23 +73,31 @@ namespace naeem {
           struct hostent *server;
           int socketFD = socket(AF_INET, SOCK_STREAM, 0);
           if (socketFD < 0) {
-            std::cerr << "ERROR opening socket" << std::endl;
+            std::cerr << 
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "ERROR opening socket" << std::endl;
             return false;
           }
           server = gethostbyname(host_.c_str());
           if (server == NULL) {
-            std::cerr << "ERROR, no such host" << std::endl;
+            std::cerr << 
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "ERROR, no such host" << std::endl;
             return false;
           }
           memset((char *) &serverAddr, 0, sizeof(serverAddr));
           serverAddr.sin_family = AF_INET;
           serverAddr.sin_port = htons(port_);
           if (inet_pton(AF_INET, host_.c_str(), &serverAddr.sin_addr) <= 0) {
-            std::cerr << "ERROR setting host" << std::endl;
+            std::cerr << 
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "ERROR setting host" << std::endl;
             return false;
           }
           if (connect(socketFD, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
-            // std::cerr << "ERROR connecting to host" << std::endl;
+            std::cerr << 
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "ERROR connecting to host" << std::endl;
             return false;
           }
           close(socketFD);

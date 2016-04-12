@@ -54,7 +54,9 @@ namespace naeem {
         DefaultRequestCallback::OnRequest(void *source,
                                           Request &request) {
           if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-            ::naeem::hottentot::runtime::Logger::GetOut() << "A new request is received." << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() << 
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "A new request is received." << std::endl;
           }
           if (requestHandlers_->count(request.GetServiceId()) > 0) {
             Response *response = new Response;
@@ -63,7 +65,9 @@ namespace naeem {
               return 0;
             }
             if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              ::naeem::hottentot::runtime::Logger::GetOut() << "Calling handler method ..." << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetOut() << 
+                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                  "Calling handler method ..." << std::endl;
             }
             requestHandler->HandleRequest(request, *response);
             return response;

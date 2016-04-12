@@ -82,7 +82,9 @@ namespace naeem {
             inet_pton(AF_INET, host_.c_str(), &(servAddr.sin_addr));
             servAddr.sin_port = htons(port_);
             if (bind(serverSocketFD, (struct sockaddr *) &servAddr, sizeof(servAddr)) < 0) {
-              ::naeem::hottentot::runtime::Logger::GetError() << "Error on bind." << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetError() << 
+                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                  "Error on bind." << std::endl;
               exit(EXIT_FAILURE);
             }
             listen(serverSocketFD, 5);
@@ -144,7 +146,9 @@ namespace naeem {
             pthread_t thread;
             int ret = pthread_create(&thread, NULL, AcceptClients, (void *)this);
             if (ret) {
-              ::naeem::hottentot::runtime::Logger::GetError() << "Error - pthread_create() return code: " << ret << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetError() << 
+                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                  "Error - pthread_create() return code: " << ret << std::endl;
               exit(EXIT_FAILURE);
             }
             pthread_detach(ret);
@@ -206,7 +210,9 @@ namespace naeem {
               tv.tv_sec = ::naeem::hottentot::runtime::Configuration::SocketReadTimeout();
               tv.tv_usec = 0;
               if (setsockopt(clientSocketFD, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval)) < 0) {
-                ::naeem::hottentot::runtime::Logger::GetError() << "ERROR setting read timeout." << std::endl;
+                ::naeem::hottentot::runtime::Logger::GetError() << 
+                  "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                    "ERROR setting read timeout." << std::endl;
                 exit(EXIT_FAILURE);
               }
   #else
@@ -231,7 +237,9 @@ namespace naeem {
             
             int ret = pthread_create(&thread, &attr, HandleClientConnection, (void *)params);
             if (ret) {
-              ::naeem::hottentot::runtime::Logger::GetError() << "Error - pthread_create() return code: " << ret << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetError() << 
+                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                  "Error - pthread_create() return code: " << ret << std::endl;
               exit(EXIT_FAILURE);
             }
             // pthread_detach(ret);
@@ -284,7 +292,9 @@ namespace naeem {
             }
           }
           if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-            ::naeem::hottentot::runtime::Logger::GetOut() << "Client is gone." << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() << 
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "Client is gone." << std::endl;
           }
 #ifndef _MSC_VER
           close(ref->clientSocketFD_);
