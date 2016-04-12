@@ -40,6 +40,7 @@
 #include "default_tcp_server_factory.h"
 
 #include "../configuration.h"
+#include "../utils.h"
 
 
 namespace naeem {
@@ -60,15 +61,21 @@ namespace naeem {
         void 
         ServiceRuntime::SigTermHanlder(int flag) {
           if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-            ::naeem::hottentot::runtime::Logger::GetOut() << "SIG_TERM is received ..." << std::endl;
-            ::naeem::hottentot::runtime::Logger::GetOut() << "Killing all listener threads ..." << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() << 
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "SIG_TERM is received ..." << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() << 
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "Killing all listener threads ..." << std::endl;
           }
           for (uint32_t i = 0; i < threads_.size(); i++) {
             // TODO: Find a more proper way to kill a thread.
             pthread_cancel(threads_[i]);
           }
           if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-            ::naeem::hottentot::runtime::Logger::GetOut() << "All threads are killed." << std::endl;
+            ::naeem::hottentot::runtime::Logger::GetOut() <<  
+              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                "All threads are killed." << std::endl;
           }
           flag = 1;
         }
@@ -79,8 +86,12 @@ namespace naeem {
             case CTRL_C_EVENT: 
             case CTRL_CLOSE_EVENT: 
               if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                ::naeem::hottentot::runtime::Logger::GetOut() << "CONTROL signal is received ..." << std::endl;
-                ::naeem::hottentot::runtime::Logger::GetOut() << "Killing all listener threads ..." << std::endl;
+                ::naeem::hottentot::runtime::Logger::GetOut() << 
+                  "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                    "CONTROL signal is received ..." << std::endl;
+                ::naeem::hottentot::runtime::Logger::GetOut() << 
+                  "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<  
+                    "Killing all listener threads ..." << std::endl;
               }
               for (uint32_t i = 0; i < threads_.size(); i++) {
                 // TODO: Find a more proper way to kill a thread.
@@ -177,7 +188,9 @@ namespace naeem {
             tcpServers_.push_back(tcpServer);
             threads_.push_back(tcpServer->BindAndStart());
             if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              ::naeem::hottentot::runtime::Logger::GetOut() << "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetOut() << 
+                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                  "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
             }
           }
           for (uint32_t i = 0; i < threads_.size(); i++) {

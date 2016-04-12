@@ -49,6 +49,14 @@ namespace naeem {
     namespace runtime {
       class Utils {
       public:
+        static std::string GetCurrentUTCTimeString() {
+          time_t     now = time(0);
+          struct tm  tstruct;
+          char       buffer[80];
+          tstruct = *gmtime(&now);
+          strftime(buffer, sizeof(buffer), "%Y-%m-%d.%X UTC", &tstruct);
+          return buffer;
+        }
         static void PrintArray(std::string label,
                                unsigned char *buffer, 
                                uint32_t length) {
