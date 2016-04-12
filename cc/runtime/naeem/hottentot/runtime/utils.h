@@ -60,19 +60,22 @@ namespace naeem {
         static void PrintArray(std::string label,
                                unsigned char *buffer, 
                                uint32_t length) {
-          Logger::GetOut() << label << ":" << std::endl;
+          Logger::GetOut() << 
+            "[" << GetCurrentUTCTimeString() << "]: " <<
+              label << ":" << std::endl << "[" << GetCurrentUTCTimeString() << "]: ";
           bool newLineInserted = false;
           for (uint32_t i = 0; i < length; i++) {
             newLineInserted = false;
-            Logger::GetOut() << std::uppercase << std::hex << "0x" << 
-              std::setw(2) << std::setfill ('0') << (unsigned int)buffer[i] << " ";
+            Logger::GetOut() << 
+              std::uppercase << std::hex << "0x" << 
+                std::setw(2) << std::setfill ('0') << (unsigned int)buffer[i] << " ";
             if ((i + 1) % 8 == 0) {
-              Logger::GetOut() << std::endl;
+              Logger::GetOut() << std::endl << "[" << GetCurrentUTCTimeString() << "]: ";
               newLineInserted = true;
             }
           }
           if (!newLineInserted) {
-            Logger::GetOut() << std::endl;
+            Logger::GetOut() << std::endl << "[" << GetCurrentUTCTimeString() << "]: ";
           }
           Logger::GetOut() << std::dec;
         }
