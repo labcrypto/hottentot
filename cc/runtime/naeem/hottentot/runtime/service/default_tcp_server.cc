@@ -201,8 +201,12 @@ namespace naeem {
             }
 #endif
             if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              ::naeem::hottentot::runtime::Logger::GetOut() << "A new client is connected." << std::endl;
-              ::naeem::hottentot::runtime::Logger::GetOut() << "Setting socket read timeout ..." << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetOut() << 
+                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                  "A new client is connected." << std::endl;
+              ::naeem::hottentot::runtime::Logger::GetOut() << 
+                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+                  "Setting socket read timeout ..." << std::endl;
             }
             if (::naeem::hottentot::runtime::Configuration::SocketReadTimeout() > 0) {
   #ifndef _MSC_VER
