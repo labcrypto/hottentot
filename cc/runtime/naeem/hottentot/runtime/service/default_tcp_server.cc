@@ -235,10 +235,8 @@ namespace naeem {
 #ifndef _MSC_VER
             pthread_t thread; // TODO(kamran): We need a thread pool here.
             pthread_attr_t attr;
-
             pthread_attr_init(&attr);
             pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-            
             int ret = pthread_create(&thread, &attr, HandleClientConnection, (void *)params);
             if (ret) {
               ::naeem::hottentot::runtime::Logger::GetError() << 
