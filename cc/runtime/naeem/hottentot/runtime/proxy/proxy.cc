@@ -83,6 +83,7 @@ namespace naeem {
             std::cerr << 
               "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
                 "ERROR, no such host" << std::endl;
+            close(socketFD);
             return false;
           }
           memset((char *) &serverAddr, 0, sizeof(serverAddr));
@@ -92,12 +93,14 @@ namespace naeem {
             std::cerr << 
               "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
                 "ERROR setting host" << std::endl;
+            close(socketFD);
             return false;
           }
           if (connect(socketFD, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
             std::cerr << 
               "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
                 "ERROR connecting to host" << std::endl;
+            close(socketFD);
             return false;
           }
           close(socketFD);
