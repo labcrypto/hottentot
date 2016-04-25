@@ -28,7 +28,6 @@ public class AuthenticationRequestHandler extends RequestHandler {
   public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
     long methodId = request.getMethodId();
     AuthenticationService authenticationImpl = (AbstractAuthenticationService) service;
-
     if(methodId == 2550194791L){
       List <Argument> args = request.getArgs();
       Argument arg0 = args.get(0);
@@ -271,6 +270,8 @@ public class AuthenticationRequestHandler extends RequestHandler {
       return response;
     }
 
-    throw new MethodNotSupportException("method id is incorrect");
+    if(Config.isVerboseMode){
+      System.out.println("method is not found");
+    }
   }
 }
