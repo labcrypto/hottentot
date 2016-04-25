@@ -33,7 +33,7 @@ public class DefaultRequestCallback implements RequestCallback {
     this.requestHandlers = requestHandlers;
   }
 
-  public Response onRequest(Request request) throws TcpClientReadException, TcpClientConnectException, TcpClientWriteException, MethodNotSupportException {
+  public Response onRequest(Request request) throws TcpClientReadException, TcpClientConnectException, TcpClientWriteException {
     RequestHandler requestHandler = requestHandlers.get(request.getServiceId());
     return requestHandler.handleRequest(request);
   }
