@@ -30,5 +30,5 @@ public abstract class RequestHandler {
     public RequestHandler(Service service) {
         this.service = service;
     }
-    abstract public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException;
+    abstract public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException;
 }
