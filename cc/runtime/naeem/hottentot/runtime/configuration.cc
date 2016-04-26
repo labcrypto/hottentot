@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 LabCrypto Organization
+ *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -27,93 +27,91 @@
 #include "configuration.h"
 
 
-namespace org {
-  namespace labcrypto {
-    namespace hottentot {
-      namespace runtime {
-        bool Configuration::verbose_ = false;
-        uint32_t Configuration::socketReadTimeout_ = 30;
-        std::vector<std::string> Configuration::options_;
-        std::map<std::string, std::string> Configuration::values_;
-        void 
-        Configuration::Init(int argc,
-                            char **argv) {
-          for (unsigned short i = 0; i < argc; i++) {
-            if (strncmp(argv[i], "--", 2) == 0) {
-              options_.push_back(argv[i] + 2);
-            } else if (strncmp(argv[i], "-", 1) == 0) {
-              options_.push_back(argv[i] + 1);
-            } else {
-              if (options_.size() > 0) {
-                values_.insert(std::pair<std::string, std::string>(options_[options_.size() - 1], argv[i]));
-              }
-            }
-            if (strncmp(argv[i], "-v", 2) == 0) {
-              verbose_ = true;
-            } else if (strncmp(argv[i], "--verbose", 9) == 0) {
-              verbose_ = true;
-            } else if (strncmp(argv[i], "--socket-read-timeout", 21) == 0) {
-              socketReadTimeout_ = atoi(argv[i + 1]);
+namespace naeem {
+  namespace hottentot {
+    namespace runtime {
+      bool Configuration::verbose_ = false;
+      uint32_t Configuration::socketReadTimeout_ = 30;
+      std::vector<std::string> Configuration::options_;
+      std::map<std::string, std::string> Configuration::values_;
+      void 
+      Configuration::Init(int argc,
+                          char **argv) {
+        for (unsigned short i = 0; i < argc; i++) {
+          if (strncmp(argv[i], "--", 2) == 0) {
+            options_.push_back(argv[i] + 2);
+          } else if (strncmp(argv[i], "-", 1) == 0) {
+            options_.push_back(argv[i] + 1);
+          } else {
+            if (options_.size() > 0) {
+              values_.insert(std::pair<std::string, std::string>(options_[options_.size() - 1], argv[i]));
             }
           }
-        }
-        bool 
-        Configuration::Exists(std::string optionShortName, std::string optionCompleteName) {
-          for (uint32_t i = 0; i < options_.size(); i++) {
-            if (options_[i] == optionShortName || options_[i] == optionCompleteName) {
-              return true;
-            }
+          if (strncmp(argv[i], "-v", 2) == 0) {
+            verbose_ = true;
+          } else if (strncmp(argv[i], "--verbose", 9) == 0) {
+            verbose_ = true;
+          } else if (strncmp(argv[i], "--socket-read-timeout", 21) == 0) {
+            socketReadTimeout_ = atoi(argv[i + 1]);
           }
-          return false;
         }
-        bool
-        Configuration::HasValue(std::string optionShortName, std::string optionCompleteName) {
-          for (std::map<std::string, std::string>::iterator it = values_.begin();
-               it != values_.end();
-               it++) {
-            if (it->first == optionShortName || it->first == optionCompleteName) {
-              return true;
-            }
+      }
+      bool 
+      Configuration::Exists(std::string optionShortName, std::string optionCompleteName) {
+        for (uint32_t i = 0; i < options_.size(); i++) {
+          if (options_[i] == optionShortName || options_[i] == optionCompleteName) {
+            return true;
           }
-          return false;
         }
-        uint32_t 
-        Configuration::AsUInt32(std::string optionShortName, std::string optionCompleteName) {
-          for (std::map<std::string, std::string>::iterator it = values_.begin();
-               it != values_.end();
-               it++) {
-            if (it->first == optionShortName || it->first == optionCompleteName) {
-              return atol(it->second.c_str());
-            }
+        return false;
+      }
+      bool
+      Configuration::HasValue(std::string optionShortName, std::string optionCompleteName) {
+        for (std::map<std::string, std::string>::iterator it = values_.begin();
+             it != values_.end();
+             it++) {
+          if (it->first == optionShortName || it->first == optionCompleteName) {
+            return true;
           }
-          return 0;
         }
-        uint64_t 
-        Configuration::AsUInt64(std::string optionShortName, std::string optionCompleteName) {
-          for (std::map<std::string, std::string>::iterator it = values_.begin();
-               it != values_.end();
-               it++) {
-            if (it->first == optionShortName || it->first == optionCompleteName) {
-  #ifndef _MSC_VER
-              return atoll(it->second.c_str());
-  #else
-              return _atoi64(it->second.c_str());
-  #endif
-            }
+        return false;
+      }
+      uint32_t 
+      Configuration::AsUInt32(std::string optionShortName, std::string optionCompleteName) {
+        for (std::map<std::string, std::string>::iterator it = values_.begin();
+             it != values_.end();
+             it++) {
+          if (it->first == optionShortName || it->first == optionCompleteName) {
+            return atol(it->second.c_str());
           }
-          return 0;
         }
-        std::string 
-        Configuration::AsString(std::string optionShortName, std::string optionCompleteName) {
-          for (std::map<std::string, std::string>::iterator it = values_.begin();
-               it != values_.end();
-               it++) {
-            if (it->first == optionShortName || it->first == optionCompleteName) {
-              return it->second.c_str();
-            }
+        return 0;
+      }
+      uint64_t 
+      Configuration::AsUInt64(std::string optionShortName, std::string optionCompleteName) {
+        for (std::map<std::string, std::string>::iterator it = values_.begin();
+             it != values_.end();
+             it++) {
+          if (it->first == optionShortName || it->first == optionCompleteName) {
+#ifndef _MSC_VER
+            return atoll(it->second.c_str());
+#else
+            return _atoi64(it->second.c_str());
+#endif
           }
-          return "";
         }
+        return 0;
+      }
+      std::string 
+      Configuration::AsString(std::string optionShortName, std::string optionCompleteName) {
+        for (std::map<std::string, std::string>::iterator it = values_.begin();
+             it != values_.end();
+             it++) {
+          if (it->first == optionShortName || it->first == optionCompleteName) {
+            return it->second.c_str();
+          }
+        }
+        return "";
       }
     }
   }
