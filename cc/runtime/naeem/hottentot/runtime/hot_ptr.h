@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,8 @@
 #define NULL 0
 #endif
 
-namespace naeem {
+namespace org {
+namespace labcrypto {
 namespace hottentot {
 namespace runtime {
   template<typename  T, bool IsArray = false>
@@ -84,4 +85,6 @@ namespace runtime {
 }
 }
 }
+}
+
 #endif

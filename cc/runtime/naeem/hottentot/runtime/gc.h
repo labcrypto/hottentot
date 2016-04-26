@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,8 @@
 #ifndef _NAEEM_HOTTENTOT_RUNTIME__GC_H_
 #define _NAEEM_HOTTENTOT_RUNTIME__GC_H_
 
-namespace naeem {
+namespace org {
+namespace labcrypto {
 namespace hottentot {
 namespace runtime {
   class GC {
@@ -58,6 +59,7 @@ namespace runtime {
     std::vector<void*> pointers_;
     std::vector<void*> arrayPointers_;
   };
+}
 }
 }
 }

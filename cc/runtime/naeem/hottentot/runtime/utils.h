@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -47,70 +47,72 @@ typedef unsigned __int64 uint64_t;
 #include "logger.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      class Utils {
-      public:
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+  class Utils {
+  public:
 #ifndef _MSC_VER
-        static std::string GetCurrentUTCTimeString() {
-          time_t     now = time(0);
-          struct tm  tstruct;
-          char       buffer[80];
-          tstruct = *gmtime(&now);
-          strftime(buffer, sizeof(buffer), "%Y-%m-%d.%X UTC", &tstruct);
-          return buffer;
-        }
-#else
-        static std::string GetCurrentUTCTimeString(void) {
-          time_t seconds_since_the_epoch;
-          struct tm tm_struct;
-          errno_t err;
-          std::ostringstream buf;
-          time(&seconds_since_the_epoch);
-          if (seconds_since_the_epoch == -1) {
-              return "";
-          }
-          err = gmtime_s(&tm_struct, &seconds_since_the_epoch);
-          if (err) {
-              return "";
-          }
-          buf
-              <<        std::setw(4) << std::setfill('0') << tm_struct.tm_year + 1900
-              << "-" << std::setw(2) << std::setfill('0') << tm_struct.tm_mon + 1
-              << "-" << std::setw(2) << std::setfill('0') << tm_struct.tm_mday
-              << "T" << std::setw(2) << std::setfill('0') << tm_struct.tm_hour
-              << ":" << std::setw(2) << std::setfill('0') << tm_struct.tm_min
-              << ":" << std::setw(2) << std::setfill('0') << tm_struct.tm_sec
-              << "Z";
-          return buf.str();
-        }
-#endif
-        static void PrintArray(std::string label,
-                               unsigned char *buffer, 
-                               uint32_t length) {
-          Logger::GetOut() << 
-            "[" << GetCurrentUTCTimeString() << "]: " <<
-              label << ":" << std::endl << "[" << GetCurrentUTCTimeString() << "]: ";
-          bool newLineInserted = false;
-          for (uint32_t i = 0; i < length; i++) {
-            newLineInserted = false;
-            Logger::GetOut() << 
-              std::uppercase << std::hex << "0x" << 
-                std::setw(2) << std::setfill ('0') << (unsigned int)buffer[i] << " ";
-            if ((i + 1) % 8 == 0) {
-              Logger::GetOut() << std::endl << "[" << GetCurrentUTCTimeString() << "]: ";
-              newLineInserted = true;
-            }
-          }
-          if (!newLineInserted) {
-            Logger::GetOut() << std::endl << "[" << GetCurrentUTCTimeString() << "]: ";
-          }
-          Logger::GetOut() << std::dec;
-        }
-      };
+    static std::string GetCurrentUTCTimeString() {
+      time_t     now = time(0);
+      struct tm  tstruct;
+      char       buffer[80];
+      tstruct = *gmtime(&now);
+      strftime(buffer, sizeof(buffer), "%Y-%m-%d.%X UTC", &tstruct);
+      return buffer;
     }
-  }
+#else
+    static std::string GetCurrentUTCTimeString(void) {
+      time_t seconds_since_the_epoch;
+      struct tm tm_struct;
+      errno_t err;
+      std::ostringstream buf;
+      time(&seconds_since_the_epoch);
+      if (seconds_since_the_epoch == -1) {
+          return "";
+      }
+      err = gmtime_s(&tm_struct, &seconds_since_the_epoch);
+      if (err) {
+          return "";
+      }
+      buf
+          <<        std::setw(4) << std::setfill('0') << tm_struct.tm_year + 1900
+          << "-" << std::setw(2) << std::setfill('0') << tm_struct.tm_mon + 1
+          << "-" << std::setw(2) << std::setfill('0') << tm_struct.tm_mday
+          << "T" << std::setw(2) << std::setfill('0') << tm_struct.tm_hour
+          << ":" << std::setw(2) << std::setfill('0') << tm_struct.tm_min
+          << ":" << std::setw(2) << std::setfill('0') << tm_struct.tm_sec
+          << "Z";
+      return buf.str();
+    }
+#endif
+    static void PrintArray(std::string label,
+                           unsigned char *buffer, 
+                           uint32_t length) {
+      Logger::GetOut() << 
+        "[" << GetCurrentUTCTimeString() << "]: " <<
+          label << ":" << std::endl << "[" << GetCurrentUTCTimeString() << "]: ";
+      bool newLineInserted = false;
+      for (uint32_t i = 0; i < length; i++) {
+        newLineInserted = false;
+        Logger::GetOut() << 
+          std::uppercase << std::hex << "0x" << 
+            std::setw(2) << std::setfill ('0') << (unsigned int)buffer[i] << " ";
+        if ((i + 1) % 8 == 0) {
+          Logger::GetOut() << std::endl << "[" << GetCurrentUTCTimeString() << "]: ";
+          newLineInserted = true;
+        }
+      }
+      if (!newLineInserted) {
+        Logger::GetOut() << std::endl << "[" << GetCurrentUTCTimeString() << "]: ";
+      }
+      Logger::GetOut() << std::dec;
+    }
+  };
+}
+}
+}
 }
 
 #endif

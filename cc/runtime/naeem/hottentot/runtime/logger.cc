@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -24,38 +24,40 @@
 #include "logger.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      std::ostream* Logger::o_ = 0;
-      std::ostream* Logger::e_ = 0;
-      bool Logger::initialized_ = false;
-      void 
-      Logger::Init() {
-        if (initialized_) {
-          return;
-        }
-        o_ = new std::ostream(std::cout.rdbuf());
-        e_ = new std::ostream(std::cerr.rdbuf());
-        initialized_ = true;
-      }
-      void
-      Logger::Shutdown() {
-        if (!initialized_) {
-          return;
-        }
-        delete o_;
-        delete e_;
-        initialized_ = false;
-      }
-      std::ostream& 
-      Logger::GetOut() {
-        return *o_;
-      }
-      std::ostream& 
-      Logger::GetError() {
-        return *e_;
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+  std::ostream* Logger::o_ = 0;
+  std::ostream* Logger::e_ = 0;
+  bool Logger::initialized_ = false;
+  void 
+  Logger::Init() {
+    if (initialized_) {
+      return;
     }
+    o_ = new std::ostream(std::cout.rdbuf());
+    e_ = new std::ostream(std::cerr.rdbuf());
+    initialized_ = true;
   }
+  void
+  Logger::Shutdown() {
+    if (!initialized_) {
+      return;
+    }
+    delete o_;
+    delete e_;
+    initialized_ = false;
+  }
+  std::ostream& 
+  Logger::GetOut() {
+    return *o_;
+  }
+  std::ostream& 
+  Logger::GetError() {
+    return *e_;
+  }
+}
+}
+}
 }

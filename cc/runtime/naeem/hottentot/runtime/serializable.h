@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -40,17 +40,18 @@ typedef unsigned __int64 uint64_t;
 #include <vector>
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      class Serializable {
-      public:
-        virtual unsigned char * Serialize(uint32_t *        /* Pointer to length */) = 0;
-        virtual void Deserialize(unsigned char *   /* Data */,
-                                 uint32_t          /* Data length */) = 0;
-      };
-    }
-  }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+  class Serializable {
+  public:
+    virtual unsigned char * Serialize(uint32_t *        /* Pointer to length */) = 0;
+    virtual void Deserialize(unsigned char *   /* Data */,
+                             uint32_t          /* Data length */) = 0;
+  };
+}
+}
 }
 
 #endif

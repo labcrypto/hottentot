@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -38,47 +38,49 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace service {
-        class RequestCallback;
-      }
-      class Request;
-      class Response;
-      class Protocol {
-      public:
-        Protocol(int remoteSocketFD) 
-          : remoteSocketFD_(remoteSocketFD) {
-        }
-        virtual ~Protocol() {}
-      public:
-        virtual unsigned char* SerializeRequest(Request &      /* Request object*/, 
-                                                uint32_t *     /* Length */) = 0;
-        virtual unsigned char* SerializeResponse(Response &    /* Response object*/, 
-                                                 uint32_t *    /* Length */) = 0;
-        virtual Request* DeserializeRequest(unsigned char *   /* Request data */, 
-                                             uint32_t          /* Request data length */) = 0;
-        virtual Response* DeserializeResponse(unsigned char *  /* Response data */, 
-                                              uint32_t         /* Response data length */) = 0;
-      public:
-        virtual void SetRequestCallback(::naeem::hottentot::runtime::service::RequestCallback *requestCallback) {
-          requestCallback_ = requestCallback;
-        }
-      public:
-        virtual void ProcessDataForRequest(unsigned char *     /* Data chuck */,
-                                           uint32_t            /* Data chunk length */) = 0;
-        virtual void ProcessDataForResponse(unsigned char *    /* Data chuck */,
-                                            uint32_t           /* Data chunk length */) = 0;
-      public:
-        virtual bool IsResponseComplete() = 0;
-        virtual Response* GetResponse() = 0;
-      protected:
-        int remoteSocketFD_;
-        ::naeem::hottentot::runtime::service::RequestCallback *requestCallback_;
-      };
-    }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+  namespace service {
+    class RequestCallback;
   }
+  class Request;
+  class Response;
+  class Protocol {
+  public:
+    Protocol(int remoteSocketFD) 
+      : remoteSocketFD_(remoteSocketFD) {
+    }
+    virtual ~Protocol() {}
+  public:
+    virtual unsigned char* SerializeRequest(Request &      /* Request object*/, 
+                                            uint32_t *     /* Length */) = 0;
+    virtual unsigned char* SerializeResponse(Response &    /* Response object*/, 
+                                             uint32_t *    /* Length */) = 0;
+    virtual Request* DeserializeRequest(unsigned char *   /* Request data */, 
+                                         uint32_t          /* Request data length */) = 0;
+    virtual Response* DeserializeResponse(unsigned char *  /* Response data */, 
+                                          uint32_t         /* Response data length */) = 0;
+  public:
+    virtual void SetRequestCallback(::naeem::hottentot::runtime::service::RequestCallback *requestCallback) {
+      requestCallback_ = requestCallback;
+    }
+  public:
+    virtual void ProcessDataForRequest(unsigned char *     /* Data chuck */,
+                                       uint32_t            /* Data chunk length */) = 0;
+    virtual void ProcessDataForResponse(unsigned char *    /* Data chuck */,
+                                        uint32_t           /* Data chunk length */) = 0;
+  public:
+    virtual bool IsResponseComplete() = 0;
+    virtual Response* GetResponse() = 0;
+  protected:
+    int remoteSocketFD_;
+    ::naeem::hottentot::runtime::service::RequestCallback *requestCallback_;
+  };
+}
+}
+}
 }
 
 #endif

@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -43,44 +43,46 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      class Configuration {
-      public:
-        static void Init(int argc, char **argv);
-        static bool Exists(std::string optionShortName, std::string optionCompleteName = "");
-        static bool HasValue(std::string optionShortName, std::string optionCompleteName = "");
-        static uint32_t AsUInt32(std::string optionShortName, std::string optionCompleteName);
-        static uint64_t AsUInt64(std::string optionShortName, std::string optionCompleteName);
-        static std::string AsString(std::string optionShortName, std::string optionCompleteName);
-        static void SetDefaultValues() {
-          verbose_ = false;
-          socketReadTimeout_ = 30;
-        }
-        static bool Verbose() {
-          return verbose_;
-        }
-        static void VerboseOn() {
-          verbose_ = true;
-        }
-        static void VerboseOff() {
-          verbose_ = false;
-        }
-        static uint32_t SocketReadTimeout() {
-          return socketReadTimeout_;
-        }
-        static void SetSocketReadTimeout(uint32_t socketReadTimeout) {
-          socketReadTimeout_ = socketReadTimeout;
-        }
-      private:
-        static bool verbose_;
-        static uint32_t socketReadTimeout_;
-        static std::vector<std::string> options_;
-        static std::map<std::string, std::string> values_;
-      };
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+  class Configuration {
+  public:
+    static void Init(int argc, char **argv);
+    static bool Exists(std::string optionShortName, std::string optionCompleteName = "");
+    static bool HasValue(std::string optionShortName, std::string optionCompleteName = "");
+    static uint32_t AsUInt32(std::string optionShortName, std::string optionCompleteName);
+    static uint64_t AsUInt64(std::string optionShortName, std::string optionCompleteName);
+    static std::string AsString(std::string optionShortName, std::string optionCompleteName);
+    static void SetDefaultValues() {
+      verbose_ = false;
+      socketReadTimeout_ = 30;
     }
-  }
+    static bool Verbose() {
+      return verbose_;
+    }
+    static void VerboseOn() {
+      verbose_ = true;
+    }
+    static void VerboseOff() {
+      verbose_ = false;
+    }
+    static uint32_t SocketReadTimeout() {
+      return socketReadTimeout_;
+    }
+    static void SetSocketReadTimeout(uint32_t socketReadTimeout) {
+      socketReadTimeout_ = socketReadTimeout;
+    }
+  private:
+    static bool verbose_;
+    static uint32_t socketReadTimeout_;
+    static std::vector<std::string> options_;
+    static std::map<std::string, std::string> values_;
+  };
+}
+}
+}
 }
 
 #endif
