@@ -28,7 +28,6 @@ public class SecondRequestHandler extends RequestHandler {
   public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
     long methodId = request.getMethodId();
     SecondService secondImpl = (AbstractSecondService) service;
-
     if(methodId == 2392076192L){
       List <Argument> args = request.getArgs();
       Response response = new Response();
@@ -40,6 +39,8 @@ public class SecondRequestHandler extends RequestHandler {
       return response;
     }
 
-    throw new MethodNotSupportException("method id is incorrect");
+    if(Config.isVerboseMode){
+      System.out.println("method is not found");
+    }
   }
 }
