@@ -61,21 +61,21 @@ namespace service {
 #ifndef _MSC_VER
   void 
   ServiceRuntime::SigTermHanlder(int flag) {
-    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-      ::naeem::hottentot::runtime::Logger::GetOut() << 
-        "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "SIG_TERM is received ..." << std::endl;
-      ::naeem::hottentot::runtime::Logger::GetOut() << 
-        "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "Killing all listener threads ..." << std::endl;
     }
     for (uint32_t i = 0; i < threads_.size(); i++) {
       // TODO: Find a more proper way to kill a thread.
       pthread_cancel(threads_[i]);
     }
-    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-      ::naeem::hottentot::runtime::Logger::GetOut() <<  
-        "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() <<  
+        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "All threads are killed." << std::endl;
     }
     flag = 1;
@@ -86,12 +86,12 @@ namespace service {
     switch(fdwCtrlType) { 
       case CTRL_C_EVENT: 
       case CTRL_CLOSE_EVENT: 
-        if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-          ::naeem::hottentot::runtime::Logger::GetOut() << 
-            "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+        if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+          ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+            "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
               "CONTROL signal is received ..." << std::endl;
-          ::naeem::hottentot::runtime::Logger::GetOut() << 
-            "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<  
+          ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+            "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<  
               "Killing all listener threads ..." << std::endl;
         }
         for (uint32_t i = 0; i < threads_.size(); i++) {
@@ -188,9 +188,9 @@ namespace service {
                                                                     requestHandlers_[it->first]);
       tcpServers_.push_back(tcpServer);
       threads_.push_back(tcpServer->BindAndStart());
-      if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-        ::naeem::hottentot::runtime::Logger::GetOut() << 
-          "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+        ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
             "Endpoint started: " << it->first.GetHost() << ":" << it->first.GetPort() << std::endl;
       }
     }

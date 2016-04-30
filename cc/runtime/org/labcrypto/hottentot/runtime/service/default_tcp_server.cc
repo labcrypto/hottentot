@@ -83,8 +83,8 @@ namespace service {
       inet_pton(AF_INET, host_.c_str(), &(servAddr.sin_addr));
       servAddr.sin_port = htons(port_);
       if (bind(serverSocketFD, (struct sockaddr *) &servAddr, sizeof(servAddr)) < 0) {
-        ::naeem::hottentot::runtime::Logger::GetError() << 
-          "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+        ::org::labcrypto::hottentot::runtime::Logger::GetError() << 
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
             "Error on bind." << std::endl;
         exit(EXIT_FAILURE);
       }
@@ -147,8 +147,8 @@ namespace service {
       pthread_t thread;
       int ret = pthread_create(&thread, NULL, AcceptClients, (void *)this);
       if (ret) {
-        ::naeem::hottentot::runtime::Logger::GetError() << 
-          "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+        ::org::labcrypto::hottentot::runtime::Logger::GetError() << 
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
             "Error - pthread_create() return code: " << ret << std::endl;
         exit(EXIT_FAILURE);
       }
@@ -201,27 +201,27 @@ namespace service {
           exit(EXIT_FAILURE);
       }
 #endif
-      if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-        ::naeem::hottentot::runtime::Logger::GetOut() << 
-          "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+        ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
             "A new client is connected." << std::endl;
-        ::naeem::hottentot::runtime::Logger::GetOut() << 
-          "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+        ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
             "Setting socket read timeout ..." << std::endl;
       }
-      if (::naeem::hottentot::runtime::Configuration::SocketReadTimeout() > 0) {
+      if (::org::labcrypto::hottentot::runtime::Configuration::SocketReadTimeout() > 0) {
 #ifndef _MSC_VER
         struct timeval tv;
-        tv.tv_sec = ::naeem::hottentot::runtime::Configuration::SocketReadTimeout();
+        tv.tv_sec = ::org::labcrypto::hottentot::runtime::Configuration::SocketReadTimeout();
         tv.tv_usec = 0;
         if (setsockopt(clientSocketFD, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval)) < 0) {
-          ::naeem::hottentot::runtime::Logger::GetError() << 
-            "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+          ::org::labcrypto::hottentot::runtime::Logger::GetError() << 
+            "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
               "ERROR setting read timeout." << std::endl;
           exit(EXIT_FAILURE);
         }
 #else
-        int nTimeout = ::naeem::hottentot::runtime::Configuration::SocketReadTimeout() * 1000;
+        int nTimeout = ::org::labcrypto::hottentot::runtime::Configuration::SocketReadTimeout() * 1000;
         if (setsockopt(clientSocketFD, SOL_SOCKET, SO_RCVTIMEO, (const char*)&nTimeout, sizeof(int)) != 0) {
           printf("setsockopt failed with error: %ld\n", WSAGetLastError());
           closesocket(ref->serverSocketFD_);
@@ -240,8 +240,8 @@ namespace service {
       pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
       int ret = pthread_create(&thread, &attr, HandleClientConnection, (void *)params);
       if (ret) {
-        ::naeem::hottentot::runtime::Logger::GetError() << 
-          "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+        ::org::labcrypto::hottentot::runtime::Logger::GetError() << 
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
             "Error - pthread_create() return code: " << ret << std::endl;
         exit(EXIT_FAILURE);
       }
@@ -273,8 +273,8 @@ namespace service {
     bool ok = true;
     _HandleClientConnectionParams *ref = (_HandleClientConnectionParams*)data;
     unsigned char buffer[256];
-    ::naeem::hottentot::runtime::Protocol *protocol = 
-      new ::naeem::hottentot::runtime::ProtocolV1(ref->clientSocketFD_);
+    ::org::labcrypto::hottentot::runtime::Protocol *protocol = 
+      new ::org::labcrypto::hottentot::runtime::ProtocolV1(ref->clientSocketFD_);
     DefaultRequestCallback *requestCallback = 
       new DefaultRequestCallback(ref->tcpServer_->requestHandlers_);
     protocol->SetRequestCallback(requestCallback);
@@ -288,15 +288,15 @@ namespace service {
         ok = false;
       }
       if (ok) {
-        if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-          ::naeem::hottentot::runtime::Utils::PrintArray("Read", buffer, numOfReadBytes);
+        if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+          ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Read", buffer, numOfReadBytes);
         }
         protocol->ProcessDataForRequest(buffer, numOfReadBytes);
       }
     }
-    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-      ::naeem::hottentot::runtime::Logger::GetOut() << 
-        "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "Client is gone." << std::endl;
     }
 #ifndef _MSC_VER

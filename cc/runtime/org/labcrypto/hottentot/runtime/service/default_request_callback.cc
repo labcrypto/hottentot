@@ -54,9 +54,9 @@ namespace service {
   Response*
   DefaultRequestCallback::OnRequest(void *source,
                                     Request &request) {
-    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-      ::naeem::hottentot::runtime::Logger::GetOut() << 
-        "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "A new request is received." << std::endl;
     }
     if (requestHandlers_->count(request.GetServiceId()) > 0) {
@@ -65,9 +65,9 @@ namespace service {
       if (requestHandler == 0) {
         return 0;
       }
-      if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-        ::naeem::hottentot::runtime::Logger::GetOut() << 
-          "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+        ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
             "Calling handler method ..." << std::endl;
       }
       requestHandler->HandleRequest(request, *response);

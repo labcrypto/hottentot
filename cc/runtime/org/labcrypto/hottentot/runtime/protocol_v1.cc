@@ -422,7 +422,6 @@ namespace runtime {
                   "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                     "Deserialized." << std::endl;
               }
-              
               if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
                 ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                   "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -475,7 +474,6 @@ namespace runtime {
                   ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
                 }
                 if (sendLength > 0) {
-}
 #ifndef _MSC_VER
                   try {
                     int result = write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
