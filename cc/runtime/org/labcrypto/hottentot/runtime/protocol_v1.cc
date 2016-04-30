@@ -150,7 +150,7 @@ namespace runtime {
       }
     }
     if (c != actualLength) {
-      ::naeem::hottentot::runtime::Logger::GetError() << 
+      ::org::labcrypto::hottentot::runtime::Logger::GetError() << 
         "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
           "Inconsistency in request serialization process." << std::endl;
       exit(1);
@@ -207,8 +207,8 @@ namespace runtime {
     uint32_t c = 0;
     Request *request = new Request;
     request->SetType((Request::RequestType)data[c++]);
-    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-      ::naeem::hottentot::runtime::Logger::GetOut() << 
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
           "Request Type: " << request->GetType() << std::endl;
     }
@@ -218,8 +218,8 @@ namespace runtime {
     ((unsigned char *)(&serviceId))[1] = data[c++];
     ((unsigned char *)(&serviceId))[0] = data[c++];
     request->SetServiceId(serviceId);
-    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-      ::naeem::hottentot::runtime::Logger::GetOut() << 
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
           "Service Id: " << serviceId << std::endl;
     }
@@ -229,25 +229,25 @@ namespace runtime {
     ((unsigned char *)(&methodId))[1] = data[c++];
     ((unsigned char *)(&methodId))[0] = data[c++];
     request->SetMethodId(methodId);
-    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-      ::naeem::hottentot::runtime::Logger::GetOut() << 
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
           "Method Id: " << methodId << std::endl;
     }
     uint8_t argCount = data[c++];
-    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-      ::naeem::hottentot::runtime::Logger::GetOut() << 
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
           "Arg. Count: " << (uint8_t)argCount << std::endl;
     }
     for (unsigned int k = 0; k < (uint8_t)argCount; k++) {
       if (data[c] == 0x00) {
         request->AddArgument(0, 0);
-        if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-          ::naeem::hottentot::runtime::Logger::GetOut() << 
+        if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+          ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
             "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
               "Argument[" << k << "] Length: " << 0 << std::endl;
-          ::naeem::hottentot::runtime::Logger::GetOut() <<  
+          ::org::labcrypto::hottentot::runtime::Logger::GetOut() <<  
             "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
               "Argument has zero length." << std::endl;
         }
@@ -270,11 +270,11 @@ namespace runtime {
         for (uint32_t i = 0; i < argLength; i++) {
           argData[i] = data[c++];
         }
-        if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-          ::naeem::hottentot::runtime::Logger::GetOut() << 
+        if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+          ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
             "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
               "Argument[" << k << "] Length: " << argLength << std::endl;
-          ::naeem::hottentot::runtime::Utils::PrintArray("Argument Data", argData, argLength);
+          ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Argument Data", argData, argLength);
         }
         request->AddArgument(argData, argLength);
       }
@@ -291,8 +291,8 @@ namespace runtime {
     if (data[c] == 0x00) {
       response->SetData(0);
       response->SetDataLength(0);
-      if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-        ::naeem::hottentot::runtime::Logger::GetOut() << 
+      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+        ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
           "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
             "Response has zero length." << std::endl;
       }
@@ -317,8 +317,8 @@ namespace runtime {
       }
       response->SetData(resultData);
       response->SetDataLength(resultLength);
-      if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-        ::naeem::hottentot::runtime::Utils::PrintArray("Response", resultData, resultLength);
+      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+        ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Response", resultData, resultLength);
       }
     }
     return response;
@@ -326,8 +326,8 @@ namespace runtime {
   void 
   ProtocolV1::ProcessDataForRequest(unsigned char *data,
                                     uint32_t       dataLength) {
-    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-      ::naeem::hottentot::runtime::Logger::GetOut() << 
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
           "We have data with length " << dataLength << " Bytes." << std::endl;
     }
@@ -339,8 +339,8 @@ namespace runtime {
             readingLength_ = data[i];
             readingCounter_ = 0;
             currentState_ = ReadingDataState;
-            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              ::naeem::hottentot::runtime::Logger::GetOut() << 
+            if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+              ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                 "[" << Utils::GetCurrentUTCTimeString() << "]: " <<  
                   "Request length is " << readingLength_ << " Bytes." << std::endl;
             }
@@ -348,8 +348,8 @@ namespace runtime {
             targetCounter_ = (data[i] & 0x0f);
             readingBuffer_.push_back(data[i]);
             readingCounter_++;
-            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              ::naeem::hottentot::runtime::Logger::GetOut() << 
+            if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+              ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                 "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                   "Length is more than 127." << std::endl;
             }
@@ -369,8 +369,8 @@ namespace runtime {
             readingBuffer_.clear();
             readingCounter_ = 0;
             currentState_ = ReadingDataState;
-            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              ::naeem::hottentot::runtime::Logger::GetOut() << 
+            if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+              ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                 "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                   "Request length is " << readingLength_ << " Bytes." << std::endl;
             }
@@ -383,22 +383,22 @@ namespace runtime {
           readingBuffer_.clear();
           readingBuffer_.push_back(data[i]);
           readingCounter_++;
-          // ::naeem::hottentot::runtime::Logger::GetOut() << ">>>>> " << readingCounter_ << " from " << targetCounter_ << " : " << (unsigned int)data[i] << std::endl;
+          // ::org::labcrypto::hottentot::runtime::Logger::GetOut() << ">>>>> " << readingCounter_ << " from " << targetCounter_ << " : " << (unsigned int)data[i] << std::endl;
           targetCounter_ = readingLength_;
-          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-            ::naeem::hottentot::runtime::Logger::GetOut() << 
+          if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+            ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
               "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                 "Preparing for reading the request body ..." << std::endl;
           }
         } else {
           if (readingCounter_ < targetCounter_) {
-            // ::naeem::hottentot::runtime::Logger::GetOut() << "Reading request body : 0x" << std::hex << std::setfill('0') << std::setw(2) << (int)data[i] << " ..." << std::dec << std::endl;
+            // ::org::labcrypto::hottentot::runtime::Logger::GetOut() << "Reading request body : 0x" << std::hex << std::setfill('0') << std::setw(2) << (int)data[i] << " ..." << std::dec << std::endl;
             readingBuffer_.push_back(data[i]);
             readingCounter_++;
-            // ::naeem::hottentot::runtime::Logger::GetOut() << ">>>>> " << readingCounter_ << " from " << targetCounter_ << " : " << (unsigned int)data[i] << std::endl;
+            // ::org::labcrypto::hottentot::runtime::Logger::GetOut() << ">>>>> " << readingCounter_ << " from " << targetCounter_ << " : " << (unsigned int)data[i] << std::endl;
             if (readingCounter_ == targetCounter_) {
-              if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                ::naeem::hottentot::runtime::Logger::GetOut() << 
+              if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+                ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                   "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                     "We have read " << readingCounter_ << " Bytes of request body ..." << std::endl;
               }
@@ -411,34 +411,34 @@ namespace runtime {
               readingCounter_ = 0;
               currentState_ = ReadingLengthState;
               // Request deserialization
-              if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                ::naeem::hottentot::runtime::Logger::GetOut() << 
+              if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+                ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                   "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                     "Deserializing request ..." << std::endl;
               }
               Request *request = DeserializeRequest(requestData, requestLength);
-              if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                ::naeem::hottentot::runtime::Logger::GetOut() << 
+              if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+                ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                   "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                     "Deserialized." << std::endl;
               }
               
-              if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                ::naeem::hottentot::runtime::Logger::GetOut() << 
+              if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+                ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                   "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                     "Calling callback ..." << std::endl;
               }
               Response *response = requestCallback_->OnRequest(this, *request);
-              if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                ::naeem::hottentot::runtime::Logger::GetOut() << 
+              if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+                ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                   "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                     "Callback was successful." << std::endl;
               }
               if (response) {
                 uint32_t responseSerializedLength = 0;
                 unsigned char *responseSerializedData = SerializeResponse(*response, &responseSerializedLength);
-                if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Utils::PrintArray("Serialized response: ", responseSerializedData, responseSerializedLength);
+                if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+                  ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Serialized response: ", responseSerializedData, responseSerializedLength);
                 }
                 uint32_t sendLength = 0;
                 if (responseSerializedLength < 128) {
@@ -471,8 +471,8 @@ namespace runtime {
                 for (unsigned int k = 0; k < responseSerializedLength; k++) {
                   sendData[c++] = responseSerializedData[k];
                 }
-                if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                  ::naeem::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
+                if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+                  ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
                 }
                 if (sendLength > 0) {
 }
@@ -499,7 +499,7 @@ namespace runtime {
                     }
 #endif
                   } catch (std::exception &e) {
-                    ::naeem::hottentot::runtime::Logger::GetError() <<
+                    ::org::labcrypto::hottentot::runtime::Logger::GetError() <<
                       "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                          e.what() << std::endl;
                   }
@@ -508,7 +508,7 @@ namespace runtime {
                 delete [] responseSerializedData;
                 delete response;
               } else {
-                ::naeem::hottentot::runtime::Logger::GetError() << 
+                ::org::labcrypto::hottentot::runtime::Logger::GetError() << 
                   "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                     "No handler is found." << std::endl;
               }
@@ -532,8 +532,8 @@ namespace runtime {
             readingLength_ = data[i];
             readingCounter_ = 0;
             currentState_ = ReadingDataState;
-            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              ::naeem::hottentot::runtime::Logger::GetOut() << 
+            if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+              ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                 "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                   "Response length is " << readingLength_ << " Bytes." << std::endl;
             }
@@ -556,8 +556,8 @@ namespace runtime {
             }
             readingCounter_ = 0;
             currentState_ = ReadingDataState;
-            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              ::naeem::hottentot::runtime::Logger::GetOut() << 
+            if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+              ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                 "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                   "Response length is " << readingLength_ << " Bytes." << std::endl;
             }
@@ -573,8 +573,8 @@ namespace runtime {
           targetCounter_ = readingLength_;
         } else {
           if (readingCounter_ < targetCounter_) {
-            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              // ::naeem::hottentot::runtime::Logger::GetOut() << "Reading response body : 0x" << std::hex << std::setfill('0') << std::setw(2) << (int)data[i] << " ..." << std::dec << std::endl;
+            if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+              // ::org::labcrypto::hottentot::runtime::Logger::GetOut() << "Reading response body : 0x" << std::hex << std::setfill('0') << std::setw(2) << (int)data[i] << " ..." << std::dec << std::endl;
             }
             readingBuffer_.push_back(data[i]);
             readingCounter_++;
@@ -584,8 +584,8 @@ namespace runtime {
               for (unsigned int c = 0; c < responseLength; c++) {
                 responseData[c] = readingBuffer_[c];
               }
-              if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-                ::naeem::hottentot::runtime::Utils::PrintArray("Response", responseData, responseLength);
+              if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+                ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Response", responseData, responseLength);
               }
               response_ = DeserializeResponse(responseData, responseLength);
               readingBuffer_.clear();

@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME__GC_H_
-#define _NAEEM_HOTTENTOT_RUNTIME__GC_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__GC_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__GC_H_
 
 namespace org {
 namespace labcrypto {

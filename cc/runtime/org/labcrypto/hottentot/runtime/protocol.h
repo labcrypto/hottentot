@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME__PROTOCOL_H_
-#define _NAEEM_HOTTENTOT_RUNTIME__PROTOCOL_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__PROTOCOL_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__PROTOCOL_H_
 
 #ifdef _MSC_VER
 typedef __int8 int8_t;
@@ -63,7 +63,7 @@ namespace runtime {
     virtual Response* DeserializeResponse(unsigned char *  /* Response data */, 
                                           uint32_t         /* Response data length */) = 0;
   public:
-    virtual void SetRequestCallback(::naeem::hottentot::runtime::service::RequestCallback *requestCallback) {
+    virtual void SetRequestCallback(::org::labcrypto::hottentot::runtime::service::RequestCallback *requestCallback) {
       requestCallback_ = requestCallback;
     }
   public:
@@ -76,7 +76,7 @@ namespace runtime {
     virtual Response* GetResponse() = 0;
   protected:
     int remoteSocketFD_;
-    ::naeem::hottentot::runtime::service::RequestCallback *requestCallback_;
+    ::org::labcrypto::hottentot::runtime::service::RequestCallback *requestCallback_;
   };
 }
 }
