@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME_PROXY__FAULT_H_
-#define _NAEEM_HOTTENTOT_RUNTIME_PROXY__FAULT_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__FAULT_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__FAULT_H_
 
 #include <string>
 #include <stdexcept>
@@ -41,27 +41,28 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace proxy {
-        class Fault : public std::runtime_error {
-        public:
-          Fault(uint8_t responseStatusCode, std::string faultMessage)
-            : std::runtime_error(faultMessage),
-              responseStatusCode_(responseStatusCode) {
-          }
-          virtual ~Fault() throw() {}
-        public:
-          inline uint8_t GetResponseStatusCode() const {
-            return responseStatusCode_;
-          }
-        protected:
-          uint8_t responseStatusCode_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace proxy {
+  class Fault : public std::runtime_error {
+  public:
+    Fault(uint8_t responseStatusCode, std::string faultMessage)
+      : std::runtime_error(faultMessage),
+        responseStatusCode_(responseStatusCode) {
     }
-  }
+    virtual ~Fault() throw() {}
+  public:
+    inline uint8_t GetResponseStatusCode() const {
+      return responseStatusCode_;
+    }
+  protected:
+    uint8_t responseStatusCode_;
+  };
+}
+}
+}
 }
 
 #endif

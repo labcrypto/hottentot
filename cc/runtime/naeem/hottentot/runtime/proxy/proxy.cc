@@ -22,7 +22,6 @@
  */
 
 #ifdef _MSC_VER
-// #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #else
@@ -60,110 +59,112 @@ typedef unsigned __int64 uint64_t;
 #include "../configuration.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace proxy {
-        void
-        Proxy::Destroy() {
-          // TODO(kamran)
-        }
-        bool
-        Proxy::IsServerAlive() {
-#ifndef _MSC_VER
-          struct sockaddr_in serverAddr;
-          struct hostent *server;
-          int socketFD = socket(AF_INET, SOCK_STREAM, 0);
-          if (socketFD < 0) {
-            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              std::cerr << 
-                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-                  "ERROR opening socket" << std::endl;
-            }
-            return false;
-          }
-          server = gethostbyname(host_.c_str());
-          if (server == NULL) {
-            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              std::cerr << 
-                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-                  "ERROR, no such host" << std::endl;
-            }
-            close(socketFD);
-            return false;
-          }
-          memset((char *) &serverAddr, 0, sizeof(serverAddr));
-          serverAddr.sin_family = AF_INET;
-          serverAddr.sin_port = htons(port_);
-          if (inet_pton(AF_INET, host_.c_str(), &serverAddr.sin_addr) <= 0) {
-            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              std::cerr << 
-                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-                  "ERROR setting host" << std::endl;
-            }
-            close(socketFD);
-            return false;
-          }
-          if (connect(socketFD, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
-            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              std::cerr << 
-                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-                  "ERROR connecting to host" << std::endl;
-            }
-            close(socketFD);
-            return false;
-          }
-          close(socketFD);
-          return true;
-#else
-          WSADATA wsaData;
-          SOCKET clientSocket = INVALID_SOCKET;
-          struct addrinfo *result = NULL,
-                          hints;
-          // Initialize Winsock
-          int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
-          if (iResult != 0) {
-              printf("WSAStartup failed with error: %d\n", iResult);
-              return false;
-          }
-          ZeroMemory( &hints, sizeof(hints) );
-          hints.ai_family = AF_UNSPEC;
-          hints.ai_socktype = SOCK_STREAM;
-          hints.ai_protocol = IPPROTO_TCP;
-          // Resolve the server address and port
-          std::stringstream ss;
-          ss << port_;
-          iResult = getaddrinfo(host_.c_str(), ss.str().c_str(), &hints, &result);
-          if ( iResult != 0 ) {
-              printf("getaddrinfo failed with error: %d\n", iResult);
-              WSACleanup();
-              return false;
-          }
-          // Create a SOCKET for connecting to server
-          clientSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-          if (clientSocket == INVALID_SOCKET) {
-              printf("socket failed with error: %ld\n", WSAGetLastError());
-              WSACleanup();
-              return false;
-          }
-          // Connect to server.
-          iResult = connect(clientSocket, result->ai_addr, (int)result->ai_addrlen);
-          if (iResult == SOCKET_ERROR) {
-              closesocket(clientSocket);
-              clientSocket = INVALID_SOCKET;
-              return false;
-          }
-          freeaddrinfo(result);
-          if (clientSocket == INVALID_SOCKET) {
-              printf("Unable to connect to server!\n");
-              WSACleanup();
-              return false;
-          }
-          closesocket(clientSocket);
-          return true;
-#endif
-        }
-      }
-    }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace proxy {
+  void
+  Proxy::Destroy() {
+    // TODO(kamran)
   }
+  bool
+  Proxy::IsServerAlive() {
+#ifndef _MSC_VER
+    struct sockaddr_in serverAddr;
+    struct hostent *server;
+    int socketFD = socket(AF_INET, SOCK_STREAM, 0);
+    if (socketFD < 0) {
+      if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+        std::cerr << 
+          "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+            "ERROR opening socket" << std::endl;
+      }
+      return false;
+    }
+    server = gethostbyname(host_.c_str());
+    if (server == NULL) {
+      if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+        std::cerr << 
+          "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+            "ERROR, no such host" << std::endl;
+      }
+      close(socketFD);
+      return false;
+    }
+    memset((char *) &serverAddr, 0, sizeof(serverAddr));
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(port_);
+    if (inet_pton(AF_INET, host_.c_str(), &serverAddr.sin_addr) <= 0) {
+      if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+        std::cerr << 
+          "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+            "ERROR setting host" << std::endl;
+      }
+      close(socketFD);
+      return false;
+    }
+    if (connect(socketFD, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
+      if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+        std::cerr << 
+          "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+            "ERROR connecting to host" << std::endl;
+      }
+      close(socketFD);
+      return false;
+    }
+    close(socketFD);
+    return true;
+#else
+    WSADATA wsaData;
+    SOCKET clientSocket = INVALID_SOCKET;
+    struct addrinfo *result = NULL,
+                    hints;
+    // Initialize Winsock
+    int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+    if (iResult != 0) {
+        printf("WSAStartup failed with error: %d\n", iResult);
+        return false;
+    }
+    ZeroMemory( &hints, sizeof(hints) );
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+    // Resolve the server address and port
+    std::stringstream ss;
+    ss << port_;
+    iResult = getaddrinfo(host_.c_str(), ss.str().c_str(), &hints, &result);
+    if ( iResult != 0 ) {
+        printf("getaddrinfo failed with error: %d\n", iResult);
+        WSACleanup();
+        return false;
+    }
+    // Create a SOCKET for connecting to server
+    clientSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+    if (clientSocket == INVALID_SOCKET) {
+        printf("socket failed with error: %ld\n", WSAGetLastError());
+        WSACleanup();
+        return false;
+    }
+    // Connect to server.
+    iResult = connect(clientSocket, result->ai_addr, (int)result->ai_addrlen);
+    if (iResult == SOCKET_ERROR) {
+        closesocket(clientSocket);
+        clientSocket = INVALID_SOCKET;
+        return false;
+    }
+    freeaddrinfo(result);
+    if (clientSocket == INVALID_SOCKET) {
+        printf("Unable to connect to server!\n");
+        WSACleanup();
+        return false;
+    }
+    closesocket(clientSocket);
+    return true;
+#endif
+  }
+}
+}
+}
+}
 }

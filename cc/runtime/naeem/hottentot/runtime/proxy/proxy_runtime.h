@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME_PROXY__PROXY_RUNTIME_H_
-#define _NAEEM_HOTTENTOT_RUNTIME_PROXY__PROXY_RUNTIME_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PROXY_RUNTIME_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PROXY_RUNTIME_H_
 
 #include <vector>
 #include <map>
@@ -42,26 +42,28 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace proxy {
-        class TcpClientFactory;
-        class ProxyRuntime {
-        public:
-          static void Init(int argc, char **argv);
-          static void Shutdown();
-          static TcpClientFactory* GetTcpClientFactory();
-          inline static void SetTcpClientFactory(TcpClientFactory *tcpClientFactory) {
-            tcpClientFactory_ = tcpClientFactory;
-          }
-        private:
-          static TcpClientFactory *tcpClientFactory_;
-          static bool initialized_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace proxy {
+  class TcpClientFactory;
+  class ProxyRuntime {
+  public:
+    static void Init(int argc, char **argv);
+    static void Shutdown();
+    static TcpClientFactory* GetTcpClientFactory();
+    inline static void SetTcpClientFactory(TcpClientFactory *tcpClientFactory) {
+      tcpClientFactory_ = tcpClientFactory;
     }
-  }
+  private:
+    static TcpClientFactory *tcpClientFactory_;
+    static bool initialized_;
+  };
+}
+}
+}
+}
 }
 
 #endif

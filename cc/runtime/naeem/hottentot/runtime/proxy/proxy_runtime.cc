@@ -34,42 +34,44 @@
 #include "../configuration.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace proxy {
-        TcpClientFactory* ProxyRuntime::tcpClientFactory_ = 0;
-        bool ProxyRuntime::initialized_ = false;
-        void
-        ProxyRuntime::Init(int argc,
-                           char **argv) {
-          if (initialized_) {
-            return;
-          }
-          Configuration::Init(argc, argv);
-#ifndef _MSC_VER
-          signal(SIGPIPE, SIG_IGN);
-#endif
-          ProxyRuntime::initialized_ = true;
-        }
-        void
-        ProxyRuntime::Shutdown() {
-          if (!initialized_) {
-            return;
-          }
-          if (tcpClientFactory_) {
-            delete tcpClientFactory_;
-          }
-          initialized_ = false;
-        }
-        TcpClientFactory*
-        ProxyRuntime::GetTcpClientFactory() {
-          if (tcpClientFactory_ == 0) {
-            tcpClientFactory_ = new DefaultTcpClientFactory;
-          }
-          return tcpClientFactory_;
-        }
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace proxy {
+  TcpClientFactory* ProxyRuntime::tcpClientFactory_ = 0;
+  bool ProxyRuntime::initialized_ = false;
+  void
+  ProxyRuntime::Init(int argc,
+                     char **argv) {
+    if (initialized_) {
+      return;
     }
+    Configuration::Init(argc, argv);
+#ifndef _MSC_VER
+    signal(SIGPIPE, SIG_IGN);
+#endif
+    ProxyRuntime::initialized_ = true;
   }
+  void
+  ProxyRuntime::Shutdown() {
+    if (!initialized_) {
+      return;
+    }
+    if (tcpClientFactory_) {
+      delete tcpClientFactory_;
+    }
+    initialized_ = false;
+  }
+  TcpClientFactory*
+  ProxyRuntime::GetTcpClientFactory() {
+    if (tcpClientFactory_ == 0) {
+      tcpClientFactory_ = new DefaultTcpClientFactory;
+    }
+    return tcpClientFactory_;
+  }
+}
+}
+}
+}
 }

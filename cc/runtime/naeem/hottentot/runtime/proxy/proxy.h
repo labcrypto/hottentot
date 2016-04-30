@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME_PROXY__PROXY_H_
-#define _NAEEM_HOTTENTOT_RUNTIME_PROXY__PROXY_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PROXY_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PROXY_H_
 
 #include <string>
 
@@ -40,26 +40,28 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace proxy {
-        class Proxy {
-        public:
-          Proxy(std::string host, uint32_t port)
-            : host_(host), port_(port) {
-          }
-          ~Proxy() {}
-        public:
-          virtual void Destroy();
-          virtual bool IsServerAlive();
-        protected:
-          std::string host_;
-          uint32_t port_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace proxy {
+  class Proxy {
+  public:
+    Proxy(std::string host, uint32_t port)
+      : host_(host), port_(port) {
     }
-  }
+    ~Proxy() {}
+  public:
+    virtual void Destroy();
+    virtual bool IsServerAlive();
+  protected:
+    std::string host_;
+    uint32_t port_;
+  };
+}
+}
+}
+}
 }
 
 #endif

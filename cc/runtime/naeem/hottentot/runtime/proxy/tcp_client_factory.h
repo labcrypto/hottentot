@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME_PROXY__TCP_CLIENT_FACTORY_H_
-#define _NAEEM_HOTTENTOT_RUNTIME_PROXY__TCP_CLIENT_FACTORY_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__TCP_CLIENT_FACTORY_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__TCP_CLIENT_FACTORY_H_
 
 #include <string>
 
@@ -40,21 +40,23 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace proxy {
-        class TcpClient;
-        class TcpClientFactory {
-        public:
-          virtual ~TcpClientFactory() {}
-        public:
-          virtual TcpClient* CreateTcpClient(std::string           /* Host */,
-                                             uint32_t              /* Port */) = 0;
-        };
-      }
-    }
-  }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace proxy {
+  class TcpClient;
+  class TcpClientFactory {
+  public:
+    virtual ~TcpClientFactory() {}
+  public:
+    virtual TcpClient* CreateTcpClient(std::string           /* Host */,
+                                       uint32_t              /* Port */) = 0;
+  };
+}
+}
+}
+}
 }
 
 #endif
