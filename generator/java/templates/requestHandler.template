@@ -26,7 +26,7 @@ public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
 [%INDENT%][%INDENT%]super(service);
 [%INDENT%]}
 [%INDENT%]@Override
-[%INDENT%]public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
+[%INDENT%]public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException {
 [%INDENT%][%INDENT%]long methodId = request.getMethodId();
 [%INDENT%][%INDENT%][%SERVICE_NAME%]Service [%SERVICE_NAME_LOWERCASE%]Impl = (Abstract[%SERVICE_NAME%]Service) service;
 [%METHOD_CONDITIONS%]
