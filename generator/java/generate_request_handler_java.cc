@@ -61,19 +61,24 @@ namespace naeem {
                 if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)){
                   std::string fetchedArgTypeOfList = 
                   ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
+                  std::string upperCaseArgTypeOfList = 
+                    ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedArgTypeOfList);
                   methodConditionStr += indent_ + indent_ + indent_ + 
-                                        "Serializable" + fetchedArgTypeOfList + "List " +
-                                        "serializable" + fetchedArgTypeOfList + "List = " +  
-                                        "new Serializable" + fetchedArgTypeOfList + "List();\n";
+                                        "Serializable" + upperCaseArgTypeOfList + "List " +
+                                        "serializable" + upperCaseArgTypeOfList + "List = " +  
+                                        "new Serializable" + upperCaseArgTypeOfList + "List();\n";
 
 // serializableTokenList.deserialize(serializedTokens);
                   methodConditionStr += indent_ + indent_ + indent_ + 
-                                        "serializable" + fetchedArgTypeOfList + "List." + 
+                                        "serializable" + upperCaseArgTypeOfList + "List." + 
                                         "deserialize( serialized" + capitalizedArgVar + ");\n";
+                  
+                  std::string argTypeOfList = 
+                    ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(fetchedArgTypeOfList);                                        
                   methodConditionStr += indent_ + indent_ + indent_ + 
-                                        "List<" + fetchedArgTypeOfList + "> " +  pArg->variable_ + " = " + 
-                                        "serializable" + fetchedArgTypeOfList + "List." +
-                                        "get" + fetchedArgTypeOfList + "List();\n"; 
+                                        "List<" + argTypeOfList + "> " +  pArg->variable_ + " = " + 
+                                        "serializable" + upperCaseArgTypeOfList + "List." +
+                                        "get" + upperCaseArgTypeOfList + "List();\n"; 
                 }else if(::naeem::hottentot::generator::common::TypeHelper::IsEnum(pArg->type_)){
                   methodConditionStr += indent_ + indent_ + indent_ +
                                         pArg->type_ + " " + pArg->variable_ +  " = " + 
@@ -107,10 +112,13 @@ namespace naeem {
                 
               }
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+                
+                std::string upperCaseReturnTypeOfList = 
+                  ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
                 methodConditionStr += indent_ + indent_ + indent_ +
-                                      "Serializable" + fetchedReturnTypeOfList + "List" + " " +
-                                      "serializable" + fetchedReturnTypeOfList + "List = " +
-                                      "new Serializable" + fetchedReturnTypeOfList + "List();\n";
+                                      "Serializable" + upperCaseReturnTypeOfList + "List" + " " +
+                                      "serializable" + upperCaseReturnTypeOfList + "List = " +
+                                      "new Serializable" + upperCaseReturnTypeOfList + "List();\n";
               } else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ +
                 pMethod->returnType_ + " " + lowerCaseReturnType + " = null;\n"; 
@@ -119,8 +127,10 @@ namespace naeem {
               
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
           
+                std::string returnTypeOfList = 
+                  ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(fetchedReturnTypeOfList);
                 methodConditionStr += indent_ + indent_ + indent_ +
-                                      "List<" + fetchedReturnTypeOfList + ">" + " " +   
+                                      "List<" + returnTypeOfList + ">" + " " +   
                                       lowerCaseFetchedReturnTypeOfList + "List = " + 
                                       lowerCaseServiceName +
                                       "Impl." + pMethod->name_ + "(";
@@ -167,21 +177,23 @@ namespace naeem {
 
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
                 
+                std::string upperCaseReturnTypeOfList = 
+                  ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
                 methodConditionStr += indent_ + indent_ + indent_ + 
-                                    "byte[] serialized" + fetchedReturnTypeOfList + "List;\n";
+                                    "byte[] serialized" + upperCaseReturnTypeOfList + "List;\n";
                 methodConditionStr += indent_ + indent_ + indent_ + 
                                     "if(" + lowerCaseFetchedReturnTypeOfList + "List == null){\n";
                 methodConditionStr += indent_ + indent_ + indent_ + indent_ +
-                                      "serialized" + fetchedReturnTypeOfList + "List  = new byte[0];\n";
+                                      "serialized" + upperCaseReturnTypeOfList + "List  = new byte[0];\n";
                 methodConditionStr += indent_ + indent_ + indent_ + "}else{\n";
                 
                 methodConditionStr += indent_ + indent_ + indent_ + indent_ +
-                                      "serializable" + fetchedReturnTypeOfList + "List." + 
-                                      "set" + fetchedReturnTypeOfList + "List(" + 
+                                      "serializable" + upperCaseReturnTypeOfList + "List." + 
+                                      "set" + upperCaseReturnTypeOfList + "List(" + 
                                       lowerCaseFetchedReturnTypeOfList + "List);\n";
                 methodConditionStr += indent_ + indent_ + indent_ + indent_ +
-                                      "serialized" + fetchedReturnTypeOfList + "List = " +
-                                      "serializable" + fetchedReturnTypeOfList + "List.serialize();\n"; 
+                                      "serialized" + upperCaseReturnTypeOfList + "List = " +
+                                      "serializable" + upperCaseReturnTypeOfList + "List.serialize();\n"; 
                 methodConditionStr += indent_ + indent_ + indent_ + "}\n";
 
               }else if(::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)){
@@ -208,12 +220,15 @@ namespace naeem {
               methodConditionStr += indent_ + indent_ + indent_ + "response.setStatusCode((byte) 0);\n";
               
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
+                
+                std::string upperCaseReturnTypeOfList = 
+                  ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
                 methodConditionStr += indent_ + indent_ + indent_ +
-                                      "response.setData(serialized" + fetchedReturnTypeOfList +
+                                      "response.setData(serialized" + upperCaseReturnTypeOfList +
                                       "List);\n";
                 methodConditionStr += indent_ + indent_ + indent_ +
                                       "response.setLength(serialized" + 
-                                      fetchedReturnTypeOfList + "List.length + 1);\n";  
+                                      upperCaseReturnTypeOfList + "List.length + 1);\n";  
               }else if(::naeem::hottentot::generator::common::TypeHelper::IsVoid(pMethod->returnType_)){
                 methodConditionStr += indent_ + indent_ + indent_ + 
                                       "response.setData(new byte[]{0});\n";

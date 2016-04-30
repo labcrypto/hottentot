@@ -30,8 +30,13 @@ public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
 [%INDENT%][%INDENT%]long methodId = request.getMethodId();
 [%INDENT%][%INDENT%][%SERVICE_NAME%]Service [%SERVICE_NAME_LOWERCASE%]Impl = (Abstract[%SERVICE_NAME%]Service) service;
 [%METHOD_CONDITIONS%]
+[%INDENT%][%INDENT%]Response response = new Response();
+[%INDENT%][%INDENT%]response.setStatusCode((byte) 255);
+[%INDENT%][%INDENT%]response.setData(new byte[]{0});
+[%INDENT%][%INDENT%]response.setLength(2);
 [%INDENT%][%INDENT%]if(Config.isVerboseMode){
-[%INDENT%][%INDENT%][%INDENT%]System.out.println("method is not found");
+[%INDENT%][%INDENT%][%INDENT%]System.out.println("WARN : method id is incorrect");
 [%INDENT%][%INDENT%]}
+[%INDENT%][%INDENT%]return response;
 [%INDENT%]}
 }

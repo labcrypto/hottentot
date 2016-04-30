@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
+import ir.ntnaeem.hottentot.type.*;
 
 public class SerializableDataWrapperList {
 
@@ -34,6 +35,7 @@ public class SerializableDataWrapperList {
       int dataLength = 0;
       //calculate serializedDataWrapperListLength
       for (DataWrapper dataWrapper : dataWrapperList) {
+        
         byte[] serializedDataWrapper = dataWrapper.serialize();
         byte[] dataWrapperLengthByteArray =
           DataLengthByteArrayMaker.getByteArray(serializedDataWrapper.length);
@@ -41,6 +43,7 @@ public class SerializableDataWrapperList {
       }
       byte[] serializedDataWrapperList = new byte[dataLength];
       for (DataWrapper dataWrapper : dataWrapperList) {
+        
         byte[] serializedDataWrapper = dataWrapper.serialize();
         int serializedDataWrapperLength = serializedDataWrapper.length;
         byte[] dataWrapperLengthByteArray =

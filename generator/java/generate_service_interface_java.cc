@@ -35,7 +35,9 @@ namespace naeem {
               if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
                 fetchedReturnTypeOfList = ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
                 lowerCaseFetchedReturnTypeOfList = ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(fetchedReturnTypeOfList);
-                returnType = "List<" + fetchedReturnTypeOfList + ">";
+                std::string returnTypeOfList = 
+                 ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(fetchedReturnTypeOfList);
+                returnType = "List<" + returnTypeOfList + ">";
               }
 
               serviceMethodsStr += indent_ + "" + returnType + " " + pMethod->name_ + "(";    
@@ -47,7 +49,9 @@ namespace naeem {
                 if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)){
                   std::string fetchedArgTypeOfList = 
                     ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
-                  serviceMethodsStr += "List<" + fetchedArgTypeOfList + "> " + pArg->variable_;    
+                  std::string argTypeOfList = 
+                    ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(fetchedArgTypeOfList);
+                  serviceMethodsStr += "List<" + argTypeOfList + "> " + pArg->variable_;    
                 }else{
                   std::string argType = 
                     ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pArg->type_);

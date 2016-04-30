@@ -12,6 +12,7 @@ import ir.ntnaeem.hottentot.runtime.Request;
 import ir.ntnaeem.hottentot.runtime.RequestHandler;
 import ir.ntnaeem.hottentot.runtime.Response;
 import ir.ntnaeem.hottentot.runtime.Service;
+import ir.ntnaeem.hottentot.runtime.config.Config;
 import ir.ntnaeem.hottentot.runtime.exception.MethodNotSupportException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
 import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
@@ -270,8 +271,13 @@ public class AuthenticationRequestHandler extends RequestHandler {
       return response;
     }
 
+    Response response = new Response();
+    response.setStatusCode((byte) 255);
+    response.setData(new byte[]{0});
+    response.setLength(2);
     if(Config.isVerboseMode){
-      System.out.println("method is not found");
+      System.out.println("WARN : method id is incorrect");
     }
+    return response;
   }
 }
