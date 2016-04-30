@@ -13,11 +13,75 @@ void generateSerializableStructListFile(std::string listStructName ,
                                         std::string outDir ,
                                         std::string indent) {
   std::string lowerCaseStructName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstLowerCase(listStructName);
-  ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
-  ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%INDENT%]" , indent , 1);
-  ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%STRUCT_NAME%]" , listStructName , 1);
-  ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr , "[%LOWER_CASE_STRUCT_NAME%]" , lowerCaseStructName , 1);            
-  std::string path = outDir + "/Serializable" + listStructName.c_str() + "List.java";
+  std::string upperCaseStructName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(listStructName);
+  std::string serializableHottentotTypeName = ::naeem::hottentot::generator::common::TypeHelper::GetSerializableHottentotType(listStructName);
+  std::string lowerCaseSerializableHottentotTypeName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstLowerCase(serializableHottentotTypeName);
+  std::string javaClassType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(listStructName);
+  std::string instanciationHottentotTypeStr = "";
+  std::string getValueMethodStr = "";
+  if(!::naeem::hottentot::generator::common::TypeHelper::IsUDT(listStructName)){
+    getValueMethodStr = ".getValue()";
+  }
+  if(!::naeem::hottentot::generator::common::TypeHelper::IsUDT(listStructName)){
+    instanciationHottentotTypeStr = 
+      serializableHottentotTypeName + " " +
+      lowerCaseSerializableHottentotTypeName + " = " + 
+      "new " + serializableHottentotTypeName + "( " + 
+      lowerCaseStructName + 
+      " );" ;
+  }
+
+  ::naeem::hottentot::generator::common::StringHelper::Replace(
+    replacableSerializableStructListTmpStr ,
+     "[%BASE_PACKAGE_NAME%]" ,
+      basePackageName ,
+       1);
+  ::naeem::hottentot::generator::common::StringHelper::Replace(
+    replacableSerializableStructListTmpStr ,
+     "[%INDENT%]" , 
+     indent ,
+      1);
+  ::naeem::hottentot::generator::common::StringHelper::Replace(
+    replacableSerializableStructListTmpStr ,
+     "[%STRUCT_NAME%]" ,
+      listStructName ,
+       1);
+  ::naeem::hottentot::generator::common::StringHelper::Replace(
+    replacableSerializableStructListTmpStr ,
+     "[%UPPER_CASE_STRUCT_NAME%]" ,
+      upperCaseStructName ,
+       1);
+  ::naeem::hottentot::generator::common::StringHelper::Replace(replacableSerializableStructListTmpStr ,
+   "[%LOWER_CASE_STRUCT_NAME%]" ,
+    lowerCaseStructName ,
+     1);            
+  ::naeem::hottentot::generator::common::StringHelper::Replace(
+    replacableSerializableStructListTmpStr ,
+     "[%HOTTENTOT_TYPE%]" ,
+      serializableHottentotTypeName ,
+       1);            
+  ::naeem::hottentot::generator::common::StringHelper::Replace(
+    replacableSerializableStructListTmpStr ,
+     "[%LOWER_CASE_HOTTENTOT_TYPE%]" ,
+      lowerCaseSerializableHottentotTypeName ,
+       1);            
+  ::naeem::hottentot::generator::common::StringHelper::Replace(
+    replacableSerializableStructListTmpStr ,
+     "[%JAVA_CLASS_TYPE%]" ,
+      javaClassType ,
+       1);            
+  ::naeem::hottentot::generator::common::StringHelper::Replace(
+    replacableSerializableStructListTmpStr , 
+      "[%INSTANCIATION_HOTTENTOT_TYPE%]" ,
+       instanciationHottentotTypeStr ,
+        1);     
+  ::naeem::hottentot::generator::common::StringHelper::Replace(
+    replacableSerializableStructListTmpStr , 
+      "[%GET_VALUE_METHOD%]" ,
+       getValueMethodStr ,
+        1);        
+
+  std::string path = outDir + "/Serializable" + upperCaseStructName.c_str() + "List.java";
   ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableSerializableStructListTmpStr);
 }
 

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
+import ir.ntnaeem.hottentot.type.*;
 
 public class SerializableTokenList {
 
@@ -34,6 +35,7 @@ public class SerializableTokenList {
       int dataLength = 0;
       //calculate serializedTokenListLength
       for (Token token : tokenList) {
+        
         byte[] serializedToken = token.serialize();
         byte[] tokenLengthByteArray =
           DataLengthByteArrayMaker.getByteArray(serializedToken.length);
@@ -41,6 +43,7 @@ public class SerializableTokenList {
       }
       byte[] serializedTokenList = new byte[dataLength];
       for (Token token : tokenList) {
+        
         byte[] serializedToken = token.serialize();
         int serializedTokenLength = serializedToken.length;
         byte[] tokenLengthByteArray =

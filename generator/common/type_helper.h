@@ -115,6 +115,76 @@ namespace naeem {
             ::naeem::hottentot::generator::common::StringHelper::Replace(output , ">" , "" , 1);
             return output;
           }
+
+          static inline std::string GetSerializableHottentotType(std::string type) {
+            if (type == "int8") {
+              return "_Int8";
+            } else if (type == "int16") {
+              return "_Int16";
+            } else if (type == "int32") {
+              return "_Int32";
+            } else if (type == "int64") {
+              return "_Int64";
+            } else if (type == "uint8") {
+              return "_Int8";
+            } else if (type == "uint16") {
+              return "_Int16";
+            } else if (type == "uint32") {
+              return "_Int32";
+            } else if (type == "uint64") {
+              return "_Int64";
+            } else if (type == "bool") {
+              return "_Boolean";
+            } else if (type == "string") {
+              return "_String";
+            } else if (type == "char") {
+              return "_Char";
+            } else if (type == "double") {
+              return "_Double";
+            } else if (type == "data") {
+              return "_Data";
+            } else {
+              std::runtime_error("Type is not supported");  
+            }
+            return type;
+            
+          }
+
+          static inline std::string GetJavaClassType(std::string type) {
+            if(IsUDT(type)){
+                std::runtime_error("type is not PDT");
+            }
+            if (type == "int8") {
+              return "Byte";
+            } else if (type == "int16") {
+              return "Short";
+            } else if (type == "int32") {
+              return "Integer";
+            } else if (type == "int64") {
+              return "Long";
+            } else if (type == "uint8") {
+              return "Byte";
+            } else if (type == "uint16") {
+              return "Short";
+            } else if (type == "uint32") {
+              return "Integer";
+            } else if (type == "uint64") {
+              return "Long";
+            } else if (type == "bool") {
+              return "Boolean";
+            } else if (type == "string") {
+              return "String";
+            } else if (type == "char") {
+              return "Character";
+            } else if (type == "double") {
+              return "Double";
+            } else {
+               std::runtime_error("type is not supported"); 
+            }
+            return type;
+          }
+
+
           static inline std::string GetJavaType(std::string type) {
             if(IsUDT(type)){
                 std::runtime_error("type is not PDT");

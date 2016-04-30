@@ -11,20 +11,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
+import ir.ntnaeem.hottentot.type.*;
 
-public class Serializable[%STRUCT_NAME%]List {
+public class Serializable[%UPPER_CASE_STRUCT_NAME%]List {
 
-  private List<[%STRUCT_NAME%]> [%LOWER_CASE_STRUCT_NAME%]List;
+  private List<[%JAVA_CLASS_TYPE%]> [%LOWER_CASE_STRUCT_NAME%]List;
 
-  public Serializable[%STRUCT_NAME%]List() {
-    [%LOWER_CASE_STRUCT_NAME%]List = new ArrayList<[%STRUCT_NAME%]>();
+  public Serializable[%UPPER_CASE_STRUCT_NAME%]List() {
+    [%LOWER_CASE_STRUCT_NAME%]List = new ArrayList<[%JAVA_CLASS_TYPE%]>();
   }
 
-  public List<[%STRUCT_NAME%]> get[%STRUCT_NAME%]List() {
+  public List<[%JAVA_CLASS_TYPE%]> get[%UPPER_CASE_STRUCT_NAME%]List() {
     return [%LOWER_CASE_STRUCT_NAME%]List;
   }
 
-  public void set[%STRUCT_NAME%]List(List<[%STRUCT_NAME%]> [%LOWER_CASE_STRUCT_NAME%]List) {
+  public void set[%UPPER_CASE_STRUCT_NAME%]List(List<[%JAVA_CLASS_TYPE%]> [%LOWER_CASE_STRUCT_NAME%]List) {
     this.[%LOWER_CASE_STRUCT_NAME%]List = [%LOWER_CASE_STRUCT_NAME%]List;
   }
 
@@ -33,60 +34,62 @@ public class Serializable[%STRUCT_NAME%]List {
       int counter = 0;
       int dataLength = 0;
       //calculate serialized[%STRUCT_NAME%]ListLength
-      for ([%STRUCT_NAME%] [%LOWER_CASE_STRUCT_NAME%] : [%LOWER_CASE_STRUCT_NAME%]List) {
-        byte[] serialized[%STRUCT_NAME%] = [%LOWER_CASE_STRUCT_NAME%].serialize();
+      for ([%JAVA_CLASS_TYPE%] [%LOWER_CASE_STRUCT_NAME%] : [%LOWER_CASE_STRUCT_NAME%]List) {
+        [%INSTANCIATION_HOTTENTOT_TYPE%]
+        byte[] serialized[%UPPER_CASE_STRUCT_NAME%] = [%LOWER_CASE_HOTTENTOT_TYPE%].serialize();
         byte[] [%LOWER_CASE_STRUCT_NAME%]LengthByteArray =
-          DataLengthByteArrayMaker.getByteArray(serialized[%STRUCT_NAME%].length);
-        dataLength += [%LOWER_CASE_STRUCT_NAME%]LengthByteArray.length + serialized[%STRUCT_NAME%].length;
+          DataLengthByteArrayMaker.getByteArray(serialized[%UPPER_CASE_STRUCT_NAME%].length);
+        dataLength += [%LOWER_CASE_STRUCT_NAME%]LengthByteArray.length + serialized[%UPPER_CASE_STRUCT_NAME%].length;
       }
-      byte[] serialized[%STRUCT_NAME%]List = new byte[dataLength];
-      for ([%STRUCT_NAME%] [%LOWER_CASE_STRUCT_NAME%] : [%LOWER_CASE_STRUCT_NAME%]List) {
-        byte[] serialized[%STRUCT_NAME%] = [%LOWER_CASE_STRUCT_NAME%].serialize();
-        int serialized[%STRUCT_NAME%]Length = serialized[%STRUCT_NAME%].length;
+      byte[] serialized[%UPPER_CASE_STRUCT_NAME%]List = new byte[dataLength];
+      for ([%JAVA_CLASS_TYPE%] [%LOWER_CASE_STRUCT_NAME%] : [%LOWER_CASE_STRUCT_NAME%]List) {
+        [%INSTANCIATION_HOTTENTOT_TYPE%]
+        byte[] serialized[%UPPER_CASE_STRUCT_NAME%] = [%LOWER_CASE_HOTTENTOT_TYPE%].serialize();
+        int serialized[%UPPER_CASE_STRUCT_NAME%]Length = serialized[%UPPER_CASE_STRUCT_NAME%].length;
         byte[] [%LOWER_CASE_STRUCT_NAME%]LengthByteArray =
-          DataLengthByteArrayMaker.getByteArray(serialized[%STRUCT_NAME%]Length);
-        System.arraycopy([%LOWER_CASE_STRUCT_NAME%]LengthByteArray, 0, serialized[%STRUCT_NAME%]List, counter, [%LOWER_CASE_STRUCT_NAME%]LengthByteArray.length);
+          DataLengthByteArrayMaker.getByteArray(serialized[%UPPER_CASE_STRUCT_NAME%]Length);
+        System.arraycopy([%LOWER_CASE_STRUCT_NAME%]LengthByteArray, 0, serialized[%UPPER_CASE_STRUCT_NAME%]List, counter, [%LOWER_CASE_STRUCT_NAME%]LengthByteArray.length);
         counter += [%LOWER_CASE_STRUCT_NAME%]LengthByteArray.length;
-        System.arraycopy(serialized[%STRUCT_NAME%], 0, serialized[%STRUCT_NAME%]List, counter, serialized[%STRUCT_NAME%].length);
-        counter += serialized[%STRUCT_NAME%].length;
+        System.arraycopy(serialized[%UPPER_CASE_STRUCT_NAME%], 0, serialized[%UPPER_CASE_STRUCT_NAME%]List, counter, serialized[%UPPER_CASE_STRUCT_NAME%].length);
+        counter += serialized[%UPPER_CASE_STRUCT_NAME%].length;
       }
-      return serialized[%STRUCT_NAME%]List;
+      return serialized[%UPPER_CASE_STRUCT_NAME%]List;
     }
     return new byte[0];
   }
 
-  public void deserialize(byte[] serialized[%STRUCT_NAME%]List) {
-    if(serialized[%STRUCT_NAME%]List.length != 0){
+  public void deserialize(byte[] serialized[%UPPER_CASE_STRUCT_NAME%]List) {
+    if(serialized[%UPPER_CASE_STRUCT_NAME%]List.length != 0){
       int counter = 0;
-      int serialized[%STRUCT_NAME%]ByteArrayLength = 0 ;
+      int serialized[%UPPER_CASE_STRUCT_NAME%]ByteArrayLength = 0 ;
       while (true) {
-        if (counter == serialized[%STRUCT_NAME%]List.length) {
+        if (counter == serialized[%UPPER_CASE_STRUCT_NAME%]List.length) {
           break;
         }
-        int firstLengthByte = serialized[%STRUCT_NAME%]List[counter];
+        int firstLengthByte = serialized[%UPPER_CASE_STRUCT_NAME%]List[counter];
         int numOfByteForLength = 1;
         if ((firstLengthByte & 0x80) == 0) {
-          serialized[%STRUCT_NAME%]ByteArrayLength = serialized[%STRUCT_NAME%]List[counter];
+          serialized[%UPPER_CASE_STRUCT_NAME%]ByteArrayLength = serialized[%UPPER_CASE_STRUCT_NAME%]List[counter];
         } else {
           counter++;
           numOfByteForLength = firstLengthByte & 0x0f;
-          byte[] serialized[%STRUCT_NAME%]LengthByteArray = new byte[numOfByteForLength];
+          byte[] serialized[%UPPER_CASE_STRUCT_NAME%]LengthByteArray = new byte[numOfByteForLength];
           int serializedDataWrapperLengthByteArrayCounter = 0;
           for (int i = counter; i < counter + numOfByteForLength; i++) {
-            serialized[%STRUCT_NAME%]LengthByteArray[serializedDataWrapperLengthByteArrayCounter++] = serialized[%STRUCT_NAME%]List[i];
+            serialized[%UPPER_CASE_STRUCT_NAME%]LengthByteArray[serializedDataWrapperLengthByteArrayCounter++] = serialized[%UPPER_CASE_STRUCT_NAME%]List[i];
           }
-          serialized[%STRUCT_NAME%]ByteArrayLength = ByteArrayToInteger.getInt(serialized[%STRUCT_NAME%]LengthByteArray);
+          serialized[%UPPER_CASE_STRUCT_NAME%]ByteArrayLength = ByteArrayToInteger.getInt(serialized[%UPPER_CASE_STRUCT_NAME%]LengthByteArray);
         }
         counter += numOfByteForLength;
-        byte[] [%LOWER_CASE_STRUCT_NAME%]ByteArray = new byte[serialized[%STRUCT_NAME%]ByteArrayLength];
+        byte[] [%LOWER_CASE_STRUCT_NAME%]ByteArray = new byte[serialized[%UPPER_CASE_STRUCT_NAME%]ByteArrayLength];
         int [%LOWER_CASE_STRUCT_NAME%]ByteArrayCounter = 0;
-        for (int i = counter; i < counter + serialized[%STRUCT_NAME%]ByteArrayLength; i++) {
-          [%LOWER_CASE_STRUCT_NAME%]ByteArray[[%LOWER_CASE_STRUCT_NAME%]ByteArrayCounter++] = serialized[%STRUCT_NAME%]List[i];
+        for (int i = counter; i < counter + serialized[%UPPER_CASE_STRUCT_NAME%]ByteArrayLength; i++) {
+          [%LOWER_CASE_STRUCT_NAME%]ByteArray[[%LOWER_CASE_STRUCT_NAME%]ByteArrayCounter++] = serialized[%UPPER_CASE_STRUCT_NAME%]List[i];
         }
-        counter += serialized[%STRUCT_NAME%]ByteArrayLength;
-        [%STRUCT_NAME%] [%LOWER_CASE_STRUCT_NAME%] = new [%STRUCT_NAME%]();
-        [%LOWER_CASE_STRUCT_NAME%].deserialize([%LOWER_CASE_STRUCT_NAME%]ByteArray);
-        [%LOWER_CASE_STRUCT_NAME%]List.add([%LOWER_CASE_STRUCT_NAME%]);
+        counter += serialized[%UPPER_CASE_STRUCT_NAME%]ByteArrayLength;
+        [%HOTTENTOT_TYPE%] [%LOWER_CASE_HOTTENTOT_TYPE%] = new [%HOTTENTOT_TYPE%]();
+        [%LOWER_CASE_HOTTENTOT_TYPE%].deserialize([%LOWER_CASE_STRUCT_NAME%]ByteArray);
+        [%LOWER_CASE_STRUCT_NAME%]List.add([%LOWER_CASE_HOTTENTOT_TYPE%][%GET_VALUE_METHOD%]);
       }
     }
   }
