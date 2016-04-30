@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__ENDPOINT_H_
-#define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__ENDPOINT_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__ENDPOINT_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__ENDPOINT_H_
 
 #include <string>
 
@@ -40,59 +40,61 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace service {
-        // TODO(kamran) We need different endpoints for IPv4 and IPv6.
-        class Endpoint {
-        public:
-          class Comparator {
-          public:
-            bool operator()(const Endpoint &left, const Endpoint &right) const {
-              if (left.host_.compare(right.host_) < 0) {
-                return true;
-              }
-              return left.port_ < right.port_;
-            }
-          };
-          class Comparator2 {
-          public:
-            bool operator()(const Endpoint &left, const Endpoint &right) const {
-              return left.host_.compare(right.host_) < 0 && left.port_ < right.port_;
-            }
-          };
-        public:
-          Endpoint(std::string host, uint32_t port) 
-            : host_(host), port_(port) {
-          }
-          ~Endpoint() {}
-        public:
-          inline std::string GetHost() const {
-            return host_;
-          }
-          inline void SetHost(std::string host) {
-            host_ = host;
-          }
-          inline uint32_t GetPort() const {
-            return port_;
-          }
-          inline void SetPort(uint32_t port) {
-            port_ = port;
-          }
-        public:
-          inline Endpoint& operator =(const Endpoint& other) {
-            host_ = other.host_;
-            port_ = other.port_;
-            return *this;
-          }
-        private:
-          std::string host_;
-          uint32_t port_;
-        };
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace service {
+  // TODO(kamran) We need different endpoints for IPv4 and IPv6.
+  class Endpoint {
+  public:
+    class Comparator {
+    public:
+      bool operator()(const Endpoint &left, const Endpoint &right) const {
+        if (left.host_.compare(right.host_) < 0) {
+          return true;
+        }
+        return left.port_ < right.port_;
       }
+    };
+    class Comparator2 {
+    public:
+      bool operator()(const Endpoint &left, const Endpoint &right) const {
+        return left.host_.compare(right.host_) < 0 && left.port_ < right.port_;
+      }
+    };
+  public:
+    Endpoint(std::string host, uint32_t port) 
+      : host_(host), port_(port) {
     }
-  }
+    ~Endpoint() {}
+  public:
+    inline std::string GetHost() const {
+      return host_;
+    }
+    inline void SetHost(std::string host) {
+      host_ = host;
+    }
+    inline uint32_t GetPort() const {
+      return port_;
+    }
+    inline void SetPort(uint32_t port) {
+      port_ = port;
+    }
+  public:
+    inline Endpoint& operator =(const Endpoint& other) {
+      host_ = other.host_;
+      port_ = other.port_;
+      return *this;
+    }
+  private:
+    std::string host_;
+    uint32_t port_;
+  };
+}
+}
+}
+}
 }
 
 #endif

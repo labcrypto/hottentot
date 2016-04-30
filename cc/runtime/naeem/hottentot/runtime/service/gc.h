@@ -21,10 +21,11 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME__GC_H_
-#define _NAEEM_HOTTENTOT_RUNTIME__GC_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__GC_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__GC_H_
 
-namespace naeem {
+namespace org {
+namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace service {
@@ -59,6 +60,7 @@ namespace service {
     std::vector<void*> voidPointers_;
     std::vector<void*> voidArrayPointers_;
   };
+}
 }
 }
 }

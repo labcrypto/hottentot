@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_FACTORY_H_
-#define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_FACTORY_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_FACTORY_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_FACTORY_H_
 
 #include <map>
 #include <string>
@@ -41,23 +41,25 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace service {
-        class TcpServer;
-        class RequestHandler;
-        class TcpServerFactory {
-        public:
-          virtual ~TcpServerFactory() {}
-        public:
-          virtual TcpServer* CreateTcpServer(std::string                           /* Host */,
-                                             uint16_t                              /* Port */,
-                                             std::map<uint8_t, RequestHandler*> *  /* Request handlers */) = 0;
-        };
-      }
-    }
-  }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace service {
+  class TcpServer;
+  class RequestHandler;
+  class TcpServerFactory {
+  public:
+    virtual ~TcpServerFactory() {}
+  public:
+    virtual TcpServer* CreateTcpServer(std::string                           /* Host */,
+                                       uint16_t                              /* Port */,
+                                       std::map<uint8_t, RequestHandler*> *  /* Request handlers */) = 0;
+  };
+}
+}
+}
+}
 }
 
 

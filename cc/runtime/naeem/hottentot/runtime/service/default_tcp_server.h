@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_TCP_SERVER_H_
-#define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_TCP_SERVER_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_TCP_SERVER_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_TCP_SERVER_H_
 
 #ifdef _MSC_VER
 // #include <windows.h>
@@ -38,45 +38,47 @@
 #include "tcp_server.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace service {
-        class DefaultTcpServer : public TcpServer {
-        public:
-          DefaultTcpServer(std::string,
-                           uint16_t,
-                           std::map<uint8_t, RequestHandler*> *);
-          virtual ~DefaultTcpServer();
-        public:
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace service {
+  class DefaultTcpServer : public TcpServer {
+  public:
+    DefaultTcpServer(std::string,
+                     uint16_t,
+                     std::map<uint8_t, RequestHandler*> *);
+    virtual ~DefaultTcpServer();
+  public:
 #ifndef _MSC_VER
-          virtual pthread_t BindAndStart();
+    virtual pthread_t BindAndStart();
 #else
-          virtual HANDLE BindAndStart();
+    virtual HANDLE BindAndStart();
 #endif
-        private:
+  private:
 #ifdef _MSC_VER
-          static DWORD WINAPI AcceptClients(LPVOID);
-          static DWORD WINAPI HandleClientConnection(LPVOID);
+    static DWORD WINAPI AcceptClients(LPVOID);
+    static DWORD WINAPI HandleClientConnection(LPVOID);
 #else
-          static void* AcceptClients(void *);
-          static void* HandleClientConnection(void *);
+    static void* AcceptClients(void *);
+    static void* HandleClientConnection(void *);
 #endif
-        private:
+  private:
 #ifdef _MSC_VER
-          SOCKET serverSocketFD_;
+    SOCKET serverSocketFD_;
 #else
-          int serverSocketFD_;
+    int serverSocketFD_;
 #endif
-        };
-        class _HandleClientConnectionParams {
-        public:
-          DefaultTcpServer *tcpServer_;
-          int clientSocketFD_;
-        };
-      }
-    }
-  }
+  };
+  class _HandleClientConnectionParams {
+  public:
+    DefaultTcpServer *tcpServer_;
+    int clientSocketFD_;
+  };
+}
+}
+}
+}
 }
 
 

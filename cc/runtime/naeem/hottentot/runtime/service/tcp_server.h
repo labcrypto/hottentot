@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_H_
-#define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_H_
 
 #ifdef _MSC_VER
 #include <windows.h>
@@ -43,36 +43,38 @@ typedef unsigned __int64 uint64_t;
 #include <vector>
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace service {
-        class Service;
-        class RequestHandler;
-        class TcpServer {
-        public:
-          TcpServer(std::string host,
-                    uint16_t port,
-                    std::map<uint8_t, RequestHandler*> *requestHandlers)
-            : host_(host),
-              port_(port),
-              requestHandlers_(requestHandlers) {
-          }
-          virtual ~TcpServer() {}
-        public:
-#ifndef _MSC_VER
-          virtual pthread_t BindAndStart() = 0;
-#else
-          virtual HANDLE BindAndStart() = 0;
-#endif
-        protected:
-          std::string host_;
-          uint16_t port_;
-          std::map<uint8_t, RequestHandler*> *requestHandlers_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace service {
+  class Service;
+  class RequestHandler;
+  class TcpServer {
+  public:
+    TcpServer(std::string host,
+              uint16_t port,
+              std::map<uint8_t, RequestHandler*> *requestHandlers)
+      : host_(host),
+        port_(port),
+        requestHandlers_(requestHandlers) {
     }
-  }
+    virtual ~TcpServer() {}
+  public:
+#ifndef _MSC_VER
+    virtual pthread_t BindAndStart() = 0;
+#else
+    virtual HANDLE BindAndStart() = 0;
+#endif
+  protected:
+    std::string host_;
+    uint16_t port_;
+    std::map<uint8_t, RequestHandler*> *requestHandlers_;
+  };
+}
+}
+}
+}
 }
 
 #endif

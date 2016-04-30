@@ -46,36 +46,38 @@ typedef unsigned __int64 uint64_t;
 #include "../configuration.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace service {
-        Response*
-        DefaultRequestCallback::OnRequest(void *source,
-                                          Request &request) {
-          if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-            ::naeem::hottentot::runtime::Logger::GetOut() << 
-              "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-                "A new request is received." << std::endl;
-          }
-          if (requestHandlers_->count(request.GetServiceId()) > 0) {
-            Response *response = new Response;
-            RequestHandler *requestHandler = requestHandlers_->find(request.GetServiceId())->second;
-            if (requestHandler == 0) {
-              return 0;
-            }
-            if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-              ::naeem::hottentot::runtime::Logger::GetOut() << 
-                "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-                  "Calling handler method ..." << std::endl;
-            }
-            requestHandler->HandleRequest(request, *response);
-            return response;
-          } else {
-            return 0;            
-          }
-        }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace service {
+  Response*
+  DefaultRequestCallback::OnRequest(void *source,
+                                    Request &request) {
+    if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+      ::naeem::hottentot::runtime::Logger::GetOut() << 
+        "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+          "A new request is received." << std::endl;
+    }
+    if (requestHandlers_->count(request.GetServiceId()) > 0) {
+      Response *response = new Response;
+      RequestHandler *requestHandler = requestHandlers_->find(request.GetServiceId())->second;
+      if (requestHandler == 0) {
+        return 0;
       }
+      if (::naeem::hottentot::runtime::Configuration::Verbose()) {
+        ::naeem::hottentot::runtime::Logger::GetOut() << 
+          "[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+            "Calling handler method ..." << std::endl;
+      }
+      requestHandler->HandleRequest(request, *response);
+      return response;
+    } else {
+      return 0;            
     }
   }
+}
+}
+}
+}
 }

@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__SERVICE_H_
-#define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__SERVICE_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__SERVICE_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__SERVICE_H_
 
 #include <string>
 
@@ -42,38 +42,40 @@ typedef unsigned __int64 uint64_t;
 #include "request_handler.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace service {
-        class Service {
-        public:
-          Service() 
-            : requestHandler_(0) {
-          }
-          virtual ~Service() {
-            if (requestHandler_) {
-              delete requestHandler_;
-            }
-          }
-        public:
-          virtual uint32_t GetServiceId() const = 0;
-          virtual void OnInit() = 0;
-          virtual void OnShutdown() = 0;
-          virtual RequestHandler* GetRequestHandler() {
-            if (requestHandler_ == 0) {
-              requestHandler_ = MakeRequestHandler();
-            }
-            return requestHandler_;
-          }
-        protected:
-          virtual RequestHandler* MakeRequestHandler() = 0;
-        protected:
-          RequestHandler *requestHandler_;
-        };
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace service {
+  class Service {
+  public:
+    Service() 
+      : requestHandler_(0) {
+    }
+    virtual ~Service() {
+      if (requestHandler_) {
+        delete requestHandler_;
       }
     }
-  }
+  public:
+    virtual uint32_t GetServiceId() const = 0;
+    virtual void OnInit() = 0;
+    virtual void OnShutdown() = 0;
+    virtual RequestHandler* GetRequestHandler() {
+      if (requestHandler_ == 0) {
+        requestHandler_ = MakeRequestHandler();
+      }
+      return requestHandler_;
+    }
+  protected:
+    virtual RequestHandler* MakeRequestHandler() = 0;
+  protected:
+    RequestHandler *requestHandler_;
+  };
+}
+}
+}
+}
 }
 
 #endif

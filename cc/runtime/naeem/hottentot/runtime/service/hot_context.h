@@ -21,13 +21,14 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME__HOT_CONTEXT_H_
-#define _NAEEM_HOTTENTOT_RUNTIME__HOT_CONTEXT_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__HOT_CONTEXT_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__HOT_CONTEXT_H_
 
 #include <string>
 
 
-namespace naeem {
+namespace org {
+namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace service {
@@ -61,6 +62,7 @@ namespace service {
     uint8_t responseStatusCode_;
     std::string faultMessage_;
   };
+}
 }
 }
 }

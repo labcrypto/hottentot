@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME_SERVICE__SERVICE_RUNTIME_H_
-#define _NAEEM_HOTTENTOT_RUNTIME_SERVICE__SERVICE_RUNTIME_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__SERVICE_RUNTIME_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__SERVICE_RUNTIME_H_
 
 #ifdef _MSC_VER
 #include <windows.h>
@@ -45,50 +45,52 @@ typedef unsigned __int64 uint64_t;
 #include "endpoint.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace service {
-        class Service;
-        class TcpServer;
-        class RequestHandler;
-        class TcpServerFactory;
-        class ServiceRuntime {
-        public:
-          static void Init(int argc, char **argv);
-          static void Shutdown();
-          static void Register(std::string   /* host */, 
-                               uint32_t      /* port */, 
-                               Service *     /* service implementation */);
-          static void Start();
-          static TcpServerFactory* GetTcpServerFactory();
-          inline static void SetTcpServerFactory(TcpServerFactory *tcpServerFactory) {
-            tcpServerFactory_ = tcpServerFactory;
-          }
-          inline static bool Verbose() {
-            return verbose_;
-          }
-#ifndef _MSC_VER
-          static void SigTermHanlder(int);
-#else
-          static BOOL SigTermHanlder(DWORD);
-#endif
-        private:
-          static bool verbose_;
-          static bool initialized_;
-          static TcpServerFactory *tcpServerFactory_;
-          static std::vector<TcpServer*> tcpServers_;
-#ifndef _MSC_VER
-          static std::vector<pthread_t> threads_;
-#else
-          static std::vector<HANDLE> threads_;
-#endif
-          static std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> services_;
-          static std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator2> requestHandlers_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace service {
+  class Service;
+  class TcpServer;
+  class RequestHandler;
+  class TcpServerFactory;
+  class ServiceRuntime {
+  public:
+    static void Init(int argc, char **argv);
+    static void Shutdown();
+    static void Register(std::string   /* host */, 
+                         uint32_t      /* port */, 
+                         Service *     /* service implementation */);
+    static void Start();
+    static TcpServerFactory* GetTcpServerFactory();
+    inline static void SetTcpServerFactory(TcpServerFactory *tcpServerFactory) {
+      tcpServerFactory_ = tcpServerFactory;
     }
-  }
+    inline static bool Verbose() {
+      return verbose_;
+    }
+#ifndef _MSC_VER
+    static void SigTermHanlder(int);
+#else
+    static BOOL SigTermHanlder(DWORD);
+#endif
+  private:
+    static bool verbose_;
+    static bool initialized_;
+    static TcpServerFactory *tcpServerFactory_;
+    static std::vector<TcpServer*> tcpServers_;
+#ifndef _MSC_VER
+    static std::vector<pthread_t> threads_;
+#else
+    static std::vector<HANDLE> threads_;
+#endif
+    static std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> services_;
+    static std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator2> requestHandlers_;
+  };
+}
+}
+}
+}
 }
 
 #endif
