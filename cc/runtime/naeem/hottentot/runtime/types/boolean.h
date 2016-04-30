@@ -44,74 +44,72 @@ typedef unsigned __int64 uint64_t;
 #include "../serializable.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace types {
-        class Boolean : public ::naeem::hottentot::runtime::Serializable {
-        public:
-          Boolean()
-            : value_(0) {
-          }
-          Boolean(bool value)
-            : value_(value) {
-          }
-          Boolean(int8_t value)
-            : value_(value != 0) {
-          }
-          Boolean(int16_t value)
-            : value_(value != 0) {
-          }
-          Boolean(int32_t value)
-            : value_(value != 0) {
-          }
-          Boolean(int64_t value)
-            : value_(value != 0) {
-          }
-          Boolean(uint8_t value)
-            : value_(value != 0) {
-          }
-          Boolean(uint16_t value)
-            : value_(value != 0) {
-          }
-          Boolean(uint32_t value)
-            : value_(value != 0) {
-          }
-          Boolean(uint64_t value)
-            : value_(value != 0) {
-          }
-          virtual ~Boolean() {}
-        public:
-          inline void SetValue(bool value) {
-            value_ = value;
-          }
-          inline bool GetValue() const {
-            return value_;
-          }
-        public:
-          inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            *length_ptr = 1 * sizeof(unsigned char);
-            unsigned char *data = new unsigned char[1];
-            data[0] = value_ ? 1 : 0;
-            return data;
-          }
-          inline virtual void Deserialize(unsigned char *data,
-                                          uint32_t length) {
-            if (length != 1) {
-              throw std::runtime_error("Boolean: Length is not correct for deserialization.");
-            }
-            value_ = data[0] != 0;
-          }
-          friend std::ostream& operator <<(std::ostream& out, const Boolean& obj) {
-            out << (obj.value_ ? "True" : "False");
-            return out;
-          }
-        private:
-          bool value_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+  class Boolean : public ::naeem::hottentot::runtime::Serializable {
+  public:
+    Boolean()
+      : value_(0) {
     }
-  }
+    Boolean(bool value)
+      : value_(value) {
+    }
+    Boolean(int8_t value)
+      : value_(value != 0) {
+    }
+    Boolean(int16_t value)
+      : value_(value != 0) {
+    }
+    Boolean(int32_t value)
+      : value_(value != 0) {
+    }
+    Boolean(int64_t value)
+      : value_(value != 0) {
+    }
+    Boolean(uint8_t value)
+      : value_(value != 0) {
+    }
+    Boolean(uint16_t value)
+      : value_(value != 0) {
+    }
+    Boolean(uint32_t value)
+      : value_(value != 0) {
+    }
+    Boolean(uint64_t value)
+      : value_(value != 0) {
+    }
+    virtual ~Boolean() {}
+  public:
+    inline void SetValue(bool value) {
+      value_ = value;
+    }
+    inline bool GetValue() const {
+      return value_;
+    }
+  public:
+    inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
+      *length_ptr = 1 * sizeof(unsigned char);
+      unsigned char *data = new unsigned char[1];
+      data[0] = value_ ? 1 : 0;
+      return data;
+    }
+    inline virtual void Deserialize(unsigned char *data,
+                                    uint32_t length) {
+      if (length != 1) {
+        throw std::runtime_error("Boolean: Length is not correct for deserialization.");
+      }
+      value_ = data[0] != 0;
+    }
+    friend std::ostream& operator <<(std::ostream& out, const Boolean& obj) {
+      out << (obj.value_ ? "True" : "False");
+      return out;
+    }
+  private:
+    bool value_;
+  };
+}
+}
 }
 
 #endif

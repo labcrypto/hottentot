@@ -44,55 +44,53 @@ typedef unsigned __int64 uint64_t;
 #include "../serializable.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace types {
-        template<class E>
-        class Enum : public ::naeem::hottentot::runtime::Serializable {
-        public:
-          Enum()
-            : value_((E)0) {
-          }
-          Enum(E value)
-            : value_(value) {
-          }
-          virtual ~Enum() {}
-        public:
-          inline void SetValue(E value) {
-            value_ = value;
-          }
-          inline E GetValue() const {
-            return value_;
-          }
-        public:
-          inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            *length_ptr = 2 * sizeof(unsigned char);
-            unsigned char *data = new unsigned char[2];
-            unsigned char *ptr = (unsigned char*)(&value_);
-            data[0] = ptr[1];
-            data[1] = ptr[0];
-            return data;
-          }
-          inline virtual void Deserialize(unsigned char *data,
-                                          uint32_t length) {
-            if (length != 2) {
-              throw std::runtime_error("Enum: Length is not correct for deserialization.");
-            }
-            unsigned char *ptr = (unsigned char*)(&value_);
-            ptr[0] = data[1];
-            ptr[1] = data[0];
-          }
-          friend std::ostream& operator <<(std::ostream& out, const Enum<E>& obj) {
-            out << obj.value_;
-            return out;
-          }
-        private:
-          E value_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+  template<class E>
+  class Enum : public ::naeem::hottentot::runtime::Serializable {
+  public:
+    Enum()
+      : value_((E)0) {
     }
-  }
+    Enum(E value)
+      : value_(value) {
+    }
+    virtual ~Enum() {}
+  public:
+    inline void SetValue(E value) {
+      value_ = value;
+    }
+    inline E GetValue() const {
+      return value_;
+    }
+  public:
+    inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
+      *length_ptr = 2 * sizeof(unsigned char);
+      unsigned char *data = new unsigned char[2];
+      unsigned char *ptr = (unsigned char*)(&value_);
+      data[0] = ptr[1];
+      data[1] = ptr[0];
+      return data;
+    }
+    inline virtual void Deserialize(unsigned char *data,
+                                    uint32_t length) {
+      if (length != 2) {
+        throw std::runtime_error("Enum: Length is not correct for deserialization.");
+      }
+      unsigned char *ptr = (unsigned char*)(&value_);
+      ptr[0] = data[1];
+      ptr[1] = data[0];
+    }
+    friend std::ostream& operator <<(std::ostream& out, const Enum<E>& obj) {
+      out << obj.value_;
+      return out;
+    }
+  private:
+    E value_;
+  };
+}
+}
 }
 
 #endif

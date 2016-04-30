@@ -43,78 +43,76 @@ typedef unsigned __int64 uint64_t;
 #include "../serializable.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace types {
-        class UInt8 : public ::naeem::hottentot::runtime::Serializable {
-        public:
-          UInt8()
-            : value_(0) {
-          }
-          UInt8(bool value)
-            : value_(value ? 1 : 0) {
-          }
-          UInt8(int8_t value)
-            : value_((uint8_t)value) {
-          }
-          UInt8(int16_t value)
-            : value_((uint8_t)value) {
-          }
-          UInt8(int32_t value)
-            : value_((uint8_t)value) {
-          }
-          UInt8(int64_t value)
-            : value_((uint8_t)value) {
-          }
-          UInt8(uint8_t value)
-            : value_(value) {
-          }
-          UInt8(uint16_t value)
-            : value_((uint8_t)value) {
-          }
-          UInt8(uint32_t value)
-            : value_((uint8_t)value) {
-          }
-          UInt8(uint64_t value)
-            : value_((uint8_t)value) {
-          }
-          virtual ~UInt8() {}
-        public:
-          inline void SetValue(uint8_t value) {
-            value_ = value;
-          }
-          inline uint8_t GetValue() const {
-            return value_;
-          }
-        public:
-          friend std::ostream& operator <<(std::ostream& out, const UInt8& obj) {
-            out << (unsigned int)obj.value_;
-            return out;
-          }
-        public:
-          inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            *length_ptr = 1 * sizeof(unsigned char);
-            unsigned char *data = 
-              new unsigned char[1 * sizeof(unsigned char)];
-            unsigned char *ptr = (unsigned char*)(&value_);
-            data[0] = ptr[0];
-            return data;
-          }
-          inline virtual void Deserialize(unsigned char *data,
-                                          uint32_t length) {
-            if (length != 1) {
-              throw std::runtime_error("UInt8: Length is not correct for deserialization.");
-            }
-            unsigned char *ptr = (unsigned char*)(&value_);
-            ptr[0] = data[0];
-          }
-        private:
-          uint8_t value_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+  class UInt8 : public ::naeem::hottentot::runtime::Serializable {
+  public:
+    UInt8()
+      : value_(0) {
     }
-  }
+    UInt8(bool value)
+      : value_(value ? 1 : 0) {
+    }
+    UInt8(int8_t value)
+      : value_((uint8_t)value) {
+    }
+    UInt8(int16_t value)
+      : value_((uint8_t)value) {
+    }
+    UInt8(int32_t value)
+      : value_((uint8_t)value) {
+    }
+    UInt8(int64_t value)
+      : value_((uint8_t)value) {
+    }
+    UInt8(uint8_t value)
+      : value_(value) {
+    }
+    UInt8(uint16_t value)
+      : value_((uint8_t)value) {
+    }
+    UInt8(uint32_t value)
+      : value_((uint8_t)value) {
+    }
+    UInt8(uint64_t value)
+      : value_((uint8_t)value) {
+    }
+    virtual ~UInt8() {}
+  public:
+    inline void SetValue(uint8_t value) {
+      value_ = value;
+    }
+    inline uint8_t GetValue() const {
+      return value_;
+    }
+  public:
+    friend std::ostream& operator <<(std::ostream& out, const UInt8& obj) {
+      out << (unsigned int)obj.value_;
+      return out;
+    }
+  public:
+    inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
+      *length_ptr = 1 * sizeof(unsigned char);
+      unsigned char *data = 
+        new unsigned char[1 * sizeof(unsigned char)];
+      unsigned char *ptr = (unsigned char*)(&value_);
+      data[0] = ptr[0];
+      return data;
+    }
+    inline virtual void Deserialize(unsigned char *data,
+                                    uint32_t length) {
+      if (length != 1) {
+        throw std::runtime_error("UInt8: Length is not correct for deserialization.");
+      }
+      unsigned char *ptr = (unsigned char*)(&value_);
+      ptr[0] = data[0];
+    }
+  private:
+    uint8_t value_;
+  };
+}
+}
 }
 
 #endif

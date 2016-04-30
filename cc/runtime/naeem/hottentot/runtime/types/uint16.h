@@ -43,80 +43,78 @@ typedef unsigned __int64 uint64_t;
 #include "../serializable.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace types {
-        class UInt16 : public ::naeem::hottentot::runtime::Serializable {
-        public:
-          UInt16()
-            : value_(0) {
-          }
-          UInt16(bool value)
-            : value_(value ? 1 : 0) {
-          }
-          UInt16(int8_t value)
-            : value_((uint16_t)value) {
-          }
-          UInt16(int16_t value)
-            : value_((uint16_t)value) {
-          }
-          UInt16(int32_t value)
-            : value_((uint16_t)value) {
-          }
-          UInt16(int64_t value)
-            : value_((uint16_t)value) {
-          }
-          UInt16(uint8_t value)
-            : value_((uint16_t)value) {
-          }
-          UInt16(uint16_t value)
-            : value_(value) {
-          }
-          UInt16(uint32_t value)
-            : value_((uint16_t)value) {
-          }
-          UInt16(uint64_t value)
-            : value_((uint16_t)value) {
-          }
-          virtual ~UInt16() {}
-        public:
-          inline void SetValue(uint16_t value) {
-            value_ = value;
-          }
-          inline uint16_t GetValue() const {
-            return value_;
-          }
-        public:
-          friend std::ostream& operator <<(std::ostream& out, const UInt16& obj) {
-            out << obj.value_;
-            return out;
-          }
-        public:
-          inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            *length_ptr = 2 * sizeof(unsigned char);
-            unsigned char *data = 
-              new unsigned char[2 * sizeof(unsigned char)];
-            unsigned char *ptr = (unsigned char*)(&value_);
-            data[0] = ptr[1];
-            data[1] = ptr[0];
-            return data;
-          }
-          inline virtual void Deserialize(unsigned char *data,
-                                          uint32_t length) {
-            if (length != 2) {
-              throw std::runtime_error("UInt16: Length is not correct for deserialization.");
-            }
-            unsigned char *ptr = (unsigned char*)(&value_);
-            ptr[0] = data[1];
-            ptr[1] = data[0];
-          }
-        private:
-          uint16_t value_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+  class UInt16 : public ::naeem::hottentot::runtime::Serializable {
+  public:
+    UInt16()
+      : value_(0) {
     }
-  }
+    UInt16(bool value)
+      : value_(value ? 1 : 0) {
+    }
+    UInt16(int8_t value)
+      : value_((uint16_t)value) {
+    }
+    UInt16(int16_t value)
+      : value_((uint16_t)value) {
+    }
+    UInt16(int32_t value)
+      : value_((uint16_t)value) {
+    }
+    UInt16(int64_t value)
+      : value_((uint16_t)value) {
+    }
+    UInt16(uint8_t value)
+      : value_((uint16_t)value) {
+    }
+    UInt16(uint16_t value)
+      : value_(value) {
+    }
+    UInt16(uint32_t value)
+      : value_((uint16_t)value) {
+    }
+    UInt16(uint64_t value)
+      : value_((uint16_t)value) {
+    }
+    virtual ~UInt16() {}
+  public:
+    inline void SetValue(uint16_t value) {
+      value_ = value;
+    }
+    inline uint16_t GetValue() const {
+      return value_;
+    }
+  public:
+    friend std::ostream& operator <<(std::ostream& out, const UInt16& obj) {
+      out << obj.value_;
+      return out;
+    }
+  public:
+    inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
+      *length_ptr = 2 * sizeof(unsigned char);
+      unsigned char *data = 
+        new unsigned char[2 * sizeof(unsigned char)];
+      unsigned char *ptr = (unsigned char*)(&value_);
+      data[0] = ptr[1];
+      data[1] = ptr[0];
+      return data;
+    }
+    inline virtual void Deserialize(unsigned char *data,
+                                    uint32_t length) {
+      if (length != 2) {
+        throw std::runtime_error("UInt16: Length is not correct for deserialization.");
+      }
+      unsigned char *ptr = (unsigned char*)(&value_);
+      ptr[0] = data[1];
+      ptr[1] = data[0];
+    }
+  private:
+    uint16_t value_;
+  };
+}
+}
 }
 
 #endif

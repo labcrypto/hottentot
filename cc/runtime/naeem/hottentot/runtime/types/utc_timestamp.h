@@ -43,72 +43,70 @@ typedef unsigned __int64 uint64_t;
 #include "../serializable.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace runtime {
-      namespace types {
-        class UtcTimestamp : public ::naeem::hottentot::runtime::Serializable {
-        public:
-          UtcTimestamp()
-            : value_(0) {
-          }
-          UtcTimestamp(int64_t value)
-            : value_((uint64_t)value) {
-          }
-          UtcTimestamp(uint64_t value)
-            : value_(value) {
-          }
-          virtual ~UtcTimestamp() {}
-        public:
-          inline void SetValue(uint64_t value) {
-            value_ = value;
-          }
-          inline uint64_t GetValue() const {
-            return value_;
-          }
-        public:
-          friend std::ostream& operator <<(std::ostream& out, const UtcTimestamp& obj) {
-            out << obj.value_;
-            return out;
-          }
-        public:
-          inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
-            *length_ptr = 8 * sizeof(unsigned char);
-            unsigned char *data = 
-              new unsigned char[8 * sizeof(unsigned char)];
-            unsigned char *ptr = (unsigned char*)(&value_);
-            data[0] = ptr[7];
-            data[1] = ptr[6];
-            data[2] = ptr[5];
-            data[3] = ptr[4];
-            data[4] = ptr[3];
-            data[5] = ptr[2];
-            data[6] = ptr[1];
-            data[7] = ptr[0];
-            return data;
-          }
-          inline virtual void Deserialize(unsigned char *data,
-                                          uint32_t length) {
-            // std::cout << "<<<<<>>>>> " << length << std::endl;
-            if (length != 8) {
-              throw std::runtime_error("UtcTimestamp: Length is not correct for deserialization.");
-            }
-            unsigned char *ptr = (unsigned char*)(&value_);
-            ptr[0] = data[7];
-            ptr[1] = data[6];
-            ptr[2] = data[5];
-            ptr[3] = data[4];
-            ptr[4] = data[3];
-            ptr[5] = data[2];
-            ptr[6] = data[1];
-            ptr[7] = data[0];
-          }
-        private:
-          uint64_t value_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+  class UtcTimestamp : public ::naeem::hottentot::runtime::Serializable {
+  public:
+    UtcTimestamp()
+      : value_(0) {
     }
-  }
+    UtcTimestamp(int64_t value)
+      : value_((uint64_t)value) {
+    }
+    UtcTimestamp(uint64_t value)
+      : value_(value) {
+    }
+    virtual ~UtcTimestamp() {}
+  public:
+    inline void SetValue(uint64_t value) {
+      value_ = value;
+    }
+    inline uint64_t GetValue() const {
+      return value_;
+    }
+  public:
+    friend std::ostream& operator <<(std::ostream& out, const UtcTimestamp& obj) {
+      out << obj.value_;
+      return out;
+    }
+  public:
+    inline virtual unsigned char * Serialize(uint32_t *length_ptr) {
+      *length_ptr = 8 * sizeof(unsigned char);
+      unsigned char *data = 
+        new unsigned char[8 * sizeof(unsigned char)];
+      unsigned char *ptr = (unsigned char*)(&value_);
+      data[0] = ptr[7];
+      data[1] = ptr[6];
+      data[2] = ptr[5];
+      data[3] = ptr[4];
+      data[4] = ptr[3];
+      data[5] = ptr[2];
+      data[6] = ptr[1];
+      data[7] = ptr[0];
+      return data;
+    }
+    inline virtual void Deserialize(unsigned char *data,
+                                    uint32_t length) {
+      // std::cout << "<<<<<>>>>> " << length << std::endl;
+      if (length != 8) {
+        throw std::runtime_error("UtcTimestamp: Length is not correct for deserialization.");
+      }
+      unsigned char *ptr = (unsigned char*)(&value_);
+      ptr[0] = data[7];
+      ptr[1] = data[6];
+      ptr[2] = data[5];
+      ptr[3] = data[4];
+      ptr[4] = data[3];
+      ptr[5] = data[2];
+      ptr[6] = data[1];
+      ptr[7] = data[0];
+    }
+  private:
+    uint64_t value_;
+  };
+}
+}
 }
 
 #endif
