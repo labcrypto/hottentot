@@ -26,7 +26,7 @@ public class ListTestRequestHandler extends RequestHandler {
     super(service);
   }
   @Override
-  public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
+  public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException {
     long methodId = request.getMethodId();
     ListTestService listTestImpl = (AbstractListTestService) service;
     if(methodId == 4202985802L){

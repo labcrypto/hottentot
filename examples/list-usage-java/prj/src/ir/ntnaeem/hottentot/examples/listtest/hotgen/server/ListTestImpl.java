@@ -27,8 +27,7 @@ class ListTestImpl extends AbstractListTestService {
 
   @Override
   public void addNumbers(List<Short> numbers) {
-    System.out.println(numbers.get(0));
-    System.out.println(numbers.get(1));
+
   }
   //implementation
 }
