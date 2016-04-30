@@ -5,10 +5,11 @@
  * Description:
  *   
  ******************************************************************/
-package ir.ntnaeem.hottentot.examples.listtest.hotgen.server;
+package ir.ntnaeem.hottentot.examples.listtest.server;
 
 import ir.ntnaeem.hottentot.runtime.Service;
 import ir.ntnaeem.hottentot.runtime.ServiceRuntime;
+
 import java.io.IOException;
 
 public class Main {
