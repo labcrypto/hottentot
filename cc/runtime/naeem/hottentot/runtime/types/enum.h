@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_RUNTIME__TYPES__ENUM_H_
-#define _NAEEM_HOTTENTOT_RUNTIME__TYPES__ENUM_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__ENUM_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__ENUM_H_
 
 #include <iostream>
 #include <stdlib.h>
