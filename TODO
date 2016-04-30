@@ -31,3 +31,4 @@ Timeout for socket reads on service side                                        
 Service side thread pooling                                                           [TODO]
 Handle errors while writing data to service                                           [DONE]
 Handle errors while writing data to proxy                                             [DONE]
+Callbacks                                                                             [TODO]
