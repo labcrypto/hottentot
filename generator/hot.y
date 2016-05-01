@@ -46,26 +46,26 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #ifdef _MSC_VER
-#include "../../ds/hot.h"
-#include "../../ds/declaration.h"
-#include "../../ds/service.h"
-#include "../../ds/method.h"
-#include "../../ds/argument.h"
-#include "../../ds/enum.h"
+#include "../../hot.h"
+#include "../../declaration.h"
+#include "../../service.h"
+#include "../../method.h"
+#include "../../argument.h"
+#include "../../enum.h"
 
-#include "../../dep/fasthash.h"
+#include "../../fasthash.h"
 
 #include "../../cc/cc_generator.h"
 #include "../../java/java_generator.h"
 #else
-#include "ds/hot.h"
-#include "ds/declaration.h"
-#include "ds/service.h"
-#include "ds/method.h"
-#include "ds/argument.h"
-#include "ds/enum.h"
+#include "hot.h"
+#include "declaration.h"
+#include "service.h"
+#include "method.h"
+#include "argument.h"
+#include "enum.h"
 
-#include "dep/fasthash.h"
+#include "fasthash.h"
 
 #include "cc/cc_generator.h"
 #include "java/java_generator.h"

@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__HOT_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__DS__HOT_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_GENERATOR__HOT_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_GENERATOR__HOT_H_
 
 #include <vector>
 #include <iostream>
