@@ -46,7 +46,18 @@ namespace naeem {
               if(declarationJavaType.compare("String") == 0){
                 declarationStr += indent_ + "private " + declarationJavaType +
                                   " " + declarationName + " = \"\";\n";  
-              }else{
+              }else if(
+                ::naeem::hottentot::generator::common::TypeHelper::IsListType(
+                  declarationPtr->type_)
+                ){
+                  std::string fetchedListType = 
+                    ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(declarationPtr->type_);
+                  std::string javaClassType = 
+                
+                  declarationStr += indent_ + "private " + declarationJavaType +
+                                  " " + declarationName + " = new Array" + 
+                                  declarationJavaType +"();\n";   
+              }else {
                 declarationStr += indent_ + "private " + declarationJavaType +
                                   " " + declarationName + ";\n";  
               }

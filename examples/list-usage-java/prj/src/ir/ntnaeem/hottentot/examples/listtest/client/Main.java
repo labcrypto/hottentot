@@ -53,7 +53,7 @@ public class Main {
     ArrayList<Boolean> zList = new ArrayList<>();
     zList.add(true);
     zList.add(false);
-    message.setZList(zList);
+    //message.setZList(zList);
     listtestProxy.addMessage(message);
     //
 //    System.out.println("-----------------------------------");

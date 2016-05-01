@@ -11,6 +11,7 @@ import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 import java.util.List;
+import java.util.ArrayList;
 
 public class [%STRUCT_NAME%] {
 [%MEMBERS%]	
