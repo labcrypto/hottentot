@@ -114,10 +114,15 @@ namespace naeem {
                                           declarationStr + getterSetterStr + toStringMethodStr);
             //serilize method
             std::string serializeMethodStr;
+            int declarationCounter = 0;
+            
             for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
                 = pStruct->declarations_.begin();
                 it != pStruct->declarations_.end();
                 ++it) {
+                  declarationCounter++;
+                  std::stringstream declarationCounterStr;
+                  declarationCounterStr << declarationCounter;
                   ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                   std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
                   if(::naeem::hottentot::generator::common::TypeHelper::IsEnum(declarationPtr->type_)) {
@@ -129,19 +134,23 @@ namespace naeem {
                       ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(declarationPtr->type_);
                     std::string capitalizedFetchedListType = 
                       ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedListType);
+                    
+                    std::string serializableVar =
+                      "serializable" + capitalizedFetchedListType + 
+                      "List" + declarationCounterStr.str();
+
                     serializeMethodStr += indent_ + indent_+
                       "Serializable" + capitalizedFetchedListType +
-                      "List serializable" + capitalizedFetchedListType + 
-                      "List = new Serializable" + capitalizedFetchedListType +
+                      "List " + serializableVar + " = new Serializable" + capitalizedFetchedListType +
                       "List();\n";
+                    
                     serializeMethodStr += indent_ + indent_ + 
-                      "serializable" + capitalizedFetchedListType +
-                      "List.set" + capitalizedFetchedListType + "List(" + 
+                      serializableVar + ".set" + capitalizedFetchedListType + "List(" + 
                       declarationPtr->variable_.c_str() + ");\n"; 
+                    
                     serializeMethodStr += indent_ + indent_ + 
                       "byte[] serialized" + capitalizedDeclarationName + " " + 
-                      " = serializable" + capitalizedFetchedListType +
-                      "List.serializeWithLength();\n";
+                      " = " + serializableVar + ".serializeWithLength();\n";
                   }else if(declarationPtr->type_.compare("data") == 0){
                     serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.getData(" + declarationPtr->variable_ + ");\n";
                   }else{
@@ -193,6 +202,7 @@ namespace naeem {
             serializeMethodStr += indent_ + indent_ + "return output;"; 
             replacableStructTmpStr.replace(replacableStructTmpStr.find("[%SERIALIZE_METHOD_BODY%]"), 25, serializeMethodStr);
             //deserialize method
+            declarationCounter = 0;
             std::string deserializeMethodStr;
             deserializeMethodStr += indent_ + indent_ + indent_ +  "int counter = 0;\n";
             deserializeMethodStr += indent_ + indent_ + indent_ + "int dataLength = 0;\n";
@@ -235,18 +245,24 @@ namespace naeem {
                           ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(declarationPtr->type_);                        
                         std::string upperCaseListType = 
                           ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedListType);
+                        
+                        declarationCounter++;
+                        std::stringstream declarationCounterStr;
+                        declarationCounterStr << declarationCounter;
+                        std::string serializableVar = 
+                          "serializable" + upperCaseListType +
+                          "List" + declarationCounterStr.str(); 
                         deserializeMethodStr += indent_ + indent_ + 
                           "Serializable" + upperCaseListType + "List " + 
-                          "serializable" + upperCaseListType + "List = new Serializable" + 
+                          serializableVar + " = new Serializable" + 
                           upperCaseListType + "List();\n";
                         deserializeMethodStr += indent_ + indent_ + 
-                          "serializable" +  upperCaseListType + "List" + 
-                          ".deserialize(" + declarationPtr->variable_.c_str() + "ByteArray);\n";
+                          serializableVar +  ".deserialize(" +
+                          declarationPtr->variable_.c_str() + "ByteArray);\n";
                         deserializeMethodStr += indent_ + indent_ + 
-                          "set" + capitalizedDeclarationName + 
-                          "(serializable" + upperCaseListType + 
-                          "List.get" + upperCaseListType +
-                           "List());\n";
+                          "set" + capitalizedDeclarationName + "(" + 
+                          serializableVar + ".get" + upperCaseListType +
+                          "List());\n";
                       }
                 }else {
                   uint32_t dataLength = ::naeem::hottentot::generator::common::TypeHelper::GetTypeLength(declarationPtr->type_.c_str());
