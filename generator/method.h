@@ -58,8 +58,8 @@ namespace cc {
   class Service;
   class Method {
     friend class Hot;
-    friend class ::naeem::hottentot::generator::cc::CCGenerator;
-    friend class ::naeem::hottentot::generator::java::JavaGenerator;
+    friend class ::org::labcrypto::hottentot::generator::cc::CCGenerator;
+    friend class ::org::labcrypto::hottentot::generator::java::JavaGenerator;
   public:
     Method(Service *service) 
       : service_(service) {

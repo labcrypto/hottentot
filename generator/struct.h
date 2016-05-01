@@ -42,8 +42,8 @@ namespace cc {
   class Module;
   class Struct {
     friend class Hot;
-    friend class ::naeem::hottentot::generator::cc::CCGenerator;
-    friend class ::naeem::hottentot::generator::java::JavaGenerator;
+    friend class ::org::labcrypto::hottentot::generator::cc::CCGenerator;
+    friend class ::org::labcrypto::hottentot::generator::java::JavaGenerator;
   public:
     public:
     Struct(Module *module) 

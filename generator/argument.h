@@ -55,8 +55,8 @@ namespace cc {
   class CCGenerator;
 };
   class Argument {
-    friend class ::naeem::hottentot::generator::cc::CCGenerator;
-    friend class ::naeem::hottentot::generator::java::JavaGenerator;
+    friend class ::org::labcrypto::hottentot::generator::cc::CCGenerator;
+    friend class ::org::labcrypto::hottentot::generator::java::JavaGenerator;
   public:
     Argument(std::string type = "", 
              std::string variable = "")

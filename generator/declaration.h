@@ -55,8 +55,8 @@ namespace cc {
   class CCGenerator;
 };
   class Declaration {
-    friend class ::naeem::hottentot::generator::cc::CCGenerator;
-    friend class ::naeem::hottentot::generator::java::JavaGenerator;
+    friend class ::org::labcrypto::hottentot::generator::cc::CCGenerator;
+    friend class ::org::labcrypto::hottentot::generator::java::JavaGenerator;
   public:
     Declaration(std::string type = "", 
                 std::string variable = "",

@@ -62,8 +62,8 @@ namespace cc {
 };
   class Module;
   class Hot {
-    friend class ::naeem::hottentot::generator::cc::CCGenerator;
-    friend class ::naeem::hottentot::generator::java::JavaGenerator;
+    friend class ::org::labcrypto::hottentot::generator::cc::CCGenerator;
+    friend class ::org::labcrypto::hottentot::generator::java::JavaGenerator;
   public:
     Hot() {}
     virtual ~Hot() {}
@@ -99,7 +99,7 @@ namespace cc {
         }
         for (uint32_t j = 0; j < modules_[i]->services_.size(); j++) {
           std::cout << "      ";
-          std::cout << (modules_[i]->services_[j]->GetServiceType() == ::naeem::hottentot::generator::ds::Service::Stateless ? "STATELESS" : "STATEFUL");
+          std::cout << (modules_[i]->services_[j]->GetServiceType() == ::org::labcrypto::hottentot::generator::Service::Stateless ? "STATELESS" : "STATEFUL");
           std::cout << " SERVICE " <<  modules_[i]->services_[j]->GetName() << std::endl;
           std::cout << "      FQName: '" << modules_[i]->services_[j]->GetFQName() << "'" << std::endl;
           std::cout << "      Hash: '" << modules_[i]->services_[j]->GetHash() << "'";

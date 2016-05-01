@@ -56,7 +56,7 @@ typedef unsigned __int64 uint64_t;
 #include "../../fasthash.h"
 
 #include "../../cc/cc_generator.h"
-#include "../../java/java_generator.h"
+// #include "../../java/java_generator.h"
 #else
 #include "hot.h"
 #include "declaration.h"
@@ -68,7 +68,7 @@ typedef unsigned __int64 uint64_t;
 #include "fasthash.h"
 
 #include "cc/cc_generator.h"
-#include "java/java_generator.h"
+// #include "java/java_generator.h"
 #endif
 
 void yyerror(char *);
@@ -80,12 +80,12 @@ extern "C" {
 unsigned int lineCounter = 1;
 std::string lastType;
 std::stack<std::string> stack;
-::naeem::hottentot::generator::ds::Hot *currentHot;
-::naeem::hottentot::generator::ds::Module *currentModule;
-::naeem::hottentot::generator::ds::Enum *currentEnum;
-::naeem::hottentot::generator::ds::Struct *currentStruct;
-::naeem::hottentot::generator::ds::Service *currentService;
-::naeem::hottentot::generator::ds::Method *currentMethod;
+::org::labcrypto::hottentot::generator::Hot *currentHot;
+::org::labcrypto::hottentot::generator::Module *currentModule;
+::org::labcrypto::hottentot::generator::Enum *currentEnum;
+::org::labcrypto::hottentot::generator::Struct *currentStruct;
+::org::labcrypto::hottentot::generator::Service *currentService;
+::org::labcrypto::hottentot::generator::Method *currentMethod;
 
 %}
 %union {
