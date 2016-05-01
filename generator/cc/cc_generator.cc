@@ -48,8 +48,10 @@ namespace hottentot {
 namespace generator {
 namespace cc {
   void
-  CCGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
-                        ::naeem::hottentot::generator::GenerationConfig &generationConfig) {                                
+  CCGenerator::Generate (
+    ::naeem::hottentot::generator::ds::Hot *hot,
+    ::naeem::hottentot::generator::GenerationConfig &generationConfig
+  ) {
     /*
      * Reading all needed templates and stroing them in a map
      */
@@ -70,6 +72,7 @@ namespace cc {
     std::string structCCTemplate((char *)__cc_templates_struct_cc_template, __cc_templates_struct_cc_template_len);
     std::string structHeaderTemplate((char *)__cc_templates_struct_header_template, __cc_templates_struct_header_template_len);
     std::string structHeaderGetterAndSetterTemplate((char *)__cc_templates_struct_header__getter_and_setter_template, __cc_templates_struct_header__getter_and_setter_template_len);
+
     std::map<std::string, std::string> templates;
     templates.insert(std::pair<std::string, std::string>("abstract_service_header", abstractServiceHeaderTemplate));
     templates.insert(std::pair<std::string, std::string>("enums", enumsTemplate));
@@ -100,52 +103,78 @@ namespace cc {
          moduleCounter < hot->modules_.size();
          moduleCounter++) {
       Runtime::enums_.clear();
-      Runtime::enums_.insert(Runtime::enums_.end(),
-                             hot->modules_[moduleCounter]->enums_.begin(), 
-                             hot->modules_[moduleCounter]->enums_.end());
-      GenerateEnums(hot->modules_,
-                    generationConfig,
-                    templates);
+      Runtime::enums_.insert (
+        Runtime::enums_.end(),
+        hot->modules_[moduleCounter]->enums_.begin(), 
+        hot->modules_[moduleCounter]->enums_.end()
+      );
+      GenerateEnums (
+        hot->modules_,
+        generationConfig,
+        templates
+      );
       for (uint32_t structCounter = 0; 
            structCounter < hot->modules_[moduleCounter]->structs_.size();
            structCounter++) {
-        GenerateStructHeader(hot->modules_[moduleCounter]->structs_[structCounter],
-                             generationConfig,
-                             templates);
-        GenerateStructCC(hot->modules_[moduleCounter]->structs_[structCounter],
-                         generationConfig,
-                         templates);
+        GenerateStructHeader (
+          hot->modules_[moduleCounter]->structs_[structCounter],
+          generationConfig,
+          templates
+        );
+        GenerateStructCC (
+          hot->modules_[moduleCounter]->structs_[structCounter],
+          generationConfig,
+          templates
+        );
       }
       for (uint32_t serviceCounter = 0;
            serviceCounter < hot->modules_[moduleCounter]->services_.size();
            serviceCounter++) {
-        GenerateAbstractServiceHeader(hot->modules_[moduleCounter]->services_[serviceCounter],
-                                      generationConfig,
-                                      templates);
-        GenerateInterface(hot->modules_[moduleCounter]->services_[serviceCounter],
-                          generationConfig,
-                          templates);
-        GenerateServiceInterface(hot->modules_[moduleCounter]->services_[serviceCounter],
-                                 generationConfig,
-                                 templates);
-        GenerateProxyHeader(hot->modules_[moduleCounter]->services_[serviceCounter],
-                            generationConfig,
-                            templates);
-        GenerateProxyCC(hot->modules_[moduleCounter]->services_[serviceCounter],
-                        generationConfig,
-                        templates);
-        GenerateProxyBuilderHeader(hot->modules_[moduleCounter]->services_[serviceCounter],
-                                   generationConfig,
-                                   templates);
-        GenerateProxyBuilderCC(hot->modules_[moduleCounter]->services_[serviceCounter],
-                               generationConfig,
-                               templates);
-        GenerateRequestHandlerHeader(hot->modules_[moduleCounter]->services_[serviceCounter],
-                                     generationConfig,
-                                     templates);
-        GenerateRequestHandlerCC(hot->modules_[moduleCounter]->services_[serviceCounter],
-                                 generationConfig,
-                                 templates);
+        GenerateAbstractServiceHeader (
+          hot->modules_[moduleCounter]->services_[serviceCounter],
+          generationConfig,
+          templates
+        );
+        GenerateInterface (
+          hot->modules_[moduleCounter]->services_[serviceCounter],
+          generationConfig,
+          templates
+        );
+        GenerateServiceInterface (
+          hot->modules_[moduleCounter]->services_[serviceCounter],
+          generationConfig,
+          templates
+        );
+        GenerateProxyHeader (
+          hot->modules_[moduleCounter]->services_[serviceCounter],
+          generationConfig,
+          templates
+        );
+        GenerateProxyCC (
+          hot->modules_[moduleCounter]->services_[serviceCounter],
+          generationConfig,
+          templates
+        );
+        GenerateProxyBuilderHeader (
+          hot->modules_[moduleCounter]->services_[serviceCounter],
+          generationConfig,
+          templates
+        );
+        GenerateProxyBuilderCC (
+          hot->modules_[moduleCounter]->services_[serviceCounter],
+          generationConfig,
+          templates
+        );
+        GenerateRequestHandlerHeader (
+          hot->modules_[moduleCounter]->services_[serviceCounter],
+          generationConfig,
+          templates
+        );
+        GenerateRequestHandlerCC (
+          hot->modules_[moduleCounter]->services_[serviceCounter],
+          generationConfig,
+          templates
+        );
       }
     }
   }
