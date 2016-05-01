@@ -25,20 +25,6 @@
 
 #include "fasthash.h"
 
-// Compression function for Merkle-Damgard construction.
-// This function is generated using the framework provided.
-//#ifdef _MSC_VER
-//#define mix(h) \
-//      (h) ^= (h) >> 23; \
-//      (h) *= 0x2127599bf4325c37ULL; \
-//      (h) ^= (h) >> 47;
-//#else
-//#define mix(h) ({ \
-//      (h) ^= (h) >> 23; \
-//      (h) *= 0x2127599bf4325c37ULL; \
-//      (h) ^= (h) >> 47; })
-//#endif
-
 uint64_t mix(uint64_t h) {
   h ^= h >> 23;
   h *= 0x2127599bf4325c37ULL;
@@ -46,8 +32,7 @@ uint64_t mix(uint64_t h) {
   return h;
 }
 
-uint64_t fasthash64(const void *buf, size_t len, uint64_t seed)
-{
+uint64_t fasthash64(const void *buf, size_t len, uint64_t seed) {
   const uint64_t    m = 0x880355f21e6d1965ULL;
   const uint64_t *pos = (const uint64_t *)buf;
   const uint64_t *end = pos + (len / 8);
@@ -79,11 +64,7 @@ uint64_t fasthash64(const void *buf, size_t len, uint64_t seed)
   return mix(h);
 } 
 
-uint32_t fasthash32(const void *buf, size_t len, uint32_t seed)
-{
-  // the following trick converts the 64-bit hashcode to Fermat
-  // residue, which shall retain information from both the higher
-  // and lower parts of hashcode.
+uint32_t fasthash32(const void *buf, size_t len, uint32_t seed) {
   uint64_t h = fasthash64(buf, len, seed);
   return h - (h >> 32);
 }

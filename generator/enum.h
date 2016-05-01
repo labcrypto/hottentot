@@ -29,53 +29,53 @@
  #include "declaration.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace java {
-        class JavaGenerator;
-      };
-      namespace cc {
-        class CCGenerator;
-      };
-      namespace ds {
-        class Module;
-        class Enum {
-          friend class Hot;
-          friend class ::naeem::hottentot::generator::cc::CCGenerator;
-          friend class ::naeem::hottentot::generator::java::JavaGenerator;
-        public:
-          public:
-          Enum(Module *module) 
-            :  module_(module) {
-          }
-          virtual ~Enum() {}
-        public:
-          inline virtual void AddItem(std::string name, uint16_t value) {
-            items_[name] = value;
-            revItems_[value] = name;
-          }
-          inline virtual std::string GetName() const {
-            return name_;
-          }
-          inline virtual void SetName(std::string name) {
-            name_ = name;
-          }
-          inline virtual std::string GetItemName(uint16_t itemValue) {
-            return revItems_[itemValue];
-          }
-          inline virtual uint16_t GetItemValue(std::string itemName) {
-            return items_[itemName];
-          }
-        private:
-          std::string name_;
-          std::map<std::string, uint16_t> items_;
-          std::map<uint16_t, std::string> revItems_;
-          Module *module_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+namespace java {
+  class JavaGenerator;
+};
+namespace cc {
+  class CCGenerator;
+};
+  class Module;
+  class Enum {
+    friend class Hot;
+    friend class ::naeem::hottentot::generator::cc::CCGenerator;
+    friend class ::naeem::hottentot::generator::java::JavaGenerator;
+  public:
+    public:
+    Enum(Module *module) 
+      :  module_(module) {
     }
-  }
+    virtual ~Enum() {}
+  public:
+    inline virtual void AddItem(std::string name, uint16_t value) {
+      items_[name] = value;
+      revItems_[value] = name;
+    }
+    inline virtual std::string GetName() const {
+      return name_;
+    }
+    inline virtual void SetName(std::string name) {
+      name_ = name;
+    }
+    inline virtual std::string GetItemName(uint16_t itemValue) {
+      return revItems_[itemValue];
+    }
+    inline virtual uint16_t GetItemValue(std::string itemName) {
+      return items_[itemName];
+    }
+  private:
+    std::string name_;
+    std::map<std::string, uint16_t> items_;
+    std::map<uint16_t, std::string> revItems_;
+    Module *module_;
+  };
+}
+}
+}
 }
 
 #endif

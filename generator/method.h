@@ -44,67 +44,67 @@ typedef unsigned __int64 uint64_t;
 #include "argument.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace java {
-        class JavaGenerator;
-      };
-      namespace cc {
-        class CCGenerator;
-      };
-      namespace ds {
-        class Argument;
-        class Service;
-        class Method {
-          friend class Hot;
-          friend class ::naeem::hottentot::generator::cc::CCGenerator;
-          friend class ::naeem::hottentot::generator::java::JavaGenerator;
-        public:
-          Method(Service *service) 
-            : service_(service) {
-          }
-          virtual ~Method() {}
-        public:
-          inline void AddArgument(Argument *argument) {
-            arguments_.push_back(argument);
-          }
-          inline std::vector<Argument*> GetArguments() {
-            return arguments_;
-          }
-          inline std::string GetReturnType() const {
-            return returnType_;
-          }
-          inline void SetReturnType(std::string returnType) {
-            returnType_ = returnType;
-          }
-          inline std::string GetName() const {
-            return name_;
-          }
-          inline void SetName(std::string name) {
-            name_ = name;
-          }
-          inline virtual void Display() {
-            std::cout << name_ <<  "(";
-            std::string del = "";
-            for (uint32_t i = 0; i < arguments_.size(); i++) {
-              std::cout << del;
-              arguments_[i]->Display();
-              del = ",";
-            }
-            std::cout << "): " << returnType_ << " => '" << GetFQName() << "', Hash: '" << GetHash() << "'";
-          }
-          virtual std::string GetFQName() const;
-          virtual uint32_t GetHash() const;
-        private:
-          std::string returnType_;
-          std::string name_;
-          std::vector<Argument*> arguments_;
-          Service *service_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+namespace java {
+  class JavaGenerator;
+};
+namespace cc {
+  class CCGenerator;
+};
+  class Argument;
+  class Service;
+  class Method {
+    friend class Hot;
+    friend class ::naeem::hottentot::generator::cc::CCGenerator;
+    friend class ::naeem::hottentot::generator::java::JavaGenerator;
+  public:
+    Method(Service *service) 
+      : service_(service) {
     }
-  }
+    virtual ~Method() {}
+  public:
+    inline void AddArgument(Argument *argument) {
+      arguments_.push_back(argument);
+    }
+    inline std::vector<Argument*> GetArguments() {
+      return arguments_;
+    }
+    inline std::string GetReturnType() const {
+      return returnType_;
+    }
+    inline void SetReturnType(std::string returnType) {
+      returnType_ = returnType;
+    }
+    inline std::string GetName() const {
+      return name_;
+    }
+    inline void SetName(std::string name) {
+      name_ = name;
+    }
+    inline virtual void Display() {
+      std::cout << name_ <<  "(";
+      std::string del = "";
+      for (uint32_t i = 0; i < arguments_.size(); i++) {
+        std::cout << del;
+        arguments_[i]->Display();
+        del = ",";
+      }
+      std::cout << "): " << returnType_ << " => '" << GetFQName() << "', Hash: '" << GetHash() << "'";
+    }
+    virtual std::string GetFQName() const;
+    virtual uint32_t GetHash() const;
+  private:
+    std::string returnType_;
+    std::string name_;
+    std::vector<Argument*> arguments_;
+    Service *service_;
+  };
+}
+}
+}
 }
 
 #endif

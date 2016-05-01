@@ -21,29 +21,29 @@
  *  SOFTWARE.
  */
  
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__COMMON__DATETIME_HELPER_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__COMMON__DATETIME_HELPER_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_GENERATOR__DATETIME_HELPER_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_GENERATOR__DATETIME_HELPER_H_
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace common {
-        class DateTimeHelper {
-        public:
-          static inline std::string GetCurrentDateTime () {
-            time_t rawtime;
-            struct tm * timeinfo;
-            char buffer[80];
-            time (&rawtime);
-            timeinfo = localtime(&rawtime);
-            strftime(buffer,80,"%d-%m-%Y %I:%M:%S",timeinfo);
-            std::string str(buffer);
-            return str;
-          }
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+  class DateTimeHelper {
+  public:
+    static inline std::string GetCurrentDateTime () {
+      time_t rawtime;
+      struct tm * timeinfo;
+      char buffer[80];
+      time (&rawtime);
+      timeinfo = localtime(&rawtime);
+      strftime(buffer,80,"%d-%m-%Y %I:%M:%S",timeinfo);
+      std::string str(buffer);
+      return str;
     }
-  }
+  };
+}
+}
+}
 }
 
 #endif

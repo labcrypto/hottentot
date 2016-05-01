@@ -25,26 +25,25 @@
 
 #include "service.h"
 #include "module.h"
-
-#include "../dep/fasthash.h"
+#include "fasthash.h"
  
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace ds {
-        std::string 
-        Service::GetFQName() const {
-          std::stringstream ss;
-          ss << module_->GetPackage() << "." << name_;
-          return ss.str();
-        }
-        uint32_t 
-        Service::GetHash() const {
-          std::string fqName = GetFQName();
-          return fasthash32(fqName.c_str(), fqName.size(), 0);
-        }
-      }
-    }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+  std::string 
+  Service::GetFQName() const {
+    std::stringstream ss;
+    ss << module_->GetPackage() << "." << name_;
+    return ss.str();
   }
+  uint32_t 
+  Service::GetHash() const {
+    std::string fqName = GetFQName();
+    return fasthash32(fqName.c_str(), fqName.size(), 0);
+  }
+}
+}
+}
 }

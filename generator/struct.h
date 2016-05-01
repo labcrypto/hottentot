@@ -29,45 +29,45 @@
  #include "declaration.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace java {
-        class JavaGenerator;
-      };
-      namespace cc {
-        class CCGenerator;
-      };
-      namespace ds {
-        class Module;
-        class Struct {
-          friend class Hot;
-          friend class ::naeem::hottentot::generator::cc::CCGenerator;
-          friend class ::naeem::hottentot::generator::java::JavaGenerator;
-        public:
-          public:
-          Struct(Module *module) 
-            :  module_(module) {
-          }
-          virtual ~Struct() {}
-        public:
-          inline virtual void AddDeclaration(Declaration *declaration) {
-            declarations_.insert(std::pair<uint32_t, Declaration*>(declaration->GetOrd(), declaration));
-          }
-          inline virtual std::string GetName() const {
-            return name_;
-          }
-          inline virtual void SetName(std::string name) {
-            name_ = name;
-          }
-        private:
-          std::string name_;
-          std::map<uint32_t, Declaration*> declarations_;
-          Module *module_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+namespace java {
+  class JavaGenerator;
+};
+namespace cc {
+  class CCGenerator;
+};
+  class Module;
+  class Struct {
+    friend class Hot;
+    friend class ::naeem::hottentot::generator::cc::CCGenerator;
+    friend class ::naeem::hottentot::generator::java::JavaGenerator;
+  public:
+    public:
+    Struct(Module *module) 
+      :  module_(module) {
     }
-  }
+    virtual ~Struct() {}
+  public:
+    inline virtual void AddDeclaration(Declaration *declaration) {
+      declarations_.insert(std::pair<uint32_t, Declaration*>(declaration->GetOrd(), declaration));
+    }
+    inline virtual std::string GetName() const {
+      return name_;
+    }
+    inline virtual void SetName(std::string name) {
+      name_ = name;
+    }
+  private:
+    std::string name_;
+    std::map<uint32_t, Declaration*> declarations_;
+    Module *module_;
+  };
+}
+}
+}
 }
 
 #endif

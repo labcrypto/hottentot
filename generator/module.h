@@ -29,51 +29,51 @@
 #include "service.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace java {
-        class JavaGenerator;
-      };
-      namespace cc {
-        class CCGenerator;
-      };
-      namespace ds {
-        class Enum;
-        class Struct;
-        class Service;
-        class Module {
-          friend class Hot;
-          friend class ::naeem::hottentot::generator::cc::CCGenerator;
-          friend class ::naeem::hottentot::generator::java::JavaGenerator;
-        public:
-          Module() {}
-          virtual ~Module() {}
-        public:
-          inline void AddEnum(Enum *enumm) {
-            enums_.push_back(enumm);
-          }
-          inline void AddStruct(Struct *struc) {
-            structs_.push_back(struc);
-          }
-          inline void AddService(Service *service) {
-            services_.push_back(service);
-          }
-          inline void SetPackage(std::string package) {
-            package_ = package;
-          }
-          inline std::string GetPackage() const {
-            return package_;
-          }
-        private:
-          std::string package_;
-          std::vector<Enum*> enums_;
-          std::vector<Struct*> structs_;
-          std::vector<Service*> services_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+namespace java {
+  class JavaGenerator;
+};
+namespace cc {
+  class CCGenerator;
+};
+  class Enum;
+  class Struct;
+  class Service;
+  class Module {
+    friend class Hot;
+    friend class ::naeem::hottentot::generator::cc::CCGenerator;
+    friend class ::naeem::hottentot::generator::java::JavaGenerator;
+  public:
+    Module() {}
+    virtual ~Module() {}
+  public:
+    inline void AddEnum(Enum *enumm) {
+      enums_.push_back(enumm);
     }
-  }
+    inline void AddStruct(Struct *struc) {
+      structs_.push_back(struc);
+    }
+    inline void AddService(Service *service) {
+      services_.push_back(service);
+    }
+    inline void SetPackage(std::string package) {
+      package_ = package;
+    }
+    inline std::string GetPackage() const {
+      return package_;
+    }
+  private:
+    std::string package_;
+    std::vector<Enum*> enums_;
+    std::vector<Struct*> structs_;
+    std::vector<Service*> services_;
+  };
+}
+}
+}
 }
 
 #endif

@@ -44,58 +44,58 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace java {
-        class JavaGenerator;
-      };
-      namespace cc {
-        class CCGenerator;
-      };
-      namespace ds {
-        class Declaration {
-          friend class ::naeem::hottentot::generator::cc::CCGenerator;
-          friend class ::naeem::hottentot::generator::java::JavaGenerator;
-        public:
-          Declaration(std::string type = "", 
-                      std::string variable = "",
-                      std::string ordString = "")
-            : type_(type),
-              variable_(variable) {
-              ord_ = atoi(ordString.substr(4, ordString.size() - 5).c_str());
-          }
-          virtual ~Declaration() {}
-        public:
-          inline std::string GetType() const {
-            return type_;
-          }
-          inline void SetType(std::string type) {
-            type_ = type;
-          }
-          inline std::string GetVariable() const {
-            return variable_;
-          }
-          inline void SetVariable(std::string variable) {
-            variable_ = variable;
-          }
-          inline uint32_t GetOrd() const {
-            return ord_;
-          }
-          inline void SetOrd(uint32_t ord) {
-            ord_ = ord;
-          }
-          inline virtual void Display() {
-            std::cout << variable_ << ": " << type_ << " with ORD(" << ord_ << ")";
-          }
-        protected:
-          std::string type_;
-          std::string variable_;
-          uint32_t ord_;
-        };
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+namespace java {
+  class JavaGenerator;
+};
+namespace cc {
+  class CCGenerator;
+};
+  class Declaration {
+    friend class ::naeem::hottentot::generator::cc::CCGenerator;
+    friend class ::naeem::hottentot::generator::java::JavaGenerator;
+  public:
+    Declaration(std::string type = "", 
+                std::string variable = "",
+                std::string ordString = "")
+      : type_(type),
+        variable_(variable) {
+        ord_ = atoi(ordString.substr(4, ordString.size() - 5).c_str());
     }
-  }
+    virtual ~Declaration() {}
+  public:
+    inline std::string GetType() const {
+      return type_;
+    }
+    inline void SetType(std::string type) {
+      type_ = type;
+    }
+    inline std::string GetVariable() const {
+      return variable_;
+    }
+    inline void SetVariable(std::string variable) {
+      variable_ = variable;
+    }
+    inline uint32_t GetOrd() const {
+      return ord_;
+    }
+    inline void SetOrd(uint32_t ord) {
+      ord_ = ord;
+    }
+    inline virtual void Display() {
+      std::cout << variable_ << ": " << type_ << " with ORD(" << ord_ << ")";
+    }
+  protected:
+    std::string type_;
+    std::string variable_;
+    uint32_t ord_;
+  };
+}
+}
+}
 }
 
 #endif

@@ -29,31 +29,31 @@
 #include "../dep/fasthash.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace ds {
-        std::string 
-        Method::GetFQName() const {
-          std::stringstream ss;
-          ss << service_->GetFQName() << "." << name_;
-          ss << "(";
-          std::string del = "";
-          for (uint32_t i = 0; i < arguments_.size(); i++) {
-            ss << del << ":" << arguments_[i]->GetType();
-            del = ",";
-          }
-          ss << "):";
-          ss << returnType_;
-          return ss.str();
-        }
-        uint32_t 
-        Method::GetHash() const {
-          std::string fqName = GetFQName();
-          uint32_t len = fqName.size();
-          return fasthash32(fqName.c_str(), len, 0);
-        }
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+  std::string 
+  Method::GetFQName() const {
+    std::stringstream ss;
+    ss << service_->GetFQName() << "." << name_;
+    ss << "(";
+    std::string del = "";
+    for (uint32_t i = 0; i < arguments_.size(); i++) {
+      ss << del << ":" << arguments_[i]->GetType();
+      del = ",";
     }
+    ss << "):";
+    ss << returnType_;
+    return ss.str();
   }
+  uint32_t 
+  Method::GetHash() const {
+    std::string fqName = GetFQName();
+    uint32_t len = fqName.size();
+    return fasthash32(fqName.c_str(), len, 0);
+  }
+}
+}
+}
 }
