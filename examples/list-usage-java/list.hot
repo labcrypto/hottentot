@@ -1,9 +1,15 @@
 module ir.ntnaeem.hottentot.examples.listtest {
+  
+  struct Test{
+    int32 id ord(1);
+  };
+
   struct MessageBox {
     string value ord(1);
     list<string> xList ord(2);
     list<uint8> yList ord(3);
     list<bool> zList ord(4);
+    list<Test> testList ord(5);
   };
 
   stateless service ListTest {

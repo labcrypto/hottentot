@@ -9,8 +9,11 @@ package ir.ntnaeem.hottentot.examples.listtest.client;
 import ir.ntnaeem.hottentot.examples.listtest.hotgen.ListTestService;
 import ir.ntnaeem.hottentot.examples.listtest.hotgen.ListTestServiceProxyBuilder;
 import ir.ntnaeem.hottentot.examples.listtest.hotgen.MessageBox;
+import ir.ntnaeem.hottentot.examples.listtest.hotgen.Test;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
   public static void main(String[] args) throws IOException {
@@ -38,6 +41,11 @@ public class Main {
     messageStringList.add("b");
     messageStringList.add("c");
     message.setXList(messageStringList);
+    List<Test> testList = new ArrayList<Test>();
+    Test test = new Test();
+    test.setId(1);
+    testList.add(test);
+    message.setTestList(testList);
     ArrayList<Byte> yList = new ArrayList<>();
     yList.add((byte) 1);
     yList.add((byte) 2);

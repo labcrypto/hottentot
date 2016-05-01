@@ -17,6 +17,7 @@ public class MessageBox {
   private List<String> xList;
   private List<Byte> yList;
   private List<Boolean> zList;
+  private List<Test> testList;
   public void setValue(String value) {
     this.value = value;
   }
@@ -41,6 +42,12 @@ public class MessageBox {
   public List<Boolean> getZList() {
     return zList;
   }
+  public void setTestList(List<Test> testList) {
+    this.testList = testList;
+  }
+  public List<Test> getTestList() {
+    return testList;
+  }
   @Override 
   public String toString() { 
     return "MessageBox{" + 
@@ -48,6 +55,7 @@ public class MessageBox {
       ",xList = '" + xList + '\'' + 
       ",yList = '" + yList + '\'' + 
       ",zList = '" + zList + '\'' + 
+      ",testList = '" + testList + '\'' + 
       "}"; 
   }
 	
@@ -62,7 +70,10 @@ public class MessageBox {
     SerializableBoolList serializableBoolList = new SerializableBoolList();
     serializableBoolList.setBoolList(zList);
     byte[] serializedZList  = serializableBoolList.serializeWithLength();
-    byte[] output = new byte[serializedValue.length + serializedXList.length + serializedYList.length + serializedZList.length];
+    SerializableTestList serializableTestList = new SerializableTestList();
+    serializableTestList.setTestList(testList);
+    byte[] serializedTestList  = serializableTestList.serializeWithLength();
+    byte[] output = new byte[serializedValue.length + serializedXList.length + serializedYList.length + serializedZList.length + serializedTestList.length];
     int counter = 0;
     //use a loop for every property
     for (int i = 0; i < serializedValue.length; i++) {
@@ -76,6 +87,9 @@ public class MessageBox {
     }
     for (int i = 0; i < serializedZList.length; i++) {
       output[counter++] = serializedZList[i];
+    }
+    for (int i = 0; i < serializedTestList.length; i++) {
+      output[counter++] = serializedTestList[i];
     }
     return output;
   }
@@ -156,6 +170,24 @@ public class MessageBox {
     SerializableBoolList serializableBoolList = new SerializableBoolList();
     serializableBoolList.deserialize(zListByteArray);
     setZList(serializableBoolList.getBoolList());
+    //testList : List<Test>
+    dataLength = 0;
+    if(( serializedByteArray[counter] & 0x80) == 0 ) {
+      dataLength = serializedByteArray[counter++];
+    }else{
+      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
+    }
+    byte[] testListByteArray = new byte[dataLength];
+    System.arraycopy(serializedByteArray,counter,testListByteArray,0,dataLength);
+    counter += dataLength;
+    SerializableTestList serializableTestList = new SerializableTestList();
+    serializableTestList.deserialize(testListByteArray);
+    setTestList(serializableTestList.getTestList());
 
     }
   }
