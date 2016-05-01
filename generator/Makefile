@@ -69,6 +69,19 @@ compile:
 	# g++ -c -g java/generate_server_impls_java.cc -o .lib/generate_server_impls_java.o
 	# g++ -c -g java/generate_enums_java.cc -o .lib/generate_enums_java.o
 	
+		    # .lib/java_generator.o \
+	    # .lib/generate_structs_java.o \
+	    # .lib/generate_enums_java.o \
+	    # .lib/generate_abstract_service_java.o \
+	    # .lib/generate_service_interface_java.o \
+	    # .lib/generate_request_handler_java.o \
+	    # .lib/generate_service_proxy_builder_java.o \
+	    # .lib/generate_service_proxy_java.o \
+	    # .lib/generate_serializable_struct_list_java.o \
+	    # .lib/generate_client_main_java.o \
+	    # .lib/generate_server_main_java.o \
+	    # .lib/generate_server_impls_java.o \
+	    
 	g++ -g .lib/y.tab.o \
 	    .lib/lex.yy.o \
 	    .lib/runtime_common.o \
@@ -90,18 +103,6 @@ compile:
 	    .lib/generate_client.o \
 	    .lib/generate_stub.o \
 	    .lib/templates.o \
-	    # .lib/java_generator.o \
-	    # .lib/generate_structs_java.o \
-	    # .lib/generate_enums_java.o \
-	    # .lib/generate_abstract_service_java.o \
-	    # .lib/generate_service_interface_java.o \
-	    # .lib/generate_request_handler_java.o \
-	    # .lib/generate_service_proxy_builder_java.o \
-	    # .lib/generate_service_proxy_java.o \
-	    # .lib/generate_serializable_struct_list_java.o \
-	    # .lib/generate_client_main_java.o \
-	    # .lib/generate_server_main_java.o \
-	    # .lib/generate_server_impls_java.o \
 	    .lib/fasthash.o \
 	    .lib/service.o \
 	    .lib/method.o \
