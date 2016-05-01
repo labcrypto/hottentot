@@ -26,7 +26,7 @@ public class AuthenticationRequestHandler extends RequestHandler {
     super(service);
   }
   @Override
-  public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
+  public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException {
     long methodId = request.getMethodId();
     AuthenticationService authenticationImpl = (AbstractAuthenticationService) service;
     if(methodId == 2550194791L){

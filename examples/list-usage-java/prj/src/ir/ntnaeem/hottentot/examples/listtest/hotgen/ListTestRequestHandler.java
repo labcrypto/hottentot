@@ -60,28 +60,28 @@ public class ListTestRequestHandler extends RequestHandler {
       response.setLength(serializedStringList.length + 1);
       return response;
     }
-    if(methodId == 1872129924L){
+    if(methodId == 284127249L){
       List <Argument> args = request.getArgs();
-      SerializableMessageList serializableMessageList = new SerializableMessageList();
+      SerializableMessageBoxList serializableMessageBoxList = new SerializableMessageBoxList();
       Response response = new Response();
-      List<Message> messageList = listTestImpl.getMessages();
-      byte[] serializedMessageList;
-      if(messageList == null){
-        serializedMessageList  = new byte[0];
+      List<MessageBox> messageboxList = listTestImpl.getMessages();
+      byte[] serializedMessageBoxList;
+      if(messageboxList == null){
+        serializedMessageBoxList  = new byte[0];
       }else{
-        serializableMessageList.setMessageList(messageList);
-        serializedMessageList = serializableMessageList.serialize();
+        serializableMessageBoxList.setMessageBoxList(messageboxList);
+        serializedMessageBoxList = serializableMessageBoxList.serialize();
       }
       response.setStatusCode((byte) 0);
-      response.setData(serializedMessageList);
-      response.setLength(serializedMessageList.length + 1);
+      response.setData(serializedMessageBoxList);
+      response.setLength(serializedMessageBoxList.length + 1);
       return response;
     }
-    if(methodId == 3626181027L){
+    if(methodId == 2086091320L){
       List <Argument> args = request.getArgs();
       Argument arg0 = args.get(0);
       byte[] serializedMessage = arg0.getData();
-      Message message = new Message();
+      MessageBox message = new MessageBox();
       message.deserialize(serializedMessage);
       Response response = new Response();
       listTestImpl.addMessage(message);
@@ -90,7 +90,7 @@ public class ListTestRequestHandler extends RequestHandler {
       response.setLength(0);
       return response;
     }
-    if(methodId == 1619390066L){
+    if(methodId == 1406341711L){
       List <Argument> args = request.getArgs();
       Argument arg0 = args.get(0);
       byte[] serializedNumbers = arg0.getData();
@@ -98,7 +98,21 @@ public class ListTestRequestHandler extends RequestHandler {
       serializableUint16List.deserialize( serializedNumbers);
       List<Short> numbers = serializableUint16List.getUint16List();
       Response response = new Response();
-      listTestImpl.addNumbers(numbers);
+      listTestImpl.addShortNumbers(numbers);
+      response.setStatusCode((byte) 0);
+      response.setData(new byte[]{0});
+      response.setLength(0);
+      return response;
+    }
+    if(methodId == 4053376767L){
+      List <Argument> args = request.getArgs();
+      Argument arg0 = args.get(0);
+      byte[] serializedNumbers = arg0.getData();
+      SerializableUint8List serializableUint8List = new SerializableUint8List();
+      serializableUint8List.deserialize( serializedNumbers);
+      List<Byte> numbers = serializableUint8List.getUint8List();
+      Response response = new Response();
+      listTestImpl.addByteNumbers(numbers);
       response.setStatusCode((byte) 0);
       response.setData(new byte[]{0});
       response.setLength(0);

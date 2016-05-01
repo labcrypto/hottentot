@@ -1,8 +1,7 @@
 package ir.ntnaeem.hottentot.examples.listtest.server;
 
 import ir.ntnaeem.hottentot.examples.listtest.hotgen.AbstractListTestService;
-import ir.ntnaeem.hottentot.examples.listtest.hotgen.Message;
-
+import ir.ntnaeem.hottentot.examples.listtest.hotgen.MessageBox;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +26,13 @@ class ListTestImpl extends AbstractListTestService {
   }
 
   @Override
-  public List<Message> getMessages() {
+  public List<MessageBox> getMessages() {
     System.out.println("------------------------");
     System.out.println("get messages method call");
-    ArrayList<Message> messages = new ArrayList<>();
-    Message message = new Message();
+    ArrayList<MessageBox> messages = new ArrayList<>();
+    MessageBox message = new MessageBox();
     message.setValue("msg1");
-    Message message2 = new Message();
+    MessageBox message2 = new MessageBox();
     message2.setValue("msg2");
     messages.add(message);
     messages.add(message2);
@@ -41,19 +40,30 @@ class ListTestImpl extends AbstractListTestService {
   }
 
   @Override
-  public void addMessage(Message message) {
+  public void addMessage(MessageBox message) {
     System.out.println("------------------------");
     System.out.println("add message method call");
     System.out.println(message.getValue());
   }
 
   @Override
-  public void addNumbers(List<Short> numbers) {
+  public void addShortNumbers(List<Short> numbers) {
     System.out.println("------------------------");
     System.out.println("add numbers method call");
     for(Short number : numbers){
       System.out.println(number);
     }
   }
+
+  @Override
+  public void addByteNumbers(List<Byte> numbers) {
+    System.out.println("------------------------");
+    System.out.println("add byte numbers method call");
+    for(Byte number : numbers){
+      System.out.println(number);
+    }
+  }
+
+
   //implementation
 }

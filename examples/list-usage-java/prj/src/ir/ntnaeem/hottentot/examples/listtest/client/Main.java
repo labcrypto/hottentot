@@ -22,7 +22,12 @@ public class Main {
     ArrayList<Short> numbers = new ArrayList<>();
     numbers.add((short) 1);
     numbers.add((short) 2);
-    listtestProxy.addNumbers(numbers);
+    listtestProxy.addShortNumbers(numbers);
+    //
+    ArrayList<Byte> byteNumbers = new ArrayList<>();
+    byteNumbers.add((byte) 1);
+    byteNumbers.add((byte) 2);
+    listtestProxy.addShortNumbers(numbers);
     //
     ArrayList<String> names = new ArrayList<>();
     names.add("name-1");
@@ -45,6 +50,7 @@ public class Main {
     for (String name : listtestProxy.getNames()) {
       System.out.println(name);
     }
+    //
     //use server methods on proxies
   }
 }

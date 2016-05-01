@@ -64,6 +64,8 @@ namespace naeem {
           serverMainTmpStr_ = serverMainTmpStr;
           serverImplTmpStr_ = serverImplTmpStr;
           enumTmpStr_ = enumTmpStr;
+          
+
           //MakeStringsFromByteArrays();
           //ReadTemplateFiles();
         }
