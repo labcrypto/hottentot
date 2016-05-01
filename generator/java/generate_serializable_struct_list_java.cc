@@ -98,7 +98,6 @@ namespace naeem {
         JavaGenerator::GenerateSerializableStructList(::naeem::hottentot::generator::ds::Module *pModule) {
           ::naeem::hottentot::generator::ds::Service *pService;
           std::string basePackageName = pModule->package_;
-          
           //search lists in structs
           for (int i = 0; i < pModule->structs_.size(); i++) {
             ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(i);
