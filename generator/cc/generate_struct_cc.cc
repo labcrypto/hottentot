@@ -48,7 +48,7 @@ namespace cc {
   void
   CCGenerator::GenerateStructCC (
     ::org::labcrypto::hottentot::generator::Struct *structt,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig,
     std::map<std::string, std::string> &templates
   ) {
     std::string indent = generationConfig.GetIndentString();
@@ -107,7 +107,7 @@ namespace cc {
       serializationSS << indent << indent << "uint32_t length" << counter << " = 0;\r\n";
       // serializationSS << indent << indent << "unsigned char *data" << counter << " = ";
       serializationSS << indent << indent << 
-        "::naeem::hottentot::runtime::HotPtr<unsigned char, true> ptr" << counter << ";\r\n";
+        "::org::labcrypto::hottentot::runtime::HotPtr<unsigned char, true> ptr" << counter << ";\r\n";
       if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
         serializationSS << indent << indent << "if (" << 
           ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + 

@@ -50,7 +50,7 @@ namespace cc {
   void
   CCGenerator::GenerateEnums (
     std::vector< ::org::labcrypto::hottentot::generator::Module*> modules,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig,
     std::map<std::string, std::string> &templates
   ) {
     std::string indent = generationConfig.GetIndentString();

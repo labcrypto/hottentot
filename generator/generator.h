@@ -53,15 +53,13 @@ namespace generator {
   namespace cc {
     class CCGenerator;
   }
-  namespace ds {
-    class Hot;
-    class Service;
-    class Struct;
-    class Method;
-    class Module;
-    class Argument;
-    class Declaration;
-  }
+  class Hot;
+  class Service;
+  class Struct;
+  class Method;
+  class Module;
+  class Argument;
+  class Declaration;
   class GenerationConfig {
     friend class ::org::labcrypto::hottentot::generator::cc::CCGenerator;
     friend class ::org::labcrypto::hottentot::generator::java::JavaGenerator;
@@ -126,7 +124,7 @@ namespace generator {
     virtual ~Generator() {}
   public:
     virtual void Generate (
-      ::org::labcrypto::hottentot::generator::ds::Hot *,
+      ::org::labcrypto::hottentot::generator::Hot *,
       GenerationConfig &
     ) = 0;
   };

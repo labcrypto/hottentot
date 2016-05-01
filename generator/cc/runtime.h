@@ -31,9 +31,7 @@ namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace generator {
-namespace ds {
   class Enum;
-}
 namespace cc {
   class Runtime {
   public:

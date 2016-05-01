@@ -48,7 +48,7 @@ namespace cc {
   void
   CCGenerator::GenerateRequestHandlerCC (
     ::org::labcrypto::hottentot::generator::Service *service,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig,
     std::map<std::string, std::string> &templates
   ) {
     std::string indent = generationConfig.GetIndentString();
@@ -156,7 +156,7 @@ namespace cc {
   CCGenerator::GenerateRequestHandlerCCMethodIfClause (
     ::org::labcrypto::hottentot::generator::Service *service,
     ::org::labcrypto::hottentot::generator::Method *method,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig,
     std::map<std::string, std::string> &templates
   ) {
     std::string indent = generationConfig.GetIndentString();
@@ -230,7 +230,7 @@ namespace cc {
     }
     resultSerialization += indent + indent + indent + "} else {\r\n";
     resultSerialization += indent + indent + indent + indent + 
-      "::naeem::hottentot::runtime::types::Utf8String faultMessage(hotContext.GetFaultMessage());\r\n";
+      "::org::labcrypto::hottentot::runtime::types::Utf8String faultMessage(hotContext.GetFaultMessage());\r\n";
     resultSerialization += indent + indent + indent + indent + 
       "serializedData = faultMessage.Serialize(&serializedDataLength);\r\n";
     resultSerialization += indent + indent + indent + "}\r\n";

@@ -48,7 +48,7 @@ namespace cc {
   void
   CCGenerator::GenerateInterface (
     ::org::labcrypto::hottentot::generator::Service *service,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig,
     std::map<std::string, std::string> &templates
   ) {
     std::string indent = generationConfig.GetIndentString();

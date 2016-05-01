@@ -50,7 +50,7 @@ namespace cc {
   void
   CCGenerator::GenerateStub (
     ::org::labcrypto::hottentot::generator::Hot *hot,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig
   ) {
     std::string indent = generationConfig.GetIndentString();
     ::org::labcrypto::hottentot::generator::Os::MakeDir(generationConfig.GetOutDir() + "/stub");
@@ -122,7 +122,7 @@ namespace cc {
               TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out, \r\n";
           }
           methodDefs += indent + indent + indent + 
-            "::naeem::hottentot::runtime::service::HotContext &hotContext\r\n";
+            "::org::labcrypto::hottentot::runtime::service::HotContext &hotContext\r\n";
           methodDefs += indent + indent + ");\r\n";
         }
         methodDefs = ::org::labcrypto::hottentot::generator::StringHelper::Trim(methodDefs);
@@ -140,7 +140,7 @@ namespace cc {
               TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out, \r\n";
           }
           arguments += indent + indent + indent + 
-            "::naeem::hottentot::runtime::service::HotContext &hotContext\r\n";
+            "::org::labcrypto::hottentot::runtime::service::HotContext &hotContext\r\n";
           std::string methodTemplate (
             (char *)__cc_templates_service_impl_cc__method_template, 
             __cc_templates_service_impl_cc__method_template_len

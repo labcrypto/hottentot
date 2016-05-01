@@ -34,7 +34,7 @@ namespace generator {
   class Enum;
   class Runtime {
   public:
-    static std::vector< ::org::labcrypto::hottentot::generator::ds::Enum*> enums_;
+    static std::vector< ::org::labcrypto::hottentot::generator::Enum*> enums_;
   };
 }
 }

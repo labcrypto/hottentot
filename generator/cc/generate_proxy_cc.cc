@@ -48,7 +48,7 @@ namespace cc {
   void
   CCGenerator::GenerateProxyCC (
     ::org::labcrypto::hottentot::generator::Service *service,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig,
     std::map<std::string, std::string> &templates
   ) {
     std::string indent = generationConfig.GetIndentString();
@@ -163,7 +163,7 @@ namespace cc {
   CCGenerator::GenerateProxyCCMethod (
     ::org::labcrypto::hottentot::generator::Service *service,
     ::org::labcrypto::hottentot::generator::Method *method,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig,
     std::map<std::string, std::string> &templates
   ) {
     std::string indent = generationConfig.GetIndentString();
@@ -297,7 +297,7 @@ namespace cc {
   CCGenerator::GenerateProxyCCMethodArgumentSerialization (
     ::org::labcrypto::hottentot::generator::Service *service,
     ::org::labcrypto::hottentot::generator::Method *method,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig,
     std::map<std::string, std::string> &templates
   ) {
     // TODO

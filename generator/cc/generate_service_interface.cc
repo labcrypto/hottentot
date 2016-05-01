@@ -48,7 +48,7 @@ namespace cc {
   void
   CCGenerator::GenerateServiceInterface (
     ::org::labcrypto::hottentot::generator::Service *service,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig,
     std::map<std::string, std::string> &templates
   ) {
     std::string indent = generationConfig.GetIndentString();
@@ -107,7 +107,7 @@ namespace cc {
           TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out, \r\n";
       }
       methodDefs += indent + indent + indent + 
-        "::naeem::hottentot::runtime::service::HotContext &hotContext\r\n";
+        "::org::labcrypto::hottentot::runtime::service::HotContext &hotContext\r\n";
       methodDefs += indent + indent + ") = 0;\r\n";
     }
     methodDefs = ::org::labcrypto::hottentot::generator::StringHelper::Trim(methodDefs);

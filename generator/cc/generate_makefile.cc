@@ -47,7 +47,7 @@ namespace cc {
   void
   CCGenerator::GenerateMakefile (
     ::org::labcrypto::hottentot::generator::Hot *hot,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig
   ) {
     std::string makefile = "";
     // makefile += "RTDIR = ../../../cc/runtime\r\n";

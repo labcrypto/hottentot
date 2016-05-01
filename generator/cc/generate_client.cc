@@ -50,7 +50,7 @@ namespace cc {
   void
   CCGenerator::GenerateClient (
     ::org::labcrypto::hottentot::generator::Hot *hot,
-     ::naeem::hottentot::generator::GenerationConfig &generationConfig
+     ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig
   ) {
     std::string indent = generationConfig.GetIndentString();
     ::org::labcrypto::hottentot::generator::Os::MakeDir(generationConfig.GetOutDir() + "/client");

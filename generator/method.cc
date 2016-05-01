@@ -26,7 +26,7 @@
 #include "method.h"
 #include "service.h"
 
-#include "../dep/fasthash.h"
+#include "fasthash.h"
 
 
 namespace org {
