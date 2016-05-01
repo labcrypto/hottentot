@@ -29,17 +29,16 @@
 
 #include "templates/templates.h"
  
-#include "../ds/hot.h"
-#include "../ds/service.h"
-#include "../ds/method.h"
- #include "../ds/module.h"
-#include "../ds/argument.h"
-#include "../ds/struct.h"
-#include "../ds/declaration.h"
-
-#include "../common/os.h"
-#include "../common/string_helper.h"
-#include "../common/datetime_helper.h"
+#include "../hot.h"
+#include "../service.h"
+#include "../method.h"
+#include "../module.h"
+#include "../argument.h"
+#include "../struct.h"
+#include "../declaration.h"
+#include "../os.h"
+#include "../string_helper.h"
+#include "../datetime_helper.h"
 
 
 namespace org {

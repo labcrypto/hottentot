@@ -37,7 +37,6 @@
 #include "../struct.h"
 #include "../declaration.h"
 #include "../enum.h"
-
 #include "../os.h"
 #include "../string_helper.h"
 
