@@ -26,8 +26,8 @@
 
 #include "runtime.h"
 
-#include "../common/string_helper.h"
-#include "../ds/enum.h"
+#include "../string_helper.h"
+#include "../enum.h"
 
 
 namespace org {

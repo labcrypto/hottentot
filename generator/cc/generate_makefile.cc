@@ -66,33 +66,43 @@ namespace cc {
       std::string objectFiles = "";
       for (uint32_t structCounter = 0; structCounter < hot->modules_[moduleCounter]->structs_.size(); structCounter++) {
         std::string structName = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-            hot->modules_[moduleCounter]->structs_[structCounter]->GetName());
-        makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot " + structName + ".cc -o lib/" + structName + ".o\r\n";
+          ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+            hot->modules_[moduleCounter]->structs_[structCounter]->GetName()
+          );
+        makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot " + structName + 
+          ".cc -o lib/" + structName + ".o\r\n";
         objectFiles += "lib/" + structName + ".o ";
       }
       for (uint32_t serviceCounter = 0; serviceCounter < hot->modules_[moduleCounter]->services_.size(); serviceCounter++) {
         std::string serviceName =
-          ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-            hot->modules_[moduleCounter]->services_[serviceCounter]->GetName() + "Service");
-        makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot proxy/" + serviceName + "_proxy.cc -o lib/proxy/" + serviceName + "_proxy.o\r\n";
-        makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot proxy/" + serviceName + "_proxy_builder.cc -o lib/proxy/" + serviceName + "_proxy_builder.o\r\n";
-        makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot service/" + serviceName + "_request_handler.cc -o lib/service/" + serviceName + "_request_handler.o\r\n";
+          ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+            hot->modules_[moduleCounter]->services_[serviceCounter]->GetName() + "Service"
+          );
+        makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot proxy/" + 
+          serviceName + "_proxy.cc -o lib/proxy/" + serviceName + "_proxy.o\r\n";
+        makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot proxy/" + 
+          serviceName + "_proxy_builder.cc -o lib/proxy/" + serviceName + "_proxy_builder.o\r\n";
+        makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot service/" + 
+          serviceName + "_request_handler.cc -o lib/service/" + serviceName + "_request_handler.o\r\n";
         objectFiles += "lib/proxy/" + serviceName + "_proxy.o ";
         objectFiles += "lib/proxy/" + serviceName + "_proxy_builder.o ";
         objectFiles += "lib/service/" + serviceName + "_request_handler.o ";
         if (generationConfig.IsClientGenerated()) {
-          makefile += "\tg++ -Wall -g -Wall -g -c -I/usr/local/include/hot client/" + serviceName + "_client.cc -o lib/client/" + serviceName + "_client.o\r\n";
-          makefile += "\tg++ " + objectFiles + " lib/client/" + serviceName + "_client.o " + " -lhotd -lpthread -o bin/" + serviceName + "_client.out\r\n";
+          makefile += "\tg++ -Wall -g -Wall -g -c -I/usr/local/include/hot client/" + 
+            serviceName + "_client.cc -o lib/client/" + serviceName + "_client.o\r\n";
+          makefile += "\tg++ " + objectFiles + " lib/client/" + 
+            serviceName + "_client.o " + " -lhotd -lpthread -o bin/" + serviceName + "_client.out\r\n";
         }
         if (generationConfig.IsStubGenerated()) {
-          makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot stub/" + serviceName + "_impl.cc -o lib/stub/" + serviceName + "_impl.o\r\n";
-          makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot stub/" + serviceName + "_server.cc -o lib/stub/" + serviceName + "_server.o\r\n";
-          makefile += "\tg++ " + objectFiles + " lib/stub/" + serviceName + "_impl.o " + "lib/stub/" + serviceName + "_server.o " + " -lhotd -lpthread -o bin/" + serviceName + "_server.out\r\n";
+          makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot stub/" + 
+            serviceName + "_impl.cc -o lib/stub/" + serviceName + "_impl.o\r\n";
+          makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot stub/" + 
+            serviceName + "_server.cc -o lib/stub/" + serviceName + "_server.o\r\n";
+          makefile += "\tg++ " + objectFiles + " lib/stub/" + 
+            serviceName + "_impl.o " + "lib/stub/" + serviceName + "_server.o " + " -lhotd -lpthread -o bin/" + serviceName + "_server.out\r\n";
         }
       }
     }
-
     std::string filename = generationConfig.GetOutDir() + "/Makefile";
     std::fstream f;
     f.open(filename.c_str(), std::fstream::out | std::fstream::binary);

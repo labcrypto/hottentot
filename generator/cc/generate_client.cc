@@ -61,17 +61,20 @@ namespace cc {
          * Making real values
          */
         std::string serviceNameCamelCaseFirstCapital = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
-            service->GetName()) + "Service";
+          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
+            service->GetName()
+          ) + "Service";
         std::string serviceNameSnakeCase = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-            serviceNameCamelCaseFirstCapital);
+          ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+            serviceNameCamelCaseFirstCapital
+          );
         std::string clientFilePath = generationConfig.GetOutDir() + "/client/" + serviceNameSnakeCase + "_client.cc";
         std::string includeStructHeaders = "";
         for (uint32_t i = 0; i < service->module_->structs_.size(); i++) {
           includeStructHeaders += "#include \"../" + 
-            ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-              service->module_->structs_[i]->GetName()) + ".h\"\r\n";
+            ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+              service->module_->structs_[i]->GetName()
+            ) + ".h\"\r\n";
         }
         includeStructHeaders = ::naeem::hottentot::generator::common::StringHelper::Trim(includeStructHeaders);
         /*
@@ -81,9 +84,14 @@ namespace cc {
         params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
         params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + "_client.h"));
         params.insert(std::pair<std::string, std::string>("NAMESPACE","::" + 
-          ::naeem::hottentot::generator::common::StringHelper::Concat( 
-            ::naeem::hottentot::generator::common::StringHelper::Split(
-                service->module_->GetPackage(), '.'), "::")));
+          ::naeem::hottentot::generator::common::StringHelper::Concat ( 
+            ::naeem::hottentot::generator::common::StringHelper::Split (
+              service->module_->GetPackage(), 
+              '.'
+            ), 
+            "::"
+          )
+        ));
         params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
         params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", serviceNameSnakeCase));
         params.insert(std::pair<std::string, std::string>("INCLUDE_STRUCT_HEADERS", includeStructHeaders));
@@ -94,9 +102,11 @@ namespace cc {
              it != params.end();
              ++it) {
           clientTemplate = 
-            ::naeem::hottentot::generator::common::StringHelper::Replace(clientTemplate, 
-                                                                         "[[[" + it->first + "]]]", 
-                                                                         it->second);
+            ::naeem::hottentot::generator::common::StringHelper::Replace (
+              clientTemplate, 
+              "[[[" + it->first + "]]]", 
+              it->second
+            );
         }
         /*
          * Writing final results to files
