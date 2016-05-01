@@ -49,8 +49,8 @@ namespace generator {
 namespace cc {
   void
   CCGenerator::Generate (
-    ::naeem::hottentot::generator::ds::Hot *hot,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig
+    ::org::labcrypto::hottentot::generator::Hot *hot,
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig
   ) {
     /*
      * Reading all needed templates and stroing them in a map
@@ -94,8 +94,8 @@ namespace cc {
     /*
      * Creating needed directories
      */
-    ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir() + "/proxy");
-    ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir() + "/service");
+    ::org::labcrypto::hottentot::generator::Os::MakeDir(generationConfig.GetOutDir() + "/proxy");
+    ::org::labcrypto::hottentot::generator::Os::MakeDir(generationConfig.GetOutDir() + "/service");
     /*
      * Proceed to generate files
      */

@@ -35,122 +35,122 @@ namespace labcrypto {
 namespace hottentot {
 namespace generator {
 namespace cc {
-  class CCGenerator : public ::naeem::hottentot::generator::Generator {
+  class CCGenerator : public ::org::labcrypto::hottentot::generator::Generator {
   public:
     CCGenerator() {}
     virtual ~CCGenerator() {}
   public:
     virtual void 
     Generate (
-      ::naeem::hottentot::generator::ds::Hot *,
-      ::naeem::hottentot::generator::GenerationConfig &
+      ::org::labcrypto::hottentot::generator::ds::Hot *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &
     );
     virtual void 
     GenerateMakefile (
-      ::naeem::hottentot::generator::ds::Hot *,
-      ::naeem::hottentot::generator::GenerationConfig &
+      ::org::labcrypto::hottentot::generator::ds::Hot *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &
     );
     virtual void 
     GenerateClient (
-      ::naeem::hottentot::generator::ds::Hot *,
-      ::naeem::hottentot::generator::GenerationConfig &
+      ::org::labcrypto::hottentot::generator::ds::Hot *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &
     );
     virtual void 
     GenerateStub (
-      ::naeem::hottentot::generator::ds::Hot *,
-      ::naeem::hottentot::generator::GenerationConfig &
+      ::org::labcrypto::hottentot::generator::ds::Hot *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &
     );
   protected:
     virtual void 
     GenerateEnums (
-      std::vector< ::naeem::hottentot::generator::ds::Module*>,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      std::vector< ::org::labcrypto::hottentot::generator::ds::Module*>,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual void 
     GenerateInterface (
-      ::naeem::hottentot::generator::ds::Service *,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      ::org::labcrypto::hottentot::generator::ds::Service *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual void 
     GenerateServiceInterface (
-      ::naeem::hottentot::generator::ds::Service *,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      ::org::labcrypto::hottentot::generator::ds::Service *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual void 
     GenerateProxyHeader (
-      ::naeem::hottentot::generator::ds::Service *,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      ::org::labcrypto::hottentot::generator::ds::Service *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual void 
     GenerateProxyCC (
-      ::naeem::hottentot::generator::ds::Service *,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      ::org::labcrypto::hottentot::generator::ds::Service *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual std::string 
     GenerateProxyCCMethod (
-      ::naeem::hottentot::generator::ds::Service *,
-      ::naeem::hottentot::generator::ds::Method *,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      ::org::labcrypto::hottentot::generator::ds::Service *,
+      ::org::labcrypto::hottentot::generator::ds::Method *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual std::string 
     GenerateProxyCCMethodArgumentSerialization (
-      ::naeem::hottentot::generator::ds::Service *,
-      ::naeem::hottentot::generator::ds::Method *,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      ::org::labcrypto::hottentot::generator::ds::Service *,
+      ::org::labcrypto::hottentot::generator::ds::Method *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual void 
     GenerateProxyBuilderHeader (
-      ::naeem::hottentot::generator::ds::Service *,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      ::org::labcrypto::hottentot::generator::ds::Service *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual void 
     GenerateProxyBuilderCC (
-      ::naeem::hottentot::generator::ds::Service *,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      ::org::labcrypto::hottentot::generator::ds::Service *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual void 
     GenerateStructHeader (
-      ::naeem::hottentot::generator::ds::Struct *,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      ::org::labcrypto::hottentot::generator::ds::Struct *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual void 
     GenerateStructCC (
-      ::naeem::hottentot::generator::ds::Struct *,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      ::org::labcrypto::hottentot::generator::ds::Struct *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual void 
     GenerateAbstractServiceHeader (
-      ::naeem::hottentot::generator::ds::Service *,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      ::org::labcrypto::hottentot::generator::ds::Service *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual void 
     GenerateRequestHandlerHeader (
-      ::naeem::hottentot::generator::ds::Service *,
-      ::naeem::hottentot::generator::GenerationConfig &,
+      ::org::labcrypto::hottentot::generator::ds::Service *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual void 
     GenerateRequestHandlerCC (
-      ::naeem::hottentot::generator::ds::Service *,
+      ::org::labcrypto::hottentot::generator::Service *,
       ::naeem::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );
     virtual std::string 
     GenerateRequestHandlerCCMethodIfClause (
-      ::naeem::hottentot::generator::ds::Service *,
-      ::naeem::hottentot::generator::ds::Method *,
+      ::org::labcrypto::hottentot::generator::Service *,
+      ::org::labcrypto::hottentot::generator::Method *,
       ::naeem::hottentot::generator::GenerationConfig &,
       std::map<std::string, std::string> &
     );    

@@ -28,7 +28,7 @@ namespace labcrypto {
 namespace hottentot {
 namespace generator {
 namespace cc {
-  std::vector< ::naeem::hottentot::generator::ds::Enum*> Runtime::enums_;
+  std::vector< ::org::labcrypto::hottentot::generator::Enum*> Runtime::enums_;
 }
 }
 }

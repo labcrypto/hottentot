@@ -49,7 +49,7 @@ namespace generator {
 namespace cc {
   void
   CCGenerator::GenerateEnums (
-    std::vector< ::naeem::hottentot::generator::ds::Module*> modules,
+    std::vector< ::org::labcrypto::hottentot::generator::Module*> modules,
     ::naeem::hottentot::generator::GenerationConfig &generationConfig,
     std::map<std::string, std::string> &templates
   ) {
@@ -65,17 +65,17 @@ namespace cc {
     std::vector<std::string> totalPackageTokens;
     std::string namespacesAndEnums = "";
     for (uint32_t i = 0; i < modules.size(); i++) {
-      ::naeem::hottentot::generator::ds::Module *module = modules[i];
+      ::org::labcrypto::hottentot::generator::Module *module = modules[i];
       std::string ns = "::" + 
-        ::naeem::hottentot::generator::common::StringHelper::Concat ( 
-          ::naeem::hottentot::generator::common::StringHelper::Split (
+        ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
+          ::org::labcrypto::hottentot::generator::StringHelper::Split (
             module->GetPackage(), 
             '.'
           ), 
           "::"
         );
       std::vector<std::string> packageTokens = 
-        ::naeem::hottentot::generator::common::StringHelper::Split (
+        ::org::labcrypto::hottentot::generator::StringHelper::Split (
           module->GetPackage(), 
           '.'
         );
@@ -83,14 +83,14 @@ namespace cc {
       std::string namespacesStart = "";
       for (uint32_t i = 0; i < packageTokens.size(); i++) {
         namespacesStart += "namespace " + 
-          ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
       }
       std::string namespacesEnd = "";
       for (int32_t i = packageTokens.size() - 1; i >= 0; i--) {
         namespacesEnd += "} // END OF NAMESPACE " + packageTokens[i] + "\r\n";
       }
-      namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
-      namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
+      namespacesStart = ::org::labcrypto::hottentot::generator::StringHelper::Trim(namespacesStart);
+      namespacesEnd = ::org::labcrypto::hottentot::generator::StringHelper::Trim(namespacesEnd);
       std::string enums = "";
       
       for (uint32_t i = 0; i < module->enums_.size(); i++) {
@@ -119,10 +119,10 @@ namespace cc {
      */
     std::map<std::string, std::string> params;
     params.insert(std::pair<std::string, std::string>("GENERATION_DATE", 
-      ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
+      ::org::labcrypto::hottentot::generator::DateTimeHelper::GetCurrentDateTime()));
     params.insert(std::pair<std::string, std::string>("FILENAME", "enums.h"));
     params.insert(std::pair<std::string, std::string>("HEADER_GUARD", "_" +
-      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase (
+      ::org::labcrypto::hottentot::generator::StringHelper::MakeScreamingSnakeCase (
         totalPackageTokens
       ) + "__ENUMS_H_"));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_AND_ENUMS", namespacesAndEnums));
@@ -132,7 +132,7 @@ namespace cc {
          it != params.end();
          ++it) {
       enumsTemplate = 
-        ::naeem::hottentot::generator::common::StringHelper::Replace (
+        ::org::labcrypto::hottentot::generator::StringHelper::Replace (
           enumsTemplate, 
           "[[[" + it->first + "]]]", 
           it->second

@@ -37,7 +37,7 @@ namespace ds {
 namespace cc {
   class Runtime {
   public:
-    static std::vector< ::naeem::hottentot::generator::ds::Enum*> enums_;
+    static std::vector< ::org::labcrypto::hottentot::generator::Enum*> enums_;
   };
 }
 }

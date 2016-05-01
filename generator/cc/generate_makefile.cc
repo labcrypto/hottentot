@@ -46,7 +46,7 @@ namespace generator {
 namespace cc {
   void
   CCGenerator::GenerateMakefile (
-    ::naeem::hottentot::generator::ds::Hot *hot,
+    ::org::labcrypto::hottentot::generator::Hot *hot,
     ::naeem::hottentot::generator::GenerationConfig &generationConfig
   ) {
     std::string makefile = "";
@@ -66,7 +66,7 @@ namespace cc {
       std::string objectFiles = "";
       for (uint32_t structCounter = 0; structCounter < hot->modules_[moduleCounter]->structs_.size(); structCounter++) {
         std::string structName = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeSnakeCaseFromCamelCase (
             hot->modules_[moduleCounter]->structs_[structCounter]->GetName()
           );
         makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot " + structName + 
@@ -75,7 +75,7 @@ namespace cc {
       }
       for (uint32_t serviceCounter = 0; serviceCounter < hot->modules_[moduleCounter]->services_.size(); serviceCounter++) {
         std::string serviceName =
-          ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeSnakeCaseFromCamelCase (
             hot->modules_[moduleCounter]->services_[serviceCounter]->GetName() + "Service"
           );
         makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot proxy/" + 

@@ -47,7 +47,7 @@ namespace generator {
 namespace cc {
   void
   CCGenerator::GenerateInterface (
-    ::naeem::hottentot::generator::ds::Service *service,
+    ::org::labcrypto::hottentot::generator::Service *service,
     ::naeem::hottentot::generator::GenerationConfig &generationConfig,
     std::map<std::string, std::string> &templates
   ) {
@@ -56,19 +56,19 @@ namespace cc {
      * Making needed variables and assigning values to them
      */
     std::string serviceNameCamelCaseFirstCapital = 
-      ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
+      ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstCapital (
         service->GetName()
       ) + "Service";
     std::string serviceNameSnakeCase = 
-      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+      ::org::labcrypto::hottentot::generator::StringHelper::MakeSnakeCaseFromCamelCase (
         serviceNameCamelCaseFirstCapital
       );
     std::string serviceNameScreamingSnakeCase =
-      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
+      ::org::labcrypto::hottentot::generator::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
     std::string serviceInterfaceFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + ".h";
     std::string ns = "::" + 
-      ::naeem::hottentot::generator::common::StringHelper::Concat ( 
-        ::naeem::hottentot::generator::common::StringHelper::Split (
+      ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
+        ::org::labcrypto::hottentot::generator::StringHelper::Split (
           service->module_->GetPackage(), 
           '.'
         ), 
@@ -78,14 +78,14 @@ namespace cc {
      * Making real values
      */
     std::vector<std::string> packageTokens = 
-      ::naeem::hottentot::generator::common::StringHelper::Split (
+      ::org::labcrypto::hottentot::generator::StringHelper::Split (
         service->module_->GetPackage(), 
         '.'
       );
     std::string namespacesStart = "";
     for (uint32_t i = 0; i < packageTokens.size(); i++) {
       namespacesStart += "namespace " + 
-        ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
+        ::org::labcrypto::hottentot::generator::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
     }
     std::string namespacesEnd = "";
     for (int32_t i = packageTokens.size() - 1; i >= 0; i--) {
@@ -94,17 +94,17 @@ namespace cc {
     std::string includeStructHeaders = "";
     for (uint32_t i = 0; i < service->module_->structs_.size(); i++) {
       includeStructHeaders += "#include \"../" + 
-        ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+        ::org::labcrypto::hottentot::generator::StringHelper::MakeSnakeCaseFromCamelCase (
           service->module_->structs_[i]->GetName()
         ) + ".h\"\r\n";
     }
-    namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
-    namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
-    includeStructHeaders = ::naeem::hottentot::generator::common::StringHelper::Trim(includeStructHeaders);
+    namespacesStart = ::org::labcrypto::hottentot::generator::StringHelper::Trim(namespacesStart);
+    namespacesEnd = ::org::labcrypto::hottentot::generator::StringHelper::Trim(namespacesEnd);
+    includeStructHeaders = ::org::labcrypto::hottentot::generator::StringHelper::Trim(includeStructHeaders);
     std::string methodDefs = "";
     for (uint32_t i = 0; i < service->methods_.size(); i++) {
-      ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
-      methodDefs += indent + indent + "virtual void " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(\r\n";
+      ::org::labcrypto::hottentot::generator::Method *method = service->methods_[i];
+      methodDefs += indent + indent + "virtual void " + ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(method->GetName()) + "(\r\n";
       for (uint32_t j = 0; j < method->arguments_.size(); j++) {
         methodDefs += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &"+ method->arguments_[j]->GetVariable() ;
         if (j == (method->arguments_.size() - 1)) {
@@ -121,18 +121,18 @@ namespace cc {
       }
       methodDefs += indent + indent + ") = 0;\r\n";
     }
-    methodDefs = ::naeem::hottentot::generator::common::StringHelper::Trim(methodDefs);
+    methodDefs = ::org::labcrypto::hottentot::generator::StringHelper::Trim(methodDefs);
     /*
      * Filling templates with real values
      */
     std::map<std::string, std::string> params;
-    params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
+    params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::org::labcrypto::hottentot::generator::DateTimeHelper::GetCurrentDateTime()));
     params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + ".h"));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
     params.insert(std::pair<std::string, std::string>("INCLUDE_STRUCT_HEADERS", includeStructHeaders));
     params.insert(std::pair<std::string, std::string>("HEADER_GUARD", "_" +
-      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase (
+      ::org::labcrypto::hottentot::generator::StringHelper::MakeScreamingSnakeCase (
         packageTokens
       ) + "__PROXY__" + serviceNameScreamingSnakeCase + "_H_"));
     params.insert(std::pair<std::string, std::string>("NAMESPACE", ns));
@@ -146,7 +146,7 @@ namespace cc {
          it != params.end();
          ++it) {
       serviceInterfaceTemplate = 
-        ::naeem::hottentot::generator::common::StringHelper::Replace (
+        ::org::labcrypto::hottentot::generator::StringHelper::Replace (
           serviceInterfaceTemplate, 
           "[[[" + it->first + "]]]", 
           it->second

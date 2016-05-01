@@ -47,7 +47,7 @@ namespace generator {
 namespace cc {
   void
   CCGenerator::GenerateStructCC (
-    ::naeem::hottentot::generator::ds::Struct *structt,
+    ::org::labcrypto::hottentot::generator::Struct *structt,
     ::naeem::hottentot::generator::GenerationConfig &generationConfig,
     std::map<std::string, std::string> &templates
   ) {
@@ -56,18 +56,18 @@ namespace cc {
      * Making needed variables and assigning values to them
      */
     std::string structNameCamelCaseFirstCapital = 
-      ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
+      ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstCapital (
         structt->GetName()
       );
     std::string structNameSnakeCase = 
-      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+      ::org::labcrypto::hottentot::generator::StringHelper::MakeSnakeCaseFromCamelCase (
         structNameCamelCaseFirstCapital
       );
     std::string structNameScreamingSnakeCase =
-    ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(structNameSnakeCase);
+    ::org::labcrypto::hottentot::generator::StringHelper::MakeScreamingSnakeCaseFromCamelCase(structNameSnakeCase);
     std::string ns = "::" + 
-      ::naeem::hottentot::generator::common::StringHelper::Concat ( 
-        ::naeem::hottentot::generator::common::StringHelper::Split (
+      ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
+        ::org::labcrypto::hottentot::generator::StringHelper::Split (
           structt->module_->GetPackage(), 
           '.'
         ), 
@@ -78,21 +78,21 @@ namespace cc {
      * Making real values
      */
     std::vector<std::string> packageTokens = 
-      ::naeem::hottentot::generator::common::StringHelper::Split (
+      ::org::labcrypto::hottentot::generator::StringHelper::Split (
         structt->module_->GetPackage(), 
         '.'
       );
     std::string namespacesStart = "";
     for (uint32_t i = 0; i < packageTokens.size(); i++) {
       namespacesStart += "namespace " + 
-        ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
+        ::org::labcrypto::hottentot::generator::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
     }
     std::string namespacesEnd = "";
     for (int32_t i = packageTokens.size() - 1; i >= 0; i--) {
       namespacesEnd += "} // END OF NAMESPACE " + packageTokens[i] + "\r\n";
     }
-    namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
-    namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
+    namespacesStart = ::org::labcrypto::hottentot::generator::StringHelper::Trim(namespacesStart);
+    namespacesEnd = ::org::labcrypto::hottentot::generator::StringHelper::Trim(namespacesEnd);
     std::string fields = "";
     /*
      * Serializarion
@@ -100,7 +100,7 @@ namespace cc {
     uint32_t counter = 0;
     std::stringstream serializationSS;
     serializationSS << indent << indent << "uint32_t totalLength = 0;\r\n";
-    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = 
+    for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it = 
            structt->declarations_.begin();
          it != structt->declarations_.end();
          ++it) {
@@ -110,11 +110,11 @@ namespace cc {
         "::naeem::hottentot::runtime::HotPtr<unsigned char, true> ptr" << counter << ";\r\n";
       if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
         serializationSS << indent << indent << "if (" << 
-          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + 
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + 
             "_" << ") {\r\n";
         serializationSS << indent << indent << indent << "ptr" << counter << " = ";
         serializationSS << 
-          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall (
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall (
             it->second->GetVariable()
           ) + "_";
         serializationSS << "->";
@@ -123,7 +123,7 @@ namespace cc {
       } else {
         serializationSS << indent << indent << "ptr" << counter << " = ";
         serializationSS << 
-          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall (
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall (
             it->second->GetVariable()
           ) + "_";
         serializationSS << ".";
@@ -147,7 +147,7 @@ namespace cc {
     serializationSS << indent << indent << "unsigned char *data = new unsigned char[totalLength];\r\n";
     serializationSS << indent << indent << "uint32_t c = 0;\r\n";
     counter = 0;
-    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = 
+    for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it = 
            structt->declarations_.begin();
          it != structt->declarations_.end();
          ++it) {
@@ -192,7 +192,7 @@ namespace cc {
      * Deserialization
      */
     bool hasAnyVariableLengthField = false;
-    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = 
+    for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it = 
            structt->declarations_.begin();
          it != structt->declarations_.end();
          ++it) {
@@ -207,13 +207,13 @@ namespace cc {
     } else {
       deserializationSS << ";\r\n";
     }
-    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = 
+    for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it = 
            structt->declarations_.begin();
          it != structt->declarations_.end();
          ++it) {
       if (TypeHelper::IsFixedLength(it->second->GetType())) {
         deserializationSS << indent << indent << 
-          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall (
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall (
             it->second->GetVariable()
           ) + "_";
         if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
@@ -247,20 +247,20 @@ namespace cc {
         if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
           deserializationSS << indent << indent << "if (elength > 0) {\r\n";
           deserializationSS << indent << indent << indent << 
-            ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) << 
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) << 
               "_ = new " << TypeHelper::GetCCType(it->second->GetType(), ns) << ";\r\n";
           deserializationSS << indent << indent << indent << 
-            ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
           deserializationSS << "->";
           deserializationSS << "Deserialize(data + c, elength);\r\n";
           deserializationSS << indent << indent << "} else {\r\n";
           deserializationSS << indent << indent << indent << 
-            ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + 
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + 
               "_ = NULL;\r\n";
           deserializationSS << indent << indent << "}\r\n";
         } else {
           deserializationSS << indent << indent << 
-            ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
           deserializationSS << ".";
           deserializationSS << "Deserialize(data + c, elength);\r\n";
         }
@@ -277,28 +277,28 @@ namespace cc {
      * Ctor assignments
      */
     std::string copyCtorAssign = "";
-    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = 
+    for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it = 
            structt->declarations_.begin();
          it != structt->declarations_.end();
          ++it) {
       copyCtorAssign += indent + indent + 
-        ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall (
+        ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall (
           it->second->GetVariable()
         ) + "_";
       copyCtorAssign += " = other." + 
-        ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall (
+        ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall (
           it->second->GetVariable()
         ) + "_;\r\n";
     }
     std::string pointerCtorAssign = "";
-    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = 
+    for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it = 
            structt->declarations_.begin();
          it != structt->declarations_.end();
          ++it) {
       pointerCtorAssign += indent + indent + 
-        ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+        ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
       pointerCtorAssign += " = other->" + 
-        ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + 
+        ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + 
           "_;\r\n";
     }
     /*
@@ -306,13 +306,13 @@ namespace cc {
      */
     std::map<std::string, std::string> params;
     params.insert(std::pair<std::string, std::string>("GENERATION_DATE", 
-      ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
+      ::org::labcrypto::hottentot::generator::DateTimeHelper::GetCurrentDateTime()));
     params.insert(std::pair<std::string, std::string>("FILENAME", structNameSnakeCase + ".cc"));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
     params.insert(std::pair<std::string, std::string>("NAMESPACE","::" + 
-      ::naeem::hottentot::generator::common::StringHelper::Concat( 
-        ::naeem::hottentot::generator::common::StringHelper::Split(
+      ::org::labcrypto::hottentot::generator::StringHelper::Concat( 
+        ::org::labcrypto::hottentot::generator::StringHelper::Split(
             structt->module_->GetPackage(), '.'), "::")));
     params.insert(std::pair<std::string, std::string>("STRUCT_NAME", structNameCamelCaseFirstCapital));
     params.insert(std::pair<std::string, std::string>("SNAKE_CASE_STRUCT_NAME", structNameSnakeCase));
@@ -326,7 +326,7 @@ namespace cc {
          it != params.end();
          ++it) {
       structCCTemplate = 
-        ::naeem::hottentot::generator::common::StringHelper::Replace (
+        ::org::labcrypto::hottentot::generator::StringHelper::Replace (
           structCCTemplate, 
           "[[[" + it->first + "]]]", 
           it->second

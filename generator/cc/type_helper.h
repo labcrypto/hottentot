@@ -38,11 +38,11 @@ namespace cc {
   class TypeHelper {
   public:
     static inline bool IsVoid(std::string type) {
-      return ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(type) == "void";
+      return ::org::labcrypto::hottentot::generator::StringHelper::MakeLowerCase(type) == "void";
     }
     static inline bool IsList(std::string type) {
       std::string listStr = "list";
-      return ::naeem::hottentot::generator::common::StringHelper::StartsWith(type, listStr);
+      return ::org::labcrypto::hottentot::generator::StringHelper::StartsWith(type, listStr);
     }
     static inline bool IsUDT(std::string type) {
       if (type == "int8") {
@@ -180,7 +180,7 @@ namespace cc {
         return "::naeem::hottentot::runtime::types::Double";
       } else if (type == "void") {
         return "void";
-      } else if(::naeem::hottentot::generator::common::StringHelper::StartsWith(type, listStr)) {
+      } else if(::org::labcrypto::hottentot::generator::StringHelper::StartsWith(type, listStr)) {
         return "::naeem::hottentot::runtime::types::List< " + 
           GetCCType(type.substr(5, type.length() - 6), ns) + ">";
       } else if(IsEnum(type)) {

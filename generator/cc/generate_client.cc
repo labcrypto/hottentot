@@ -49,43 +49,43 @@ namespace generator {
 namespace cc {
   void
   CCGenerator::GenerateClient (
-    ::naeem::hottentot::generator::ds::Hot *hot,
+    ::org::labcrypto::hottentot::generator::Hot *hot,
      ::naeem::hottentot::generator::GenerationConfig &generationConfig
   ) {
     std::string indent = generationConfig.GetIndentString();
-    ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir() + "/client");
+    ::org::labcrypto::hottentot::generator::Os::MakeDir(generationConfig.GetOutDir() + "/client");
     for (uint32_t moduleCounter = 0; moduleCounter < hot->modules_.size(); moduleCounter++) {
       for (uint32_t serviceCounter = 0; serviceCounter < hot->modules_[moduleCounter]->services_.size(); serviceCounter++) {
-        ::naeem::hottentot::generator::ds::Service *service = hot->modules_[moduleCounter]->services_[serviceCounter];
+        ::org::labcrypto::hottentot::generator::Service *service = hot->modules_[moduleCounter]->services_[serviceCounter];
         /*
          * Making real values
          */
         std::string serviceNameCamelCaseFirstCapital = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstCapital (
             service->GetName()
           ) + "Service";
         std::string serviceNameSnakeCase = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeSnakeCaseFromCamelCase (
             serviceNameCamelCaseFirstCapital
           );
         std::string clientFilePath = generationConfig.GetOutDir() + "/client/" + serviceNameSnakeCase + "_client.cc";
         std::string includeStructHeaders = "";
         for (uint32_t i = 0; i < service->module_->structs_.size(); i++) {
           includeStructHeaders += "#include \"../" + 
-            ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeSnakeCaseFromCamelCase (
               service->module_->structs_[i]->GetName()
             ) + ".h\"\r\n";
         }
-        includeStructHeaders = ::naeem::hottentot::generator::common::StringHelper::Trim(includeStructHeaders);
+        includeStructHeaders = ::org::labcrypto::hottentot::generator::StringHelper::Trim(includeStructHeaders);
         /*
          * Filling templates with real values
          */
         std::map<std::string, std::string> params;
-        params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
+        params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::org::labcrypto::hottentot::generator::DateTimeHelper::GetCurrentDateTime()));
         params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + "_client.h"));
         params.insert(std::pair<std::string, std::string>("NAMESPACE","::" + 
-          ::naeem::hottentot::generator::common::StringHelper::Concat ( 
-            ::naeem::hottentot::generator::common::StringHelper::Split (
+          ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
+            ::org::labcrypto::hottentot::generator::StringHelper::Split (
               service->module_->GetPackage(), 
               '.'
             ), 
@@ -97,12 +97,12 @@ namespace cc {
         params.insert(std::pair<std::string, std::string>("INCLUDE_STRUCT_HEADERS", includeStructHeaders));
         params.insert(std::pair<std::string, std::string>("INDENT", indent));
         std::string clientTemplate((char *)__cc_templates_client_template, __cc_templates_client_template_len);
-        // ::naeem::hottentot::generator::common::Os::ReadFile("cc/templates/client.template", clientTemplate);
+        // ::org::labcrypto::hottentot::generator::Os::ReadFile("cc/templates/client.template", clientTemplate);
         for (std::map<std::string, std::string>::iterator it = params.begin();
              it != params.end();
              ++it) {
           clientTemplate = 
-            ::naeem::hottentot::generator::common::StringHelper::Replace (
+            ::org::labcrypto::hottentot::generator::StringHelper::Replace (
               clientTemplate, 
               "[[[" + it->first + "]]]", 
               it->second
