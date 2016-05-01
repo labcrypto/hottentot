@@ -17,7 +17,6 @@ class ReportingImpl extends AbstractReportingService {
 
   @Override
   public List<ReportedCrawlerInfo> getReport(List<WantedCrawlerInfo> crawlerInfoList) {
-    crawlerInfoList.gita
     return null;
   }
   //implementation
