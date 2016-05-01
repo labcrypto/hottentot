@@ -28,8 +28,13 @@ compile:
 	yacc -d hot.y
 	g++ -c -g -Wno-write-strings y.tab.c -o .lib/y.tab.o
 	flex hot.l
+	
 	g++ -c -g lex.yy.c -o .lib/lex.yy.o
-	g++ -c -g common/runtime.cc -o .lib/runtime_common.o
+	g++ -c -g runtime.cc -o .lib/runtime_common.o
+	g++ -c -g fasthash.cc -o .lib/fasthash.o
+	g++ -c -g service.cc -o .lib/service.o
+	g++ -c -g method.cc -o .lib/method.o
+
 	g++ -c -g cc/runtime.cc -o .lib/runtime.o
 	g++ -c -g cc/cc_generator.cc -o .lib/cc_generator.o
 	g++ -c -g cc/generate_abstract_service_header.cc -o .lib/generate_abstract_service_header.o
@@ -48,6 +53,7 @@ compile:
 	g++ -c -g cc/generate_client.cc -o .lib/generate_client.o
 	g++ -c -g cc/generate_stub.cc -o .lib/generate_stub.o
 	g++ -c -g cc/templates/templates.cc -o .lib/templates.o
+	
 	g++ -c -g java/java_generator.cc -o .lib/java_generator.o
 	g++ -c -g java/generate_abstract_service_java.cc -o .lib/generate_abstract_service_java.o
 	g++ -c -g java/generate_structs_java.cc -o .lib/generate_structs_java.o
@@ -60,9 +66,7 @@ compile:
 	g++ -c -g java/generate_server_main_java.cc -o .lib/generate_server_main_java.o
 	g++ -c -g java/generate_server_impls_java.cc -o .lib/generate_server_impls_java.o
 	g++ -c -g java/generate_enums_java.cc -o .lib/generate_enums_java.o
-	g++ -c -g dep/fasthash.cc -o .lib/fasthash.o
-	g++ -c -g ds/service.cc -o .lib/service.o
-	g++ -c -g ds/method.cc -o .lib/method.o
+	
 	g++ -g .lib/y.tab.o \
 	    .lib/lex.yy.o \
 	    .lib/runtime_common.o \

@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,30 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-
-#include <sstream>
-
-#include "method.h"
-#include "service.h"
-
-#include "../dep/fasthash.h"
-
+ 
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__COMMON__DATETIME_HELPER_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__COMMON__DATETIME_HELPER_H_
 
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace ds {
-        std::string 
-        Method::GetFQName() const {
-          std::stringstream ss;
-          ss << service_->GetFQName() << "." << name_;
-          ss << "(";
-          std::string del = "";
-          for (uint32_t i = 0; i < arguments_.size(); i++) {
-            ss << del << ":" << arguments_[i]->GetType();
-            del = ",";
+      namespace common {
+        class DateTimeHelper {
+        public:
+          static inline std::string GetCurrentDateTime () {
+            time_t rawtime;
+            struct tm * timeinfo;
+            char buffer[80];
+            time (&rawtime);
+            timeinfo = localtime(&rawtime);
+            strftime(buffer,80,"%d-%m-%Y %I:%M:%S",timeinfo);
+            std::string str(buffer);
+            return str;
           }
-          ss << "):";
-          ss << returnType_;
-          return ss.str();
-        }
-        uint32_t 
-        Method::GetHash() const {
-          std::string fqName = GetFQName();
-          uint32_t len = fqName.size();
-          return fasthash32(fqName.c_str(), len, 0);
-        }
+        };
       }
     }
   }
 }
+
+#endif

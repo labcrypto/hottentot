@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,12 +21,12 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__STRUCT_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__DS__STRUCT_H_
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__MODULE_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__DS__MODULE_H_
 
-#include <map>
+#include <vector>
 
- #include "declaration.h"
+#include "service.h"
 
 
 namespace naeem {
@@ -39,31 +39,37 @@ namespace naeem {
         class CCGenerator;
       };
       namespace ds {
-        class Module;
-        class Struct {
+        class Enum;
+        class Struct;
+        class Service;
+        class Module {
           friend class Hot;
           friend class ::naeem::hottentot::generator::cc::CCGenerator;
           friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
-          public:
-          Struct(Module *module) 
-            :  module_(module) {
-          }
-          virtual ~Struct() {}
+          Module() {}
+          virtual ~Module() {}
         public:
-          inline virtual void AddDeclaration(Declaration *declaration) {
-            declarations_.insert(std::pair<uint32_t, Declaration*>(declaration->GetOrd(), declaration));
+          inline void AddEnum(Enum *enumm) {
+            enums_.push_back(enumm);
           }
-          inline virtual std::string GetName() const {
-            return name_;
+          inline void AddStruct(Struct *struc) {
+            structs_.push_back(struc);
           }
-          inline virtual void SetName(std::string name) {
-            name_ = name;
+          inline void AddService(Service *service) {
+            services_.push_back(service);
+          }
+          inline void SetPackage(std::string package) {
+            package_ = package;
+          }
+          inline std::string GetPackage() const {
+            return package_;
           }
         private:
-          std::string name_;
-          std::map<uint32_t, Declaration*> declarations_;
-          Module *module_;
+          std::string package_;
+          std::vector<Enum*> enums_;
+          std::vector<Struct*> structs_;
+          std::vector<Service*> services_;
         };
       }
     }

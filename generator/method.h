@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,11 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__ARGUMENT_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__DS__ARGUMENT_H_
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__METHOD_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__DS__METHOD_H_
 
 #include <vector>
-#include <string>
 #include <iostream>
-#include <stdlib.h>
 
 #include <stdio.h>
 #ifdef _MSC_VER
@@ -43,6 +41,8 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
+#include "argument.h"
+
 
 namespace naeem {
   namespace hottentot {
@@ -54,35 +54,53 @@ namespace naeem {
         class CCGenerator;
       };
       namespace ds {
-        class Argument {
+        class Argument;
+        class Service;
+        class Method {
+          friend class Hot;
           friend class ::naeem::hottentot::generator::cc::CCGenerator;
           friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
-          Argument(std::string type = "", 
-                   std::string variable = "")
-            : type_(type),
-              variable_(variable) {
+          Method(Service *service) 
+            : service_(service) {
           }
-          virtual ~Argument() {}
+          virtual ~Method() {}
         public:
-          inline std::string GetType() const {
-            return type_;
+          inline void AddArgument(Argument *argument) {
+            arguments_.push_back(argument);
           }
-          inline void SetType(std::string type) {
-            type_ = type;
+          inline std::vector<Argument*> GetArguments() {
+            return arguments_;
           }
-          inline std::string GetVariable() const {
-            return variable_;
+          inline std::string GetReturnType() const {
+            return returnType_;
           }
-          inline void SetVariable(std::string variable) {
-            variable_ = variable;
+          inline void SetReturnType(std::string returnType) {
+            returnType_ = returnType;
+          }
+          inline std::string GetName() const {
+            return name_;
+          }
+          inline void SetName(std::string name) {
+            name_ = name;
           }
           inline virtual void Display() {
-            std::cout << variable_ << ": " << type_;
+            std::cout << name_ <<  "(";
+            std::string del = "";
+            for (uint32_t i = 0; i < arguments_.size(); i++) {
+              std::cout << del;
+              arguments_[i]->Display();
+              del = ",";
+            }
+            std::cout << "): " << returnType_ << " => '" << GetFQName() << "', Hash: '" << GetHash() << "'";
           }
-        protected:
-          std::string type_;
-          std::string variable_;
+          virtual std::string GetFQName() const;
+          virtual uint32_t GetHash() const;
+        private:
+          std::string returnType_;
+          std::string name_;
+          std::vector<Argument*> arguments_;
+          Service *service_;
         };
       }
     }

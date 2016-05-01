@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,55 +21,22 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__MODULE_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__DS__MODULE_H_
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__COMMON__RUNTIME_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__COMMON__RUNTIME_H_
 
 #include <vector>
 
-#include "service.h"
-
-
+ 
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace java {
-        class JavaGenerator;
-      };
-      namespace cc {
-        class CCGenerator;
-      };
       namespace ds {
         class Enum;
-        class Struct;
-        class Service;
-        class Module {
-          friend class Hot;
-          friend class ::naeem::hottentot::generator::cc::CCGenerator;
-          friend class ::naeem::hottentot::generator::java::JavaGenerator;
+      }
+      namespace common {
+        class Runtime {
         public:
-          Module() {}
-          virtual ~Module() {}
-        public:
-          inline void AddEnum(Enum *enumm) {
-            enums_.push_back(enumm);
-          }
-          inline void AddStruct(Struct *struc) {
-            structs_.push_back(struc);
-          }
-          inline void AddService(Service *service) {
-            services_.push_back(service);
-          }
-          inline void SetPackage(std::string package) {
-            package_ = package;
-          }
-          inline std::string GetPackage() const {
-            return package_;
-          }
-        private:
-          std::string package_;
-          std::vector<Enum*> enums_;
-          std::vector<Struct*> structs_;
-          std::vector<Service*> services_;
+          static std::vector< ::naeem::hottentot::generator::ds::Enum*> enums_;
         };
       }
     }

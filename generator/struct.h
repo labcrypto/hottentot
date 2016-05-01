@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -20,26 +20,50 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
- 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__COMMON__DATETIME_HELPER_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__COMMON__DATETIME_HELPER_H_
+
+#ifndef _NAEEM_HOTTENTOT_GENERATOR__DS__STRUCT_H_
+#define _NAEEM_HOTTENTOT_GENERATOR__DS__STRUCT_H_
+
+#include <map>
+
+ #include "declaration.h"
+
 
 namespace naeem {
   namespace hottentot {
     namespace generator {
-      namespace common {
-        class DateTimeHelper {
+      namespace java {
+        class JavaGenerator;
+      };
+      namespace cc {
+        class CCGenerator;
+      };
+      namespace ds {
+        class Module;
+        class Struct {
+          friend class Hot;
+          friend class ::naeem::hottentot::generator::cc::CCGenerator;
+          friend class ::naeem::hottentot::generator::java::JavaGenerator;
         public:
-          static inline std::string GetCurrentDateTime () {
-            time_t rawtime;
-            struct tm * timeinfo;
-            char buffer[80];
-            time (&rawtime);
-            timeinfo = localtime(&rawtime);
-            strftime(buffer,80,"%d-%m-%Y %I:%M:%S",timeinfo);
-            std::string str(buffer);
-            return str;
+          public:
+          Struct(Module *module) 
+            :  module_(module) {
           }
+          virtual ~Struct() {}
+        public:
+          inline virtual void AddDeclaration(Declaration *declaration) {
+            declarations_.insert(std::pair<uint32_t, Declaration*>(declaration->GetOrd(), declaration));
+          }
+          inline virtual std::string GetName() const {
+            return name_;
+          }
+          inline virtual void SetName(std::string name) {
+            name_ = name;
+          }
+        private:
+          std::string name_;
+          std::map<uint32_t, Declaration*> declarations_;
+          Module *module_;
         };
       }
     }
