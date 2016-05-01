@@ -46,9 +46,11 @@ namespace hottentot {
 namespace generator {
 namespace cc {
   void
-  CCGenerator::GenerateRequestHandlerCC(::naeem::hottentot::generator::ds::Service *service,
-                                        ::naeem::hottentot::generator::GenerationConfig &generationConfig,
-                                        std::map<std::string, std::string> &templates) {
+  CCGenerator::GenerateRequestHandlerCC (
+    ::naeem::hottentot::generator::ds::Service *service,
+    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+    std::map<std::string, std::string> &templates
+  ) {
     std::string indent = generationConfig.GetIndentString();
     /*
      * Making needed variables and assigning values to them
@@ -130,10 +132,12 @@ namespace cc {
     f.close();
   }
   std::string 
-  CCGenerator::GenerateRequestHandlerCCMethodIfClause(::naeem::hottentot::generator::ds::Service *service,
-                                                      ::naeem::hottentot::generator::ds::Method *method,
-                                                      ::naeem::hottentot::generator::GenerationConfig &generationConfig,
-                                                      std::map<std::string, std::string> &templates) {
+  CCGenerator::GenerateRequestHandlerCCMethodIfClause (
+    ::naeem::hottentot::generator::ds::Service *service,
+    ::naeem::hottentot::generator::ds::Method *method,
+    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+    std::map<std::string, std::string> &templates
+  ) {
     std::string indent = generationConfig.GetIndentString();
     /*
      * Making real values
@@ -180,9 +184,6 @@ namespace cc {
       }
     }          
     std::string resultSerialization = "";
-    // if (TypeHelper::IsUDT(method->GetReturnType())) {
-    //  resultSerialization += indent + indent + indent + "unsigned char *serializedData = result.Serialize(&serializedDataLength);\r\n";
-    // } else {
     resultSerialization += indent + indent + indent + "if (hotContext.GetResponseStatusCode() == 0) {\r\n";
     if (TypeHelper::IsVoid(method->GetReturnType())) {
       resultSerialization += indent + indent + indent + indent + "serializedData = 0;\r\n";

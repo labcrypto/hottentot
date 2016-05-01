@@ -48,8 +48,10 @@ namespace hottentot {
 namespace generator {
 namespace cc {
   void
-  CCGenerator::GenerateClient(::naeem::hottentot::generator::ds::Hot *hot,
-                              ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
+  CCGenerator::GenerateClient (
+    ::naeem::hottentot::generator::ds::Hot *hot,
+     ::naeem::hottentot::generator::GenerationConfig &generationConfig
+  ) {
     std::string indent = generationConfig.GetIndentString();
     ::naeem::hottentot::generator::common::Os::MakeDir(generationConfig.GetOutDir() + "/client");
     for (uint32_t moduleCounter = 0; moduleCounter < hot->modules_.size(); moduleCounter++) {

@@ -45,8 +45,10 @@ namespace hottentot {
 namespace generator {
 namespace cc {
   void
-  CCGenerator::GenerateMakefile(::naeem::hottentot::generator::ds::Hot *hot,
-                                ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
+  CCGenerator::GenerateMakefile (
+    ::naeem::hottentot::generator::ds::Hot *hot,
+    ::naeem::hottentot::generator::GenerationConfig &generationConfig
+  ) {
     std::string makefile = "";
     // makefile += "RTDIR = ../../../cc/runtime\r\n";
     makefile += "all:\r\n";
@@ -60,22 +62,8 @@ namespace cc {
     if (generationConfig.IsStubGenerated()) {
       makefile += "\tmkdir -p lib/stub\r\n";
     }
-    /*makefile += "\tmkdir -p lib/runtime\r\n";
-    makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/logger.cc -o lib/runtime/logger.o\r\n";
-    makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/protocol_v1.cc -o lib/runtime/protocol_v1.o\r\n";
-    makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/proxy/proxy.cc -o lib/runtime/proxy.o\r\n";
-    makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/proxy/proxy_runtime.cc -o lib/runtime/proxy_runtime.o\r\n";
-    makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/proxy/default_tcp_client.cc -o lib/runtime/default_tcp_client.o\r\n";
-    makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/proxy/default_tcp_client_factory.cc -o lib/runtime/default_tcp_client_factory.o\r\n";
-    makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/service/service_runtime.cc -o lib/runtime/service_runtime.o\r\n";
-    makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/service/default_tcp_server.cc -o lib/runtime/default_tcp_server.o\r\n";
-    makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/service/default_tcp_server_factory.cc -o lib/runtime/default_tcp_server_factory.o\r\n";
-    makefile += "\tg++ -c $(RTDIR)/naeem/hottentot/runtime/service/default_request_callback.cc -o lib/runtime/default_request_callback.o\r\n";*/
     for (uint32_t moduleCounter = 0; moduleCounter < hot->modules_.size(); moduleCounter++) {
       std::string objectFiles = "";
-      /*objectFiles += "lib/runtime/logger.o lib/runtime/protocol_v1.o lib/runtime/proxy.o lib/runtime/proxy_runtime.o ";
-      objectFiles += "lib/runtime/default_tcp_client.o lib/runtime/default_tcp_client_factory.o lib/runtime/service_runtime.o lib/runtime/default_tcp_server.o ";
-      objectFiles += "lib/runtime/default_tcp_server_factory.o lib/runtime/default_request_callback.o ";*/
       for (uint32_t structCounter = 0; structCounter < hot->modules_[moduleCounter]->structs_.size(); structCounter++) {
         std::string structName = 
           ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(

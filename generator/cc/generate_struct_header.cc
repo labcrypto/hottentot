@@ -46,9 +46,11 @@ namespace hottentot {
 namespace generator {
 namespace cc {
   void
-  CCGenerator::GenerateStructHeader(::naeem::hottentot::generator::ds::Struct *structt,
-                                    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
-                                    std::map<std::string, std::string> &templates) {
+  CCGenerator::GenerateStructHeader (
+    ::naeem::hottentot::generator::ds::Struct *structt,
+    ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+    std::map<std::string, std::string> &templates
+  ) {
     std::string indent = generationConfig.GetIndentString();
     /*
      * Making needed variables and assigning values to them
