@@ -26,7 +26,7 @@ public class SecondRequestHandler extends RequestHandler {
     super(service);
   }
   @Override
-  public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException, MethodNotSupportException {
+  public Response handleRequest(Request request) throws TcpClientWriteException, TcpClientReadException, TcpClientConnectException {
     long methodId = request.getMethodId();
     SecondService secondImpl = (AbstractSecondService) service;
     if(methodId == 2392076192L){

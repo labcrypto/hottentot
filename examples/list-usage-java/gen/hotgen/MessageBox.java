@@ -11,52 +11,40 @@ import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 
-public class Message {
+public class MessageBox {
   private String value = "";
-  private String desc = "";
-  private short len;
+  private list<string> messages;
   public void setValue(String value) {
     this.value = value;
   }
   public String getValue() {
     return value;
   }
-  public void setDesc(String desc) {
-    this.desc = desc;
+  public void setMessages(list<string> messages) {
+    this.messages = messages;
   }
-  public String getDesc() {
-    return desc;
-  }
-  public void setLen(short len) {
-    this.len = len;
-  }
-  public short getLen() {
-    return len;
+  public list<string> getMessages() {
+    return messages;
   }
   @Override 
   public String toString() { 
-    return "Message{" + 
+    return "MessageBox{" + 
       "value = '" + value + '\'' + 
-      ",desc = '" + desc + '\'' + 
-      ",len = '" + len + '\'' + 
+      ",messages = '" + messages + '\'' + 
       "}"; 
   }
 	
   public byte[] serialize() {
     byte[] serializedValue = PDTSerializer.getString(value);
-    byte[] serializedDesc = PDTSerializer.getString(desc);
-    byte[] serializedLen = PDTSerializer.getInt16(len);
-    byte[] output = new byte[serializedValue.length + serializedDesc.length + serializedLen.length];
+    byte[] serializedMessages = PDTSerializer.getList<string>(messages);
+    byte[] output = new byte[serializedValue.length + serializedMessages.length];
     int counter = 0;
     //use a loop for every property
     for (int i = 0; i < serializedValue.length; i++) {
       output[counter++] = serializedValue[i];
     }
-    for (int i = 0; i < serializedDesc.length; i++) {
-      output[counter++] = serializedDesc[i];
-    }
-    for (int i = 0; i < serializedLen.length; i++) {
-      output[counter++] = serializedLen[i];
+    for (int i = 0; i < serializedMessages.length; i++) {
+      output[counter++] = serializedMessages[i];
     }
     return output;
   }
@@ -83,28 +71,12 @@ public class Message {
     System.arraycopy(serializedByteArray,counter,valueByteArray,0,dataLength);
     counter += dataLength;
     setValue(PDTDeserializer.getString(valueByteArray));
-    //desc : String
-    dataLength = 0;
-    if(( serializedByteArray[counter] & 0x80) == 0 ) {
-      dataLength = serializedByteArray[counter++];
-    }else{
-      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
-      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
-      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
-        serializedByteArrayLength[i] = serializedByteArray[counter++];
-      }
-      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
+    //messages : list<string>
+    byte[] messagesByteArray = new byte[4294967295];
+    for(int i = 0 ; i < 4294967295 ; i++){
+      messagesByteArray[i] = serializedByteArray[counter++];
     }
-    byte[] descByteArray = new byte[dataLength];
-    System.arraycopy(serializedByteArray,counter,descByteArray,0,dataLength);
-    counter += dataLength;
-    setDesc(PDTDeserializer.getString(descByteArray));
-    //len : short
-    byte[] lenByteArray = new byte[2];
-    for(int i = 0 ; i < 2 ; i++){
-      lenByteArray[i] = serializedByteArray[counter++];
-    }
-    setLen(PDTDeserializer.getInt16(lenByteArray));
+    setMessages(PDTDeserializer.getList<string>(messagesByteArray));
 
     }
   }

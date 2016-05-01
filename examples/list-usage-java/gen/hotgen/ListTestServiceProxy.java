@@ -142,12 +142,12 @@ byte[] serializedNames = serializableStringList.serialize();
     serializableStringList.deserialize(response.getData());
     return serializableStringList.getStringList();
   }
-  public List<Message> getMessages() { 
+  public List<MessageBox> getMessages() { 
 
     //make request
     Request request = new Request();
     request.setServiceId(304603072L);
-    request.setMethodId(1872129924L);
+    request.setMethodId(284127249L);
     request.setArgumentCount((byte) 0);
     request.setType(Request.RequestType.InvokeStateless);
     int dataLength = 0;
@@ -188,23 +188,23 @@ byte[] serializedNames = serializableStringList.serialize();
     } catch (TcpClientCloseException e) { 
       e.printStackTrace(); 
     } 
-    //deserialize list<Message>part from response
-    SerializableMessageList serializableMessageList = null;
+    //deserialize list<MessageBox>part from response
+    SerializableMessageBoxList serializableMessageBoxList = null;
     if (response.getStatusCode() == -1) {
       //TODO
     }
-    serializableMessageList = new SerializableMessageList();
-    serializableMessageList.deserialize(response.getData());
-    return serializableMessageList.getMessageList();
+    serializableMessageBoxList = new SerializableMessageBoxList();
+    serializableMessageBoxList.deserialize(response.getData());
+    return serializableMessageBoxList.getMessageBoxList();
   }
-  public void addMessage(Message message) { 
+  public void addMessage(MessageBox message) { 
     //serialize message
     byte[] serializedMessage = message.serialize();
 
     //make request
     Request request = new Request();
     request.setServiceId(304603072L);
-    request.setMethodId(3626181027L);
+    request.setMethodId(2086091320L);
     request.setArgumentCount((byte) 1);
     request.setType(Request.RequestType.InvokeStateless);
     Argument arg0 = new Argument();
@@ -248,7 +248,7 @@ byte[] serializedNames = serializableStringList.serialize();
       throw new HottentotRuntimeException(e);
     }
   }
-  public void addNumbers(List<Short> numbers) { 
+  public void addShortNumbers(List<Short> numbers) { 
     //serialize numbers
     SerializableUint16List serializableUint16List = new SerializableUint16List();
 serializableUint16List.setUint16List(numbers);
@@ -257,7 +257,60 @@ byte[] serializedNumbers = serializableUint16List.serialize();
     //make request
     Request request = new Request();
     request.setServiceId(304603072L);
-    request.setMethodId(1619390066L);
+    request.setMethodId(1406341711L);
+    request.setArgumentCount((byte) 1);
+    request.setType(Request.RequestType.InvokeStateless);
+    Argument arg0 = new Argument();
+    arg0.setDataLength(serializedNumbers.length);
+    arg0.setData(serializedNumbers);
+    request.addArgument(arg0);
+    int dataLength = 0;
+    //calculate data length for every argument
+    //calulate numbersDataLength
+    int numbersDataLength= serializedNumbers.length;
+    int numbersDataLengthByteArrayLength = 1;
+    if (numbersDataLength >= 0x80) {
+      if (numbersDataLength <= 0xff) {
+        //ex 0x81 0xff
+        numbersDataLengthByteArrayLength = 2;
+      } else if (numbersDataLength <= 0xffff) {
+        //ex 0x82 0xff 0xff
+        numbersDataLengthByteArrayLength = 3;
+      } else if (numbersDataLength <= 0xffffff) {
+        //ex 0x83 0xff 0xff 0xff
+        numbersDataLengthByteArrayLength = 4;
+      }
+    }
+    dataLength += numbersDataLength + numbersDataLengthByteArrayLength;
+    //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
+    request.setLength(10 + dataLength);
+    //connect to server
+    TcpClient tcpClient = TcpClientFactory.create();
+    try{
+      tcpClient.connect(host, port);
+    } catch (TcpClientConnectException e) {
+      throw new HottentotRuntimeException(e);
+    }
+    //serialize request according to HTNP
+    Protocol protocol = ProtocolFactory.create();
+    byte[] serializedRequest = protocol.serializeRequest(request);
+    //send request
+    try {
+      tcpClient.write(serializedRequest);
+    } catch (TcpClientWriteException e) {
+      throw new HottentotRuntimeException(e);
+    }
+  }
+  public void addByteNumbers(List<Byte> numbers) { 
+    //serialize numbers
+    SerializableUint8List serializableUint8List = new SerializableUint8List();
+serializableUint8List.setUint8List(numbers);
+byte[] serializedNumbers = serializableUint8List.serialize();
+
+    //make request
+    Request request = new Request();
+    request.setServiceId(304603072L);
+    request.setMethodId(4053376767L);
     request.setArgumentCount((byte) 1);
     request.setType(Request.RequestType.InvokeStateless);
     Argument arg0 = new Argument();

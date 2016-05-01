@@ -12,11 +12,16 @@ void generateSerializableStructListFile(std::string listStructName ,
                                         std::string replacableSerializableStructListTmpStr ,
                                         std::string outDir ,
                                         std::string indent) {
-  std::string lowerCaseStructName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstLowerCase(listStructName);
-  std::string upperCaseStructName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(listStructName);
-  std::string serializableHottentotTypeName = ::naeem::hottentot::generator::common::TypeHelper::GetSerializableHottentotType(listStructName);
-  std::string lowerCaseSerializableHottentotTypeName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstLowerCase(serializableHottentotTypeName);
-  std::string javaClassType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(listStructName);
+  std::string lowerCaseStructName = 
+    ::naeem::hottentot::generator::common::StringHelper::MakeFirstLowerCase(listStructName);
+  std::string upperCaseStructName = 
+    ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(listStructName);
+  std::string serializableHottentotTypeName = 
+    ::naeem::hottentot::generator::common::TypeHelper::GetSerializableHottentotType(listStructName);
+  std::string lowerCaseSerializableHottentotTypeName = 
+    ::naeem::hottentot::generator::common::StringHelper::MakeFirstLowerCase(serializableHottentotTypeName);
+  std::string javaClassType = 
+    ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(listStructName);
   std::string instanciationHottentotTypeStr = "";
   std::string getValueMethodStr = "";
   if(!::naeem::hottentot::generator::common::TypeHelper::IsUDT(listStructName)){
@@ -93,6 +98,28 @@ namespace naeem {
         JavaGenerator::GenerateSerializableStructList(::naeem::hottentot::generator::ds::Module *pModule) {
           ::naeem::hottentot::generator::ds::Service *pService;
           std::string basePackageName = pModule->package_;
+          
+          //search lists in structs
+          for (int i = 0; i < pModule->structs_.size(); i++) {
+            ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(i);
+            
+            for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+             = pStruct->declarations_.begin();
+             it != pStruct->declarations_.end();
+             ++it) {
+              ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
+              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(declarationPtr->type_)) {
+                std::string listStructName = ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(declarationPtr->type_);
+                generateSerializableStructListFile(listStructName ,
+                                                  basePackageName , 
+                                                  serializableStructListTmpStr_ ,
+                                                  outDir_ , 
+                                                  indent_ );
+              }
+            }
+          }
+
+          //search lists in input and output of methods
           for (int i = 0; i < pModule->services_.size(); i++) {
             pService = pModule->services_.at(i);
             std::string serviceName = pService->name_;
