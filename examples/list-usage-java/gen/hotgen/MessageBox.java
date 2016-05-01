@@ -11,13 +11,14 @@ import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 import java.util.List;
+import java.util.ArrayList;
 
 public class MessageBox {
   private String value = "";
-  private List<String> xList;
-  private List<Byte> yList;
-  private List<Boolean> zList;
-  private List<Test> testList;
+  private List<String> xList = new ArrayList<String>();
+  private List<Byte> yList = new ArrayList<Byte>();
+  private List<Boolean> zList = new ArrayList<Boolean>();
+  private List<Test> testList = new ArrayList<Test>();
   public void setValue(String value) {
     this.value = value;
   }
