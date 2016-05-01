@@ -42,99 +42,101 @@
 #include "../common/datetime_helper.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace cc {
-        void
-        CCGenerator::GenerateEnums(std::vector< ::naeem::hottentot::generator::ds::Module*> modules,
-                                   ::naeem::hottentot::generator::GenerationConfig &generationConfig,
-                                   std::map<std::string, std::string> &templates) {
-          std::string indent = generationConfig.GetIndentString();
-          /*
-           * Making needed variables and assigning values to them
-           */
-          std::string enumsFilePath = generationConfig.GetOutDir() + "/enums.h";
-          
-          /*
-           * Making real values
-           */
-          std::vector<std::string> totalPackageTokens;
-          std::string namespacesAndEnums = "";
-          for (uint32_t i = 0; i < modules.size(); i++) {
-            ::naeem::hottentot::generator::ds::Module *module = modules[i];
-            std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
-                              ::naeem::hottentot::generator::common::StringHelper::Split(
-                              module->GetPackage(), '.'), "::");
-            std::vector<std::string> packageTokens = ::naeem::hottentot::generator::common::StringHelper::Split(
-              module->GetPackage(), '.');
-            totalPackageTokens.insert(totalPackageTokens.end(), packageTokens.begin(), packageTokens.end());
-            std::string namespacesStart = "";
-            for (uint32_t i = 0; i < packageTokens.size(); i++) {
-              namespacesStart += "namespace " + 
-                ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
-            }
-            std::string namespacesEnd = "";
-            for (int32_t i = packageTokens.size() - 1; i >= 0; i--) {
-              namespacesEnd += "} // END OF NAMESPACE " + packageTokens[i] + "\r\n";
-            }
-            namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
-            namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
-            std::string enums = "";
-            
-            for (uint32_t i = 0; i < module->enums_.size(); i++) {
-              enums += indent + "enum " + module->enums_[i]->GetName() + " {\r\n";
-              std::map<uint16_t, std::string>::iterator finalItemIter = module->enums_[i]->revItems_.end();
-              --finalItemIter;
-              for (std::map<uint16_t, std::string>::iterator it = module->enums_[i]->revItems_.begin();
-                   it != module->enums_[i]->revItems_.end();
-                   it++) {
-                std::stringstream ss;
-                ss << indent << indent << "k" << 
-                  /*::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
-                    ::naeem::hottentot::generator::common::StringHelper::ExplodeCamelCase(
-                    */module->enums_[i]->GetName() /*))*/ << "___" << 
-                  /*::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(*/
-                    it->second /*)*/ << " = " << it->first;
-                if (it != finalItemIter) {
-                  ss << ",";
-                }
-                ss << std::endl;
-                enums += ss.str();
-              }
-              enums += indent + "};\r\n";
-            }
-            namespacesAndEnums += namespacesStart + "\r\n" + enums + namespacesEnd;
-          }
-          /*
-           * Filling templates with real values
-           */
-          std::map<std::string, std::string> params;
-          params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
-          params.insert(std::pair<std::string, std::string>("FILENAME", "enums.h"));
-          params.insert(std::pair<std::string, std::string>("HEADER_GUARD", "_" +
-            ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
-              totalPackageTokens) + "__ENUMS_H_"));
-          params.insert(std::pair<std::string, std::string>("NAMESPACES_AND_ENUMS", namespacesAndEnums));
-          params.insert(std::pair<std::string, std::string>("INDENT", indent));
-          std::string enumsTemplate = templates["enums"];
-          for (std::map<std::string, std::string>::iterator it = params.begin();
-               it != params.end();
-               ++it) {
-            enumsTemplate = 
-              ::naeem::hottentot::generator::common::StringHelper::Replace(enumsTemplate, 
-                                                                           "[[[" + it->first + "]]]", 
-                                                                           it->second);
-          }
-          /*
-           * Writing final results to files
-           */
-          std::fstream f;
-          f.open(enumsFilePath.c_str(), std::fstream::out | std::fstream::binary);
-          f << enumsTemplate;
-          f.close();
-        }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+namespace cc {
+  void
+  CCGenerator::GenerateEnums(std::vector< ::naeem::hottentot::generator::ds::Module*> modules,
+                             ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+                             std::map<std::string, std::string> &templates) {
+    std::string indent = generationConfig.GetIndentString();
+    /*
+     * Making needed variables and assigning values to them
+     */
+    std::string enumsFilePath = generationConfig.GetOutDir() + "/enums.h";
+    
+    /*
+     * Making real values
+     */
+    std::vector<std::string> totalPackageTokens;
+    std::string namespacesAndEnums = "";
+    for (uint32_t i = 0; i < modules.size(); i++) {
+      ::naeem::hottentot::generator::ds::Module *module = modules[i];
+      std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
+                        ::naeem::hottentot::generator::common::StringHelper::Split(
+                        module->GetPackage(), '.'), "::");
+      std::vector<std::string> packageTokens = ::naeem::hottentot::generator::common::StringHelper::Split(
+        module->GetPackage(), '.');
+      totalPackageTokens.insert(totalPackageTokens.end(), packageTokens.begin(), packageTokens.end());
+      std::string namespacesStart = "";
+      for (uint32_t i = 0; i < packageTokens.size(); i++) {
+        namespacesStart += "namespace " + 
+          ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
       }
+      std::string namespacesEnd = "";
+      for (int32_t i = packageTokens.size() - 1; i >= 0; i--) {
+        namespacesEnd += "} // END OF NAMESPACE " + packageTokens[i] + "\r\n";
+      }
+      namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
+      namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
+      std::string enums = "";
+      
+      for (uint32_t i = 0; i < module->enums_.size(); i++) {
+        enums += indent + "enum " + module->enums_[i]->GetName() + " {\r\n";
+        std::map<uint16_t, std::string>::iterator finalItemIter = module->enums_[i]->revItems_.end();
+        --finalItemIter;
+        for (std::map<uint16_t, std::string>::iterator it = module->enums_[i]->revItems_.begin();
+             it != module->enums_[i]->revItems_.end();
+             it++) {
+          std::stringstream ss;
+          ss << indent << indent << "k" << 
+            /*::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
+              ::naeem::hottentot::generator::common::StringHelper::ExplodeCamelCase(
+              */module->enums_[i]->GetName() /*))*/ << "___" << 
+            /*::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(*/
+              it->second /*)*/ << " = " << it->first;
+          if (it != finalItemIter) {
+            ss << ",";
+          }
+          ss << std::endl;
+          enums += ss.str();
+        }
+        enums += indent + "};\r\n";
+      }
+      namespacesAndEnums += namespacesStart + "\r\n" + enums + namespacesEnd;
     }
+    /*
+     * Filling templates with real values
+     */
+    std::map<std::string, std::string> params;
+    params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
+    params.insert(std::pair<std::string, std::string>("FILENAME", "enums.h"));
+    params.insert(std::pair<std::string, std::string>("HEADER_GUARD", "_" +
+      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
+        totalPackageTokens) + "__ENUMS_H_"));
+    params.insert(std::pair<std::string, std::string>("NAMESPACES_AND_ENUMS", namespacesAndEnums));
+    params.insert(std::pair<std::string, std::string>("INDENT", indent));
+    std::string enumsTemplate = templates["enums"];
+    for (std::map<std::string, std::string>::iterator it = params.begin();
+         it != params.end();
+         ++it) {
+      enumsTemplate = 
+        ::naeem::hottentot::generator::common::StringHelper::Replace(enumsTemplate, 
+                                                                     "[[[" + it->first + "]]]", 
+                                                                     it->second);
+    }
+    /*
+     * Writing final results to files
+     */
+    std::fstream f;
+    f.open(enumsFilePath.c_str(), std::fstream::out | std::fstream::binary);
+    f << enumsTemplate;
+    f.close();
   }
+}
+}
+}
+}
 }

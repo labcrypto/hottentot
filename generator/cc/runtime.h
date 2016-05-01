@@ -27,20 +27,22 @@
 #include <vector>
 
  
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace ds {
-        class Enum;
-      }
-      namespace cc {
-        class Runtime {
-        public:
-          static std::vector< ::naeem::hottentot::generator::ds::Enum*> enums_;
-        };
-      }
-    }
-  }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+namespace ds {
+  class Enum;
+}
+namespace cc {
+  class Runtime {
+  public:
+    static std::vector< ::naeem::hottentot::generator::ds::Enum*> enums_;
+  };
+}
+}
+}
+}
 }
 
 #endif

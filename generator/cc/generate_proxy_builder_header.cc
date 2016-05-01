@@ -40,80 +40,82 @@
 #include "../common/datetime_helper.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace cc {
-        void
-        CCGenerator::GenerateProxyBuilderHeader(::naeem::hottentot::generator::ds::Service *service,
-                                                ::naeem::hottentot::generator::GenerationConfig &generationConfig,
-                                                std::map<std::string, std::string> &templates) {
-          std::string indent = generationConfig.GetIndentString();
-          /*
-           * Making needed variables and assigning values to them
-           */
-          std::string serviceNameCamelCaseFirstCapital = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
-            service->GetName()) + "Service";
-          std::string serviceNameSnakeCase = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-              serviceNameCamelCaseFirstCapital);
-          std::string serviceNameScreamingSnakeCase =
-          ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
-          std::string serviceProxyHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy_builder.h";
-          /*
-           * Making real values
-           */
-          std::vector<std::string> packageTokens = ::naeem::hottentot::generator::common::StringHelper::Split(
-            service->module_->GetPackage(), '.');
-          std::string namespacesStart = "";
-          for (uint32_t i = 0; i < packageTokens.size(); i++) {
-            namespacesStart += "namespace " + 
-              ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
-          }
-          std::string namespacesEnd = "";
-          for (int32_t i = packageTokens.size() - 1; i >= 0; i--) {
-            namespacesEnd += "} // END OF NAMESPACE " + packageTokens[i] + "\r\n";
-          }
-          namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
-          namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
-          /*
-           * Filling templates with real values
-           */
-          std::map<std::string, std::string> params;
-          params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
-          params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + "_proxy_builder.h"));
-          params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
-          params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
-          params.insert(std::pair<std::string, std::string>("HEADER_GUARD", "_" +
-            ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
-              packageTokens) + "__PROXY__" + serviceNameScreamingSnakeCase + "_PROXY_BUILDER_H_"));
-          params.insert(std::pair<std::string, std::string>("NAMESPACE","::" + 
-            ::naeem::hottentot::generator::common::StringHelper::Concat( 
-              ::naeem::hottentot::generator::common::StringHelper::Split(
-                  service->module_->GetPackage(), '.'), "::")));
-          params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
-          params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", serviceNameSnakeCase));
-          params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME", serviceNameScreamingSnakeCase));
-          params.insert(std::pair<std::string, std::string>("INDENT", indent));
-          std::string proxyHeaderTemplate = templates["proxy_builder_header"];
-          for (std::map<std::string, std::string>::iterator it = params.begin();
-               it != params.end();
-               ++it) {
-            proxyHeaderTemplate = 
-              ::naeem::hottentot::generator::common::StringHelper::Replace(proxyHeaderTemplate, 
-                                                                           "[[[" + it->first + "]]]", 
-                                                                           it->second);
-          }
-          /*
-           * Writing final results to files
-           */
-          std::fstream f;
-          f.open(serviceProxyHeaderFilePath.c_str(), std::fstream::out | std::fstream::binary);
-          f << proxyHeaderTemplate;
-          f.close();
-        }
-      }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+namespace cc {
+  void
+  CCGenerator::GenerateProxyBuilderHeader(::naeem::hottentot::generator::ds::Service *service,
+                                          ::naeem::hottentot::generator::GenerationConfig &generationConfig,
+                                          std::map<std::string, std::string> &templates) {
+    std::string indent = generationConfig.GetIndentString();
+    /*
+     * Making needed variables and assigning values to them
+     */
+    std::string serviceNameCamelCaseFirstCapital = 
+    ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
+      service->GetName()) + "Service";
+    std::string serviceNameSnakeCase = 
+      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
+        serviceNameCamelCaseFirstCapital);
+    std::string serviceNameScreamingSnakeCase =
+    ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
+    std::string serviceProxyHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy_builder.h";
+    /*
+     * Making real values
+     */
+    std::vector<std::string> packageTokens = ::naeem::hottentot::generator::common::StringHelper::Split(
+      service->module_->GetPackage(), '.');
+    std::string namespacesStart = "";
+    for (uint32_t i = 0; i < packageTokens.size(); i++) {
+      namespacesStart += "namespace " + 
+        ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(packageTokens[i]) + " {\r\n";
     }
+    std::string namespacesEnd = "";
+    for (int32_t i = packageTokens.size() - 1; i >= 0; i--) {
+      namespacesEnd += "} // END OF NAMESPACE " + packageTokens[i] + "\r\n";
+    }
+    namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
+    namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
+    /*
+     * Filling templates with real values
+     */
+    std::map<std::string, std::string> params;
+    params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
+    params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + "_proxy_builder.h"));
+    params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
+    params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
+    params.insert(std::pair<std::string, std::string>("HEADER_GUARD", "_" +
+      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
+        packageTokens) + "__PROXY__" + serviceNameScreamingSnakeCase + "_PROXY_BUILDER_H_"));
+    params.insert(std::pair<std::string, std::string>("NAMESPACE","::" + 
+      ::naeem::hottentot::generator::common::StringHelper::Concat( 
+        ::naeem::hottentot::generator::common::StringHelper::Split(
+            service->module_->GetPackage(), '.'), "::")));
+    params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
+    params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", serviceNameSnakeCase));
+    params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME", serviceNameScreamingSnakeCase));
+    params.insert(std::pair<std::string, std::string>("INDENT", indent));
+    std::string proxyHeaderTemplate = templates["proxy_builder_header"];
+    for (std::map<std::string, std::string>::iterator it = params.begin();
+         it != params.end();
+         ++it) {
+      proxyHeaderTemplate = 
+        ::naeem::hottentot::generator::common::StringHelper::Replace(proxyHeaderTemplate, 
+                                                                     "[[[" + it->first + "]]]", 
+                                                                     it->second);
+    }
+    /*
+     * Writing final results to files
+     */
+    std::fstream f;
+    f.open(serviceProxyHeaderFilePath.c_str(), std::fstream::out | std::fstream::binary);
+    f << proxyHeaderTemplate;
+    f.close();
   }
+}
+}
+}
+}
 }
