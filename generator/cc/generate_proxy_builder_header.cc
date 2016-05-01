@@ -56,19 +56,27 @@ namespace cc {
      * Making needed variables and assigning values to them
      */
     std::string serviceNameCamelCaseFirstCapital = 
-    ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
-      service->GetName()) + "Service";
+    ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
+      service->GetName()
+    ) + "Service";
     std::string serviceNameSnakeCase = 
-      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-        serviceNameCamelCaseFirstCapital);
+      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+        serviceNameCamelCaseFirstCapital
+      );
     std::string serviceNameScreamingSnakeCase =
-    ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
-    std::string serviceProxyHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + "_proxy_builder.h";
+      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase (
+        serviceNameSnakeCase
+      );
+    std::string serviceProxyHeaderFilePath = generationConfig.GetOutDir() + "/proxy/" + 
+      serviceNameSnakeCase + "_proxy_builder.h";
     /*
      * Making real values
      */
-    std::vector<std::string> packageTokens = ::naeem::hottentot::generator::common::StringHelper::Split(
-      service->module_->GetPackage(), '.');
+    std::vector<std::string> packageTokens = 
+      ::naeem::hottentot::generator::common::StringHelper::Split (
+        service->module_->GetPackage(), 
+        '.'
+      );
     std::string namespacesStart = "";
     for (uint32_t i = 0; i < packageTokens.size(); i++) {
       namespacesStart += "namespace " + 
@@ -89,12 +97,18 @@ namespace cc {
     params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
     params.insert(std::pair<std::string, std::string>("HEADER_GUARD", "_" +
-      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
-        packageTokens) + "__PROXY__" + serviceNameScreamingSnakeCase + "_PROXY_BUILDER_H_"));
+      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase (
+        packageTokens
+      ) + "__PROXY__" + serviceNameScreamingSnakeCase + "_PROXY_BUILDER_H_"));
     params.insert(std::pair<std::string, std::string>("NAMESPACE","::" + 
-      ::naeem::hottentot::generator::common::StringHelper::Concat( 
-        ::naeem::hottentot::generator::common::StringHelper::Split(
-            service->module_->GetPackage(), '.'), "::")));
+      ::naeem::hottentot::generator::common::StringHelper::Concat ( 
+        ::naeem::hottentot::generator::common::StringHelper::Split (
+          service->module_->GetPackage(), 
+          '.'
+        ), 
+        "::"
+      )
+    ));
     params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
     params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", serviceNameSnakeCase));
     params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME", serviceNameScreamingSnakeCase));
@@ -104,9 +118,11 @@ namespace cc {
          it != params.end();
          ++it) {
       proxyHeaderTemplate = 
-        ::naeem::hottentot::generator::common::StringHelper::Replace(proxyHeaderTemplate, 
-                                                                     "[[[" + it->first + "]]]", 
-                                                                     it->second);
+        ::naeem::hottentot::generator::common::StringHelper::Replace(
+          proxyHeaderTemplate, 
+          "[[[" + it->first + "]]]", 
+          it->second
+        );
     }
     /*
      * Writing final results to files
