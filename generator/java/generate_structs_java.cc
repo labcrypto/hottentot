@@ -113,6 +113,24 @@ namespace naeem {
                      serializeMethodStr += indent_ + indent_ + 
                                           "byte[] serialized" + capitalizedDeclarationName + " = " +
                                           declarationPtr->variable_ + ".serialize();\n";
+                  }else if(::naeem::hottentot::generator::common::TypeHelper::IsListType(declarationPtr->type_)) {
+                    std::string fetchedListType = 
+                      ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(declarationPtr->type_);
+                    std::string capitalizedFetchedListType = 
+                      ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedListType);
+                    serializeMethodStr += indent_ + indent_+
+                      "Serializable" + capitalizedFetchedListType +
+                      "List serializable" + capitalizedFetchedListType + 
+                      "List = new Serializable" + capitalizedFetchedListType +
+                      "List();\n";
+                    serializeMethodStr += indent_ + indent_ + 
+                      "serializable" + capitalizedFetchedListType +
+                      "List.set" + capitalizedFetchedListType + "List(" + 
+                      declarationPtr->variable_.c_str() + ");\n"; 
+                    serializeMethodStr += indent_ + indent_ + 
+                      "byte[] serialized" + capitalizedDeclarationName + " " + 
+                      " = serializable" + capitalizedFetchedListType +
+                      "List.serializeWithLength();\n";
                   }else if(declarationPtr->type_.compare("data") == 0){
                     serializeMethodStr += indent_ + indent_ + "byte[] serialized" + capitalizedDeclarationName + " = PDTSerializer.getData(" + declarationPtr->variable_ + ");\n";
                   }else{
@@ -178,28 +196,47 @@ namespace naeem {
                 std::string capitalizedDeclarationType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->type_);
                 std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
                 deserializeMethodStr += indent_ + indent_ + "//" + declarationPtr->variable_ + " : " + declarationJavaType + "\n";
-                if(declarationJavaType.compare("String") == 0 ||
-                   declarationJavaType.compare("byte[]") == 0) {
-                  deserializeMethodStr += indent_ + indent_ + "dataLength = 0;\n";
-                  deserializeMethodStr += indent_ + indent_ +
-                  "if(( serializedByteArray[counter] & 0x80) == 0 ) {\n";
-                  deserializeMethodStr += indent_ + indent_ + indent_ + "dataLength = serializedByteArray[counter++];\n";
-                  deserializeMethodStr += indent_ + indent_ + "}else{\n";  
-                  deserializeMethodStr += indent_ + indent_ + indent_ + "numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;\n";
-                  deserializeMethodStr += indent_ + indent_ + indent_ + "byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];\n";
-                  deserializeMethodStr += indent_ + indent_ + indent_ + "for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){\n";
-                  deserializeMethodStr += indent_ + indent_ + indent_ + indent_ + "serializedByteArrayLength[i] = serializedByteArray[counter++];\n";
-                  deserializeMethodStr += indent_ + indent_ + indent_ + "}\n";
-                  deserializeMethodStr += indent_ + indent_ + indent_ + "dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);\n";
-                  deserializeMethodStr += indent_ + indent_ + "}\n";
-                  deserializeMethodStr += indent_ + indent_ + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[dataLength];\n";
-                  deserializeMethodStr += indent_ + indent_ + "System.arraycopy(serializedByteArray,counter," + declarationPtr->variable_.c_str() + "ByteArray,0,dataLength);\n";
-                  deserializeMethodStr += indent_ + indent_ + "counter += dataLength;\n";
-                  if(declarationJavaType.compare("String") == 0){
-                    deserializeMethodStr += indent_ + indent_ + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
-                  }else if(declarationJavaType.compare("byte[]") == 0){
-                    deserializeMethodStr += indent_ + indent_ + "set" + capitalizedDeclarationName + "(" + declarationPtr->variable_.c_str() + "ByteArray);\n";
-                  }
+                
+                if(declarationPtr->type_.compare("string") == 0 ||
+                   declarationJavaType.compare("data") == 0 || 
+                   ::naeem::hottentot::generator::common::TypeHelper::IsListType(declarationPtr->type_)) {
+                      deserializeMethodStr += indent_ + indent_ + "dataLength = 0;\n";
+                      deserializeMethodStr += indent_ + indent_ +
+                      "if(( serializedByteArray[counter] & 0x80) == 0 ) {\n";
+                      deserializeMethodStr += indent_ + indent_ + indent_ + "dataLength = serializedByteArray[counter++];\n";
+                      deserializeMethodStr += indent_ + indent_ + "}else{\n";  
+                      deserializeMethodStr += indent_ + indent_ + indent_ + "numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;\n";
+                      deserializeMethodStr += indent_ + indent_ + indent_ + "byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];\n";
+                      deserializeMethodStr += indent_ + indent_ + indent_ + "for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){\n";
+                      deserializeMethodStr += indent_ + indent_ + indent_ + indent_ + "serializedByteArrayLength[i] = serializedByteArray[counter++];\n";
+                      deserializeMethodStr += indent_ + indent_ + indent_ + "}\n";
+                      deserializeMethodStr += indent_ + indent_ + indent_ + "dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);\n";
+                      deserializeMethodStr += indent_ + indent_ + "}\n";
+                      deserializeMethodStr += indent_ + indent_ + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[dataLength];\n";
+                      deserializeMethodStr += indent_ + indent_ + "System.arraycopy(serializedByteArray,counter," + declarationPtr->variable_.c_str() + "ByteArray,0,dataLength);\n";
+                      deserializeMethodStr += indent_ + indent_ + "counter += dataLength;\n";
+                      if(declarationPtr->type_.compare("string") == 0 ){
+                        deserializeMethodStr += indent_ + indent_ + "set" + capitalizedDeclarationName + "(PDTDeserializer.get" + capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + "ByteArray));\n";
+                      }else if(declarationPtr->type_.compare("string") == 0 ){
+                        deserializeMethodStr += indent_ + indent_ + "set" + capitalizedDeclarationName + "(" + declarationPtr->variable_.c_str() + "ByteArray);\n";
+                      }else if(::naeem::hottentot::generator::common::TypeHelper::IsListType(declarationPtr->type_)){
+                        std::string fetchedListType = 
+                          ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(declarationPtr->type_);                        
+                        std::string upperCaseListType = 
+                          ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedListType);
+                        deserializeMethodStr += indent_ + indent_ + 
+                          "Serializable" + upperCaseListType + "List " + 
+                          "serializable" + upperCaseListType + "List = new Serializable" + 
+                          upperCaseListType + "List();\n";
+                        deserializeMethodStr += indent_ + indent_ + 
+                          "serializable" +  upperCaseListType + "List" + 
+                          ".deserialize(" + declarationPtr->variable_.c_str() + "ByteArray);\n";
+                        deserializeMethodStr += indent_ + indent_ + 
+                          "set" + capitalizedDeclarationName + 
+                          "(serializable" + upperCaseListType + 
+                          "List.get" + upperCaseListType +
+                           "List());\n";
+                      }
                 }else {
                   uint32_t dataLength = ::naeem::hottentot::generator::common::TypeHelper::GetTypeLength(declarationPtr->type_.c_str());
                   capitalizedDeclarationJavaType = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);

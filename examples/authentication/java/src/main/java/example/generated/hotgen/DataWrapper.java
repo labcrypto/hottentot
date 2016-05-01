@@ -72,21 +72,11 @@ public class DataWrapper {
     counter += dataLength;
     setValue(PDTDeserializer.getString(valueByteArray));
     //digi : byte[]
-    dataLength = 0;
-    if(( serializedByteArray[counter] & 0x80) == 0 ) {
-      dataLength = serializedByteArray[counter++];
-    }else{
-      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
-      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
-      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
-        serializedByteArrayLength[i] = serializedByteArray[counter++];
-      }
-      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
+    byte[] digiByteArray = new byte[4294967295];
+    for(int i = 0 ; i < 4294967295 ; i++){
+      digiByteArray[i] = serializedByteArray[counter++];
     }
-    byte[] digiByteArray = new byte[dataLength];
-    System.arraycopy(serializedByteArray,counter,digiByteArray,0,dataLength);
-    counter += dataLength;
-    setDigi(digiByteArray);
+    setDigi(PDTDeserializer.getData(digiByteArray));
 
     }
   }

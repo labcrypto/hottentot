@@ -40,10 +40,13 @@ class ListTestImpl extends AbstractListTestService {
   }
 
   @Override
-  public void addMessage(MessageBox message) {
+  public void addMessage(MessageBox messageBox) {
     System.out.println("------------------------");
     System.out.println("add message method call");
-    System.out.println(message.getValue());
+    System.out.println(messageBox.getValue());
+    System.out.println(messageBox.getXList());
+    System.out.println(messageBox.getYList());
+    System.out.println(messageBox.getZList());
   }
 
   @Override

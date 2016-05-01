@@ -219,6 +219,10 @@ namespace naeem {
               return "double";
             } else if (type == "void") {
               return "void";
+            }else if (type == "void") {
+              return "void";
+            }else if (IsListType(type)){
+              return "List<" + GetJavaClassType(FetchTypeOfList(type)) + ">";
             }
             return type;
           }

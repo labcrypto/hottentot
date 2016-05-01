@@ -58,6 +58,20 @@ public class SerializableStringList {
     return new byte[0];
   }
 
+  public byte[] serializeWithLength() {
+    byte[] serializedBytes = serialize();
+    byte[] dataLengthInBytes = DataLengthByteArrayMaker.getByteArray(serializedBytes.length);
+    byte[] output = new byte[serializedBytes.length + dataLengthInBytes.length];
+    int c = 0;
+    for(int i = 0 ; i < dataLengthInBytes.length ; i++){
+      output[c++] = dataLengthInBytes[i];
+    }
+    for(int i = 0 ; i < serializedBytes.length ; i++){
+      output[c++] = serializedBytes[i];
+    }
+    return output;
+  }
+
   public void deserialize(byte[] serializedStringList) {
     if(serializedStringList.length != 0){
       int counter = 0;

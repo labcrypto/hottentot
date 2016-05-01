@@ -10,6 +10,7 @@ package [%BASE_PACKAGE_NAME%].hotgen;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
+import java.util.List;
 
 public class [%STRUCT_NAME%] {
 [%MEMBERS%]	

@@ -8,48 +8,58 @@ package ir.ntnaeem.hottentot.examples.listtest.client;
 
 import ir.ntnaeem.hottentot.examples.listtest.hotgen.ListTestService;
 import ir.ntnaeem.hottentot.examples.listtest.hotgen.ListTestServiceProxyBuilder;
-import ir.ntnaeem.hottentot.examples.listtest.hotgen.Message;
-
+import ir.ntnaeem.hottentot.examples.listtest.hotgen.MessageBox;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
   public static void main(String[] args) throws IOException {
     ir.ntnaeem.hottentot.runtime.config.Config.setMainArgs(args);
     final ListTestService listtestProxy = ListTestServiceProxyBuilder.create("127.0.0.1", 8080);
     //
-    ArrayList<Short> numbers = new ArrayList<>();
-    numbers.add((short) 1);
-    numbers.add((short) 2);
-    listtestProxy.addShortNumbers(numbers);
+//    ArrayList<Short> numbers = new ArrayList<>();
+//    numbers.add((short) 1);
+//    numbers.add((short) 2);
+//    listtestProxy.addShortNumbers(numbers);
+//    //
+//    ArrayList<Byte> byteNumbers = new ArrayList<>();
+//    byteNumbers.add((byte) 1);
+//    byteNumbers.add((byte) 2);
+//    listtestProxy.addShortNumbers(numbers);
+//    //
+//    ArrayList<String> names = new ArrayList<>();
+//    names.add("name-1");
+//    names.add("name-2");
+//    listtestProxy.addNames(names);
     //
-    ArrayList<Byte> byteNumbers = new ArrayList<>();
-    byteNumbers.add((byte) 1);
-    byteNumbers.add((byte) 2);
-    listtestProxy.addShortNumbers(numbers);
-    //
-    ArrayList<String> names = new ArrayList<>();
-    names.add("name-1");
-    names.add("name-2");
-    listtestProxy.addNames(names);
-    //
-    Message message = new Message();
-    message.setValue("MSG-TEST");
+    MessageBox message = new MessageBox();
+    message.setValue("a");
+    ArrayList<String> messageStringList = new ArrayList<>();
+    messageStringList.add("b");
+    messageStringList.add("c");
+    message.setXList(messageStringList);
+    ArrayList<Byte> yList = new ArrayList<>();
+    yList.add((byte) 1);
+    yList.add((byte) 2);
+    message.setYList(yList);
+    ArrayList<Boolean> zList = new ArrayList<>();
+    zList.add(true);
+    zList.add(false);
+    message.setZList(zList);
     listtestProxy.addMessage(message);
     //
-    System.out.println("-----------------------------------");
-    System.out.println("get messages method call");
-    List<Message> messages = listtestProxy.getMessages();
-    for (Message message1 : messages) {
-      System.out.println(message.getValue());
-    }
-    //
-    System.out.println("-----------------------------------");
-    System.out.println("get names method call");
-    for (String name : listtestProxy.getNames()) {
-      System.out.println(name);
-    }
+//    System.out.println("-----------------------------------");
+//    System.out.println("get messages method call");
+//    List<MessageBox> messages = listtestProxy.getMessages();
+//    for (MessageBox message1 : messages) {
+//      System.out.println(message.getValue());
+//    }
+//    //
+//    System.out.println("-----------------------------------");
+//    System.out.println("get names method call");
+//    for (String name : listtestProxy.getNames()) {
+//      System.out.println(name);
+//    }
     //
     //use server methods on proxies
   }

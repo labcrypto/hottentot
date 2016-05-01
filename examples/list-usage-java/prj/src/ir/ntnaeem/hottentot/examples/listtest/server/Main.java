@@ -19,7 +19,6 @@ public class Main {
     ServiceRuntime serviceRuntime = new ServiceRuntime();
     Service listtestService = new ListTestImpl();
     serviceRuntime.register("127.0.0.1",8080, listtestService);
-
     serviceRuntime.start();
   }
 }

@@ -10,41 +10,72 @@ package ir.ntnaeem.hottentot.examples.listtest.hotgen;
 import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
+import java.util.List;
 
 public class MessageBox {
   private String value = "";
-  private list<string> messages;
+  private List<String> xList;
+  private List<Byte> yList;
+  private List<Boolean> zList;
   public void setValue(String value) {
     this.value = value;
   }
   public String getValue() {
     return value;
   }
-  public void setMessages(list<string> messages) {
-    this.messages = messages;
+  public void setXList(List<String> xList) {
+    this.xList = xList;
   }
-  public list<string> getMessages() {
-    return messages;
+  public List<String> getXList() {
+    return xList;
+  }
+  public void setYList(List<Byte> yList) {
+    this.yList = yList;
+  }
+  public List<Byte> getYList() {
+    return yList;
+  }
+  public void setZList(List<Boolean> zList) {
+    this.zList = zList;
+  }
+  public List<Boolean> getZList() {
+    return zList;
   }
   @Override 
   public String toString() { 
     return "MessageBox{" + 
       "value = '" + value + '\'' + 
-      ",messages = '" + messages + '\'' + 
+      ",xList = '" + xList + '\'' + 
+      ",yList = '" + yList + '\'' + 
+      ",zList = '" + zList + '\'' + 
       "}"; 
   }
 	
   public byte[] serialize() {
     byte[] serializedValue = PDTSerializer.getString(value);
-    byte[] serializedMessages = PDTSerializer.getList<string>(messages);
-    byte[] output = new byte[serializedValue.length + serializedMessages.length];
+    SerializableStringList serializableStringList = new SerializableStringList();
+    serializableStringList.setStringList(xList);
+    byte[] serializedXList  = serializableStringList.serializeWithLength();
+    SerializableUint8List serializableUint8List = new SerializableUint8List();
+    serializableUint8List.setUint8List(yList);
+    byte[] serializedYList  = serializableUint8List.serializeWithLength();
+    SerializableBoolList serializableBoolList = new SerializableBoolList();
+    serializableBoolList.setBoolList(zList);
+    byte[] serializedZList  = serializableBoolList.serializeWithLength();
+    byte[] output = new byte[serializedValue.length + serializedXList.length + serializedYList.length + serializedZList.length];
     int counter = 0;
     //use a loop for every property
     for (int i = 0; i < serializedValue.length; i++) {
       output[counter++] = serializedValue[i];
     }
-    for (int i = 0; i < serializedMessages.length; i++) {
-      output[counter++] = serializedMessages[i];
+    for (int i = 0; i < serializedXList.length; i++) {
+      output[counter++] = serializedXList[i];
+    }
+    for (int i = 0; i < serializedYList.length; i++) {
+      output[counter++] = serializedYList[i];
+    }
+    for (int i = 0; i < serializedZList.length; i++) {
+      output[counter++] = serializedZList[i];
     }
     return output;
   }
@@ -71,12 +102,60 @@ public class MessageBox {
     System.arraycopy(serializedByteArray,counter,valueByteArray,0,dataLength);
     counter += dataLength;
     setValue(PDTDeserializer.getString(valueByteArray));
-    //messages : list<string>
-    byte[] messagesByteArray = new byte[4294967295];
-    for(int i = 0 ; i < 4294967295 ; i++){
-      messagesByteArray[i] = serializedByteArray[counter++];
+    //xList : List<String>
+    dataLength = 0;
+    if(( serializedByteArray[counter] & 0x80) == 0 ) {
+      dataLength = serializedByteArray[counter++];
+    }else{
+      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
     }
-    setMessages(PDTDeserializer.getList<string>(messagesByteArray));
+    byte[] xListByteArray = new byte[dataLength];
+    System.arraycopy(serializedByteArray,counter,xListByteArray,0,dataLength);
+    counter += dataLength;
+    SerializableStringList serializableStringList = new SerializableStringList();
+    serializableStringList.deserialize(xListByteArray);
+    setXList(serializableStringList.getStringList());
+    //yList : List<Byte>
+    dataLength = 0;
+    if(( serializedByteArray[counter] & 0x80) == 0 ) {
+      dataLength = serializedByteArray[counter++];
+    }else{
+      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
+    }
+    byte[] yListByteArray = new byte[dataLength];
+    System.arraycopy(serializedByteArray,counter,yListByteArray,0,dataLength);
+    counter += dataLength;
+    SerializableUint8List serializableUint8List = new SerializableUint8List();
+    serializableUint8List.deserialize(yListByteArray);
+    setYList(serializableUint8List.getUint8List());
+    //zList : List<Boolean>
+    dataLength = 0;
+    if(( serializedByteArray[counter] & 0x80) == 0 ) {
+      dataLength = serializedByteArray[counter++];
+    }else{
+      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
+    }
+    byte[] zListByteArray = new byte[dataLength];
+    System.arraycopy(serializedByteArray,counter,zListByteArray,0,dataLength);
+    counter += dataLength;
+    SerializableBoolList serializableBoolList = new SerializableBoolList();
+    serializableBoolList.deserialize(zListByteArray);
+    setZList(serializableBoolList.getBoolList());
 
     }
   }

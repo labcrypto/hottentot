@@ -4,12 +4,13 @@
  * Name:
  * Description:
  ******************************************************************/
-package ir.ntnaeem.hottentot.examples.listtest.hotgen;
+package ir.ntnaeem.hottentot.examples.listtest.hotgen_correct;
 
 import ir.ntnaeem.hottentot.serializerHelper.DataLengthByteArrayMaker;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 import ir.ntnaeem.hottentot.type.*;
 
@@ -35,7 +36,7 @@ public class SerializableStringList {
       int dataLength = 0;
       //calculate serializedstringListLength
       for (String string : stringList) {
-        _String _String = new _String( string );
+        _String _String = new _String(string);
         byte[] serializedString = _String.serialize();
         byte[] stringLengthByteArray =
           DataLengthByteArrayMaker.getByteArray(serializedString.length);
@@ -43,7 +44,7 @@ public class SerializableStringList {
       }
       byte[] serializedStringList = new byte[dataLength];
       for (String string : stringList) {
-        _String _String = new _String( string );
+        _String _String = new _String(string);
         byte[] serializedString = _String.serialize();
         int serializedStringLength = serializedString.length;
         byte[] stringLengthByteArray =
@@ -55,9 +56,10 @@ public class SerializableStringList {
       }
       return serializedStringList;
     }
-    return new byte[0];
+    return new byte[]{0};
   }
 
+  //CHANGED
   public byte[] serializeWithLength() {
     byte[] serializedBytes = serialize();
     byte[] dataLengthInBytes = DataLengthByteArrayMaker.getByteArray(serializedBytes.length);
@@ -72,10 +74,11 @@ public class SerializableStringList {
     return output;
   }
 
+
   public void deserialize(byte[] serializedStringList) {
-    if(serializedStringList.length != 0){
+    if (serializedStringList.length != 0) {
       int counter = 0;
-      int serializedStringByteArrayLength = 0 ;
+      int serializedStringByteArrayLength = 0;
       while (true) {
         if (counter == serializedStringList.length) {
           break;

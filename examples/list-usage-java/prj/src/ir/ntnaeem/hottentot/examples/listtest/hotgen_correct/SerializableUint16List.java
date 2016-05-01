@@ -4,11 +4,10 @@
  * Name:
  * Description:
  ******************************************************************/
-package ir.ntnaeem.hottentot.examples.listtest.hotgen;
+package ir.ntnaeem.hottentot.examples.listtest.hotgen_correct;
 
 import ir.ntnaeem.hottentot.serializerHelper.DataLengthByteArrayMaker;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 import ir.ntnaeem.hottentot.type.*;
@@ -55,21 +54,7 @@ public class SerializableUint16List {
       }
       return serializedUint16List;
     }
-    return new byte[0];
-  }
-
-  public byte[] serializeWithLength() {
-    byte[] serializedBytes = serialize();
-    byte[] dataLengthInBytes = DataLengthByteArrayMaker.getByteArray(serializedBytes.length);
-    byte[] output = new byte[serializedBytes.length + dataLengthInBytes.length];
-    int c = 0;
-    for(int i = 0 ; i < dataLengthInBytes.length ; i++){
-      output[c++] = dataLengthInBytes[i];
-    }
-    for(int i = 0 ; i < serializedBytes.length ; i++){
-      output[c++] = serializedBytes[i];
-    }
-    return output;
+    return new byte[]{0};
   }
 
   public void deserialize(byte[] serializedUint16List) {
