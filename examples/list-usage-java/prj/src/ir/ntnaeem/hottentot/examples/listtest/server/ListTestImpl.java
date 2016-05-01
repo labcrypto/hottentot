@@ -47,6 +47,7 @@ class ListTestImpl extends AbstractListTestService {
     System.out.println(messageBox.getXList());
     System.out.println(messageBox.getYList());
     System.out.println(messageBox.getZList());
+    System.out.println(messageBox.getTestList());
   }
 
   @Override
