@@ -56,9 +56,9 @@ namespace cc {
      * Making needed variables and assigning values to them
      */
     std::string serviceNameCamelCaseFirstCapital = 
-    ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
-      service->GetName()
-    ) + "Service";
+      ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
+        service->GetName()
+      ) + "Service";
     std::string serviceNameSnakeCase = 
       ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
         serviceNameCamelCaseFirstCapital

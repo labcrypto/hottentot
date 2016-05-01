@@ -56,13 +56,14 @@ namespace cc {
      * Making needed variables and assigning values to them
      */
     std::string serviceNameCamelCaseFirstCapital = 
-    ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
-      service->GetName()) + "Service";
+      ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
+        service->GetName()
+      ) + "Service";
     std::string serviceNameSnakeCase = 
-      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
+      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
         serviceNameCamelCaseFirstCapital);
     std::string serviceNameScreamingSnakeCase =
-    ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
+      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
     std::string serviceInterfaceFilePath = generationConfig.GetOutDir() + "/service/" + serviceNameSnakeCase + ".h";
     std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
                        ::naeem::hottentot::generator::common::StringHelper::Split(
@@ -84,8 +85,9 @@ namespace cc {
     std::string includeStructHeaders = "";
     for (uint32_t i = 0; i < service->module_->structs_.size(); i++) {
       includeStructHeaders += "#include \"../" + 
-        ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-          service->module_->structs_[i]->GetName()) + ".h\"\r\n";
+        ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+          service->module_->structs_[i]->GetName()
+        ) + ".h\"\r\n";
     }
     namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
     namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
@@ -93,14 +95,19 @@ namespace cc {
     std::string methodDefs = "";
     for (uint32_t i = 0; i < service->methods_.size(); i++) {
       ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
-      methodDefs += indent + indent + "virtual void " + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(\r\n";
+      methodDefs += indent + indent + "virtual void " + 
+        ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(\r\n";
       for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-        methodDefs += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &"+ method->arguments_[j]->GetVariable() + ", \r\n";
+        methodDefs += indent + indent + indent + 
+          TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + 
+            method->arguments_[j]->GetVariable() + ", \r\n";
       }
       if (!TypeHelper::IsVoid(method->GetReturnType())) {
-        methodDefs += indent + indent + indent + TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out, \r\n";
+        methodDefs += indent + indent + indent + 
+          TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out, \r\n";
       }
-      methodDefs += indent + indent + indent + "::naeem::hottentot::runtime::service::HotContext &hotContext\r\n";
+      methodDefs += indent + indent + indent + 
+        "::naeem::hottentot::runtime::service::HotContext &hotContext\r\n";
       methodDefs += indent + indent + ") = 0;\r\n";
     }
     methodDefs = ::naeem::hottentot::generator::common::StringHelper::Trim(methodDefs);
@@ -108,18 +115,22 @@ namespace cc {
      * Filling templates with real values
      */
     std::map<std::string, std::string> params;
-    params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
+    params.insert(std::pair<std::string, std::string>("GENERATION_DATE", 
+      ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
     params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + ".h"));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
     params.insert(std::pair<std::string, std::string>("INCLUDE_STRUCT_HEADERS", includeStructHeaders));
     params.insert(std::pair<std::string, std::string>("HEADER_GUARD", "_" +
-      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase(
-        packageTokens) + "__SERVICE__" + serviceNameScreamingSnakeCase + "_H_"));
+      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCase (
+        packageTokens
+      ) + "__SERVICE__" + serviceNameScreamingSnakeCase + "_H_"));
     params.insert(std::pair<std::string, std::string>("NAMESPACE", ns));
-    params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
+    params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", 
+      serviceNameCamelCaseFirstCapital));
     params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", serviceNameSnakeCase));
-    params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME", serviceNameScreamingSnakeCase));
+    params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME", 
+      serviceNameScreamingSnakeCase));
     params.insert(std::pair<std::string, std::string>("METHOD_DEFS", methodDefs));
     params.insert(std::pair<std::string, std::string>("INDENT", indent));
     std::string serviceInterfaceTemplate = templates["service_interface"];
@@ -127,9 +138,11 @@ namespace cc {
          it != params.end();
          ++it) {
       serviceInterfaceTemplate = 
-        ::naeem::hottentot::generator::common::StringHelper::Replace(serviceInterfaceTemplate, 
-                                                                     "[[[" + it->first + "]]]", 
-                                                                     it->second);
+        ::naeem::hottentot::generator::common::StringHelper::Replace (
+          serviceInterfaceTemplate, 
+          "[[[" + it->first + "]]]", 
+          it->second
+        );
     }
     /*
      * Writing final results to files

@@ -56,22 +56,35 @@ namespace cc {
      * Making needed variables and assigning values to them
      */
     std::string serviceNameCamelCaseFirstCapital = 
-    ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
-      service->GetName()) + "Service";
+      ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
+        service->GetName()
+      ) + "Service";
     std::string serviceNameSnakeCase = 
-      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-        serviceNameCamelCaseFirstCapital);
+      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+        serviceNameCamelCaseFirstCapital
+      );
     std::string serviceNameScreamingSnakeCase =
-    ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
-    std::string requestHandlerCCFilePath = generationConfig.GetOutDir() + "/service/" + serviceNameSnakeCase + "_request_handler.cc";
-    std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
-                        ::naeem::hottentot::generator::common::StringHelper::Split(
-                        service->module_->GetPackage(), '.'), "::");
+      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase (
+        serviceNameSnakeCase
+      );
+    std::string requestHandlerCCFilePath = generationConfig.GetOutDir() + "/service/" + 
+      serviceNameSnakeCase + "_request_handler.cc";
+    std::string ns = "::" + 
+      ::naeem::hottentot::generator::common::StringHelper::Concat ( 
+        ::naeem::hottentot::generator::common::StringHelper::Split (
+          service->module_->GetPackage(), 
+          '.'
+        ), 
+        "::"
+      );
     /*
      * Making real values
      */
-     std::vector<std::string> packageTokens = ::naeem::hottentot::generator::common::StringHelper::Split(
-      service->module_->GetPackage(), '.');
+     std::vector<std::string> packageTokens = 
+      ::naeem::hottentot::generator::common::StringHelper::Split (
+        service->module_->GetPackage(), 
+        '.'
+      );
     std::string namespacesStart = "";
     for (uint32_t i = 0; i < packageTokens.size(); i++) {
       namespacesStart += "namespace " + 
@@ -84,8 +97,9 @@ namespace cc {
     std::string includeStructHeaders = "";
     for (uint32_t i = 0; i < service->module_->structs_.size(); i++) {
       includeStructHeaders += "#include \"../" + 
-        ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-          service->module_->structs_[i]->GetName()) + ".h\"\r\n";
+        ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+          service->module_->structs_[i]->GetName()
+        ) + ".h\"\r\n";
     }
     namespacesStart = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesStart);
     namespacesEnd = ::naeem::hottentot::generator::common::StringHelper::Trim(namespacesEnd);
@@ -93,14 +107,16 @@ namespace cc {
     std::string methodIfClauses = "";
     for (uint32_t i = 0; i < service->methods_.size(); i++) {
       ::naeem::hottentot::generator::ds::Method *method = service->methods_[i];
-      methodIfClauses += GenerateRequestHandlerCCMethodIfClause(service, method, generationConfig, templates) + "\r\n";
+      methodIfClauses += 
+        GenerateRequestHandlerCCMethodIfClause(service, method, generationConfig, templates) + "\r\n";
     }
     methodIfClauses = ::naeem::hottentot::generator::common::StringHelper::Trim(methodIfClauses);
     /*
      * Filling templates with real values
      */
     std::map<std::string, std::string> params;
-    params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
+    params.insert(std::pair<std::string, std::string>("GENERATION_DATE", 
+      ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
     params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + "_request_handler.cc"));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
@@ -110,18 +126,23 @@ namespace cc {
       ::naeem::hottentot::generator::common::StringHelper::Concat( 
         ::naeem::hottentot::generator::common::StringHelper::Split(
             service->module_->GetPackage(), '.'), "::")));
-    params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
-    params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", serviceNameSnakeCase));
-    params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME", serviceNameScreamingSnakeCase));
+    params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", 
+      serviceNameCamelCaseFirstCapital));
+    params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", 
+      serviceNameSnakeCase));
+    params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME", 
+      serviceNameScreamingSnakeCase));
     params.insert(std::pair<std::string, std::string>("INDENT", indent));
     std::string requestHandlerCCTemplate = templates["request_handler_cc"];
     for (std::map<std::string, std::string>::iterator it = params.begin();
          it != params.end();
          ++it) {
       requestHandlerCCTemplate = 
-        ::naeem::hottentot::generator::common::StringHelper::Replace(requestHandlerCCTemplate, 
-                                                                     "[[[" + it->first + "]]]", 
-                                                                     it->second);
+        ::naeem::hottentot::generator::common::StringHelper::Replace (
+          requestHandlerCCTemplate, 
+          "[[[" + it->first + "]]]", 
+          it->second
+        );
     }
     /*
      * Writing final results to files
@@ -143,19 +164,29 @@ namespace cc {
      * Making real values
      */
     std::string serviceNameCamelCaseFirstCapital = 
-      ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
-        service->GetName()) + "Service";
+      ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
+        service->GetName()
+      ) + "Service";
     std::stringstream methodHashSS;
     methodHashSS << method->GetHash();
-    std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
-                        ::naeem::hottentot::generator::common::StringHelper::Split(
-                        service->module_->GetPackage(), '.'), "::");
+    std::string ns = "::" + 
+      ::naeem::hottentot::generator::common::StringHelper::Concat ( 
+        ::naeem::hottentot::generator::common::StringHelper::Split (
+          service->module_->GetPackage(), 
+          '.'
+        ), 
+        "::"
+      );
     std::string inputVariables = "";
     for (uint32_t i = 0; i < method->arguments_.size(); i++) {
       if (TypeHelper::IsUDT(method->arguments_[i]->GetType())) {
-        inputVariables += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[i]->GetType(), ns) + " " + method->arguments_[i]->GetVariable() + ";\r\n";
+        inputVariables += indent + indent + indent + 
+          TypeHelper::GetCCType(method->arguments_[i]->GetType(), ns) + 
+            " " + method->arguments_[i]->GetVariable() + ";\r\n";
       } else {
-        inputVariables += indent + indent + indent + TypeHelper::GetCCType(method->arguments_[i]->GetType(), ns) + " " + method->arguments_[i]->GetVariable() + ";\r\n";
+        inputVariables += indent + indent + indent + 
+          TypeHelper::GetCCType(method->arguments_[i]->GetType(), ns) + 
+            " " + method->arguments_[i]->GetVariable() + ";\r\n";
       }
       std::stringstream tempSS;
       tempSS << ".Deserialize(request.GetArgumentData(" << i << "), request.GetArgumentLength(" << i << "));";
@@ -166,7 +197,8 @@ namespace cc {
       methodCall += indent + indent + indent + TypeHelper::GetCCType(method->GetReturnType(), ns) + " result;\r\n";
     } 
     methodCall += indent + indent + indent + "try {\r\n";
-    methodCall += indent + indent + indent + indent + "serviceObject->" + ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
+    methodCall += indent + indent + indent + indent + "serviceObject->" + 
+      ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(method->GetName()) + "(";
     std::string sep = "";
     for (uint32_t i = 0; i < method->arguments_.size(); i++) {
       methodCall += sep + method->arguments_[i]->GetVariable();
@@ -188,7 +220,8 @@ namespace cc {
     if (TypeHelper::IsVoid(method->GetReturnType())) {
       resultSerialization += indent + indent + indent + indent + "serializedData = 0;\r\n";
     } else {
-      resultSerialization += indent + indent + indent + indent + "serializedData = result.Serialize(&serializedDataLength);\r\n";
+      resultSerialization += indent + indent + indent + indent + 
+        "serializedData = result.Serialize(&serializedDataLength);\r\n";
       if (!TypeHelper::IsVoid(method->GetReturnType())) {
         if (TypeHelper::IsList(method->GetReturnType())) {
           resultSerialization += indent + indent + indent + "result.Purge();\r\n";
@@ -196,42 +229,59 @@ namespace cc {
       }
     }
     resultSerialization += indent + indent + indent + "} else {\r\n";
-    resultSerialization += indent + indent + indent + indent + "::naeem::hottentot::runtime::types::Utf8String faultMessage(hotContext.GetFaultMessage());\r\n";
-    resultSerialization += indent + indent + indent + indent + "serializedData = faultMessage.Serialize(&serializedDataLength);\r\n";
+    resultSerialization += indent + indent + indent + indent + 
+      "::naeem::hottentot::runtime::types::Utf8String faultMessage(hotContext.GetFaultMessage());\r\n";
+    resultSerialization += indent + indent + indent + indent + 
+      "serializedData = faultMessage.Serialize(&serializedDataLength);\r\n";
     resultSerialization += indent + indent + indent + "}\r\n";
     /*
      * Filling template
      */
     std::string proxyCCMethodIfClauseTemplate = templates["request_handler_cc__method_if_clause"];
     proxyCCMethodIfClauseTemplate =
-      ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
-                                                                   "[[[INDENT]]]",
-                                                                   indent);
+      ::naeem::hottentot::generator::common::StringHelper::Replace (
+        proxyCCMethodIfClauseTemplate,
+        "[[[INDENT]]]",
+        indent
+      );
     proxyCCMethodIfClauseTemplate =
-      ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
-                                                                   "[[[CAMEL_CASE_FC_SERVICE_NAME]]]",
-                                                                   serviceNameCamelCaseFirstCapital);
+      ::naeem::hottentot::generator::common::StringHelper::Replace (
+        proxyCCMethodIfClauseTemplate,
+        "[[[CAMEL_CASE_FC_SERVICE_NAME]]]",
+        serviceNameCamelCaseFirstCapital
+      );
     proxyCCMethodIfClauseTemplate =
-      ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
-                                                                   "[[[METHOD_NAME]]]",
-                                                                   ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
-                                                                     method->GetName()));
+      ::naeem::hottentot::generator::common::StringHelper::Replace (
+        proxyCCMethodIfClauseTemplate,
+        "[[[METHOD_NAME]]]",
+        ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
+          method->GetName()
+        )
+      );
     proxyCCMethodIfClauseTemplate =
-      ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
-                                                                   "[[[INPUT_VARIABLES]]]",
-                                                                   inputVariables);
+      ::naeem::hottentot::generator::common::StringHelper::Replace (
+        proxyCCMethodIfClauseTemplate,
+        "[[[INPUT_VARIABLES]]]",
+        inputVariables
+      );
     proxyCCMethodIfClauseTemplate =
-      ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
-                                                                   "[[[RESULT_SERIALIZATION]]]",
-                                                                   resultSerialization);
+      ::naeem::hottentot::generator::common::StringHelper::Replace (
+        proxyCCMethodIfClauseTemplate,
+        "[[[RESULT_SERIALIZATION]]]",
+        resultSerialization
+      );
     proxyCCMethodIfClauseTemplate =
-      ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
-                                                                   "[[[METHOD_CALL]]]",
-                                                                   methodCall);
+      ::naeem::hottentot::generator::common::StringHelper::Replace (
+        proxyCCMethodIfClauseTemplate,
+        "[[[METHOD_CALL]]]",
+        methodCall
+      );
     proxyCCMethodIfClauseTemplate =
-      ::naeem::hottentot::generator::common::StringHelper::Replace(proxyCCMethodIfClauseTemplate,
-                                                                   "[[[METHOD_HASH]]]",
-                                                                   methodHashSS.str());
+      ::naeem::hottentot::generator::common::StringHelper::Replace (
+        proxyCCMethodIfClauseTemplate,
+        "[[[METHOD_HASH]]]",
+        methodHashSS.str()
+      );
     return proxyCCMethodIfClauseTemplate;
   }
 }

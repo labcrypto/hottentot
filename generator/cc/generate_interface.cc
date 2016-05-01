@@ -56,15 +56,15 @@ namespace cc {
      * Making needed variables and assigning values to them
      */
     std::string serviceNameCamelCaseFirstCapital = 
-    ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
-      service->GetName()
-    ) + "Service";
+      ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
+        service->GetName()
+      ) + "Service";
     std::string serviceNameSnakeCase = 
       ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
         serviceNameCamelCaseFirstCapital
       );
     std::string serviceNameScreamingSnakeCase =
-    ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
+      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
     std::string serviceInterfaceFilePath = generationConfig.GetOutDir() + "/proxy/" + serviceNameSnakeCase + ".h";
     std::string ns = "::" + 
       ::naeem::hottentot::generator::common::StringHelper::Concat ( 

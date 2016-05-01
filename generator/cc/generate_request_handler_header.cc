@@ -56,19 +56,25 @@ namespace cc {
      * Making needed variables and assigning values to them
      */
     std::string serviceNameCamelCaseFirstCapital = 
-    ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
-      service->GetName()) + "Service";
+      ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
+        service->GetName()
+      ) + "Service";
     std::string serviceNameSnakeCase = 
-      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-        serviceNameCamelCaseFirstCapital);
+      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+        serviceNameCamelCaseFirstCapital
+      );
     std::string serviceNameScreamingSnakeCase =
-    ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
-    std::string requestHandlerHeaderFilePath = generationConfig.GetOutDir() + "/service/" + serviceNameSnakeCase + "_request_handler.h";
+      ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(serviceNameSnakeCase);
+    std::string requestHandlerHeaderFilePath = generationConfig.GetOutDir() + "/service/" + 
+      serviceNameSnakeCase + "_request_handler.h";
     /*
      * Making real values
      */
-    std::vector<std::string> packageTokens = ::naeem::hottentot::generator::common::StringHelper::Split(
-      service->module_->GetPackage(), '.');
+    std::vector<std::string> packageTokens = 
+      ::naeem::hottentot::generator::common::StringHelper::Split (
+        service->module_->GetPackage(), 
+        '.'
+      );
     std::string namespacesStart = "";
     for (uint32_t i = 0; i < packageTokens.size(); i++) {
       namespacesStart += "namespace " + 
@@ -84,7 +90,8 @@ namespace cc {
      * Filling templates with real values
      */
     std::map<std::string, std::string> params;
-    params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
+    params.insert(std::pair<std::string, std::string>("GENERATION_DATE", 
+      ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
     params.insert(std::pair<std::string, std::string>("FILENAME", serviceNameSnakeCase + "_request_handler.h"));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
@@ -95,18 +102,23 @@ namespace cc {
       ::naeem::hottentot::generator::common::StringHelper::Concat( 
         ::naeem::hottentot::generator::common::StringHelper::Split(
             service->module_->GetPackage(), '.'), "::")));
-    params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", serviceNameCamelCaseFirstCapital));
-    params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", serviceNameSnakeCase));
-    params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME", serviceNameScreamingSnakeCase));
+    params.insert(std::pair<std::string, std::string>("CAMEL_CASE_FC_SERVICE_NAME", 
+      serviceNameCamelCaseFirstCapital));
+    params.insert(std::pair<std::string, std::string>("SNAKE_CASE_SERVICE_NAME", 
+      serviceNameSnakeCase));
+    params.insert(std::pair<std::string, std::string>("SCREAMING_SNAKE_CASE_SERVICE_NAME", 
+      serviceNameScreamingSnakeCase));
     params.insert(std::pair<std::string, std::string>("INDENT", indent));
     std::string requestHandlerHeaderTemplate = templates["request_handler_header"];
     for (std::map<std::string, std::string>::iterator it = params.begin();
          it != params.end();
          ++it) {
       requestHandlerHeaderTemplate = 
-        ::naeem::hottentot::generator::common::StringHelper::Replace(requestHandlerHeaderTemplate, 
-                                                                     "[[[" + it->first + "]]]", 
-                                                                     it->second);
+        ::naeem::hottentot::generator::common::StringHelper::Replace (
+          requestHandlerHeaderTemplate, 
+          "[[[" + it->first + "]]]", 
+          it->second
+        );
     }
     /*
      * Writing final results to files

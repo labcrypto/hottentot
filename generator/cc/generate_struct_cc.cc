@@ -56,22 +56,32 @@ namespace cc {
      * Making needed variables and assigning values to them
      */
     std::string structNameCamelCaseFirstCapital = 
-    ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital(
-      structt->GetName());
+      ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstCapital (
+        structt->GetName()
+      );
     std::string structNameSnakeCase = 
-      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase(
-        structNameCamelCaseFirstCapital);
+      ::naeem::hottentot::generator::common::StringHelper::MakeSnakeCaseFromCamelCase (
+        structNameCamelCaseFirstCapital
+      );
     std::string structNameScreamingSnakeCase =
     ::naeem::hottentot::generator::common::StringHelper::MakeScreamingSnakeCaseFromCamelCase(structNameSnakeCase);
-    std::string ns = "::" + ::naeem::hottentot::generator::common::StringHelper::Concat( 
-                        ::naeem::hottentot::generator::common::StringHelper::Split(
-                        structt->module_->GetPackage(), '.'), "::");
+    std::string ns = "::" + 
+      ::naeem::hottentot::generator::common::StringHelper::Concat ( 
+        ::naeem::hottentot::generator::common::StringHelper::Split (
+          structt->module_->GetPackage(), 
+          '.'
+        ), 
+        "::"
+      );
     std::string structCCFilePath = generationConfig.GetOutDir() + "/" + structNameSnakeCase + ".cc";
     /*
      * Making real values
      */
-    std::vector<std::string> packageTokens = ::naeem::hottentot::generator::common::StringHelper::Split(
-      structt->module_->GetPackage(), '.');
+    std::vector<std::string> packageTokens = 
+      ::naeem::hottentot::generator::common::StringHelper::Split (
+        structt->module_->GetPackage(), 
+        '.'
+      );
     std::string namespacesStart = "";
     for (uint32_t i = 0; i < packageTokens.size(); i++) {
       namespacesStart += "namespace " + 
@@ -90,22 +100,32 @@ namespace cc {
     uint32_t counter = 0;
     std::stringstream serializationSS;
     serializationSS << indent << indent << "uint32_t totalLength = 0;\r\n";
-    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
+    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = 
+           structt->declarations_.begin();
          it != structt->declarations_.end();
          ++it) {
       serializationSS << indent << indent << "uint32_t length" << counter << " = 0;\r\n";
       // serializationSS << indent << indent << "unsigned char *data" << counter << " = ";
-      serializationSS << indent << indent << "::naeem::hottentot::runtime::HotPtr<unsigned char, true> ptr" << counter << ";\r\n";
+      serializationSS << indent << indent << 
+        "::naeem::hottentot::runtime::HotPtr<unsigned char, true> ptr" << counter << ";\r\n";
       if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
-        serializationSS << indent << indent << "if (" << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_" << ") {\r\n";
+        serializationSS << indent << indent << "if (" << 
+          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + 
+            "_" << ") {\r\n";
         serializationSS << indent << indent << indent << "ptr" << counter << " = ";
-        serializationSS << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
-          serializationSS << "->";
+        serializationSS << 
+          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall (
+            it->second->GetVariable()
+          ) + "_";
+        serializationSS << "->";
         serializationSS << "Serialize(&length" << counter << ");\r\n";
         serializationSS << indent << indent << "}\r\n";
       } else {
         serializationSS << indent << indent << "ptr" << counter << " = ";
-        serializationSS << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+        serializationSS << 
+          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall (
+            it->second->GetVariable()
+          ) + "_";
         serializationSS << ".";
         serializationSS << "Serialize(&length" << counter << ");\r\n";
       }
@@ -127,7 +147,8 @@ namespace cc {
     serializationSS << indent << indent << "unsigned char *data = new unsigned char[totalLength];\r\n";
     serializationSS << indent << indent << "uint32_t c = 0;\r\n";
     counter = 0;
-    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
+    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = 
+           structt->declarations_.begin();
          it != structt->declarations_.end();
          ++it) {
       if (!TypeHelper::IsFixedLength(it->second->GetType())) {
@@ -158,7 +179,8 @@ namespace cc {
       counter++;
     }
     serializationSS << indent << indent << "if (c != totalLength) {\r\n";
-    serializationSS << indent << indent << indent << "std::cout << \"Struct Serialization: Inconsistency in length of serialized byte array.\" << std::endl;\r\n";
+    serializationSS << indent << indent << indent << 
+      "std::cout << \"Struct Serialization: Inconsistency in length of serialized byte array.\" << std::endl;\r\n";
     serializationSS << indent << indent << indent << "exit(1);\r\n";
     serializationSS << indent << indent << "};\r\n";
     serializationSS << indent << indent << "if (length_ptr) {\r\n";
@@ -170,7 +192,8 @@ namespace cc {
      * Deserialization
      */
     bool hasAnyVariableLengthField = false;
-    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
+    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = 
+           structt->declarations_.begin();
          it != structt->declarations_.end();
          ++it) {
       if (!TypeHelper::IsFixedLength(it->second->GetType())) {
@@ -184,18 +207,24 @@ namespace cc {
     } else {
       deserializationSS << ";\r\n";
     }
-    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
+    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = 
+           structt->declarations_.begin();
          it != structt->declarations_.end();
          ++it) {
       if (TypeHelper::IsFixedLength(it->second->GetType())) {
-        deserializationSS << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+        deserializationSS << indent << indent << 
+          ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall (
+            it->second->GetVariable()
+          ) + "_";
         if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
           deserializationSS << "->";
         } else {
           deserializationSS << ".";
         }
-        deserializationSS << "Deserialize(data + c, " << TypeHelper::GetFixedLength(it->second->GetType()) << ");\r\n";
-        deserializationSS << indent << indent << "c += " << TypeHelper::GetFixedLength(it->second->GetType()) << ";\r\n";
+        deserializationSS << "Deserialize(data + c, " << 
+          TypeHelper::GetFixedLength(it->second->GetType()) << ");\r\n";
+        deserializationSS << indent << indent << "c += " << 
+          TypeHelper::GetFixedLength(it->second->GetType()) << ";\r\n";
       } else {
         deserializationSS << indent << indent << "if ((data[c] & 0x80) == 0) {\r\n";
         deserializationSS << indent << indent << indent << "elength = data[c];\r\n";
@@ -217,15 +246,21 @@ namespace cc {
         
         if (TypeHelper::IsUDT(it->second->GetType()) && !TypeHelper::IsList(it->second->GetType())) {
           deserializationSS << indent << indent << "if (elength > 0) {\r\n";
-          deserializationSS << indent << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) << "_ = new " << TypeHelper::GetCCType(it->second->GetType(), ns) << ";\r\n";
-          deserializationSS << indent << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+          deserializationSS << indent << indent << indent << 
+            ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) << 
+              "_ = new " << TypeHelper::GetCCType(it->second->GetType(), ns) << ";\r\n";
+          deserializationSS << indent << indent << indent << 
+            ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
           deserializationSS << "->";
           deserializationSS << "Deserialize(data + c, elength);\r\n";
           deserializationSS << indent << indent << "} else {\r\n";
-          deserializationSS << indent << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_ = NULL;\r\n";
+          deserializationSS << indent << indent << indent << 
+            ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + 
+              "_ = NULL;\r\n";
           deserializationSS << indent << indent << "}\r\n";
         } else {
-          deserializationSS << indent << indent << ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+          deserializationSS << indent << indent << 
+            ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
           deserializationSS << ".";
           deserializationSS << "Deserialize(data + c, elength);\r\n";
         }
@@ -233,7 +268,8 @@ namespace cc {
       }
     }
     deserializationSS << indent << indent << "if (c != length) {\r\n";
-    deserializationSS << indent << indent << indent << "std::cout << \"Struct Deserialization: Inconsistency in length of deserialized byte array.\" << std::endl;\r\n";
+    deserializationSS << indent << indent << indent << 
+      "std::cout << \"Struct Deserialization: Inconsistency in length of deserialized byte array.\" << std::endl;\r\n";
     deserializationSS << indent << indent << indent << "exit(1);\r\n";
     deserializationSS << indent << indent << "};\r\n";
     std::string deserialization = deserializationSS.str();
@@ -241,24 +277,36 @@ namespace cc {
      * Ctor assignments
      */
     std::string copyCtorAssign = "";
-    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
+    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = 
+           structt->declarations_.begin();
          it != structt->declarations_.end();
          ++it) {
-      copyCtorAssign += indent + indent + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
-      copyCtorAssign += " = other." + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_;\r\n";
+      copyCtorAssign += indent + indent + 
+        ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall (
+          it->second->GetVariable()
+        ) + "_";
+      copyCtorAssign += " = other." + 
+        ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall (
+          it->second->GetVariable()
+        ) + "_;\r\n";
     }
     std::string pointerCtorAssign = "";
-    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = structt->declarations_.begin();
+    for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it = 
+           structt->declarations_.begin();
          it != structt->declarations_.end();
          ++it) {
-      pointerCtorAssign += indent + indent + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
-      pointerCtorAssign += " = other->" + ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_;\r\n";
+      pointerCtorAssign += indent + indent + 
+        ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + "_";
+      pointerCtorAssign += " = other->" + 
+        ::naeem::hottentot::generator::common::StringHelper::MakeCamelCaseFirstSmall(it->second->GetVariable()) + 
+          "_;\r\n";
     }
     /*
      * Filling templates with real values
      */
     std::map<std::string, std::string> params;
-    params.insert(std::pair<std::string, std::string>("GENERATION_DATE", ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
+    params.insert(std::pair<std::string, std::string>("GENERATION_DATE", 
+      ::naeem::hottentot::generator::common::DateTimeHelper::GetCurrentDateTime()));
     params.insert(std::pair<std::string, std::string>("FILENAME", structNameSnakeCase + ".cc"));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_START", namespacesStart));
     params.insert(std::pair<std::string, std::string>("NAMESPACES_END", namespacesEnd));
@@ -278,9 +326,11 @@ namespace cc {
          it != params.end();
          ++it) {
       structCCTemplate = 
-        ::naeem::hottentot::generator::common::StringHelper::Replace(structCCTemplate, 
-                                                                     "[[[" + it->first + "]]]", 
-                                                                     it->second);
+        ::naeem::hottentot::generator::common::StringHelper::Replace (
+          structCCTemplate, 
+          "[[[" + it->first + "]]]", 
+          it->second
+        );
     }
     /*
      * Writing final results to files
