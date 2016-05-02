@@ -19,6 +19,8 @@ public class Crawler {
   private String name = "";
   private String ip = "";
   private short port;
+  private String startURL = "";
+  private List<String> domainList = new ArrayList<String>();
   public void setId(long id) {
     this.id = id;
   }
@@ -49,6 +51,18 @@ public class Crawler {
   public short getPort() {
     return port;
   }
+  public void setStartURL(String startURL) {
+    this.startURL = startURL;
+  }
+  public String getStartURL() {
+    return startURL;
+  }
+  public void setDomainList(List<String> domainList) {
+    this.domainList = domainList;
+  }
+  public List<String> getDomainList() {
+    return domainList;
+  }
   @Override 
   public String toString() { 
     return "Crawler{" + 
@@ -57,6 +71,8 @@ public class Crawler {
       ",name = '" + name + '\'' + 
       ",ip = '" + ip + '\'' + 
       ",port = '" + port + '\'' + 
+      ",startURL = '" + startURL + '\'' + 
+      ",domainList = '" + domainList + '\'' + 
       "}"; 
   }
 	
@@ -66,7 +82,11 @@ public class Crawler {
     byte[] serializedName = PDTSerializer.getString(name);
     byte[] serializedIp = PDTSerializer.getString(ip);
     byte[] serializedPort = PDTSerializer.getInt16(port);
-    byte[] output = new byte[serializedId.length + serializedType.length + serializedName.length + serializedIp.length + serializedPort.length];
+    byte[] serializedStartURL = PDTSerializer.getString(startURL);
+    SerializableStringList serializableStringList7 = new SerializableStringList();
+    serializableStringList7.setStringList(domainList);
+    byte[] serializedDomainList  = serializableStringList7.serializeWithLength();
+    byte[] output = new byte[serializedId.length + serializedType.length + serializedName.length + serializedIp.length + serializedPort.length + serializedStartURL.length + serializedDomainList.length];
     int counter = 0;
     //use a loop for every property
     for (int i = 0; i < serializedId.length; i++) {
@@ -83,6 +103,12 @@ public class Crawler {
     }
     for (int i = 0; i < serializedPort.length; i++) {
       output[counter++] = serializedPort[i];
+    }
+    for (int i = 0; i < serializedStartURL.length; i++) {
+      output[counter++] = serializedStartURL[i];
+    }
+    for (int i = 0; i < serializedDomainList.length; i++) {
+      output[counter++] = serializedDomainList[i];
     }
     return output;
   }
@@ -143,6 +169,40 @@ public class Crawler {
       portByteArray[i] = serializedByteArray[counter++];
     }
     setPort(PDTDeserializer.getInt16(portByteArray));
+    //startURL : String
+    dataLength = 0;
+    if(( serializedByteArray[counter] & 0x80) == 0 ) {
+      dataLength = serializedByteArray[counter++];
+    }else{
+      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
+    }
+    byte[] startURLByteArray = new byte[dataLength];
+    System.arraycopy(serializedByteArray,counter,startURLByteArray,0,dataLength);
+    counter += dataLength;
+    setStartURL(PDTDeserializer.getString(startURLByteArray));
+    //domainList : List<String>
+    dataLength = 0;
+    if(( serializedByteArray[counter] & 0x80) == 0 ) {
+      dataLength = serializedByteArray[counter++];
+    }else{
+      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
+    }
+    byte[] domainListByteArray = new byte[dataLength];
+    System.arraycopy(serializedByteArray,counter,domainListByteArray,0,dataLength);
+    counter += dataLength;
+    SerializableStringList serializableStringList1 = new SerializableStringList();
+    serializableStringList1.deserialize(domainListByteArray);
+    setDomainList(serializableStringList1.getStringList());
 
     }
   }

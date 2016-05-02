@@ -14,23 +14,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class ReportedCrawlerInfo {
-  private byte status;
-  private long startTs;
   private List<String> crawledDomains = new ArrayList<String>();
   private List<String> crawledUrls = new ArrayList<String>();
   private List<String> failedUrls = new ArrayList<String>();
-  public void setStatus(byte status) {
-    this.status = status;
-  }
-  public byte getStatus() {
-    return status;
-  }
-  public void setStartTs(long startTs) {
-    this.startTs = startTs;
-  }
-  public long getStartTs() {
-    return startTs;
-  }
   public void setCrawledDomains(List<String> crawledDomains) {
     this.crawledDomains = crawledDomains;
   }
@@ -52,35 +38,25 @@ public class ReportedCrawlerInfo {
   @Override 
   public String toString() { 
     return "ReportedCrawlerInfo{" + 
-      "status = '" + status + '\'' + 
-      ",startTs = '" + startTs + '\'' + 
-      ",crawledDomains = '" + crawledDomains + '\'' + 
+      "crawledDomains = '" + crawledDomains + '\'' + 
       ",crawledUrls = '" + crawledUrls + '\'' + 
       ",failedUrls = '" + failedUrls + '\'' + 
       "}"; 
   }
 	
   public byte[] serialize() {
-    byte[] serializedStatus = PDTSerializer.getInt8(status);
-    byte[] serializedStartTs = PDTSerializer.getInt64(startTs);
+    SerializableStringList serializableStringList1 = new SerializableStringList();
+    serializableStringList1.setStringList(crawledDomains);
+    byte[] serializedCrawledDomains  = serializableStringList1.serializeWithLength();
+    SerializableStringList serializableStringList2 = new SerializableStringList();
+    serializableStringList2.setStringList(crawledUrls);
+    byte[] serializedCrawledUrls  = serializableStringList2.serializeWithLength();
     SerializableStringList serializableStringList3 = new SerializableStringList();
-    serializableStringList3.setStringList(crawledDomains);
-    byte[] serializedCrawledDomains  = serializableStringList3.serializeWithLength();
-    SerializableStringList serializableStringList4 = new SerializableStringList();
-    serializableStringList4.setStringList(crawledUrls);
-    byte[] serializedCrawledUrls  = serializableStringList4.serializeWithLength();
-    SerializableStringList serializableStringList5 = new SerializableStringList();
-    serializableStringList5.setStringList(failedUrls);
-    byte[] serializedFailedUrls  = serializableStringList5.serializeWithLength();
-    byte[] output = new byte[serializedStatus.length + serializedStartTs.length + serializedCrawledDomains.length + serializedCrawledUrls.length + serializedFailedUrls.length];
+    serializableStringList3.setStringList(failedUrls);
+    byte[] serializedFailedUrls  = serializableStringList3.serializeWithLength();
+    byte[] output = new byte[serializedCrawledDomains.length + serializedCrawledUrls.length + serializedFailedUrls.length];
     int counter = 0;
     //use a loop for every property
-    for (int i = 0; i < serializedStatus.length; i++) {
-      output[counter++] = serializedStatus[i];
-    }
-    for (int i = 0; i < serializedStartTs.length; i++) {
-      output[counter++] = serializedStartTs[i];
-    }
     for (int i = 0; i < serializedCrawledDomains.length; i++) {
       output[counter++] = serializedCrawledDomains[i];
     }
@@ -99,18 +75,6 @@ public class ReportedCrawlerInfo {
       int dataLength = 0;
       int numbersOfBytesForDataLength;
       //do for every property
-    //status : byte
-    byte[] statusByteArray = new byte[1];
-    for(int i = 0 ; i < 1 ; i++){
-      statusByteArray[i] = serializedByteArray[counter++];
-    }
-    setStatus(PDTDeserializer.getInt8(statusByteArray));
-    //startTs : long
-    byte[] startTsByteArray = new byte[8];
-    for(int i = 0 ; i < 8 ; i++){
-      startTsByteArray[i] = serializedByteArray[counter++];
-    }
-    setStartTs(PDTDeserializer.getInt64(startTsByteArray));
     //crawledDomains : List<String>
     dataLength = 0;
     if(( serializedByteArray[counter] & 0x80) == 0 ) {

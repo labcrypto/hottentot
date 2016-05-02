@@ -138,16 +138,16 @@ public class ReportingServiceProxy extends AbstractReportingService implements P
       throw new HottentotRuntimeException(e);
     }
   }
-  public List<ReportedCrawlerInfo> getReport(List<WantedCrawlerInfo> crawlerInfoList) { 
+  public List<ReportEntry> getReport(List<reportRequest> crawlerInfoList) { 
     //serialize crawlerInfoList
-    SerializableWantedCrawlerInfoList serializableWantedCrawlerInfoList = new SerializableWantedCrawlerInfoList();
-serializableWantedCrawlerInfoList.setWantedCrawlerInfoList(crawlerInfoList);
-byte[] serializedCrawlerInfoList = serializableWantedCrawlerInfoList.serialize();
+    SerializableReportRequestList serializableReportRequestList = new SerializableReportRequestList();
+serializableReportRequestList.setReportRequestList(crawlerInfoList);
+byte[] serializedCrawlerInfoList = serializableReportRequestList.serialize();
 
     //make request
     Request request = new Request();
     request.setServiceId(1526418773L);
-    request.setMethodId(1860609099L);
+    request.setMethodId(1306714766L);
     request.setArgumentCount((byte) 1);
     request.setType(Request.RequestType.InvokeStateless);
     Argument arg0 = new Argument();
@@ -208,14 +208,14 @@ byte[] serializedCrawlerInfoList = serializableWantedCrawlerInfoList.serialize()
     } catch (TcpClientCloseException e) { 
       e.printStackTrace(); 
     } 
-    //deserialize list<ReportedCrawlerInfo>part from response
-    SerializableReportedCrawlerInfoList serializableReportedCrawlerInfoList = null;
+    //deserialize list<ReportEntry>part from response
+    SerializableReportEntryList serializableReportEntryList = null;
     if (response.getStatusCode() == -1) {
       //TODO
     }
-    serializableReportedCrawlerInfoList = new SerializableReportedCrawlerInfoList();
-    serializableReportedCrawlerInfoList.deserialize(response.getData());
-    return serializableReportedCrawlerInfoList.getReportedCrawlerInfoList();
+    serializableReportEntryList = new SerializableReportEntryList();
+    serializableReportEntryList.deserialize(response.getData());
+    return serializableReportEntryList.getReportEntryList();
   }
 
   public void destroy() {

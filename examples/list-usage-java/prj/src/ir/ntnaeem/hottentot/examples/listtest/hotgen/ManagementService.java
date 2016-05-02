@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface ManagementService extends Service {
   boolean isCrawlerIdValid(long crawlerId);
-  long startCrawler(Crawler crawler,String startURL,List<String> domainList);
+  long startCrawler(Crawler crawler);
   void stopCrawler(long crawlerId);
   void pauseCrawler(long crawlerId);
   void resumeCrawler(long crawlerId);

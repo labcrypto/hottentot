@@ -42,22 +42,14 @@ public class ManagementRequestHandler extends RequestHandler {
       response.setLength(serializedResult.length + 1);
       return response;
     }
-    if(methodId == 732023276L){
+    if(methodId == 1251988382L){
       List <Argument> args = request.getArgs();
       Argument arg0 = args.get(0);
       byte[] serializedCrawler = arg0.getData();
       Crawler crawler = new Crawler();
       crawler.deserialize(serializedCrawler);
-      Argument arg1 = args.get(1);
-      byte[] serializedStartURL = arg1.getData();
-      String startURL = PDTDeserializer.getString(serializedStartURL);
-      Argument arg2 = args.get(2);
-      byte[] serializedDomainList = arg2.getData();
-      SerializableStringList serializableStringList = new SerializableStringList();
-      serializableStringList.deserialize( serializedDomainList);
-      List<String> domainList = serializableStringList.getStringList();
       Response response = new Response();
-      long result = managementImpl.startCrawler(crawler,startURL,domainList);
+      long result = managementImpl.startCrawler(crawler);
       byte[] serializedResult = PDTSerializer.getUint64( result );
       response.setStatusCode((byte) 0);
       response.setData(serializedResult);
