@@ -143,7 +143,7 @@
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]if (protocol->GetResponse()->GetStatusCode() == 0) {
 [[[RESPONSE_DESERIALIZATION]]][[[INDENT]]][[[INDENT]]]} else {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::types::Utf8String faultMessage;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::Utf8String faultMessage;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]faultMessage.Deserialize(protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]uint8_t responseStatusCode = protocol->GetResponse()->GetStatusCode();
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]/*

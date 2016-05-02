@@ -11,7 +11,7 @@
 
 #include <string>
 
-#include <org/labcrypto/hottentot/runtime/types/primitives.h>
+#include <org/labcrypto/hottentot/primitives.h>
 #include <org/labcrypto/hottentot/runtime/serializable.h>
 
 [[[INCLUDE_DEPENDENCIES]]]
