@@ -24,6 +24,8 @@ typedef unsigned __int64 uint64_t;
 
 #include <string>
 
+#include <org/labcrypto/hottentot/primitives.h>
+
 [[[INCLUDE_STRUCT_HEADERS]]]
 
 
