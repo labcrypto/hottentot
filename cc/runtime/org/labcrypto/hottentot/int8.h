@@ -40,7 +40,7 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
-#include "../serializable.h"
+#include "serializable.h"
 
 
 namespace org {
