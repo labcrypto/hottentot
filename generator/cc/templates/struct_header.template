@@ -12,7 +12,7 @@
 #include <string>
 
 #include <org/labcrypto/hottentot/primitives.h>
-#include <org/labcrypto/hottentot/runtime/serializable.h>
+#include <org/labcrypto/hottentot/serializable.h>
 
 [[[INCLUDE_DEPENDENCIES]]]
 #include "enums.h"

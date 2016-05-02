@@ -151,40 +151,40 @@ namespace cc {
     static inline std::string GetCCType(std::string type, std::string ns) {
       std::string listStr = "list";
       if (type == "int8") {
-        return "::org::labcrypto::hottentot::runtime::types::Int8";
+        return "::org::labcrypto::hottentot::Int8";
       } else if (type == "int16") {
-        return "::org::labcrypto::hottentot::runtime::types::Int16";
+        return "::org::labcrypto::hottentot::Int16";
       } else if (type == "int32") {
-        return "::org::labcrypto::hottentot::runtime::types::Int32";
+        return "::org::labcrypto::hottentot::Int32";
       } else if (type == "int64") {
-        return "::org::labcrypto::hottentot::runtime::types::Int64";
+        return "::org::labcrypto::hottentot::Int64";
       } else if (type == "uint8") {
-        return "::org::labcrypto::hottentot::runtime::types::UInt8";
+        return "::org::labcrypto::hottentot::UInt8";
       } else if (type == "uint16") {
-        return "::org::labcrypto::hottentot::runtime::types::UInt16";
+        return "::org::labcrypto::hottentot::UInt16";
       } else if (type == "uint32") {
-        return "::org::labcrypto::hottentot::runtime::types::UInt32";
+        return "::org::labcrypto::hottentot::UInt32";
       } else if (type == "uint64") {
-        return "::org::labcrypto::hottentot::runtime::types::UInt64";
+        return "::org::labcrypto::hottentot::UInt64";
       } else if (type == "bool") {
-        return "::org::labcrypto::hottentot::runtime::types::Boolean";
+        return "::org::labcrypto::hottentot::Boolean";
       } else if (type == "string") {
-        return "::org::labcrypto::hottentot::runtime::types::Utf8String";
+        return "::org::labcrypto::hottentot::Utf8String";
       } else if (type == "char") {
-        return "::org::labcrypto::hottentot::runtime::types::Char";
+        return "::org::labcrypto::hottentot::Char";
       } else if (type == "data") {
-        return "::org::labcrypto::hottentot::runtime::types::ByteArray";
+        return "::org::labcrypto::hottentot::ByteArray";
       } else if (type == "utc_timestamp") {
-        return "::org::labcrypto::hottentot::runtime::types::UtcTimestamp";
+        return "::org::labcrypto::hottentot::UtcTimestamp";
       } else if (type == "double") {
-        return "::org::labcrypto::hottentot::runtime::types::Double";
+        return "::org::labcrypto::hottentot::Double";
       } else if (type == "void") {
         return "void";
       } else if(::org::labcrypto::hottentot::generator::StringHelper::StartsWith(type, listStr)) {
-        return "::org::labcrypto::hottentot::runtime::types::List< " + 
+        return "::org::labcrypto::hottentot::List< " + 
           GetCCType(type.substr(5, type.length() - 6), ns) + ">";
       } else if(IsEnum(type)) {
-        return "::org::labcrypto::hottentot::runtime::types::Enum< " + ns + "::" + type + ">";
+        return "::org::labcrypto::hottentot::Enum< " + ns + "::" + type + ">";
       }
       if (ns.length() == 0) {
         return type;
