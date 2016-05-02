@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__UINT8_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__UINT8_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT__UINT8_H_
+#define _ORG_LABCRYPTO_HOTTENTOT__UINT8_H_
 
 #include <iostream>
 #include <stdexcept>
@@ -46,7 +46,7 @@ typedef unsigned __int64 uint64_t;
 namespace org {
 namespace labcrypto {
 namespace hottentot {
-  class UInt8 : public ::naeem::hottentot::runtime::Serializable {
+  class UInt8 : public Serializable {
   public:
     UInt8()
       : value_(0) {

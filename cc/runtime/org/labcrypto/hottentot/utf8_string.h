@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__UTF8_STRING_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__UTF8_STRING_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT__UTF8_STRING_H_
+#define _ORG_LABCRYPTO_HOTTENTOT__UTF8_STRING_H_
 
 #include <iostream>
 #include <stdexcept>
@@ -47,7 +47,7 @@ typedef unsigned __int64 uint64_t;
 namespace org {
 namespace labcrypto {
 namespace hottentot {
-  class Utf8String : public ::naeem::hottentot::runtime::Serializable {
+  class Utf8String : public Serializable {
   public:
     Utf8String(const char *data = 0)
       : data_(0),

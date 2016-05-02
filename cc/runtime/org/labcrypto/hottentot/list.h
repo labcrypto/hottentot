@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__LIST_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__LIST_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT__LIST_H_
+#define _ORG_LABCRYPTO_HOTTENTOT__LIST_H_
 
 #include <iostream>
 #include <stdexcept>
@@ -48,7 +48,7 @@ namespace org {
 namespace labcrypto {
 namespace hottentot {
   template<class T>
-  class List : public ::naeem::hottentot::runtime::Serializable {
+  class List : public Serializable {
   public:
     List(){
     }

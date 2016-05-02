@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__SERIALIZABLE_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__SERIALIZABLE_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT__SERIALIZABLE_H_
+#define _ORG_LABCRYPTO_HOTTENTOT__SERIALIZABLE_H_
 
 #ifdef _MSC_VER
 typedef __int8 int8_t;
@@ -43,7 +43,6 @@ typedef unsigned __int64 uint64_t;
 namespace org {
 namespace labcrypto {
 namespace hottentot {
-namespace runtime {
   class Serializable {
   public:
     virtual unsigned char * Serialize(uint32_t *        /* Pointer to length */) = 0;

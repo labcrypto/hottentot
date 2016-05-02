@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__UTC_TIMESTAMP_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__UTC_TIMESTAMP_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT__UTC_TIMESTAMP_H_
+#define _ORG_LABCRYPTO_HOTTENTOT__UTC_TIMESTAMP_H_
 
 #include <iostream>
 #include <stdexcept>
@@ -46,7 +46,7 @@ typedef unsigned __int64 uint64_t;
 namespace org {
 namespace labcrypto {
 namespace hottentot {
-  class UtcTimestamp : public ::naeem::hottentot::runtime::Serializable {
+  class UtcTimestamp : public Serializable {
   public:
     UtcTimestamp()
       : value_(0) {

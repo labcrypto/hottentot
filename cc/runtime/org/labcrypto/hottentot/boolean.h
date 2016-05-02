@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__BOOLEAN_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__BOOLEAN_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT__BOOLEAN_H_
+#define _ORG_LABCRYPTO_HOTTENTOT__BOOLEAN_H_
 
 #include <iostream>
 #include <stdlib.h>
@@ -47,7 +47,7 @@ typedef unsigned __int64 uint64_t;
 namespace org {
 namespace labcrypto {
 namespace hottentot {
-  class Boolean : public ::naeem::hottentot::runtime::Serializable {
+  class Boolean : public Serializable {
   public:
     Boolean()
       : value_(0) {

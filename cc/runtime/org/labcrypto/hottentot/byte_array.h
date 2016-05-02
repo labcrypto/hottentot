@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__BYTE_ARRAY_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__BYTE_ARRAY_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT__BYTE_ARRAY_H_
+#define _ORG_LABCRYPTO_HOTTENTOT__BYTE_ARRAY_H_
 
 #include <iostream>
 #include <iomanip>
@@ -47,7 +47,7 @@ typedef unsigned __int64 uint64_t;
 namespace org {
 namespace labcrypto {
 namespace hottentot {
-  class ByteArray : public ::naeem::hottentot::runtime::Serializable {
+  class ByteArray : public Serializable {
   public:
     ByteArray()
       : data_(0),

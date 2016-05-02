@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__ENUM_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__TYPES__ENUM_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT__ENUM_H_
+#define _ORG_LABCRYPTO_HOTTENTOT__ENUM_H_
 
 #include <iostream>
 #include <stdlib.h>
@@ -48,7 +48,7 @@ namespace org {
 namespace labcrypto {
 namespace hottentot {
   template<class E>
-  class Enum : public ::naeem::hottentot::runtime::Serializable {
+  class Enum : public Serializable {
   public:
     Enum()
       : value_((E)0) {
