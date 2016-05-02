@@ -91,7 +91,7 @@ namespace cc {
     }
     std::string namespacesEnd = "";
     for (int32_t i = packageTokens.size() - 1; i >= 0; i--) {
-      namespacesEnd += "}  // END OF NAMESPACE " + packageTokens[i] + "\r\n";
+      namespacesEnd += "} // END OF NAMESPACE " + packageTokens[i] + "\r\n";
     }
     std::string includeStructHeaders = "";
     for (uint32_t i = 0; i < service->module_->structs_.size(); i++) {

@@ -229,7 +229,7 @@ namespace cc {
     }
     resultSerialization += indent + indent + indent + "} else {\r\n";
     resultSerialization += indent + indent + indent + indent + 
-      "::org::labcrypto::hottentot::runtime::types::Utf8String faultMessage(hotContext.GetFaultMessage());\r\n";
+      "::org::labcrypto::hottentot::Utf8String faultMessage(hotContext.GetFaultMessage());\r\n";
     resultSerialization += indent + indent + indent + indent + 
       "serializedData = faultMessage.Serialize(&serializedDataLength);\r\n";
     resultSerialization += indent + indent + indent + "}\r\n";
