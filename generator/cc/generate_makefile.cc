@@ -87,7 +87,7 @@ namespace cc {
         objectFiles += "lib/proxy/" + serviceName + "_proxy_builder.o ";
         objectFiles += "lib/service/" + serviceName + "_request_handler.o ";
         if (generationConfig.IsClientGenerated()) {
-          makefile += "\tg++ -Wall -g -Wall -g -c -I/usr/local/include/hot client/" + 
+          makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot client/" + 
             serviceName + "_client.cc -o lib/client/" + serviceName + "_client.o\r\n";
           makefile += "\tg++ " + objectFiles + " lib/client/" + 
             serviceName + "_client.o " + " -lhotd -lpthread -o bin/" + serviceName + "_client.out\r\n";
