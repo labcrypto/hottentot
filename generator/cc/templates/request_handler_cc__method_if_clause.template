@@ -7,7 +7,7 @@
 [[[INPUT_VARIABLES]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]][[[INDENT]]] * Calling service method
 [[[INDENT]]][[[INDENT]]][[[INDENT]]] */
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::HotContext hotContext;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::service::HotContext hotContext;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]
 [[[METHOD_CALL]]]
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]} catch (std::exception &e) {

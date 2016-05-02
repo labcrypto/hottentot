@@ -21,18 +21,18 @@
 int 
 main(int argc, char **argv) {
 [[[INDENT]]]try {
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::Init();  
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::ProxyRuntime::Init(argc, argv);
-[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " << 
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::Init();  
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::Init(argc, argv);
+[[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " << 
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Proxy runtime is initialized." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::proxy::[[[CAMEL_CASE_FC_SERVICE_NAME]]] *proxy = 
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::proxy::[[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Create("127.0.0.1", 2000);
-[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " << 
+[[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " << 
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Proxy object is created." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]try {
@@ -41,45 +41,45 @@ main(int argc, char **argv) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]// TODO: Delete allocated objects
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]// ====================================================
 [[[INDENT]]][[[INDENT]]]} catch (std::runtime_error &e) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetError() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetError() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " << 
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]e.what() << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::proxy::[[[CAMEL_CASE_FC_SERVICE_NAME]]]ProxyBuilder::Destroy(proxy);
-[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Proxy object is destroyed." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::ProxyRuntime::Shutdown();
-[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::Shutdown();
+[[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Proxy runtime is shutdown." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::Shutdown();  
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::Shutdown();  
 [[[INDENT]]]} catch (std::exception &e) {
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::ProxyRuntime::Shutdown();
-[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::Shutdown();
+[[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Proxy runtime is shutdown." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::Shutdown();  
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetError() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::Shutdown();  
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetError() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]e.what() << std::endl;
 [[[INDENT]]][[[INDENT]]]return 1;
 [[[INDENT]]]} catch (...) {
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::proxy::ProxyRuntime::Shutdown();
-[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::Shutdown();
+[[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Proxy runtime is shutdown." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::Shutdown();  
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetError() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " << [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Error." << std::endl;
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::Shutdown();  
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetError() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " << [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Error." << std::endl;
 [[[INDENT]]][[[INDENT]]]return 1;
 [[[INDENT]]]}
 [[[INDENT]]]return 0;

@@ -35,10 +35,10 @@ typedef unsigned __int64 uint64_t;
 [[[STRUCT_CLASS_FORWARD_DECLARATIONS]]]
 namespace proxy {
 [[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy : public [[[CAMEL_CASE_FC_SERVICE_NAME]]], 
-[[[INDENT]]][[[INDENT]]]public ::naeem::hottentot::runtime::proxy::Proxy {
+[[[INDENT]]][[[INDENT]]]public ::org::labcrypto::hottentot::runtime::proxy::Proxy {
 [[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy(std::string host, uint32_t port) 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]: ::naeem::hottentot::runtime::proxy::Proxy(host, port) {}
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]: ::org::labcrypto::hottentot::runtime::proxy::Proxy(host, port) {}
 [[[INDENT]]][[[INDENT]]]virtual ~[[[CAMEL_CASE_FC_SERVICE_NAME]]]Proxy() {}
 [[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]][[[METHOD_DEFS]]]

@@ -35,7 +35,7 @@ typedef unsigned __int64 uint64_t;
 
 [[[NAMESPACES_START]]]
 namespace service {
-[[[INDENT]]]class Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]] : public [[[CAMEL_CASE_FC_SERVICE_NAME]]], public ::naeem::hottentot::runtime::service::Service {
+[[[INDENT]]]class Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]] : public [[[CAMEL_CASE_FC_SERVICE_NAME]]], public ::org::labcrypto::hottentot::runtime::service::Service {
 [[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]]Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]]() {}
 [[[INDENT]]][[[INDENT]]]virtual ~Abstract[[[CAMEL_CASE_FC_SERVICE_NAME]]]() {}
@@ -44,7 +44,7 @@ namespace service {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]return [[[SERVICE_HASH]]];
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]]protected:
-[[[INDENT]]][[[INDENT]]]inline virtual ::naeem::hottentot::runtime::service::RequestHandler* MakeRequestHandler() {
+[[[INDENT]]][[[INDENT]]]inline virtual ::org::labcrypto::hottentot::runtime::service::RequestHandler* MakeRequestHandler() {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]return new [[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler(this);
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]]};

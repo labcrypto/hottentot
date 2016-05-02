@@ -29,15 +29,15 @@ typedef unsigned __int64 uint64_t;
 
 [[[NAMESPACES_START]]]
 namespace service {
-[[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler : public ::naeem::hottentot::runtime::service::RequestHandler {
+[[[INDENT]]]class [[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler : public ::org::labcrypto::hottentot::runtime::service::RequestHandler {
 [[[INDENT]]]public:
-[[[INDENT]]][[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler(::naeem::hottentot::runtime::service::Service *service)
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]: ::naeem::hottentot::runtime::service::RequestHandler(service) {
+[[[INDENT]]][[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler(::org::labcrypto::hottentot::runtime::service::Service *service)
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]: ::org::labcrypto::hottentot::runtime::service::RequestHandler(service) {
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]virtual ~[[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler() {}
 [[[INDENT]]]public:
-[[[INDENT]]][[[INDENT]]]virtual void HandleRequest(::naeem::hottentot::runtime::Request &request,
-                                                   ::naeem::hottentot::runtime::Response &response);
+[[[INDENT]]][[[INDENT]]]virtual void HandleRequest(::org::labcrypto::hottentot::runtime::Request &request,
+                                                   ::org::labcrypto::hottentot::runtime::Response &response);
 [[[INDENT]]]};
 } // END OF NAMESPACE service
 [[[NAMESPACES_END]]]

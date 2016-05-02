@@ -21,30 +21,30 @@
 int
 main(int argc, char **argv) {
 [[[INDENT]]]try {
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::Init();
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::ServiceRuntime::Init(argc, argv);
-[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::Init();
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::service::ServiceRuntime::Init(argc, argv);
+[[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Starting server ..." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]][[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl *service =
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]new [[[NAMESPACE]]]::[[[CAMEL_CASE_FC_SERVICE_NAME]]]Impl;
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::ServiceRuntime::Register("0.0.0.0", 2000, service);
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::ServiceRuntime::Start();
-[[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::service::ServiceRuntime::Register("0.0.0.0", 2000, service);
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::service::ServiceRuntime::Start();
+[[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Service runtime is shutdown." << std::endl;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"About to disable logging system ..." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::service::ServiceRuntime::Shutdown();
-[[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Logger::Shutdown();
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::service::ServiceRuntime::Shutdown();
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::Shutdown();
 [[[INDENT]]]} catch (...) {
 [[[INDENT]]][[[INDENT]]]std::cout << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::naeem::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Error." << std::endl;
 [[[INDENT]]][[[INDENT]]]return 1;
 [[[INDENT]]]}
