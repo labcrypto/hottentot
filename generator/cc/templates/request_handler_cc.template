@@ -8,8 +8,8 @@
  
 #include <string.h>
 
-#include <naeem/hottentot/runtime/request.h>
-#include <naeem/hottentot/runtime/response.h>
+#include <org/labcrypto/hottentot/runtime/request.h>
+#include <org/labcrypto/hottentot/runtime/response.h>
 
 #include "[[[SNAKE_CASE_SERVICE_NAME]]]_request_handler.h"
 #include "abstract_[[[SNAKE_CASE_SERVICE_NAME]]].h"

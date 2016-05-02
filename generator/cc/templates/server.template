@@ -8,10 +8,10 @@
  
 #include <iostream>
 
-#include <naeem/hottentot/runtime/configuration.h>
-#include <naeem/hottentot/runtime/logger.h>
-#include <naeem/hottentot/runtime/utils.h>
-#include <naeem/hottentot/runtime/service/service_runtime.h>
+#include <org/labcrypto/hottentot/runtime/configuration.h>
+#include <org/labcrypto/hottentot/runtime/logger.h>
+#include <org/labcrypto/hottentot/runtime/utils.h>
+#include <org/labcrypto/hottentot/runtime/service/service_runtime.h>
 
 [[[INCLUDE_STRUCT_HEADERS]]]
 

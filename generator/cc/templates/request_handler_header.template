@@ -24,7 +24,7 @@ typedef unsigned __int64 uint64_t;
 
 #include <string>
 
-#include <naeem/hottentot/runtime/service/request_handler.h>
+#include <org/labcrypto/hottentot/runtime/service/request_handler.h>
 
 
 [[[NAMESPACES_START]]]
