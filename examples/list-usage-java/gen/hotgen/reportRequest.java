@@ -13,7 +13,7 @@ import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 import java.util.List;
 import java.util.ArrayList;
 
-public class WantedCrawlerInfo {
+public class reportRequest {
   private long fromTs;
   private long toTs;
   private long crawlerIds;
@@ -44,7 +44,7 @@ public class WantedCrawlerInfo {
   }
   @Override 
   public String toString() { 
-    return "WantedCrawlerInfo{" + 
+    return "reportRequest{" + 
       "fromTs = '" + fromTs + '\'' + 
       ",toTs = '" + toTs + '\'' + 
       ",crawlerIds = '" + crawlerIds + '\'' + 

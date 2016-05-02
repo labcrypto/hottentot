@@ -53,26 +53,26 @@ public class ReportingRequestHandler extends RequestHandler {
       response.setLength(0);
       return response;
     }
-    if(methodId == 1860609099L){
+    if(methodId == 1306714766L){
       List <Argument> args = request.getArgs();
       Argument arg0 = args.get(0);
       byte[] serializedCrawlerInfoList = arg0.getData();
-      SerializableWantedCrawlerInfoList serializableWantedCrawlerInfoList = new SerializableWantedCrawlerInfoList();
-      serializableWantedCrawlerInfoList.deserialize( serializedCrawlerInfoList);
-      List<WantedCrawlerInfo> crawlerInfoList = serializableWantedCrawlerInfoList.getWantedCrawlerInfoList();
-      SerializableReportedCrawlerInfoList serializableReportedCrawlerInfoList = new SerializableReportedCrawlerInfoList();
+      SerializableReportRequestList serializableReportRequestList = new SerializableReportRequestList();
+      serializableReportRequestList.deserialize( serializedCrawlerInfoList);
+      List<reportRequest> crawlerInfoList = serializableReportRequestList.getReportRequestList();
+      SerializableReportEntryList serializableReportEntryList = new SerializableReportEntryList();
       Response response = new Response();
-      List<ReportedCrawlerInfo> reportedcrawlerinfoList = reportingImpl.getReport(crawlerInfoList);
-      byte[] serializedReportedCrawlerInfoList;
-      if(reportedcrawlerinfoList == null){
-        serializedReportedCrawlerInfoList  = new byte[0];
+      List<ReportEntry> reportentryList = reportingImpl.getReport(crawlerInfoList);
+      byte[] serializedReportEntryList;
+      if(reportentryList == null){
+        serializedReportEntryList  = new byte[0];
       }else{
-        serializableReportedCrawlerInfoList.setReportedCrawlerInfoList(reportedcrawlerinfoList);
-        serializedReportedCrawlerInfoList = serializableReportedCrawlerInfoList.serialize();
+        serializableReportEntryList.setReportEntryList(reportentryList);
+        serializedReportEntryList = serializableReportEntryList.serialize();
       }
       response.setStatusCode((byte) 0);
-      response.setData(serializedReportedCrawlerInfoList);
-      response.setLength(serializedReportedCrawlerInfoList.length + 1);
+      response.setData(serializedReportEntryList);
+      response.setLength(serializedReportEntryList.length + 1);
       return response;
     }
 

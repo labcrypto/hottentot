@@ -111,35 +111,20 @@ public class ManagementServiceProxy extends AbstractManagementService implements
     ret.deserialize(response.getData());
     return ret.getValue();
   }
-  public long startCrawler(Crawler crawler,String startURL,List<String> domainList) { 
+  public long startCrawler(Crawler crawler) { 
     //serialize crawler
     byte[] serializedCrawler = crawler.serialize();
-    //serialize startURL
-    _String startURLWrapper = new _String(startURL);
-    byte[] serializedStartURL = startURLWrapper.serialize();
-    //serialize domainList
-    SerializableStringList serializableStringList = new SerializableStringList();
-serializableStringList.setStringList(domainList);
-byte[] serializedDomainList = serializableStringList.serialize();
 
     //make request
     Request request = new Request();
     request.setServiceId(795813994L);
-    request.setMethodId(732023276L);
-    request.setArgumentCount((byte) 3);
+    request.setMethodId(1251988382L);
+    request.setArgumentCount((byte) 1);
     request.setType(Request.RequestType.InvokeStateless);
     Argument arg0 = new Argument();
     arg0.setDataLength(serializedCrawler.length);
     arg0.setData(serializedCrawler);
     request.addArgument(arg0);
-    Argument arg1 = new Argument();
-    arg1.setDataLength(serializedStartURL.length);
-    arg1.setData(serializedStartURL);
-    request.addArgument(arg1);
-    Argument arg2 = new Argument();
-    arg2.setDataLength(serializedDomainList.length);
-    arg2.setData(serializedDomainList);
-    request.addArgument(arg2);
     int dataLength = 0;
     //calculate data length for every argument
     //calulate crawlerDataLength
@@ -158,38 +143,6 @@ byte[] serializedDomainList = serializableStringList.serialize();
       }
     }
     dataLength += crawlerDataLength + crawlerDataLengthByteArrayLength;
-    //calulate startURLDataLength
-    int startURLDataLength= serializedStartURL.length;
-    int startURLDataLengthByteArrayLength = 1;
-    if (startURLDataLength >= 0x80) {
-      if (startURLDataLength <= 0xff) {
-        //ex 0x81 0xff
-        startURLDataLengthByteArrayLength = 2;
-      } else if (startURLDataLength <= 0xffff) {
-        //ex 0x82 0xff 0xff
-        startURLDataLengthByteArrayLength = 3;
-      } else if (startURLDataLength <= 0xffffff) {
-        //ex 0x83 0xff 0xff 0xff
-        startURLDataLengthByteArrayLength = 4;
-      }
-    }
-    dataLength += startURLDataLength + startURLDataLengthByteArrayLength;
-    //calulate domainListDataLength
-    int domainListDataLength= serializedDomainList.length;
-    int domainListDataLengthByteArrayLength = 1;
-    if (domainListDataLength >= 0x80) {
-      if (domainListDataLength <= 0xff) {
-        //ex 0x81 0xff
-        domainListDataLengthByteArrayLength = 2;
-      } else if (domainListDataLength <= 0xffff) {
-        //ex 0x82 0xff 0xff
-        domainListDataLengthByteArrayLength = 3;
-      } else if (domainListDataLength <= 0xffffff) {
-        //ex 0x83 0xff 0xff 0xff
-        domainListDataLengthByteArrayLength = 4;
-      }
-    }
-    dataLength += domainListDataLength + domainListDataLengthByteArrayLength;
     //arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
     request.setLength(10 + dataLength);
     //connect to server

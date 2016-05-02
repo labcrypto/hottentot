@@ -20,7 +20,4 @@ module ir.ntnaeem.hottentot.examples.listtest {
     void addShortNumbers(list<uint16> numbers);
     void addByteNumbers(list<uint8> numbers);
   };
-
-
-
 };

@@ -14,75 +14,53 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class MonitoredCrawlerInfo {
-  private int totalRam;
-  private int usedRam;
-  private int numOfCrawledURLs;
-  private int numOfFailedURLs;
-  private short numOfCrawledDomains;
-  public void setTotalRam(int totalRam) {
-    this.totalRam = totalRam;
+  private byte status;
+  private long startTs;
+  private List<Statistic> statistics = new ArrayList<Statistic>();
+  public void setStatus(byte status) {
+    this.status = status;
   }
-  public int getTotalRam() {
-    return totalRam;
+  public byte getStatus() {
+    return status;
   }
-  public void setUsedRam(int usedRam) {
-    this.usedRam = usedRam;
+  public void setStartTs(long startTs) {
+    this.startTs = startTs;
   }
-  public int getUsedRam() {
-    return usedRam;
+  public long getStartTs() {
+    return startTs;
   }
-  public void setNumOfCrawledURLs(int numOfCrawledURLs) {
-    this.numOfCrawledURLs = numOfCrawledURLs;
+  public void setStatistics(List<Statistic> statistics) {
+    this.statistics = statistics;
   }
-  public int getNumOfCrawledURLs() {
-    return numOfCrawledURLs;
-  }
-  public void setNumOfFailedURLs(int numOfFailedURLs) {
-    this.numOfFailedURLs = numOfFailedURLs;
-  }
-  public int getNumOfFailedURLs() {
-    return numOfFailedURLs;
-  }
-  public void setNumOfCrawledDomains(short numOfCrawledDomains) {
-    this.numOfCrawledDomains = numOfCrawledDomains;
-  }
-  public short getNumOfCrawledDomains() {
-    return numOfCrawledDomains;
+  public List<Statistic> getStatistics() {
+    return statistics;
   }
   @Override 
   public String toString() { 
     return "MonitoredCrawlerInfo{" + 
-      "totalRam = '" + totalRam + '\'' + 
-      ",usedRam = '" + usedRam + '\'' + 
-      ",numOfCrawledURLs = '" + numOfCrawledURLs + '\'' + 
-      ",numOfFailedURLs = '" + numOfFailedURLs + '\'' + 
-      ",numOfCrawledDomains = '" + numOfCrawledDomains + '\'' + 
+      "status = '" + status + '\'' + 
+      ",startTs = '" + startTs + '\'' + 
+      ",statistics = '" + statistics + '\'' + 
       "}"; 
   }
 	
   public byte[] serialize() {
-    byte[] serializedTotalRam = PDTSerializer.getInt32(totalRam);
-    byte[] serializedUsedRam = PDTSerializer.getInt32(usedRam);
-    byte[] serializedNumOfCrawledURLs = PDTSerializer.getInt32(numOfCrawledURLs);
-    byte[] serializedNumOfFailedURLs = PDTSerializer.getInt32(numOfFailedURLs);
-    byte[] serializedNumOfCrawledDomains = PDTSerializer.getInt16(numOfCrawledDomains);
-    byte[] output = new byte[serializedTotalRam.length + serializedUsedRam.length + serializedNumOfCrawledURLs.length + serializedNumOfFailedURLs.length + serializedNumOfCrawledDomains.length];
+    byte[] serializedStatus = PDTSerializer.getInt8(status);
+    byte[] serializedStartTs = PDTSerializer.getInt64(startTs);
+    SerializableStatisticList serializableStatisticList3 = new SerializableStatisticList();
+    serializableStatisticList3.setStatisticList(statistics);
+    byte[] serializedStatistics  = serializableStatisticList3.serializeWithLength();
+    byte[] output = new byte[serializedStatus.length + serializedStartTs.length + serializedStatistics.length];
     int counter = 0;
     //use a loop for every property
-    for (int i = 0; i < serializedTotalRam.length; i++) {
-      output[counter++] = serializedTotalRam[i];
+    for (int i = 0; i < serializedStatus.length; i++) {
+      output[counter++] = serializedStatus[i];
     }
-    for (int i = 0; i < serializedUsedRam.length; i++) {
-      output[counter++] = serializedUsedRam[i];
+    for (int i = 0; i < serializedStartTs.length; i++) {
+      output[counter++] = serializedStartTs[i];
     }
-    for (int i = 0; i < serializedNumOfCrawledURLs.length; i++) {
-      output[counter++] = serializedNumOfCrawledURLs[i];
-    }
-    for (int i = 0; i < serializedNumOfFailedURLs.length; i++) {
-      output[counter++] = serializedNumOfFailedURLs[i];
-    }
-    for (int i = 0; i < serializedNumOfCrawledDomains.length; i++) {
-      output[counter++] = serializedNumOfCrawledDomains[i];
+    for (int i = 0; i < serializedStatistics.length; i++) {
+      output[counter++] = serializedStatistics[i];
     }
     return output;
   }
@@ -93,36 +71,36 @@ public class MonitoredCrawlerInfo {
       int dataLength = 0;
       int numbersOfBytesForDataLength;
       //do for every property
-    //totalRam : int
-    byte[] totalRamByteArray = new byte[4];
-    for(int i = 0 ; i < 4 ; i++){
-      totalRamByteArray[i] = serializedByteArray[counter++];
+    //status : byte
+    byte[] statusByteArray = new byte[1];
+    for(int i = 0 ; i < 1 ; i++){
+      statusByteArray[i] = serializedByteArray[counter++];
     }
-    setTotalRam(PDTDeserializer.getInt32(totalRamByteArray));
-    //usedRam : int
-    byte[] usedRamByteArray = new byte[4];
-    for(int i = 0 ; i < 4 ; i++){
-      usedRamByteArray[i] = serializedByteArray[counter++];
+    setStatus(PDTDeserializer.getInt8(statusByteArray));
+    //startTs : long
+    byte[] startTsByteArray = new byte[8];
+    for(int i = 0 ; i < 8 ; i++){
+      startTsByteArray[i] = serializedByteArray[counter++];
     }
-    setUsedRam(PDTDeserializer.getInt32(usedRamByteArray));
-    //numOfCrawledURLs : int
-    byte[] numOfCrawledURLsByteArray = new byte[4];
-    for(int i = 0 ; i < 4 ; i++){
-      numOfCrawledURLsByteArray[i] = serializedByteArray[counter++];
+    setStartTs(PDTDeserializer.getInt64(startTsByteArray));
+    //statistics : List<Statistic>
+    dataLength = 0;
+    if(( serializedByteArray[counter] & 0x80) == 0 ) {
+      dataLength = serializedByteArray[counter++];
+    }else{
+      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+      for(byte i = 0 ; i < numbersOfBytesForDataLength ; i++){
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
     }
-    setNumOfCrawledURLs(PDTDeserializer.getInt32(numOfCrawledURLsByteArray));
-    //numOfFailedURLs : int
-    byte[] numOfFailedURLsByteArray = new byte[4];
-    for(int i = 0 ; i < 4 ; i++){
-      numOfFailedURLsByteArray[i] = serializedByteArray[counter++];
-    }
-    setNumOfFailedURLs(PDTDeserializer.getInt32(numOfFailedURLsByteArray));
-    //numOfCrawledDomains : short
-    byte[] numOfCrawledDomainsByteArray = new byte[2];
-    for(int i = 0 ; i < 2 ; i++){
-      numOfCrawledDomainsByteArray[i] = serializedByteArray[counter++];
-    }
-    setNumOfCrawledDomains(PDTDeserializer.getInt16(numOfCrawledDomainsByteArray));
+    byte[] statisticsByteArray = new byte[dataLength];
+    System.arraycopy(serializedByteArray,counter,statisticsByteArray,0,dataLength);
+    counter += dataLength;
+    SerializableStatisticList serializableStatisticList1 = new SerializableStatisticList();
+    serializableStatisticList1.deserialize(statisticsByteArray);
+    setStatistics(serializableStatisticList1.getStatisticList());
 
     }
   }

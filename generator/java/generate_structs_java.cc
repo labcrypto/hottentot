@@ -170,6 +170,7 @@ namespace naeem {
                   }
             }
             serializeMethodStr += indent_ + indent_ + "byte[] output = new byte[";
+            //int mapCounter = 0;
             for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
                 = pStruct->declarations_.begin();
                 it != pStruct->declarations_.end();
@@ -177,8 +178,8 @@ namespace naeem {
                   ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
                   std::string capitalizedDeclarationName = ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_.c_str());
                   serializeMethodStr += "serialized" + capitalizedDeclarationName + ".length";
-                  if (it->first == pStruct->declarations_.size()) {
-                  serializeMethodStr += "];\n";
+                  if (it == (--(pStruct->declarations_.end()))) {
+                    serializeMethodStr += "];\n";
                   }else {
                     serializeMethodStr += " + ";
                   }

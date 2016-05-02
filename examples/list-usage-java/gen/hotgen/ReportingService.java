@@ -14,6 +14,6 @@ import java.util.List;
 public interface ReportingService extends Service {
   void registerCrawlerId(long crawlerId);
   void unregisterCrawlerId(long crawlerId);
-  List<ReportedCrawlerInfo> getReport(List<WantedCrawlerInfo> crawlerInfoList);
+  List<ReportEntry> getReport(List<reportRequest> crawlerInfoList);
 
 }
