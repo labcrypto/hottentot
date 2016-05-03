@@ -1,290 +1,292 @@
 #include <sys/stat.h>
+
 #include <sstream>
+
 #include "java_generator.h"
-#include "../ds/hot.h"
-#include "../common/string_helper.h"
-#include "../common/os.h" 
-#include "../common/type_helper.h" 
+
+#include "../hot.h"
+#include "../string_helper.h"
+#include "../os.h" 
+#include "../type_helper.h" 
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace java {
-        void
-        JavaGenerator::GenerateServiceProxy(::naeem::hottentot::generator::ds::Module *pModule) {
-          ::naeem::hottentot::generator::ds::Service *pService;
-          std::string basePackageName = pModule->package_;
-          for (int i = 0; i < pModule->services_.size(); i++) {
-            std::string replacableServiceProxyStrTmp = serviceProxyTmpStr_;
-            pService = pModule->services_.at(i);
-            pService = pModule->services_.at(i);
-            ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp , "[%INDENT%]" , indent_ , 1);
-            ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp,"[%BASE_PACKAGE_NAME%]" , basePackageName , 1);
-            ::naeem::hottentot::generator::common::StringHelper::Replace(replacableServiceProxyStrTmp,"[%SERVICE_NAME%]" , pService->name_ , 1);
-            //loop on service methods
-            ::naeem::hottentot::generator::ds::Method *pMethod;
-            std::string methodsStr;
-            for (int i = 0; i < pService->methods_.size(); i++) {
-              pMethod = pService->methods_.at(i);
-
-              std::string fetchedReturnTypeOfList;
-              std::string lowerCaseFetchedReturnTypeOfList;
-              std::string returnType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
-            
-              std::string lowerCaseReturnType = pMethod->returnType_;
-              std::string capitalizedReturnType = 
-              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(
-              pMethod->returnType_);
-              lowerCaseReturnType[0] += 32;
-              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
-                fetchedReturnTypeOfList = ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
-                std::string returnTypeOfList = 
-                  ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(fetchedReturnTypeOfList);
-                returnType = "List<" + returnTypeOfList + ">";
-              }
-              methodsStr += indent_ + "public " + returnType + " " + pMethod->name_ + "(";
-              ::naeem::hottentot::generator::ds::Argument *pArg;
-              std::string fetchedArgTypeOfList;
-              std::string argType;
-              for (int i = 0; i < pMethod->arguments_.size(); i++) {
-                pArg = pMethod->arguments_.at(i);
-                if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)){
-                  fetchedArgTypeOfList =
-                    ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);  
-                  std::string argTypeOfList = 
-                    ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(fetchedArgTypeOfList);
-                  argType = "List<" + argTypeOfList + ">";
-                }else {
-                  argType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pArg->type_);  
-                }
-                methodsStr += argType + " " + pArg->variable_;
-                if (i < pMethod->arguments_.size() - 1) {
-                  methodsStr += ",";
-                }
-              }
-            methodsStr += ") { \n";
-            for (int i = 0; i < pMethod->arguments_.size(); i++) {
-              pArg = pMethod->arguments_.at(i);
-              methodsStr += indent_ + indent_ + "//serialize " + pArg->variable_ + "\n";
-              std::string capitalalizedArgVar = 
-              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_);     
-              if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)){
-                std::string fetchedArgTypeOfList;
-                fetchedArgTypeOfList = 
-                  ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
-                
-                std::string upperCaseArgTypeOfList = 
-                  ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedArgTypeOfList);
-                methodsStr += indent_ + indent_ + 
-                              "Serializable" + upperCaseArgTypeOfList + "List " + 
-                              "serializable" + upperCaseArgTypeOfList + "List = new " +
-                              "Serializable" + upperCaseArgTypeOfList + "List();\n";
-                methodsStr += "serializable" + upperCaseArgTypeOfList + "List.set" +
-                              upperCaseArgTypeOfList + "List(" + pArg->variable_ + ");\n";
-                methodsStr += "byte[] serialized" +  capitalalizedArgVar + 
-                              " = serializable" + upperCaseArgTypeOfList + "List.serialize();\n";
-              } else if(
-                ::naeem::hottentot::generator::common::TypeHelper::IsUDT(
-                pArg->type_)) {
-                methodsStr += indent_ + indent_ +
-                              "byte[] serialized" +
-                              capitalalizedArgVar + " = " +
-                              pArg->variable_ + ".serialize();\n";  
-              } else {
-                std::string pdtWrapperClass = 
-                ::naeem::hottentot::generator::common::TypeHelper::GetPdtWrapperClassName(
-                pArg->type_);
-                methodsStr += indent_ + indent_ + 
-                              pdtWrapperClass + " " + pArg->variable_ + "Wrapper = new " + 
-                              pdtWrapperClass + "(" + pArg->variable_ + ");\n";
-                methodsStr += indent_ + indent_ + 
-                              "byte[] serialized" +
-                              capitalalizedArgVar + " = " + 
-                              pArg->variable_ + "Wrapper.serialize();\n"; 
-              }
-            }
-            methodsStr += "\n";
-            methodsStr += indent_ + indent_ + "//make request\n";
-            methodsStr += indent_ + indent_ + "Request request = new Request();\n";
-            std::stringstream serviceId;
-            serviceId << pService->GetHash();
-            methodsStr += indent_ + indent_ + "request.setServiceId(" + serviceId.str() + "L);\n";
-            std::stringstream methodId;
-            methodId << pMethod->GetHash();
-            methodsStr += indent_ + indent_ + "request.setMethodId(" + methodId.str() + "L);\n";
-            std::stringstream argSize;
-            argSize << pMethod->arguments_.size();
-            methodsStr +=
-            indent_ + indent_ + "request.setArgumentCount((byte) " + argSize.str() + ");\n";
-            methodsStr += indent_ + indent_ + "request.setType(Request.RequestType.";
-            if (pService->serviceType_ == 0) {
-              methodsStr += "InvokeStateless";
-            } else if (pService->serviceType_ == 1) {
-              methodsStr += "InvokeStatefull";
-            }
-            methodsStr += ");\n";
-
-            /*
-              arg0.setDataLength(serializedTokens.length);
-              arg0.setData(serializedTokens);
-            */
-
-            for (int i = 0; i < pMethod->arguments_.size(); i++) {
-              std::stringstream ssI;
-              pArg = pMethod->arguments_.at(i);
-              ssI << i;
-              std::string capitalizedArgVar = 
-                ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_);
-              methodsStr += indent_ + indent_ + "Argument arg" + ssI.str() + " = new Argument();\n";
-              
-              methodsStr += indent_ + indent_ + "arg" + ssI.str() + ".setDataLength(" +
-                            "serialized" + capitalizedArgVar + ".length);\n";
-              methodsStr += indent_ + indent_ + 
-                            "arg" + ssI.str() + ".setData(serialized" + capitalizedArgVar + ");\n";
-              methodsStr += indent_ + indent_ +
-                           "request.addArgument(arg" + ssI.str() + ");\n";
-            }
-            //calculate request length
-            methodsStr += indent_ + indent_ + "int dataLength = 0;\n";
-            methodsStr += indent_ + indent_ + "//calculate data length for every argument\n";
-            for (int i = 0; i < pMethod->arguments_.size(); i++) {
-              pArg = pMethod->arguments_.at(i);
-              std::string argDataLengthVarName = pArg->variable_ + "DataLength";
-              std::string capitalizedArgVar = 
-              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_); 
-              std::string argDataLengthByteArrayLengthVarName =
-              pArg->variable_ + "DataLengthByteArrayLength";
-              methodsStr += indent_ + indent_ + "//calulate " + argDataLengthVarName + "\n";
-              methodsStr += indent_ + indent_ + "int " + argDataLengthVarName + "= serialized" +
-              capitalizedArgVar  + ".length;\n";
-              methodsStr += indent_ + indent_ + "int " + argDataLengthByteArrayLengthVarName + " = 1;\n";
-              methodsStr += indent_ + indent_ + "if (" + argDataLengthVarName + " >= 0x80) {\n";
-              methodsStr += indent_ + indent_ + indent_ + "if (" + argDataLengthVarName + " <= 0xff) {\n";
-              methodsStr += indent_ + indent_ + indent_ + indent_ + "//ex 0x81 0xff\n";
-              methodsStr += indent_ + indent_ + indent_ + indent_ + "" +
-              argDataLengthByteArrayLengthVarName + " = 2;\n";
-              methodsStr += indent_ + indent_ + indent_ + "} else if (" + argDataLengthVarName + " <= 0xffff) {\n";
-              methodsStr += indent_ + indent_ + indent_ + indent_ + "//ex 0x82 0xff 0xff\n";
-              methodsStr += indent_ + indent_ + indent_ + indent_ + "" +
-              argDataLengthByteArrayLengthVarName + " = 3;\n";
-              methodsStr += indent_ + indent_ + indent_ + "} else if (" + argDataLengthVarName + " <= 0xffffff) {\n";
-              methodsStr += indent_ + indent_ + indent_ + indent_ + "//ex 0x83 0xff 0xff 0xff\n";
-              methodsStr += indent_ + indent_ + indent_ + indent_ + "" +
-              argDataLengthByteArrayLengthVarName + " = 4;\n";
-              methodsStr += indent_ + indent_ + indent_ + "}\n";
-              methodsStr += indent_ + indent_ + "}\n";
-              methodsStr += indent_ + indent_ + "dataLength += " + argDataLengthVarName + " + " +
-              argDataLengthByteArrayLengthVarName + ";\n";
-            }
-            methodsStr += indent_ + indent_ + "//arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;\n";
-            methodsStr += indent_ + indent_ + "request.setLength(10 + dataLength);\n";
-            methodsStr += indent_ + indent_ + "//connect to server\n";
-            methodsStr += indent_ + indent_ + "TcpClient tcpClient = TcpClientFactory.create();\n";
-            methodsStr += indent_ + indent_ + "try{\n";
-            methodsStr += indent_ + indent_ + indent_ + "tcpClient.connect(host, port);\n";
-            methodsStr += indent_ + indent_ + "} catch (TcpClientConnectException e) {\n";
-            methodsStr += indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
-            methodsStr += indent_ + indent_ + "}\n";
-            methodsStr += indent_ + indent_ + "//serialize request according to HTNP\n";
-            methodsStr += indent_ + indent_ + "Protocol protocol = ProtocolFactory.create();\n";
-            methodsStr += indent_ + indent_ +
-            "byte[] serializedRequest = protocol.serializeRequest(request);\n";
-            methodsStr += indent_ + indent_ + "//send request\n";
-            methodsStr += indent_ + indent_ + "try {\n";
-            methodsStr += indent_ + indent_ + indent_ + "tcpClient.write(serializedRequest);\n";
-            methodsStr += indent_ + indent_ + "} catch (TcpClientWriteException e) {\n";
-            methodsStr += indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
-            methodsStr += indent_ + indent_ + "}\n";
-
-            if(!::naeem::hottentot::generator::common::TypeHelper::IsVoid(pMethod->returnType_)){
-                methodsStr += indent_ + indent_ + "//read response from server\n";
-                methodsStr += indent_ + indent_ + "byte[] buffer = new byte[256];\n";
-                methodsStr += indent_ + indent_ + "while (!protocol.isResponseComplete()) {\n";
-                methodsStr += indent_ + indent_ + indent_ + "byte[] dataChunkRead;\n";
-                methodsStr += indent_ + indent_ + indent_ + "try {\n";
-                methodsStr += indent_ + indent_ + indent_ + indent_ + "dataChunkRead = tcpClient.read();\n";
-                methodsStr += indent_ + indent_ + indent_ + "} catch (TcpClientReadException e) {\n";
-                methodsStr +=
-                indent_ + indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
-                methodsStr += indent_ + indent_ + indent_ + "}\n";
-                methodsStr +=
-                indent_ + indent_ + indent_ + "protocol.processDataForResponse(dataChunkRead);\n";
-                methodsStr += indent_ + indent_ + "}\n";
-                methodsStr += indent_ + indent_ + "Response response = protocol.getResponse();\n";
-                methodsStr += indent_ + indent_ + "//close everything\n";
-                methodsStr += indent_ + indent_ + " try { \n";
-                methodsStr += indent_ + indent_ + indent_ + " tcpClient.close(); \n";
-                methodsStr += indent_ + indent_ + "} catch (TcpClientCloseException e) { \n";
-                methodsStr += indent_ + indent_ + indent_ + "e.printStackTrace(); \n";
-                methodsStr += indent_ + indent_ + "} \n";
-                methodsStr += indent_ + indent_ + "//deserialize " + pMethod->returnType_ + "part from response\n";
-                if(::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)){
-                  
-                  std::string upperCaseReturnTypeOfList = 
-                    ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
-                  methodsStr += indent_ + indent_ +
-                                "Serializable" + upperCaseReturnTypeOfList + "List" + 
-                                " serializable" + upperCaseReturnTypeOfList + "List = null;\n"; 
-                  methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-                  methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
-                  methodsStr += indent_ + indent_ + "}\n";
-                  methodsStr += indent_ + indent_ + 
-                                "serializable" + upperCaseReturnTypeOfList + "List = " 
-                                "new Serializable" + upperCaseReturnTypeOfList + "List();\n";
-                  methodsStr += indent_ + indent_ + 
-                                "serializable" + upperCaseReturnTypeOfList + "List." + 
-                                "deserialize(response.getData());\n";
-                  methodsStr += indent_ + indent_ +
-                                "return serializable" + upperCaseReturnTypeOfList + 
-                                "List.get" + upperCaseReturnTypeOfList + "List();\n"; 
-                }else if(::naeem::hottentot::generator::common::TypeHelper::IsEnum(pMethod->returnType_)) {
-                  methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-                  methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
-                  methodsStr += indent_ + indent_ + "}\n";
-                  methodsStr += indent_ + indent_ +
-                                "return " + pMethod->returnType_ + ".deserialize(response.getData());\n";
-                } else if(
-                  ::naeem::hottentot::generator::common::TypeHelper::IsUDT(
-                  pMethod->returnType_)){
-                  methodsStr += indent_ + indent_ +
-                                returnType + " " + lowerCaseReturnType + "= null;\n"; 
-                  methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-                  methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
-                  methodsStr += indent_ + indent_ + "}\n";
-                  methodsStr += indent_ + indent_ + "" + lowerCaseReturnType + "= new " +
-                                pMethod->returnType_ + "();\n";
-                  methodsStr += indent_ + indent_ + "" + lowerCaseReturnType +
-                                ".deserialize(response.getData());\n";
-                  methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
-                } else {
-                  methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-                  methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
-                  methodsStr += indent_ + indent_ + "}\n";
-                  std::string pdtWrapperClassName = 
-                  ::naeem::hottentot::generator::common::TypeHelper::GetPdtWrapperClassName(
-                  pMethod->returnType_);
-                  methodsStr += indent_ + indent_ + 
-                                pdtWrapperClassName + " ret = new " +
-                                pdtWrapperClassName + "();\n";
-                  methodsStr += indent_ + indent_ +
-                                "ret.deserialize(response.getData());\n";
-                  methodsStr += indent_ + indent_ +
-                                "return ret.getValue();\n";
-                }
-
-              }
-              methodsStr += indent_ + "}\n";
-          }
-          replacableServiceProxyStrTmp.replace(replacableServiceProxyStrTmp.find("[%METHODS%]"), 11,
-           methodsStr);
-          std::string path = outDir_ + "/" + pService->name_.c_str() + "ServiceProxy.java";
-          ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableServiceProxyStrTmp);
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+namespace java {
+  void
+  JavaGenerator::GenerateServiceProxy (
+    ::naeem::hottentot::generator::ds::Module *pModule
+  ) {
+    ::naeem::hottentot::generator::ds::Service *pService;
+    std::string basePackageName = pModule->package_;
+    for (int i = 0; i < pModule->services_.size(); i++) {
+      std::string replacableServiceProxyStrTmp = serviceProxyTmpStr_;
+      pService = pModule->services_.at(i);
+      pService = pModule->services_.at(i);
+      ::naeem::hottentot::generator::common::StringHelper::Replace (
+        replacableServiceProxyStrTmp, 
+        "[%INDENT%]", 
+        indent_, 
+        1
+      );
+      ::naeem::hottentot::generator::common::StringHelper::Replace (
+        replacableServiceProxyStrTmp,
+        "[%BASE_PACKAGE_NAME%]", 
+        basePackageName, 
+        1
+      );
+      ::naeem::hottentot::generator::common::StringHelper::Replace ( 
+        replacableServiceProxyStrTmp,
+        "[%SERVICE_NAME%]", 
+        pService->name_, 
+        1
+      );
+      ::naeem::hottentot::generator::ds::Method *pMethod;
+      std::string methodsStr;
+      for (int i = 0; i < pService->methods_.size(); i++) {
+        pMethod = pService->methods_.at(i);
+        std::string fetchedReturnTypeOfList;
+        std::string lowerCaseFetchedReturnTypeOfList;
+        std::string returnType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
+        std::string lowerCaseReturnType = pMethod->returnType_;
+        std::string capitalizedReturnType = 
+        ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pMethod->returnType_);
+        lowerCaseReturnType[0] += 32;
+        if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)) {
+          fetchedReturnTypeOfList = 
+            ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
+          std::string returnTypeOfList = 
+            ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(fetchedReturnTypeOfList);
+          returnType = "List<" + returnTypeOfList + ">";
         }
+        methodsStr += indent_ + "public " + returnType + " " + pMethod->name_ + "(";
+        ::naeem::hottentot::generator::ds::Argument *pArg;
+        std::string fetchedArgTypeOfList;
+        std::string argType;
+        for (int i = 0; i < pMethod->arguments_.size(); i++) {
+          pArg = pMethod->arguments_.at(i);
+          if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)) {
+            fetchedArgTypeOfList =
+              ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);  
+            std::string argTypeOfList = 
+              ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(fetchedArgTypeOfList);
+            argType = "List<" + argTypeOfList + ">";
+          } else {
+            argType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pArg->type_);  
+          }
+          methodsStr += argType + " " + pArg->variable_;
+          if (i < pMethod->arguments_.size() - 1) {
+            methodsStr += ",";
+          }
+        }
+        methodsStr += ") { \n";
+        for (int i = 0; i < pMethod->arguments_.size(); i++) {
+          pArg = pMethod->arguments_.at(i);
+          methodsStr += indent_ + indent_ + "//serialize " + pArg->variable_ + "\n";
+          std::string capitalalizedArgVar = 
+          ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_);     
+          if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)) {
+            std::string fetchedArgTypeOfList;
+            fetchedArgTypeOfList = 
+              ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
+            std::string upperCaseArgTypeOfList = 
+              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedArgTypeOfList);
+            methodsStr += indent_ + indent_ + 
+                          "Serializable" + upperCaseArgTypeOfList + "List " + 
+                          "serializable" + upperCaseArgTypeOfList + "List = new " +
+                          "Serializable" + upperCaseArgTypeOfList + "List();\n";
+            methodsStr += "serializable" + upperCaseArgTypeOfList + "List.set" +
+                          upperCaseArgTypeOfList + "List(" + pArg->variable_ + ");\n";
+            methodsStr += "byte[] serialized" +  capitalalizedArgVar + 
+                          " = serializable" + upperCaseArgTypeOfList + "List.serialize();\n";
+          } else if (::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)) {
+            methodsStr += indent_ + indent_ +
+                          "byte[] serialized" +
+                          capitalalizedArgVar + " = " +
+                          pArg->variable_ + ".serialize();\n";  
+          } else {
+            std::string pdtWrapperClass = 
+              ::naeem::hottentot::generator::common::TypeHelper::GetPdtWrapperClassName(pArg->type_);
+            methodsStr += indent_ + indent_ + 
+                          pdtWrapperClass + " " + pArg->variable_ + "Wrapper = new " + 
+                          pdtWrapperClass + "(" + pArg->variable_ + ");\n";
+            methodsStr += indent_ + indent_ + 
+                          "byte[] serialized" +
+                          capitalalizedArgVar + " = " + 
+                          pArg->variable_ + "Wrapper.serialize();\n"; 
+          }
+        }
+        methodsStr += "\n";
+        methodsStr += indent_ + indent_ + "//make request\n";
+        methodsStr += indent_ + indent_ + "Request request = new Request();\n";
+        std::stringstream serviceId;
+        serviceId << pService->GetHash();
+        methodsStr += indent_ + indent_ + "request.setServiceId(" + serviceId.str() + "L);\n";
+        std::stringstream methodId;
+        methodId << pMethod->GetHash();
+        methodsStr += indent_ + indent_ + "request.setMethodId(" + methodId.str() + "L);\n";
+        std::stringstream argSize;
+        argSize << pMethod->arguments_.size();
+        methodsStr +=
+        indent_ + indent_ + "request.setArgumentCount((byte) " + argSize.str() + ");\n";
+        methodsStr += indent_ + indent_ + "request.setType(Request.RequestType.";
+        if (pService->serviceType_ == 0) {
+          methodsStr += "InvokeStateless";
+        } else if (pService->serviceType_ == 1) {
+          methodsStr += "InvokeStatefull";
+        }
+        methodsStr += ");\n";
+        for (int i = 0; i < pMethod->arguments_.size(); i++) {
+          std::stringstream ssI;
+          pArg = pMethod->arguments_.at(i);
+          ssI << i;
+          std::string capitalizedArgVar = 
+            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_);
+          methodsStr += indent_ + indent_ + "Argument arg" + ssI.str() + " = new Argument();\n";
+          methodsStr += indent_ + indent_ + "arg" + ssI.str() + ".setDataLength(" +
+                        "serialized" + capitalizedArgVar + ".length);\n";
+          methodsStr += indent_ + indent_ + 
+                        "arg" + ssI.str() + ".setData(serialized" + capitalizedArgVar + ");\n";
+          methodsStr += indent_ + indent_ +
+                       "request.addArgument(arg" + ssI.str() + ");\n";
+        }
+        methodsStr += indent_ + indent_ + "int dataLength = 0;\n";
+        methodsStr += indent_ + indent_ + "//calculate data length for every argument\n";
+        for (int i = 0; i < pMethod->arguments_.size(); i++) {
+          pArg = pMethod->arguments_.at(i);
+          std::string argDataLengthVarName = pArg->variable_ + "DataLength";
+          std::string capitalizedArgVar = 
+            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_); 
+          std::string argDataLengthByteArrayLengthVarName =
+          pArg->variable_ + "DataLengthByteArrayLength";
+          methodsStr += indent_ + indent_ + "// calulate " + argDataLengthVarName + "\n";
+          methodsStr += indent_ + indent_ + "int " + argDataLengthVarName + "= serialized" +
+          capitalizedArgVar  + ".length;\n";
+          methodsStr += indent_ + indent_ + "int " + argDataLengthByteArrayLengthVarName + " = 1;\n";
+          methodsStr += indent_ + indent_ + "if (" + argDataLengthVarName + " >= 0x80) {\n";
+          methodsStr += indent_ + indent_ + indent_ + "if (" + argDataLengthVarName + " <= 0xff) {\n";
+          methodsStr += indent_ + indent_ + indent_ + indent_ + "//ex 0x81 0xff\n";
+          methodsStr += indent_ + indent_ + indent_ + indent_ + "" +
+          argDataLengthByteArrayLengthVarName + " = 2;\n";
+          methodsStr += indent_ + indent_ + indent_ + "} else if (" + argDataLengthVarName + " <= 0xffff) {\n";
+          methodsStr += indent_ + indent_ + indent_ + indent_ + "//ex 0x82 0xff 0xff\n";
+          methodsStr += indent_ + indent_ + indent_ + indent_ + "" +
+          argDataLengthByteArrayLengthVarName + " = 3;\n";
+          methodsStr += indent_ + indent_ + indent_ + "} else if (" + argDataLengthVarName + " <= 0xffffff) {\n";
+          methodsStr += indent_ + indent_ + indent_ + indent_ + "//ex 0x83 0xff 0xff 0xff\n";
+          methodsStr += indent_ + indent_ + indent_ + indent_ + "" +
+          argDataLengthByteArrayLengthVarName + " = 4;\n";
+          methodsStr += indent_ + indent_ + indent_ + "}\n";
+          methodsStr += indent_ + indent_ + "}\n";
+          methodsStr += indent_ + indent_ + "dataLength += " + argDataLengthVarName + " + " +
+          argDataLengthByteArrayLengthVarName + ";\n";
+        }
+        methodsStr += indent_ + indent_ + "// arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;\n";
+        methodsStr += indent_ + indent_ + "request.setLength(10 + dataLength);\n";
+        methodsStr += indent_ + indent_ + "// connect to server\n";
+        methodsStr += indent_ + indent_ + "TcpClient tcpClient = TcpClientFactory.create();\n";
+        methodsStr += indent_ + indent_ + "try{\n";
+        methodsStr += indent_ + indent_ + indent_ + "tcpClient.connect(host, port);\n";
+        methodsStr += indent_ + indent_ + "} catch (TcpClientConnectException e) {\n";
+        methodsStr += indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
+        methodsStr += indent_ + indent_ + "}\n";
+        methodsStr += indent_ + indent_ + "// serialize request according to HTNP\n";
+        methodsStr += indent_ + indent_ + "Protocol protocol = ProtocolFactory.create();\n";
+        methodsStr += indent_ + indent_ +
+        "byte[] serializedRequest = protocol.serializeRequest(request);\n";
+        methodsStr += indent_ + indent_ + "// send request\n";
+        methodsStr += indent_ + indent_ + "try {\n";
+        methodsStr += indent_ + indent_ + indent_ + "tcpClient.write(serializedRequest);\n";
+        methodsStr += indent_ + indent_ + "} catch (TcpClientWriteException e) {\n";
+        methodsStr += indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
+        methodsStr += indent_ + indent_ + "}\n";
+        if (!::naeem::hottentot::generator::common::TypeHelper::IsVoid(pMethod->returnType_)) {
+          methodsStr += indent_ + indent_ + "// read response from server\n";
+          methodsStr += indent_ + indent_ + "byte[] buffer = new byte[256];\n";
+          methodsStr += indent_ + indent_ + "while (!protocol.isResponseComplete()) {\n";
+          methodsStr += indent_ + indent_ + indent_ + "byte[] dataChunkRead;\n";
+          methodsStr += indent_ + indent_ + indent_ + "try {\n";
+          methodsStr += indent_ + indent_ + indent_ + indent_ + "dataChunkRead = tcpClient.read();\n";
+          methodsStr += indent_ + indent_ + indent_ + "} catch (TcpClientReadException e) {\n";
+          methodsStr +=
+            indent_ + indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
+          methodsStr += indent_ + indent_ + indent_ + "}\n";
+          methodsStr +=
+            indent_ + indent_ + indent_ + "protocol.processDataForResponse(dataChunkRead);\n";
+          methodsStr += indent_ + indent_ + "}\n";
+          methodsStr += indent_ + indent_ + "Response response = protocol.getResponse();\n";
+          methodsStr += indent_ + indent_ + "// close everything\n";
+          methodsStr += indent_ + indent_ + " try { \n";
+          methodsStr += indent_ + indent_ + indent_ + " tcpClient.close(); \n";
+          methodsStr += indent_ + indent_ + "} catch (TcpClientCloseException e) { \n";
+          methodsStr += indent_ + indent_ + indent_ + "e.printStackTrace(); \n";
+          methodsStr += indent_ + indent_ + "} \n";
+          methodsStr += indent_ + indent_ + "//deserialize " + pMethod->returnType_ + "part from response\n";
+          if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)) {
+            std::string upperCaseReturnTypeOfList = 
+              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
+            methodsStr += indent_ + indent_ +
+                          "Serializable" + upperCaseReturnTypeOfList + "List" + 
+                          " serializable" + upperCaseReturnTypeOfList + "List = null;\n"; 
+            methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
+            methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+            methodsStr += indent_ + indent_ + "}\n";
+            methodsStr += indent_ + indent_ + 
+                          "serializable" + upperCaseReturnTypeOfList + "List = " 
+                          "new Serializable" + upperCaseReturnTypeOfList + "List();\n";
+            methodsStr += indent_ + indent_ + 
+                          "serializable" + upperCaseReturnTypeOfList + "List." + 
+                          "deserialize(response.getData());\n";
+            methodsStr += indent_ + indent_ +
+                          "return serializable" + upperCaseReturnTypeOfList + 
+                          "List.get" + upperCaseReturnTypeOfList + "List();\n"; 
+          } else if (::naeem::hottentot::generator::common::TypeHelper::IsEnum(pMethod->returnType_)) {
+            methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
+            methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+            methodsStr += indent_ + indent_ + "}\n";
+            methodsStr += indent_ + indent_ +
+                          "return " + pMethod->returnType_ + ".deserialize(response.getData());\n";
+          } else if (::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)) {
+            methodsStr += indent_ + indent_ +
+                          returnType + " " + lowerCaseReturnType + "= null;\n"; 
+            methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
+            methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+            methodsStr += indent_ + indent_ + "}\n";
+            methodsStr += indent_ + indent_ + "" + lowerCaseReturnType + "= new " +
+                          pMethod->returnType_ + "();\n";
+            methodsStr += indent_ + indent_ + "" + lowerCaseReturnType +
+                          ".deserialize(response.getData());\n";
+            methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
+          } else {
+            methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
+            methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+            methodsStr += indent_ + indent_ + "}\n";
+            std::string pdtWrapperClassName = 
+              ::naeem::hottentot::generator::common::TypeHelper::GetPdtWrapperClassName (pMethod->returnType_);
+            methodsStr += indent_ + indent_ + 
+                          pdtWrapperClassName + " ret = new " +
+                          pdtWrapperClassName + "();\n";
+            methodsStr += indent_ + indent_ +
+                          "ret.deserialize(response.getData());\n";
+            methodsStr += indent_ + indent_ +
+                          "return ret.getValue();\n";
+          }
+        }
+        methodsStr += indent_ + "}\n";
       }
-
-
-      } //END NAMESPACE JAVA
-    } //END NAMESPACE GENERATOR
-  } //END NAMESPACE HOTTENTOT
-}  //END NAMESPACE NAEEM
+      replacableServiceProxyStrTmp.replace (
+        replacableServiceProxyStrTmp.find("[%METHODS%]"), 
+        11,
+        methodsStr
+      );
+      std::string path = outDir_ + "/" + pService->name_.c_str() + "ServiceProxy.java";
+      ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableServiceProxyStrTmp);
+    }
+  }
+} // END NAMESPACE java
+} // END NAMESPACE generator
+} // END NAMESPACE hottentot
+} // END NAMESPACE labcrypto
+} // END NAMESPACE org
