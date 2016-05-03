@@ -27,7 +27,11 @@ namespace echoer {
   public:
     virtual void OnInit();
     virtual void OnShutdown();
-    virtual void EchoMessage(::ir::ntnaeem::hottentot::examples::echoer::RequestMessage &req, ::ir::ntnaeem::hottentot::examples::echoer::ResponseMessage &out);
+    virtual void EchoMessage (
+      ::ir::ntnaeem::hottentot::examples::echoer::RequestMessage &req, 
+      ::ir::ntnaeem::hottentot::examples::echoer::ResponseMessage &out,
+      ::org::labcrypto::hottentot::runtime::service::HotContext &hotContext
+    );
   };
 } // END OF NAMESPACE echoer
 } // END OF NAMESPACE examples

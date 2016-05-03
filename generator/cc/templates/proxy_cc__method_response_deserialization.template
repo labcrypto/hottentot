@@ -1,4 +1,4 @@
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]if (::naeem::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]::naeem::hottentot::runtime::Utils::PrintArray("Response", protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Utils::PrintArray("Response", protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]out[[[ACCESS_OPERATOR]]]Deserialize(protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());

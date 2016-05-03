@@ -8,8 +8,8 @@
  
 #include <string.h>
 
-#include <naeem/hottentot/runtime/request.h>
-#include <naeem/hottentot/runtime/response.h>
+#include <org/labcrypto/hottentot/runtime/request.h>
+#include <org/labcrypto/hottentot/runtime/response.h>
 
 #include "[[[SNAKE_CASE_SERVICE_NAME]]]_request_handler.h"
 #include "abstract_[[[SNAKE_CASE_SERVICE_NAME]]].h"
@@ -20,7 +20,7 @@
 [[[NAMESPACES_START]]]
 namespace service {
 [[[INDENT]]]void 
-[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler::HandleRequest(::naeem::hottentot::runtime::Request &request, ::naeem::hottentot::runtime::Response &response) {
+[[[INDENT]]][[[CAMEL_CASE_FC_SERVICE_NAME]]]RequestHandler::HandleRequest(::org::labcrypto::hottentot::runtime::Request &request, ::org::labcrypto::hottentot::runtime::Response &response) {
 [[[INDENT]]][[[INDENT]]][[[METHOD_IF_CLAUSES]]]
 [[[INDENT]]][[[INDENT]]]char errorMessage[] = "Method not found.";
 [[[INDENT]]][[[INDENT]]]response.SetStatusCode(1);

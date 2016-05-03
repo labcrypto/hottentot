@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__GENERATOR_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__GENERATOR_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_GENERATOR__GENERATOR_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_GENERATOR__GENERATOR_H_
 
 #include <vector>
 #include <string>
@@ -43,92 +43,94 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace java {
-        class JavaGenerator;
-      };
-      namespace cc {
-        class CCGenerator;
-      }
-      namespace ds {
-        class Hot;
-        class Service;
-        class Struct;
-        class Method;
-        class Module;
-        class Argument;
-        class Declaration;
-      }
-      class GenerationConfig {
-        friend class ::naeem::hottentot::generator::cc::CCGenerator;
-        friend class ::naeem::hottentot::generator::java::JavaGenerator;
-      public:
-        inline std::string GetOutDir() const {
-          return outDir_;
-        }
-        inline void SetOutDir(std::string outDir) {
-          outDir_ = outDir;
-        }
-        inline bool IsSpacesUsedInsteadOfTabsForIndentation() const {
-          return spacesUsedInsteadOfTabsForIndentation_;
-        }
-        inline void SetSpacesUsedInsteadOfTabsForIndentation(bool spacesUsedInsteadOfTabsForIndentation) {
-          spacesUsedInsteadOfTabsForIndentation_ = spacesUsedInsteadOfTabsForIndentation;
-        }
-        inline bool IsMakefileGenerated() const {
-          return makefileGenerated_;
-        }
-        inline void SetMakefileGenerated(bool makefileGenerated) {
-          makefileGenerated_ = makefileGenerated;
-        }
-        inline bool IsClientGenerated() const {
-          return clientGenerated_;
-        }
-        inline void SetClientGenerated(bool clientGenerated) {
-          clientGenerated_ = clientGenerated;
-        }
-        inline bool IsStubGenerated() const {
-          return stubGenerated_;
-        }
-        inline void SetStubGenerated(bool stubGenerated) {
-          stubGenerated_ = stubGenerated;
-        }
-        inline uint8_t GetNumberOfSpacesUsedForIndentation() const {
-          return numberOfSpacesUsedForIndentation_;
-        }
-        inline void SetNumberOfSpacesUsedForIndentation(uint8_t numberOfSpacesUsedForIndentation) {
-          numberOfSpacesUsedForIndentation_ = numberOfSpacesUsedForIndentation;
-        }
-        inline std::string GetIndentString() {
-          if (spacesUsedInsteadOfTabsForIndentation_) {
-            std::string indent = "";
-            for (uint8_t i = 0; i < numberOfSpacesUsedForIndentation_; i++) {
-              indent += " ";
-            }
-            return indent;
-          }
-          return "\t";
-        }
-      private:
-        bool makefileGenerated_;
-        bool clientGenerated_;
-        bool stubGenerated_;
-        bool spacesUsedInsteadOfTabsForIndentation_;
-        uint8_t numberOfSpacesUsedForIndentation_;
-        std::string outDir_;
-      };
-      class Generator {
-      public:
-        Generator() {}
-        virtual ~Generator() {}
-      public:
-        virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
-                              GenerationConfig &) = 0;
-      };
-    }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+  namespace java {
+    class JavaGenerator;
+  };
+  namespace cc {
+    class CCGenerator;
   }
+  class Hot;
+  class Service;
+  class Struct;
+  class Method;
+  class Module;
+  class Argument;
+  class Declaration;
+  class GenerationConfig {
+    friend class ::org::labcrypto::hottentot::generator::cc::CCGenerator;
+    friend class ::org::labcrypto::hottentot::generator::java::JavaGenerator;
+  public:
+    inline std::string GetOutDir() const {
+      return outDir_;
+    }
+    inline void SetOutDir(std::string outDir) {
+      outDir_ = outDir;
+    }
+    inline bool IsSpacesUsedInsteadOfTabsForIndentation() const {
+      return spacesUsedInsteadOfTabsForIndentation_;
+    }
+    inline void SetSpacesUsedInsteadOfTabsForIndentation(bool spacesUsedInsteadOfTabsForIndentation) {
+      spacesUsedInsteadOfTabsForIndentation_ = spacesUsedInsteadOfTabsForIndentation;
+    }
+    inline bool IsMakefileGenerated() const {
+      return makefileGenerated_;
+    }
+    inline void SetMakefileGenerated(bool makefileGenerated) {
+      makefileGenerated_ = makefileGenerated;
+    }
+    inline bool IsClientGenerated() const {
+      return clientGenerated_;
+    }
+    inline void SetClientGenerated(bool clientGenerated) {
+      clientGenerated_ = clientGenerated;
+    }
+    inline bool IsStubGenerated() const {
+      return stubGenerated_;
+    }
+    inline void SetStubGenerated(bool stubGenerated) {
+      stubGenerated_ = stubGenerated;
+    }
+    inline uint8_t GetNumberOfSpacesUsedForIndentation() const {
+      return numberOfSpacesUsedForIndentation_;
+    }
+    inline void SetNumberOfSpacesUsedForIndentation(uint8_t numberOfSpacesUsedForIndentation) {
+      numberOfSpacesUsedForIndentation_ = numberOfSpacesUsedForIndentation;
+    }
+    inline std::string GetIndentString() {
+      if (spacesUsedInsteadOfTabsForIndentation_) {
+        std::string indent = "";
+        for (uint8_t i = 0; i < numberOfSpacesUsedForIndentation_; i++) {
+          indent += " ";
+        }
+        return indent;
+      }
+      return "\t";
+    }
+  private:
+    bool makefileGenerated_;
+    bool clientGenerated_;
+    bool stubGenerated_;
+    bool spacesUsedInsteadOfTabsForIndentation_;
+    uint8_t numberOfSpacesUsedForIndentation_;
+    std::string outDir_;
+  };
+  class Generator {
+  public:
+    Generator() {}
+    virtual ~Generator() {}
+  public:
+    virtual void Generate (
+      ::org::labcrypto::hottentot::generator::Hot *,
+      GenerationConfig &
+    ) = 0;
+  };
+}
+}
+}
 }
 
 #endif

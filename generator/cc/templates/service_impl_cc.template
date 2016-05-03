@@ -6,9 +6,9 @@
  *   This file contains empty implementation of sample stub.
  ******************************************************************/
  
-#include <naeem/hottentot/runtime/configuration.h>
-#include <naeem/hottentot/runtime/logger.h>
-#include <naeem/hottentot/runtime/utils.h>
+#include <org/labcrypto/hottentot/runtime/configuration.h>
+#include <org/labcrypto/hottentot/runtime/logger.h>
+#include <org/labcrypto/hottentot/runtime/utils.h>
 
 #include "[[[SNAKE_CASE_SERVICE_NAME]]]_impl.h"
 

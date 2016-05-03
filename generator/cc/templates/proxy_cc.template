@@ -6,16 +6,16 @@
  *   This file contains implementation of the proxy class.
  ***************************************************************/
 
-#include <naeem/hottentot/runtime/configuration.h>
-#include <naeem/hottentot/runtime/logger.h>
-#include <naeem/hottentot/runtime/utils.h>
-#include <naeem/hottentot/runtime/request.h>
-#include <naeem/hottentot/runtime/response.h>
-#include <naeem/hottentot/runtime/protocol_v1.h>
-#include <naeem/hottentot/runtime/proxy/fault.h>
-#include <naeem/hottentot/runtime/proxy/tcp_client.h>
-#include <naeem/hottentot/runtime/proxy/proxy_runtime.h>
-#include <naeem/hottentot/runtime/proxy/tcp_client_factory.h>
+#include <org/labcrypto/hottentot/runtime/configuration.h>
+#include <org/labcrypto/hottentot/runtime/logger.h>
+#include <org/labcrypto/hottentot/runtime/utils.h>
+#include <org/labcrypto/hottentot/runtime/request.h>
+#include <org/labcrypto/hottentot/runtime/response.h>
+#include <org/labcrypto/hottentot/runtime/protocol_v1.h>
+#include <org/labcrypto/hottentot/runtime/proxy/fault.h>
+#include <org/labcrypto/hottentot/runtime/proxy/tcp_client.h>
+#include <org/labcrypto/hottentot/runtime/proxy/proxy_runtime.h>
+#include <org/labcrypto/hottentot/runtime/proxy/tcp_client_factory.h>
 
 #include "[[[SNAKE_CASE_SERVICE_NAME]]]_proxy.h"
 

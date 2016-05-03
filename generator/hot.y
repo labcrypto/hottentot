@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -46,29 +46,29 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #ifdef _MSC_VER
-#include "../../ds/hot.h"
-#include "../../ds/declaration.h"
-#include "../../ds/service.h"
-#include "../../ds/method.h"
-#include "../../ds/argument.h"
-#include "../../ds/enum.h"
+#include "../../hot.h"
+#include "../../declaration.h"
+#include "../../service.h"
+#include "../../method.h"
+#include "../../argument.h"
+#include "../../enum.h"
 
-#include "../../dep/fasthash.h"
+#include "../../fasthash.h"
 
 #include "../../cc/cc_generator.h"
-#include "../../java/java_generator.h"
+// #include "../../java/java_generator.h"
 #else
-#include "ds/hot.h"
-#include "ds/declaration.h"
-#include "ds/service.h"
-#include "ds/method.h"
-#include "ds/argument.h"
-#include "ds/enum.h"
+#include "hot.h"
+#include "declaration.h"
+#include "service.h"
+#include "method.h"
+#include "argument.h"
+#include "enum.h"
 
-#include "dep/fasthash.h"
+#include "fasthash.h"
 
 #include "cc/cc_generator.h"
-#include "java/java_generator.h"
+// #include "java/java_generator.h"
 #endif
 
 void yyerror(char *);
@@ -80,12 +80,12 @@ extern "C" {
 unsigned int lineCounter = 1;
 std::string lastType;
 std::stack<std::string> stack;
-::naeem::hottentot::generator::ds::Hot *currentHot;
-::naeem::hottentot::generator::ds::Module *currentModule;
-::naeem::hottentot::generator::ds::Enum *currentEnum;
-::naeem::hottentot::generator::ds::Struct *currentStruct;
-::naeem::hottentot::generator::ds::Service *currentService;
-::naeem::hottentot::generator::ds::Method *currentMethod;
+::org::labcrypto::hottentot::generator::Hot *currentHot;
+::org::labcrypto::hottentot::generator::Module *currentModule;
+::org::labcrypto::hottentot::generator::Enum *currentEnum;
+::org::labcrypto::hottentot::generator::Struct *currentStruct;
+::org::labcrypto::hottentot::generator::Service *currentService;
+::org::labcrypto::hottentot::generator::Method *currentMethod;
 
 %}
 %union {
@@ -119,11 +119,11 @@ modules:        modules module
 
 module:         {
                   if (currentHot == NULL) {
-                    currentHot = new ::naeem::hottentot::generator::ds::Hot();
+                    currentHot = new ::org::labcrypto::hottentot::generator::Hot();
                     // fprintf(stdout, ">>> GENERATOR: Hot object created.\n");
                   }
                   if (currentModule == NULL) {
-                    currentModule = new ::naeem::hottentot::generator::ds::Module();
+                    currentModule = new ::org::labcrypto::hottentot::generator::Module();
                     // fprintf(stdout, ">>> GENERATOR: Module object created.\n");
                     currentHot->AddModule(currentModule);
                     // fprintf(stdout, ">>> GENERATOR: Module object has been added to hot.\n");
@@ -166,7 +166,7 @@ items:          items item
 
 item:           {
                   if (currentStruct == NULL) {
-                    currentStruct = new ::naeem::hottentot::generator::ds::Struct(currentModule);
+                    currentStruct = new ::org::labcrypto::hottentot::generator::Struct(currentModule);
                     // fprintf(stdout, ">>> GENERATOR: Struct object created.\n");
                     currentModule->AddStruct(currentStruct);
                     // fprintf(stdout, ">>> GENERATOR: Struct object has been added to model.\n");
@@ -181,7 +181,7 @@ item:           {
                 }
                 | {
                     if (currentService == NULL) {
-                      currentService = new ::naeem::hottentot::generator::ds::Service("stateless", "", currentModule);
+                      currentService = new ::org::labcrypto::hottentot::generator::Service("stateless", "", currentModule);
                       currentModule->AddService(currentService);
                     } else {
                       fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
@@ -195,7 +195,7 @@ item:           {
                 }
                 | {
                     if (currentService == NULL) {
-                      currentService = new ::naeem::hottentot::generator::ds::Service("stateful", "",currentModule);
+                      currentService = new ::org::labcrypto::hottentot::generator::Service("stateful", "",currentModule);
                       currentModule->AddService(currentService);
                     } else {
                       fprintf(stdout, "SYNTAX ERROR: Services can't be nested.\n");
@@ -209,7 +209,7 @@ item:           {
                 }
                 | {
                     if (currentEnum == NULL) {
-                      currentEnum = new ::naeem::hottentot::generator::ds::Enum(currentModule);
+                      currentEnum = new ::org::labcrypto::hottentot::generator::Enum(currentModule);
                       currentModule->AddEnum(currentEnum);
                     } else {
                       fprintf(stdout, "SYNTAX ERROR: Enums can't be nested.\n");
@@ -239,7 +239,7 @@ declarations:   declaration
 
 declaration:    type IDENTIFIER ORD ';' {
                   // printf("Declaration3 seen:    LIST<%s> %s %s\n", $3, $5, $6);
-                  currentStruct->AddDeclaration(new ::naeem::hottentot::generator::ds::Declaration($1, $2, $3));
+                  currentStruct->AddDeclaration(new ::org::labcrypto::hottentot::generator::Declaration($1, $2, $3));
                 }
                 ;
 
@@ -252,7 +252,7 @@ methods:        methods method
 
 method:         {
                   if (currentMethod == NULL) {
-                    currentMethod = new ::naeem::hottentot::generator::ds::Method(currentService);
+                    currentMethod = new ::org::labcrypto::hottentot::generator::Method(currentService);
                     currentService->AddMethod(currentMethod);
                   }
                 } type IDENTIFIER '(' arguments ')' ';' {
@@ -268,7 +268,7 @@ arguments:      argument
                 ;
 
 argument:       type IDENTIFIER {
-                  currentMethod->AddArgument(new ::naeem::hottentot::generator::ds::Argument($1, $2));
+                  currentMethod->AddArgument(new ::org::labcrypto::hottentot::generator::Argument($1, $2));
                   // printf("Argument has been added.\n");
                 }
                 ;
@@ -321,7 +321,7 @@ extern FILE *yyin;
 void printHelpMessageAndExit() {
   std::cout << std::endl;
   std::cout << "Hottentot Serialization and RPC Framework" << std::endl;
-  std::cout << "NTNAEEM Co. 2016 Copyright" << std::endl;
+  std::cout << "LabCrypto Org. 2015-2016 Copyright" << std::endl;
   std::cout << "Usage: hot [OPTION]... [HOT-FILE]..." << std::endl;
   std::cout << "  OPTIONS:" << std::endl;
   std::cout << "    --java                     Generate java sources. [Default: disabled]" << std::endl;
@@ -336,7 +336,7 @@ void printHelpMessageAndExit() {
   std::cout << "    --parse                    Displays parse result in a tree format. [Default: disabled]" << std::endl;
   std::cout << "    --dont-generate            Don't generate sources. [Default: disabled]" << std::endl;
   std::cout << std::endl;
-  std::cout << "For more information and examples, please visit https://github.com/NTNAEEM/hottentot" << std::endl;
+  std::cout << "For more information and examples, please visit https://github.com/LabCryptoOrg/hottentot" << std::endl;
   std::cout << std::endl;
   exit(1);
 }
@@ -419,18 +419,18 @@ int main(int argc, char **argv) {
     if (parse) {
       currentHot->Display();
     }
-    ::naeem::hottentot::generator::GenerationConfig generationConfig;
+    ::org::labcrypto::hottentot::generator::GenerationConfig generationConfig;
     generationConfig.SetOutDir(outputDir);
     generationConfig.SetSpacesUsedInsteadOfTabsForIndentation(isSpacesUsedForIndentation);
     generationConfig.SetNumberOfSpacesUsedForIndentation(numberOfSpacesUsedForIndentation);
     generationConfig.SetMakefileGenerated(makefileGenerated);
     generationConfig.SetClientGenerated(clientGenerated);
     generationConfig.SetStubGenerated(stubGenerated);
-    ::naeem::hottentot::generator::Generator *generator = 0;
+    ::org::labcrypto::hottentot::generator::Generator *generator = 0;
     if (!dontGenerate && isCC) {
-      generator = new ::naeem::hottentot::generator::cc::CCGenerator();
-      ::naeem::hottentot::generator::cc::CCGenerator* ccGenerator =
-          dynamic_cast< ::naeem::hottentot::generator::cc::CCGenerator*>(generator);
+      generator = new ::org::labcrypto::hottentot::generator::cc::CCGenerator();
+      ::org::labcrypto::hottentot::generator::cc::CCGenerator* ccGenerator =
+          dynamic_cast< ::org::labcrypto::hottentot::generator::cc::CCGenerator*>(generator);
       ccGenerator->Generate(currentHot, generationConfig);
       if (makefileGenerated) {
         ccGenerator->GenerateMakefile(currentHot, generationConfig);
@@ -443,8 +443,8 @@ int main(int argc, char **argv) {
       }
     }
     if (!dontGenerate && isJava) {
-      generator = new ::naeem::hottentot::generator::java::JavaGenerator();
-      generator->Generate(currentHot, generationConfig);
+      // generator = new ::org::labcrypto::hottentot::generator::java::JavaGenerator();
+      // generator->Generate(currentHot, generationConfig);
     }
     delete generator;
     delete currentHot;

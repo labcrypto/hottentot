@@ -1,6 +1,6 @@
 /*  The MIT License (MIT)
  *
- *  Copyright (c) 2015 Noavaran Tejarat Gostar NAEEM Co.
+ *  Copyright (c) 2015 LabCrypto Org.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,26 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__CC__RUNTIME_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__CC__RUNTIME_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_GENERATOR__CC__RUNTIME_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_GENERATOR__CC__RUNTIME_H_
 
 #include <vector>
 
  
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace ds {
-        class Enum;
-      }
-      namespace cc {
-        class Runtime {
-        public:
-          static std::vector< ::naeem::hottentot::generator::ds::Enum*> enums_;
-        };
-      }
-    }
-  }
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+  class Enum;
+namespace cc {
+  class Runtime {
+  public:
+    static std::vector< ::org::labcrypto::hottentot::generator::Enum*> enums_;
+  };
+}
+}
+}
+}
 }
 
 #endif

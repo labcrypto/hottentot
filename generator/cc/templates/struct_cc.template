@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string.h>
 
-#include <naeem/hottentot/runtime/hot_ptr.h>
+#include <org/labcrypto/hottentot/runtime/hot_ptr.h>
 
 #include "[[[SNAKE_CASE_STRUCT_NAME]]].h"
 

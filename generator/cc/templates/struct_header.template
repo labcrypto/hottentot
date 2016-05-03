@@ -11,15 +11,14 @@
 
 #include <string>
 
-#include <naeem/hottentot/runtime/types/primitives.h>
-#include <naeem/hottentot/runtime/serializable.h>
+#include <org/labcrypto/hottentot/primitives.h>
 
 [[[INCLUDE_DEPENDENCIES]]]
 #include "enums.h"
 
 
 [[[NAMESPACES_START]]]
-[[[INDENT]]]class [[[STRUCT_NAME]]] : public ::naeem::hottentot::runtime::Serializable {
+[[[INDENT]]]class [[[STRUCT_NAME]]] : public ::org::labcrypto::hottentot::Serializable {
 [[[INDENT]]]public:
 [[[INDENT]]][[[INDENT]]][[[STRUCT_NAME]]]() {
 [[[INITIALIZATIONS]]][[[INDENT]]][[[INDENT]]]}

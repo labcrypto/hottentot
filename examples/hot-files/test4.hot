@@ -1,0 +1,88 @@
+/*  The MIT License (MIT)
+ *
+ *  Copyright (c) 2015 LabCrypto Org.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE.
+ */
+module example.generated{
+  
+  enum GenderType {
+    1 = Male;
+    2 = Female;
+  };
+
+  struct Token{
+    string value ord(1);
+    uint8 id ord(2);
+  };
+
+  struct Credential{
+    string username ord(1);
+    string password ord(2);
+  };
+  
+  struct DataWrapper{
+    string value ord(1);
+    data digi ord(2);
+  };
+
+  struct StringWrapper{
+    string value ord(1);
+  };
+
+  struct Result{
+    uint8 ustatus8 ord(1);
+    uint16 ustatus16 ord(2);
+    uint32 ustatus32 ord(3);
+    uint64 ustatus64 ord(4);
+    int8 status8 ord(5);
+    int16 status16 ord(6);
+    int32 status32 ord(7);
+    int64 status64 ord(8);
+  };
+
+  struct GenderWrapper{
+    GenderType gender ord(1);
+    int8 id ord(2);
+  };
+  
+  stateless service Authentication{
+    list<Token> auth(Credential credential);
+    list<DataWrapper> test();
+    list<StringWrapper> test2();
+    StringWrapper test3();
+    DataWrapper test4();
+    DataWrapper test5(list<StringWrapper> inputList);
+    DataWrapper test6(list<DataWrapper> inputs);
+    Result test7();
+    StringWrapper test8(StringWrapper str);
+    uint8 test9(string str , bool flag , uint16 num , data d);
+    data test10(GenderWrapper gwr);
+    void test11(uint16 in);
+    GenderType test12();
+    void test13(GenderType gt);
+  };  
+
+  stateless service Second{
+    int32 f();
+  };
+
+ 
+
+};
