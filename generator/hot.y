@@ -56,7 +56,7 @@ typedef unsigned __int64 uint64_t;
 #include "../../fasthash.h"
 
 #include "../../cc/cc_generator.h"
-// #include "../../java/java_generator.h"
+#include "../../java/java_generator.h"
 #else
 #include "hot.h"
 #include "declaration.h"
@@ -68,7 +68,7 @@ typedef unsigned __int64 uint64_t;
 #include "fasthash.h"
 
 #include "cc/cc_generator.h"
-// #include "java/java_generator.h"
+#include "java/java_generator.h"
 #endif
 
 void yyerror(char *);
@@ -443,8 +443,8 @@ int main(int argc, char **argv) {
       }
     }
     if (!dontGenerate && isJava) {
-      // generator = new ::org::labcrypto::hottentot::generator::java::JavaGenerator();
-      // generator->Generate(currentHot, generationConfig);
+      generator = new ::org::labcrypto::hottentot::generator::java::JavaGenerator();
+      generator->Generate(currentHot, generationConfig);
     }
     delete generator;
     delete currentHot;
