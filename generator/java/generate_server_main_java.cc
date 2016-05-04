@@ -83,7 +83,7 @@ namespace java {
         "/"
       );
     ::org::labcrypto::hottentot::generator::Os::MakeDir(serverOutDir_ + "/" + packages);
-    std::string path = serverOutDir_ + "/" + packages + "/Main.java";
+    std::string path = serverOutDir_ + "/" + packages + "/SampleServer.java";
     ::org::labcrypto::hottentot::generator::Os::WriteFile (
       path, 
       replacableServerMainTmpStr

@@ -13,7 +13,7 @@ import org.labcrypto.hottentot.runtime.Service;
 import org.labcrypto.hottentot.runtime.ServiceRuntime;
 
 
-public class Main {
+public class SampleServer {
 [%INDENT%]public static void main(String[] args) throws IOException {
 [%INDENT%][%INDENT%]org.labcrypto.hottentot.runtime.config.Config.setMainArgs(args);
 [%INDENT%][%INDENT%]org.labcrypto.hottentot.runtime.config.Config.setConfigPropertiesFromConfigFile();

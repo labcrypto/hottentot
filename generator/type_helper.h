@@ -25,6 +25,7 @@
 #define _ORG_LABCRYPTO_HOTTENTOT_GENERATOR__TYPE_HELPER_H_
 
 #include <stdexcept>
+ 
 #include "runtime.h"
 
 namespace org {
@@ -219,12 +220,45 @@ namespace generator {
         return "double";
       } else if (type == "void") {
         return "void";
-      }else if (type == "void") {
-        return "void";
-      }else if (IsListType(type)){
+      } else if (IsListType(type)){
         return "List<" + GetJavaClassType(FetchTypeOfList(type)) + ">";
       }
       return type;
+    }
+
+    static inline bool IsJavaNullable(std::string type) {
+      if (type == "int8") {
+        return false;
+      } else if (type == "int16") {
+        return false;
+      } else if (type == "int32") {
+        return false;
+      } else if (type == "int64") {
+        return false;
+      } else if (type == "uint8") {
+        return false;
+      } else if (type == "uint16") {
+        return false;
+      } else if (type == "uint32") {
+        return false;
+      } else if (type == "uint64") {
+        return false;
+      } else if (type == "bool") {
+        return false;
+      } else if (type == "string") {
+        return true;
+      } else if (type == "char") {
+        return false;
+      } else if (type == "data") {
+        return true;
+      } else if (type == "date") {
+        return false;
+      } else if (type == "double") {
+        return false;
+      } else if (type == "void") {
+        return false;
+      }
+      return true;
     }
 
     static inline std::string GetPdtWrapperClassName(std::string type) {
@@ -296,7 +330,6 @@ namespace generator {
       }
       return false;
     }
-    
   };
 }
 }

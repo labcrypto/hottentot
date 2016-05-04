@@ -12,7 +12,7 @@ import java.io.IOException;
 [%IMPORT_PROXIES%]
 
 
-public class Main {
+public class SampleClient {
 [%INDENT%]public static void main(String[] args) throws IOException {
 [%INDENT%][%INDENT%]org.labcrypto.hottentot.runtime.config.Config.setMainArgs(args);
 [%ALL_PROXIES%]

@@ -1,7 +1,5 @@
 package [%BASE_PACKAGE_NAME%];
 
-import [%BASE_PACKAGE_NAME%].*;
 
 class [%SERVICE_NAME%]Impl extends Abstract[%SERVICE_NAME%]Service {
-	//implementation
-}
+[%METHODS%]}

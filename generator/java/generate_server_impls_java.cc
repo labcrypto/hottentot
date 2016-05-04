@@ -29,6 +29,9 @@
 
 #include "../hot.h"
 #include "../os.h" 
+#include "../method.h" 
+#include "../service.h" 
+#include "../type_helper.h" 
 
 
 namespace org {
@@ -42,8 +45,59 @@ namespace java {
   ) {
     std::string basePackageName = pModule->package_;
     ::org::labcrypto::hottentot::generator::Service *pService;
+    ::org::labcrypto::hottentot::generator::Method *pMethod;
     for (int i = 0; i < pModule->services_.size(); i++) {
       std::string replacableServerImplTmpStr = serverImplTmpStr_;  
+      pService = pModule->services_.at(i);
+      std::string serviceName = pService->GetName();
+      std::string methodsStr = "";
+      for (int i = 0; i < pService->methods_.size(); i++) {
+        pMethod = pService->methods_.at(i);
+        std::string fetchedReturnTypeOfList;
+        std::string lowerCaseFetchedReturnTypeOfList;
+        std::string returnType = ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(pMethod->returnType_);
+        std::string lowerCaseReturnType = pMethod->returnType_;
+        std::string capitalizedReturnType = 
+        ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(pMethod->returnType_);
+        lowerCaseReturnType[0] += 32;
+        if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
+          fetchedReturnTypeOfList = 
+            ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pMethod->returnType_);
+          std::string returnTypeOfList = 
+            ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaClassType(fetchedReturnTypeOfList);
+          returnType = "List<" + returnTypeOfList + ">";
+        }
+        methodsStr += indent_ + "@Override\n";
+        methodsStr += indent_ + "public " + returnType + " " + pMethod->name_ + "(";
+        ::org::labcrypto::hottentot::generator::Argument *pArg;
+        std::string fetchedArgTypeOfList;
+        std::string argType;
+        for (int i = 0; i < pMethod->arguments_.size(); i++) {
+          pArg = pMethod->arguments_.at(i);
+          if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pArg->type_)) {
+            fetchedArgTypeOfList =
+              ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pArg->type_);  
+            std::string argTypeOfList = 
+              ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaClassType(fetchedArgTypeOfList);
+            argType = "List<" + argTypeOfList + ">";
+          } else {
+            argType = ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(pArg->type_);  
+          }
+          methodsStr += argType + " " + pArg->variable_;
+          if (i < pMethod->arguments_.size() - 1) {
+            methodsStr += ",";
+          }
+        }
+        methodsStr += ") { \n";
+        if (!TypeHelper::IsVoid(returnType)) {
+          if (TypeHelper::IsJavaNullable(returnType)) {
+            methodsStr += indent_ + indent_ + "return null;\n";
+          } else {
+            methodsStr += indent_ + indent_ + "return 0;\n";
+          }
+        }
+        methodsStr +=  indent_ + "}\n";
+      }
       ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableServerImplTmpStr, 
         "[%BASE_PACKAGE_NAME%]", 
@@ -56,9 +110,12 @@ namespace java {
         indent_, 
         1
       );
-      pService = pModule->services_.at(i);
-      std::string serviceName = pService->GetName();
-      std::string methodsStr = "";
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
+        replacableServerImplTmpStr,
+        "[%METHODS%]", 
+        methodsStr, 
+        1
+      );
       ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableServerImplTmpStr,
         "[%SERVICE_NAME%]", 

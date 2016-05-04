@@ -64,9 +64,9 @@ namespace java {
       std::string serviceName = pService->GetName();
       std::string lowerCaseServiceName = 
       ::org::labcrypto::hottentot::generator::StringHelper::MakeLowerCase(serviceName);
-      importProxiesStr += "import " + basePackageName + ".hotgen." +
+      importProxiesStr += "import " + basePackageName + "." +
                           serviceName +  "Service;\n";
-      importProxiesStr += "import " + basePackageName + ".hotgen." +
+      importProxiesStr += "import " + basePackageName + "." +
                           serviceName  + "ServiceProxyBuilder;\n";
       allProxiesStr += indent_ + indent_ + "final " + serviceName + "Service " +
                         lowerCaseServiceName + "Proxy = " + serviceName +
@@ -93,7 +93,7 @@ namespace java {
         "/"
       );
     ::org::labcrypto::hottentot::generator::Os::MakeDir(clientOutDir_ + "/" + packages);
-    std::string path = clientOutDir_ + "/" + packages + "/Main.java";
+    std::string path = clientOutDir_ + "/" + packages + "/SampleClient.java";
     ::org::labcrypto::hottentot::generator::Os::WriteFile (
       path, 
       replacableClientMainTmpStr
