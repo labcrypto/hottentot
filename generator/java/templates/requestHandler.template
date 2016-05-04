@@ -7,19 +7,21 @@
  ******************************************************************/
 package [%BASE_PACKAGE_NAME%].hotgen;
 
-import ir.ntnaeem.hottentot.runtime.Argument;
-import ir.ntnaeem.hottentot.runtime.Request;
-import ir.ntnaeem.hottentot.runtime.RequestHandler;
-import ir.ntnaeem.hottentot.runtime.Response;
-import ir.ntnaeem.hottentot.runtime.Service;
-import ir.ntnaeem.hottentot.runtime.config.Config;
-import ir.ntnaeem.hottentot.runtime.exception.MethodNotSupportException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
-import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
-import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
 import java.util.List;
+
+import org.labcrypto.hottentot.runtime.Argument;
+import org.labcrypto.hottentot.runtime.Request;
+import org.labcrypto.hottentot.runtime.RequestHandler;
+import org.labcrypto.hottentot.runtime.Response;
+import org.labcrypto.hottentot.runtime.Service;
+import org.labcrypto.hottentot.runtime.config.Config;
+import org.labcrypto.hottentot.runtime.exception.MethodNotSupportException;
+import org.labcrypto.hottentot.runtime.exception.TcpClientConnectException;
+import org.labcrypto.hottentot.runtime.exception.TcpClientReadException;
+import org.labcrypto.hottentot.runtime.exception.TcpClientWriteException;
+import org.labcrypto.hottentot.helper.PDTDeserializer;
+import org.labcrypto.hottentot.helper.PDTSerializer;
+
 
 public class [%SERVICE_NAME%]RequestHandler extends RequestHandler {
 [%INDENT%]public [%SERVICE_NAME%]RequestHandler(Service service) {

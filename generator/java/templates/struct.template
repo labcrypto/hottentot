@@ -7,11 +7,13 @@
  ******************************************************************/
 package [%BASE_PACKAGE_NAME%].hotgen;
 
-import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
-import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
-import ir.ntnaeem.hottentot.serializerHelper.ByteArrayToInteger;
 import java.util.List;
 import java.util.ArrayList;
+
+import org.labcrypto.hottentot.helper.PDTSerializer;
+import org.labcrypto.hottentot.helper.PDTDeserializer;
+import org.labcrypto.hottentot.helper.ByteArrayToInteger;
+
 
 public class [%STRUCT_NAME%] {
 [%MEMBERS%]	

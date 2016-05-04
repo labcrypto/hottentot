@@ -7,23 +7,25 @@
  ******************************************************************/
 package [%BASE_PACKAGE_NAME%].hotgen;
 
-import ir.ntnaeem.hottentot.runtime.Argument;
-import ir.ntnaeem.hottentot.runtime.Proxy;
-import ir.ntnaeem.hottentot.runtime.Request;
-import ir.ntnaeem.hottentot.runtime.Response;
-import ir.ntnaeem.hottentot.runtime.TcpClient;
-import ir.ntnaeem.hottentot.runtime.exception.HottentotRuntimeException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientConnectException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientReadException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientWriteException;
-import ir.ntnaeem.hottentot.runtime.exception.TcpClientCloseException;
-import ir.ntnaeem.hottentot.runtime.factory.ProtocolFactory;
-import ir.ntnaeem.hottentot.runtime.factory.TcpClientFactory;
-import ir.ntnaeem.hottentot.runtime.protocol.Protocol;
-import ir.ntnaeem.hottentot.serializerHelper.PDTSerializer;
-import ir.ntnaeem.hottentot.serializerHelper.PDTDeserializer;
-import ir.ntnaeem.hottentot.type.*;
 import java.util.List;
+
+import org.labcrypto.hottentot.*;
+import org.labcrypto.hottentot.runtime.Argument;
+import org.labcrypto.hottentot.runtime.Proxy;
+import org.labcrypto.hottentot.runtime.Request;
+import org.labcrypto.hottentot.runtime.Response;
+import org.labcrypto.hottentot.runtime.TcpClient;
+import org.labcrypto.hottentot.runtime.exception.HottentotRuntimeException;
+import org.labcrypto.hottentot.runtime.exception.TcpClientConnectException;
+import org.labcrypto.hottentot.runtime.exception.TcpClientReadException;
+import org.labcrypto.hottentot.runtime.exception.TcpClientWriteException;
+import org.labcrypto.hottentot.runtime.exception.TcpClientCloseException;
+import org.labcrypto.hottentot.runtime.factory.ProtocolFactory;
+import org.labcrypto.hottentot.runtime.factory.TcpClientFactory;
+import org.labcrypto.hottentot.runtime.protocol.Protocol;
+import org.labcrypto.hottentot.helper.PDTSerializer;
+import org.labcrypto.hottentot.helper.PDTDeserializer;
+
 
 public class [%SERVICE_NAME%]ServiceProxy extends Abstract[%SERVICE_NAME%]Service implements Proxy {
 	

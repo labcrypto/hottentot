@@ -7,7 +7,8 @@
  ******************************************************************/
 package [%BASE_PACKAGE_NAME%].hotgen;
 
-import ir.ntnaeem.hottentot.runtime.RequestHandler;
+import org.labcrypto.hottentot.runtime.RequestHandler;
+
 
 public abstract class Abstract[%SERVICE_NAME%]Service implements [%SERVICE_NAME%]Service {	
 [%INDENT%]public RequestHandler makeRequestHandler() {

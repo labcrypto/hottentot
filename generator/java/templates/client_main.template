@@ -7,12 +7,14 @@
  ******************************************************************/
 package [%BASE_PACKAGE_NAME%].hotgen.client;
 
-[%IMPORT_PROXIES%]
 import java.io.IOException;
+
+[%IMPORT_PROXIES%]
+
 
 public class Main {
 [%INDENT%]public static void main(String[] args) throws IOException {
-[%INDENT%][%INDENT%]ir.ntnaeem.hottentot.runtime.config.Config.setMainArgs(args);
+[%INDENT%][%INDENT%]org.labcrypto.hottentot.runtime.config.Config.setMainArgs(args);
 [%ALL_PROXIES%]
 [%INDENT%][%INDENT%]//use server methods on proxies
 [%INDENT%]}
