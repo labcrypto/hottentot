@@ -47,7 +47,16 @@ namespace java {
     for (int i = 0; i < pModule->services_.size(); i++) {
       std::string basePackageName = pModule->package_;
       pService = pModule->services_.at(i);
-      std::string path = outDir_ + "/Abstract" + pService->name_.c_str() + "Service.java";
+      std::string packages =
+        ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
+          ::org::labcrypto::hottentot::generator::StringHelper::Split (
+           pModule->GetPackage(), 
+            '.'
+          ), 
+          "/"
+        );
+      ::org::labcrypto::hottentot::generator::Os::MakeDir(outDir_ + "/" + packages);
+      std::string path = outDir_ + "/" + packages + "/Abstract" + pService->name_.c_str() + "Service.java";
       os.open(path.c_str(), std::ios::trunc);
       replacableAbstractServiceTmpStr = abstractServiceTmpStr_;
       ::org::labcrypto::hottentot::generator::StringHelper::Replace (

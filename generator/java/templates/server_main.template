@@ -5,7 +5,7 @@
  * Description:
  *   
  ******************************************************************/
-package [%BASE_PACKAGE_NAME%].hotgen.server;
+package [%BASE_PACKAGE_NAME%];
 
 import java.io.IOException;
 

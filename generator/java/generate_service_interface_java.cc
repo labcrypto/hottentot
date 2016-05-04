@@ -108,7 +108,16 @@ namespace java {
         19, 
         serviceMethodsStr
       );
-      std::string path = outDir_ + "/" + pService->name_.c_str() + "Service.java";
+      std::string packages =
+        ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
+          ::org::labcrypto::hottentot::generator::StringHelper::Split (
+           pModule->GetPackage(), 
+            '.'
+          ), 
+          "/"
+        );
+      ::org::labcrypto::hottentot::generator::Os::MakeDir(outDir_ + "/" + packages);
+      std::string path = outDir_ + "/" + packages + "/" + pService->name_.c_str() + "Service.java";
       ::org::labcrypto::hottentot::generator::Os::WriteFile(path , replacableServiceTmpStr);
     }
   }

@@ -6,9 +6,7 @@
  *   
  ******************************************************************/
 
-package ir.ntnaeem.hottentot.examples.echoer.hotgen;
-
-import java.util.List;
+package ir.ntnaeem.hottentot.examples.echoer;
 
 import org.labcrypto.hottentot.runtime.Service;
 

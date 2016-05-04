@@ -338,7 +338,17 @@ namespace java {
         27, 
         deserializeMethodStr
       );
-      std::string path = outDir_ + "/" + pStruct->name_.c_str() + ".java";
+      std::string packages =
+        ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
+          ::org::labcrypto::hottentot::generator::StringHelper::Split (
+           pModule->GetPackage(), 
+            '.'
+          ), 
+          "/"
+        );
+      ::org::labcrypto::hottentot::generator::Os::MakeDir(outDir_ + "/" + packages);
+      std::string path = outDir_ + "/" + packages + "/" + 
+        pStruct->name_.c_str() + ".java";
       ::org::labcrypto::hottentot::generator::Os::WriteFile(path , replacableStructTmpStr);
     }
   }

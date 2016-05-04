@@ -74,7 +74,16 @@ namespace java {
       registerServicesStr, 
       1
     );
-    std::string path = serverOutDir_ + "/Main.java";
+    std::string packages =
+      ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
+        ::org::labcrypto::hottentot::generator::StringHelper::Split (
+         pModule->GetPackage(), 
+          '.'
+        ), 
+        "/"
+      );
+    ::org::labcrypto::hottentot::generator::Os::MakeDir(serverOutDir_ + "/" + packages);
+    std::string path = serverOutDir_ + "/" + packages + "/Main.java";
     ::org::labcrypto::hottentot::generator::Os::WriteFile (
       path, 
       replacableServerMainTmpStr

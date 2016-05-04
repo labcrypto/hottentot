@@ -65,7 +65,16 @@ namespace java {
         serviceName, 
         1
       );
-      std::string path = serverOutDir_ + "/" + serviceName + "Impl.java";
+      std::string packages =
+        ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
+          ::org::labcrypto::hottentot::generator::StringHelper::Split (
+           pModule->GetPackage(), 
+            '.'
+          ), 
+          "/"
+        );
+      ::org::labcrypto::hottentot::generator::Os::MakeDir(serverOutDir_ + "/" + packages);
+      std::string path = serverOutDir_ + "/" + packages + "/" + serviceName + "Impl.java";
       ::org::labcrypto::hottentot::generator::Os::WriteFile (
         path, 
         replacableServerImplTmpStr

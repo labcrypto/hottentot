@@ -5,7 +5,7 @@
  * Description:
  *   
  ******************************************************************/
-package ir.ntnaeem.hottentot.examples.echoer.hotgen;
+package ir.ntnaeem.hottentot.examples.echoer;
 
 import org.labcrypto.hottentot.runtime.RequestHandler;
 

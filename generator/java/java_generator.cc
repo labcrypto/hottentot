@@ -87,9 +87,9 @@ namespace java {
     ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig
   ) {
     SetTabStr(generationConfig);
-    outDir_ = generationConfig.outDir_ + "/hotgen";
-    clientOutDir_ = outDir_ + "/client";
-    serverOutDir_ = outDir_ + "/server";
+    outDir_ = generationConfig.outDir_ + "/src/main/java";
+    clientOutDir_ = generationConfig.outDir_ + "/src/main/client";
+    serverOutDir_ = generationConfig.outDir_ + "/src/main/server";
     ::org::labcrypto::hottentot::generator::Os::MakeDir(outDir_.c_str());
     ::org::labcrypto::hottentot::generator::Os::MakeDir(clientOutDir_.c_str());
     ::org::labcrypto::hottentot::generator::Os::MakeDir(serverOutDir_.c_str());

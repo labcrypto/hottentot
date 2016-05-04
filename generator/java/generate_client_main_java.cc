@@ -84,7 +84,16 @@ namespace java {
       importProxiesStr, 
       1
     );
-    std::string path = clientOutDir_ + "/Main.java";
+    std::string packages =
+      ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
+        ::org::labcrypto::hottentot::generator::StringHelper::Split (
+         pModule->GetPackage(), 
+          '.'
+        ), 
+        "/"
+      );
+    ::org::labcrypto::hottentot::generator::Os::MakeDir(clientOutDir_ + "/" + packages);
+    std::string path = clientOutDir_ + "/" + packages + "/Main.java";
     ::org::labcrypto::hottentot::generator::Os::WriteFile (
       path, 
       replacableClientMainTmpStr

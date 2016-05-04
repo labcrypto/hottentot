@@ -5,10 +5,7 @@
  * Description:
  *   This file contains definition of an abstract service class.
  ******************************************************************/
-package ir.ntnaeem.hottentot.examples.echoer.hotgen;
-
-import java.util.List;
-import java.util.ArrayList;
+package ir.ntnaeem.hottentot.examples.echoer;
 
 import org.labcrypto.hottentot.helper.PDTSerializer;
 import org.labcrypto.hottentot.helper.PDTDeserializer;

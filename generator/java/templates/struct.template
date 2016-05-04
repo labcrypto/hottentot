@@ -5,10 +5,7 @@
  * Description:
  *   This file contains definition of an abstract service class.
  ******************************************************************/
-package [%BASE_PACKAGE_NAME%].hotgen;
-
-import java.util.List;
-import java.util.ArrayList;
+package [%BASE_PACKAGE_NAME%];
 
 import org.labcrypto.hottentot.helper.PDTSerializer;
 import org.labcrypto.hottentot.helper.PDTDeserializer;

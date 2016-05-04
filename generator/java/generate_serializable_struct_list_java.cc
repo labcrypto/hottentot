@@ -35,6 +35,7 @@
 
 void 
 GenerateSerializableStructListFile (
+  ::org::labcrypto::hottentot::generator::Module *pModule,
   std::string listStructName ,
   std::string basePackageName ,
   std::string replacableSerializableStructListTmpStr ,
@@ -122,8 +123,18 @@ GenerateSerializableStructListFile (
     replacableSerializableStructListTmpStr, 
     "[%GET_VALUE_METHOD%]",
     getValueMethodStr,
-    1);        
-  std::string path = outDir + "/Serializable" + upperCaseStructName.c_str() + "List.java";
+    1);     
+  std::string packages =
+    ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
+      ::org::labcrypto::hottentot::generator::StringHelper::Split (
+       pModule->GetPackage(), 
+        '.'
+      ), 
+      "/"
+    );
+  ::org::labcrypto::hottentot::generator::Os::MakeDir(outDir + "/" + packages);   
+  std::string path = outDir + "/" + packages + "/Serializable" + 
+    upperCaseStructName.c_str() + "List.java";
   ::org::labcrypto::hottentot::generator::Os::WriteFile (
     path, 
     replacableSerializableStructListTmpStr
@@ -152,6 +163,7 @@ namespace java {
           std::string listStructName = 
             ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(declarationPtr->type_);
           GenerateSerializableStructListFile (
+            pModule,
             listStructName,
             basePackageName, 
             serializableStructListTmpStr_,
@@ -173,6 +185,7 @@ namespace java {
           std::string listStructName = 
             ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pMethod->returnType_);
           GenerateSerializableStructListFile (
+            pModule,
             listStructName,
             basePackageName, 
             serializableStructListTmpStr_,
@@ -187,6 +200,7 @@ namespace java {
             std::string listStructName =
               ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pArg->type_);
             GenerateSerializableStructListFile (
+              pModule,
               listStructName,
               basePackageName, 
               serializableStructListTmpStr_,

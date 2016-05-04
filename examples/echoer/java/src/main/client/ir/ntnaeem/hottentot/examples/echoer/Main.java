@@ -5,7 +5,7 @@
  * Description:
  *   
  ******************************************************************/
-package ir.ntnaeem.hottentot.examples.echoer.hotgen.client;
+package ir.ntnaeem.hottentot.examples.echoer;
 
 import java.io.IOException;
 

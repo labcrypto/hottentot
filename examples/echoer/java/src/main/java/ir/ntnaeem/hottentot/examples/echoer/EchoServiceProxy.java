@@ -5,11 +5,8 @@
  * Description:
  *   
  ******************************************************************/
-package ir.ntnaeem.hottentot.examples.echoer.hotgen;
+package ir.ntnaeem.hottentot.examples.echoer;
 
-import java.util.List;
-
-import org.labcrypto.hottentot.*;
 import org.labcrypto.hottentot.runtime.Argument;
 import org.labcrypto.hottentot.runtime.Proxy;
 import org.labcrypto.hottentot.runtime.Request;
@@ -23,8 +20,6 @@ import org.labcrypto.hottentot.runtime.exception.TcpClientCloseException;
 import org.labcrypto.hottentot.runtime.factory.ProtocolFactory;
 import org.labcrypto.hottentot.runtime.factory.TcpClientFactory;
 import org.labcrypto.hottentot.runtime.protocol.Protocol;
-import org.labcrypto.hottentot.helper.PDTSerializer;
-import org.labcrypto.hottentot.helper.PDTDeserializer;
 
 
 public class EchoServiceProxy extends AbstractEchoService implements Proxy {
