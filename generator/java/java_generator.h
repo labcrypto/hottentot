@@ -98,6 +98,7 @@ namespace java {
     std::string clientMainTmpStr_;
     std::string serverMainTmpStr_;
     std::string serverImplTmpStr_;
+    std::string pomTmpStr_;
     std::string outDir_;
     std::string extendModule_;
     std::string clientOutDir_;

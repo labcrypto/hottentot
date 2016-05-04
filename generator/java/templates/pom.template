@@ -27,6 +27,23 @@
           <target>1.7</target>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+            <execution>
+                <phase>generate-sources</phase>
+                <goals><goal>add-source</goal></goals>
+                <configuration>
+                    <sources>
+                        <source>src/main/hot</source>
+                        <source>src/main/hot-client-sample</source>
+                        <source>src/main/hot-server-sample</source>
+                    </sources>
+                </configuration>
+            </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 

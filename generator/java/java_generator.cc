@@ -68,6 +68,7 @@ namespace java {
     serverMainTmpStr_ = serverMainTmpStr;
     serverImplTmpStr_ = serverImplTmpStr;
     enumTmpStr_ = enumTmpStr;
+    pomTmpStr_ = pomTmpStr;
   }
   void
   JavaGenerator::ReadTemplateFiles() {
@@ -117,7 +118,47 @@ namespace java {
     ::org::labcrypto::hottentot::generator::Hot *hot,
     ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig
   ) {
-    // TODO
+    std::string replacablePomTmpStr = pomTmpStr_;
+    ::org::labcrypto::hottentot::generator::StringHelper::Replace (
+      replacablePomTmpStr, 
+      "[%POM_GROUP_ID%]", 
+      generationConfig.GetPomGroupId(), 
+      1
+    );
+    ::org::labcrypto::hottentot::generator::StringHelper::Replace (
+      replacablePomTmpStr, 
+      "[%POM_ARTIFACT_ID%]", 
+      generationConfig.GetPomArtifactId(), 
+      1
+    );
+    ::org::labcrypto::hottentot::generator::StringHelper::Replace (
+      replacablePomTmpStr, 
+      "[%POM_VERSION%]", 
+      generationConfig.GetPomVersion(), 
+      1
+    );
+    ::org::labcrypto::hottentot::generator::StringHelper::Replace (
+      replacablePomTmpStr, 
+      "[%HOT_DIR_PATH%]", 
+      outDir_, 
+      1
+    );
+    ::org::labcrypto::hottentot::generator::StringHelper::Replace (
+      replacablePomTmpStr, 
+      "[%HOT_SAMPLE_CLIENT_DIR_PATH%]", 
+      clientOutDir_, 
+      1
+    );
+    ::org::labcrypto::hottentot::generator::StringHelper::Replace (
+      replacablePomTmpStr, 
+      "[%HOT_SAMPLE_SERVER_DIR_PATH%]", 
+      serverOutDir_, 
+      1
+    );
+    ::org::labcrypto::hottentot::generator::Os::WriteFile (
+      generationConfig.GetOutDir() + "/pom.xml", 
+      replacablePomTmpStr
+    );
   }
 } // END NAMESPACE java
 } // END NAMESPACE generator
