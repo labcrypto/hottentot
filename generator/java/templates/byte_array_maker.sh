@@ -73,3 +73,9 @@ xxd -i enumByteArray > ./java/templates/byte_arrays/enum.h
 rm -rf enumByteArray
 echo "std::string enumTmpStr(reinterpret_cast<char const *>(enumByteArray),
 							         enumByteArray_len);" >> ./java/templates/byte_arrays/enum.h
+
+cat ./java/templates/pom.template > pomByteArray
+xxd -i pomByteArray > ./java/templates/byte_arrays/pom.h
+rm -rf pomByteArray
+echo "std::string pomTmpStr(reinterpret_cast<char const *>(pomByteArray),
+							         pomByteArray_len);" >> ./java/templates/byte_arrays/pom.h

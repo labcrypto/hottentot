@@ -352,6 +352,10 @@ int main(int argc, char **argv) {
   bool parse = false;
   uint8_t numberOfSpacesUsedForIndentation = 2;
   char *outputDir = 0;
+  char *extendModule = 0;
+  char *pomGroupId = 0;
+  char *pomArtifactId = 0;
+  char *pomVersion = 0;
   std::vector<char*> hots;
   for (uint16_t i = 1; i < argc;) {
     if (strcmp(argv[i], "--java") == 0) {
@@ -389,6 +393,18 @@ int main(int argc, char **argv) {
     } else if (strcmp(argv[i], "--out") == 0) {
       outputDir = argv[i + 1];
       i += 2;
+    } else if (strcmp(argv[i], "--extend-module") == 0) {
+      extendModule = argv[i + 1];
+      i += 2;
+    } else if (strcmp(argv[i], "--pom-group-id") == 0) {
+      pomGroupId = argv[i + 1];
+      i += 2;
+    } else if (strcmp(argv[i], "--pom-artifact-id") == 0) {
+      pomArtifactId = argv[i + 1];
+      i += 2;
+    } else if (strcmp(argv[i], "--pom-version") == 0) {
+      pomVersion = argv[i + 1];
+      i += 2;
     } else {
       if (strlen(argv[i]) > 1 && strncmp(argv[i], "--", 2) == 0) {
         printf("ERROR: Unknown option: %s\n", argv[i]);
@@ -406,6 +422,11 @@ int main(int argc, char **argv) {
   }
   if (hots.size() == 0) {
     std::cout << "ERROR: No hot file is selected for generation." << std::endl;
+    printHelpMessageAndExit();
+    exit(1);
+  }
+  if (isJava && (pomGroupId == 0 || pomArtifactId == 0 || pomVersion == 0)) {
+    std::cout << "ERROR: POM information is not enough for source generation." << std::endl;
     printHelpMessageAndExit();
     exit(1);
   }

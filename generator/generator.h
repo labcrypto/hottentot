@@ -110,6 +110,30 @@ namespace generator {
       }
       return "\t";
     }
+    inline std::string GetExtendModule() {
+      return extendModule_;
+    }
+    inline void SetExtendModule(std::string extendModule) {
+      extendModule_ = extendModule;
+    }
+    inline std::string GetPomGroupId() {
+      return pomGroupId_;
+    }
+    inline void SetPomGroupId(std::string pomGroupId) {
+      pomGroupId_ = pomGroupId;
+    }
+    inline std::string GetPomArtifactId() {
+      return pomArtifactId_;
+    }
+    inline void SetPomArtifactId(std::string pomArtifactId) {
+      pomArtifactId_ = pomArtifactId;
+    }
+    inline std::string GetPomVersion() {
+      return pomVersion_;
+    }
+    inline void SetPomVersion(std::string pomVersion) {
+      pomVersion_ = pomVersion;
+    }
   private:
     bool makefileGenerated_;
     bool clientGenerated_;
@@ -117,6 +141,10 @@ namespace generator {
     bool spacesUsedInsteadOfTabsForIndentation_;
     uint8_t numberOfSpacesUsedForIndentation_;
     std::string outDir_;
+    std::string extendModule_;
+    std::string pomGroupId_;
+    std::string pomArtifactId_;
+    std::string pomVersion_;
   };
   class Generator {
   public:
