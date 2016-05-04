@@ -8,6 +8,8 @@
 
 package [%BASE_PACKAGE_NAME%];
 
+import java.util.*;
+
 import org.labcrypto.hottentot.runtime.Service;
 
 

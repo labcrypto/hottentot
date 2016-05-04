@@ -91,7 +91,7 @@ namespace java {
     extendModule_ = generationConfig.extendModule_;
     outDir_ = generationConfig.outDir_ + "/src/main/hot";
     clientOutDir_ = generationConfig.outDir_ + "/src/main/hot-client-sample";
-    serverOutDir_ = generationConfig.outDir_ + "/src/main/hot-client-sample";
+    serverOutDir_ = generationConfig.outDir_ + "/src/main/hot-server-sample";
     ::org::labcrypto::hottentot::generator::Os::MakeDir(outDir_.c_str());
     ::org::labcrypto::hottentot::generator::Os::MakeDir(clientOutDir_.c_str());
     ::org::labcrypto::hottentot::generator::Os::MakeDir(serverOutDir_.c_str());

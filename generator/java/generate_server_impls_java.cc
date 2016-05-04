@@ -101,7 +101,7 @@ namespace java {
       ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableServerImplTmpStr, 
         "[%BASE_PACKAGE_NAME%]", 
-        basePackageName + "." + extendModule_, 
+        basePackageName + (extendModule_.size() > 0 ? "." : "") + extendModule_, 
         1
       );
       ::org::labcrypto::hottentot::generator::StringHelper::Replace (
@@ -125,7 +125,7 @@ namespace java {
       std::string packages =
         ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
           ::org::labcrypto::hottentot::generator::StringHelper::Split (
-           pModule->GetPackage() + "." + extendModule_, 
+           pModule->GetPackage() + (extendModule_.size() > 0 ? "." : "") + extendModule_, 
             '.'
           ), 
           "/"

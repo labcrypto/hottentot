@@ -7,6 +7,8 @@
  ******************************************************************/
 package [%BASE_PACKAGE_NAME%];
 
+import java.util.*;
+
 import org.labcrypto.hottentot.helper.PDTSerializer;
 import org.labcrypto.hottentot.helper.PDTDeserializer;
 import org.labcrypto.hottentot.helper.ByteArrayToInteger;

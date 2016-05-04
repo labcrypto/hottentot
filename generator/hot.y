@@ -460,10 +460,10 @@ int main(int argc, char **argv) {
     generationConfig.SetMakefileGenerated(makefileGenerated);
     generationConfig.SetClientGenerated(clientGenerated);
     generationConfig.SetStubGenerated(stubGenerated);
-    generationConfig.SetExtendModule(extendModule);
-    generationConfig.SetPomGroupId(pomGroupId);
-    generationConfig.SetPomArtifactId(pomArtifactId);
-    generationConfig.SetPomVersion(pomVersion);
+    generationConfig.SetExtendModule(extendModule == 0 ? "" : extendModule);
+    generationConfig.SetPomGroupId(pomGroupId == 0 ? "" : pomGroupId);
+    generationConfig.SetPomArtifactId(pomArtifactId == 0 ? "" : pomArtifactId);
+    generationConfig.SetPomVersion(pomVersion == 0 ? "" : pomVersion);
     ::org::labcrypto::hottentot::generator::Generator *generator = 0;
     if (isCC) {
       generator = new ::org::labcrypto::hottentot::generator::cc::CCGenerator();

@@ -36,10 +36,11 @@
 void 
 GenerateSerializableStructListFile (
   ::org::labcrypto::hottentot::generator::Module *pModule,
-  std::string listStructName ,
-  std::string basePackageName ,
-  std::string replacableSerializableStructListTmpStr ,
-  std::string outDir ,
+  std::string listStructName,
+  std::string basePackageName,
+  std::string replacableSerializableStructListTmpStr,
+  std::string outDir,
+  std::string extendModule,
   std::string indent
 ) {
   std::string lowerCaseStructName = 
@@ -68,7 +69,7 @@ GenerateSerializableStructListFile (
   ::org::labcrypto::hottentot::generator::StringHelper::Replace (
     replacableSerializableStructListTmpStr,
     "[%BASE_PACKAGE_NAME%]",
-    basePackageName + "." + extendModule_,
+    basePackageName + (extendModule.size() > 0 ? "." : "") + extendModule,
     1
   );
   ::org::labcrypto::hottentot::generator::StringHelper::Replace (
@@ -127,7 +128,7 @@ GenerateSerializableStructListFile (
   std::string packages =
     ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
       ::org::labcrypto::hottentot::generator::StringHelper::Split (
-       pModule->GetPackage() + "." + extendModule_, 
+       pModule->GetPackage() + (extendModule.size() > 0 ? "." : "") + extendModule, 
         '.'
       ), 
       "/"
@@ -168,6 +169,7 @@ namespace java {
             basePackageName, 
             serializableStructListTmpStr_,
             outDir_, 
+            extendModule_,
             indent_
           );
         }
@@ -189,7 +191,8 @@ namespace java {
             listStructName,
             basePackageName, 
             serializableStructListTmpStr_,
-            outDir_, 
+            outDir_,
+            extendModule_,
             indent_
           );
         }
@@ -204,7 +207,8 @@ namespace java {
               listStructName,
               basePackageName, 
               serializableStructListTmpStr_,
-              outDir_, 
+              outDir_,
+              extendModule_,
               indent_
             );
           }
