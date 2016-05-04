@@ -151,7 +151,7 @@ namespace java {
         if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(declarationPtr->type_)) {
           std::string listStructName = 
             ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(declarationPtr->type_);
-          GnerateSerializableStructListFile (
+          GenerateSerializableStructListFile (
             listStructName,
             basePackageName, 
             serializableStructListTmpStr_,
