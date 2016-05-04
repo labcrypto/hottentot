@@ -22,12 +22,11 @@
  */
 
 #include <sys/stat.h>
+
 #include <sstream>
+
 #include "java_generator.h"
-#include "../ds/hot.h"
-#include "../common/string_helper.h"
-#include "../common/os.h" 
-#include "../common/type_helper.h" 
+
 #include "templates/byte_arrays/abstractService.h" 
 #include "templates/byte_arrays/requestHandler.h" 
 #include "templates/byte_arrays/service.h" 
@@ -40,93 +39,79 @@
 #include "templates/byte_arrays/serverImpl.h" 
 #include "templates/byte_arrays/enum.h" 
 
+#include "../hot.h"
+#include "../string_helper.h"
+#include "../os.h" 
+#include "../type_helper.h" 
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace java {
-        JavaGenerator::~JavaGenerator() {
-          //
-        }
-        void
-        JavaGenerator::Destroy(){
-          //TODO
-        }
-        JavaGenerator::JavaGenerator() {
-          abstractServiceTmpStr_ = abstractServiceTmpStr;
-          requestHandlerTmpStr_ = requestHandlerTmpStr;
-          serviceTmpStr_ = serviceTmpStr;
-          serviceProxyTmpStr_ = serviceProxyTmpStr;
-          serviceProxyBuilderTmpStr_ = serviceProxyBuilderTmpStr;
-          structTmpStr_ = structTmpStr;
-          serializableStructListTmpStr_ = serializableStructListTmpStr;
-          clientMainTmpStr_ = clientMainTmpStr;
-          serverMainTmpStr_ = serverMainTmpStr;
-          serverImplTmpStr_ = serverImplTmpStr;
-          enumTmpStr_ = enumTmpStr;
-          
 
-          //MakeStringsFromByteArrays();
-          //ReadTemplateFiles();
-        }
-
-        void
-        JavaGenerator::ReadTemplateFiles() {
-          //I dont use this ... 
-          ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/struct.template",structTmpStr_);
-          ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/abstractService.template",abstractServiceTmpStr_);
-          ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/service.template",serviceTmpStr_);
-          ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/serviceProxy.template",serviceProxyTmpStr_);
-          ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/serviceProxyBuilder.template",serviceProxyBuilderTmpStr_);
-          ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/requestHandler.template",requestHandlerTmpStr_);
-          ::naeem::hottentot::generator::common::Os::ReadFile("./java/templates/client_main.template",clientMainTmpStr_);
-        }
-
-        void
-        JavaGenerator::SetTabStr(::naeem::hottentot::generator::GenerationConfig &generationConfig){
-          if(generationConfig.IsSpacesUsedInsteadOfTabsForIndentation()) {
-            for (int i = 0; i < generationConfig.GetNumberOfSpacesUsedForIndentation() ; i++) {
-              indent_ += " ";
-            }
-          }else{
-            indent_ = "\t";
-          }
-        }
-
-        void
-        JavaGenerator::Generate(::naeem::hottentot::generator::ds::Hot *hot,
-          ::naeem::hottentot::generator::GenerationConfig &generationConfig) {
-          SetTabStr(generationConfig);
-          //set out dir
-          outDir_ = generationConfig.outDir_ + "/hotgen";
-          clientOutDir_ = outDir_ + "/client";
-          serverOutDir_ = outDir_ + "/server";
-          //
-          ::naeem::hottentot::generator::common::Os::MakeDir(outDir_.c_str());
-          ::naeem::hottentot::generator::common::Os::MakeDir(clientOutDir_.c_str());
-          ::naeem::hottentot::generator::common::Os::MakeDir(serverOutDir_.c_str());
-          // std::string serviceFolder = outDir_ + "/service";
-          // std::string proxyFolder = outDir_ + "/proxy";
-          // ::naeem::hottentot::generator::common::Os::MakeDir(serviceFolder);
-          // ::naeem::hottentot::generator::common::Os::MakeDir(proxyFolder);
-          modules_ = hot->modules_;
-          for (int i = 0; i < modules_.size(); i++) {
-            ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
-            GenerateEnums(pModule);
-            GenerateStructs(pModule);
-            GenerateAbstractService(pModule);
-            GenerateServiceInterface(pModule);
-            GenerateRequestHandler(pModule);
-            GenerateServiceProxyBuilder(pModule);
-            GenerateServiceProxy(pModule);
-            GenerateSerializableStructList(pModule);
-            GenerateClientMain(pModule);
-            GenerateServerMain(pModule);
-            GenerateServerImpls(pModule);
-          }
-          Destroy();
-        }
-      } // END NAMESPACE JAVA
-    } // END NAMESPACE GENERATOR
-  } // END NAMESPACE HOTTENTOT
-} // END NAMESPACE NAEEM
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+namespace java {
+  JavaGenerator::~JavaGenerator() {
+  }
+  void
+  JavaGenerator::Destroy(){
+  }
+  JavaGenerator::JavaGenerator() {
+    abstractServiceTmpStr_ = abstractServiceTmpStr;
+    requestHandlerTmpStr_ = requestHandlerTmpStr;
+    serviceTmpStr_ = serviceTmpStr;
+    serviceProxyTmpStr_ = serviceProxyTmpStr;
+    serviceProxyBuilderTmpStr_ = serviceProxyBuilderTmpStr;
+    structTmpStr_ = structTmpStr;
+    serializableStructListTmpStr_ = serializableStructListTmpStr;
+    clientMainTmpStr_ = clientMainTmpStr;
+    serverMainTmpStr_ = serverMainTmpStr;
+    serverImplTmpStr_ = serverImplTmpStr;
+    enumTmpStr_ = enumTmpStr;
+  }
+  void
+  JavaGenerator::ReadTemplateFiles() {
+  }
+  void
+  JavaGenerator::SetTabStr(::naeem::hottentot::generator::GenerationConfig &generationConfig) {
+    if (generationConfig.IsSpacesUsedInsteadOfTabsForIndentation()) {
+      for (int i = 0; i < generationConfig.GetNumberOfSpacesUsedForIndentation(); i++) {
+        indent_ += " ";
+      }
+    } else {
+      indent_ = "\t";
+    }
+  }
+  void
+  JavaGenerator::Generate (
+    ::naeem::hottentot::generator::ds::Hot *hot,
+    ::naeem::hottentot::generator::GenerationConfig &generationConfig
+  ) {
+    SetTabStr(generationConfig);
+    outDir_ = generationConfig.outDir_ + "/hotgen";
+    clientOutDir_ = outDir_ + "/client";
+    serverOutDir_ = outDir_ + "/server";
+    ::naeem::hottentot::generator::common::Os::MakeDir(outDir_.c_str());
+    ::naeem::hottentot::generator::common::Os::MakeDir(clientOutDir_.c_str());
+    ::naeem::hottentot::generator::common::Os::MakeDir(serverOutDir_.c_str());
+    modules_ = hot->modules_;
+    for (int i = 0; i < modules_.size(); i++) {
+      ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
+      GenerateEnums(pModule);
+      GenerateStructs(pModule);
+      GenerateAbstractService(pModule);
+      GenerateServiceInterface(pModule);
+      GenerateRequestHandler(pModule);
+      GenerateServiceProxyBuilder(pModule);
+      GenerateServiceProxy(pModule);
+      GenerateSerializableStructList(pModule);
+      GenerateClientMain(pModule);
+      GenerateServerMain(pModule);
+      GenerateServerImpls(pModule);
+    }
+    Destroy();
+  }
+} // END NAMESPACE java
+} // END NAMESPACE generator
+} // END NAMESPACE hottentot
+} // END NAMESPACE labcrypto
+} // END NMAESPACE org

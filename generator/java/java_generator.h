@@ -21,15 +21,15 @@
  *  SOFTWARE.
  */
 
-#ifndef _NAEEM_HOTTENTOT_GENERATOR__JAVA__JAVA_GENERATOR_H_
-#define _NAEEM_HOTTENTOT_GENERATOR__JAVA__JAVA_GENERATOR_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_GENERATOR__JAVA__JAVA_GENERATOR_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_GENERATOR__JAVA__JAVA_GENERATOR_H_
 
+#include <map>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <fstream>
-#include <map>
 
 #include <stdio.h>
 #ifdef _MSC_VER
@@ -46,62 +46,65 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #include "../generator.h"
-#include "../ds/module.h"
+#include "../module.h"
 
 
-namespace naeem {
-  namespace hottentot {
-    namespace generator {
-      namespace java {
-        class JavaGenerator : public ::naeem::hottentot::generator::Generator {
-        public:
-          JavaGenerator();
-          virtual ~JavaGenerator();
-        public:
-          virtual void Generate(::naeem::hottentot::generator::ds::Hot *,
-                                ::naeem::hottentot::generator::GenerationConfig &);
-
-          void FakeInsert();
-          void GenerateStructs(::naeem::hottentot::generator::ds::Module*);
-          void GenerateEnums(::naeem::hottentot::generator::ds::Module*);
-          void ReadTemplateFiles();
-          void GenerateAbstractService(::naeem::hottentot::generator::ds::Module*);
-          void GenerateServiceInterface(::naeem::hottentot::generator::ds::Module*);
-          void GenerateServiceProxyBuilder(::naeem::hottentot::generator::ds::Module*);
-          void GenerateRequestHandler(::naeem::hottentot::generator::ds::Module*);
-          void GenerateServiceProxy(::naeem::hottentot::generator::ds::Module*);
-          void GenerateSerializableStructList(::naeem::hottentot::generator::ds::Module*);
-          void GenerateClientMain(::naeem::hottentot::generator::ds::Module*);
-          void GenerateServerMain(::naeem::hottentot::generator::ds::Module*);
-          void GenerateServerImpls(::naeem::hottentot::generator::ds::Module*);
-          void SetTabStr(::naeem::hottentot::generator::GenerationConfig &);
-          std::string ConvertType(std::string);
-          uint32_t GetTypeLength(std::string);
-          void Destroy();
-          
-        private:
-          std::ofstream os;
-          std::vector<naeem::hottentot::generator::ds::Module*>  modules_;
-          std::string structTmpStr_;
-          std::string enumTmpStr_;
-          std::string abstractServiceTmpStr_;
-          std::string serviceTmpStr_;
-          std::string serviceProxyBuilderTmpStr_;
-          std::string requestHandlerTmpStr_;
-          std::string serviceProxyTmpStr_;
-          std::string serializableStructListTmpStr_;
-          std::string clientMainTmpStr_;
-          std::string serverMainTmpStr_;
-          std::string serverImplTmpStr_;
-          std::string outDir_;
-          std::string clientOutDir_;
-          std::string serverOutDir_;
-          static const uint32_t TAB_SPACE_NUMBER = 4;
-          std::string indent_;
-        };
-      }
-    }
-  }
-}
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace generator {
+namespace java {
+  class JavaGenerator : public ::naeem::hottentot::generator::Generator {
+  public:
+    JavaGenerator();
+    virtual ~JavaGenerator();
+  public:
+    virtual void Generate (
+      ::naeem::hottentot::generator::ds::Hot *,
+      ::naeem::hottentot::generator::GenerationConfig &
+    );
+    void FakeInsert();
+    void GenerateStructs(::naeem::hottentot::generator::ds::Module*);
+    void GenerateEnums(::naeem::hottentot::generator::ds::Module*);
+    void ReadTemplateFiles();
+    void GenerateAbstractService(::naeem::hottentot::generator::ds::Module*);
+    void GenerateServiceInterface(::naeem::hottentot::generator::ds::Module*);
+    void GenerateServiceProxyBuilder(::naeem::hottentot::generator::ds::Module*);
+    void GenerateRequestHandler(::naeem::hottentot::generator::ds::Module*);
+    void GenerateServiceProxy(::naeem::hottentot::generator::ds::Module*);
+    void GenerateSerializableStructList(::naeem::hottentot::generator::ds::Module*);
+    void GenerateClientMain(::naeem::hottentot::generator::ds::Module*);
+    void GenerateServerMain(::naeem::hottentot::generator::ds::Module*);
+    void GenerateServerImpls(::naeem::hottentot::generator::ds::Module*);
+    void SetTabStr(::naeem::hottentot::generator::GenerationConfig &);
+    std::string ConvertType(std::string);
+    uint32_t GetTypeLength(std::string);
+    void Destroy();
+  private:
+    std::ofstream os;
+    std::vector<naeem::hottentot::generator::ds::Module*>  modules_;
+    std::string structTmpStr_;
+    std::string enumTmpStr_;
+    std::string abstractServiceTmpStr_;
+    std::string serviceTmpStr_;
+    std::string serviceProxyBuilderTmpStr_;
+    std::string requestHandlerTmpStr_;
+    std::string serviceProxyTmpStr_;
+    std::string serializableStructListTmpStr_;
+    std::string clientMainTmpStr_;
+    std::string serverMainTmpStr_;
+    std::string serverImplTmpStr_;
+    std::string outDir_;
+    std::string clientOutDir_;
+    std::string serverOutDir_;
+    std::string indent_;
+  private:
+    static const uint32_t TAB_SPACE_NUMBER = 4;
+  };
+} // END NAMESPACE java
+} // END NAMESPACE generator
+} // END NAMESPACE hottentot
+} // END NAMESPACE labcrypto
+} // END NAMESPACE org
 
 #endif
