@@ -50,7 +50,7 @@ namespace java {
       std::string packages =
         ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
           ::org::labcrypto::hottentot::generator::StringHelper::Split (
-           pModule->GetPackage(), 
+           pModule->GetPackage() + "." + extendModule_, 
             '.'
           ), 
           "/"
@@ -67,7 +67,7 @@ namespace java {
       ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableAbstractServiceTmpStr, 
         "[%BASE_PACKAGE_NAME%]", 
-        basePackageName, 
+        basePackageName + "." + extendModule_, 
         1
       );
       ::org::labcrypto::hottentot::generator::StringHelper::Replace (

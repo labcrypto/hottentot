@@ -60,7 +60,7 @@ namespace java {
       ::org::labcrypto::hottentot::generator::StringHelper::Replace ( 
         replacableRequestHandlerTmpStr, 
         "[%BASE_PACKAGE_NAME%]", 
-        basePackageName, 
+        basePackageName + "." + extendModule_, 
         1
       );
       ::org::labcrypto::hottentot::generator::StringHelper::Replace (
@@ -278,7 +278,7 @@ namespace java {
       std::string packages =
         ::org::labcrypto::hottentot::generator::StringHelper::Concat ( 
           ::org::labcrypto::hottentot::generator::StringHelper::Split (
-           pModule->GetPackage(), 
+           pModule->GetPackage() + "." + extendModule_, 
             '.'
           ), 
           "/"

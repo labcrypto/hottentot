@@ -99,6 +99,7 @@ namespace java {
     std::string serverMainTmpStr_;
     std::string serverImplTmpStr_;
     std::string outDir_;
+    std::string extendModule_;
     std::string clientOutDir_;
     std::string serverOutDir_;
     std::string indent_;
