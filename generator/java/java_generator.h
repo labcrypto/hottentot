@@ -63,6 +63,10 @@ namespace java {
       ::org::labcrypto::hottentot::generator::Hot *,
       ::org::labcrypto::hottentot::generator::GenerationConfig &
     );
+    void GeneratePomFile (
+      ::org::labcrypto::hottentot::generator::Hot *,
+      ::org::labcrypto::hottentot::generator::GenerationConfig &
+    );
     void FakeInsert();
     void GenerateStructs(::org::labcrypto::hottentot::generator::Module*);
     void GenerateEnums(::org::labcrypto::hottentot::generator::Module*);

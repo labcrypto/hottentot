@@ -324,17 +324,22 @@ void printHelpMessageAndExit() {
   std::cout << "LabCrypto Org. 2015-2016 Copyright" << std::endl;
   std::cout << "Usage: hot [OPTION]... [HOT-FILE]..." << std::endl;
   std::cout << "  OPTIONS:" << std::endl;
-  std::cout << "    --java                     Generate java sources. [Default: disabled]" << std::endl;
-  std::cout << "    --cc                       Generate C++ sources. [Default: enabled]" << std::endl;
+  std::cout << "    --java                     Generate java sources. [Default: MANDATORY]" << std::endl;
+  std::cout << "    --cc                       Generate C++ sources. [Default: MANDATORY]" << std::endl;
   std::cout << "    --makefile                 Generate Makefile for C++ sources. [Default: disabled]" << std::endl;
   std::cout << "    --client                   Generate sources for C++ client. [Default: disabled]" << std::endl;
   std::cout << "    --stub                     Generate a C++ stub for service. [Default: disabled]" << std::endl;
   std::cout << "    --indent-with-spaces       Generator will produce indents using spaces. [Default: enabled]" << std::endl;
   std::cout << "    --indent-with-tabs         Generator will produce indents using tabs. [Default: disabled]" << std::endl;
   std::cout << "    --indent-space-count       Number of spaces for producing a single indent. [Default: 2]" << std::endl;
-  std::cout << "    --out                      Path to output directory. [Default: hotgen]" << std::endl;
+  std::cout << "    --out                      Path to output directory. [Default: MANDATORY]" << std::endl;
   std::cout << "    --parse                    Displays parse result in a tree format. [Default: disabled]" << std::endl;
   std::cout << "    --dont-generate            Don't generate sources. [Default: disabled]" << std::endl;
+  std::cout << "    --extend-module            A dot seperated string which will be added to module. [Default: '']" << std::endl;
+  std::cout << "    --pom                      Generate POM file for java sources. [Default: disabled]" << std::endl;
+  std::cout << "    --pom-group-id             GroupId of POM file. [Default: MANDATORT IF POM SPECIFIED.]" << std::endl;
+  std::cout << "    --pom-artifact-id          ArtifactId of POM file. [Default: MANDATORT IF POM SPECIFIED.]" << std::endl;
+  std::cout << "    --pom-version              Version of POM file. [Default: MANDATORT IF POM SPECIFIED.]" << std::endl;
   std::cout << std::endl;
   std::cout << "For more information and examples, please visit https://github.com/LabCryptoOrg/hottentot" << std::endl;
   std::cout << std::endl;
@@ -350,6 +355,7 @@ int main(int argc, char **argv) {
   bool stubGenerated = false;
   bool dontGenerate = false;
   bool parse = false;
+  bool pom = false;
   uint8_t numberOfSpacesUsedForIndentation = 2;
   char *outputDir = 0;
   char *extendModule = 0;
@@ -385,6 +391,9 @@ int main(int argc, char **argv) {
     } else if (strcmp(argv[i], "--parse") == 0) {
       parse = true;
       i++;
+    } else if (strcmp(argv[i], "--pom") == 0) {
+      pom = true;
+      i++;
     } else if (strcmp(argv[i], "--help") == 0) {
       printHelpMessageAndExit();
     } else if (strcmp(argv[i], "--number-of-spaces-used-for-indentation") == 0) {
@@ -415,17 +424,21 @@ int main(int argc, char **argv) {
     }
   }
   if (!isJava && !isCC) {
-    isCC = true;
+    std::cout << "ERROR: Target language is not specified" << std::endl;
+    printHelpMessageAndExit();
+    exit(1);
   }
   if (outputDir == 0) {
-    outputDir = "hotgen";
+    std::cout << "ERROR: Output director is not specified." << std::endl;
+    printHelpMessageAndExit();
+    exit(1);
   }
   if (hots.size() == 0) {
     std::cout << "ERROR: No hot file is selected for generation." << std::endl;
     printHelpMessageAndExit();
     exit(1);
   }
-  if (isJava && (pomGroupId == 0 || pomArtifactId == 0 || pomVersion == 0)) {
+  if (isJava && pom && (pomGroupId == 0 || pomArtifactId == 0 || pomVersion == 0)) {
     std::cout << "ERROR: POM information is not enough for source generation." << std::endl;
     printHelpMessageAndExit();
     exit(1);
@@ -447,8 +460,12 @@ int main(int argc, char **argv) {
     generationConfig.SetMakefileGenerated(makefileGenerated);
     generationConfig.SetClientGenerated(clientGenerated);
     generationConfig.SetStubGenerated(stubGenerated);
+    generationConfig.SetExtendModule(extendModule);
+    generationConfig.SetPomGroupId(pomGroupId);
+    generationConfig.SetPomArtifactId(pomArtifactId);
+    generationConfig.SetPomVersion(pomVersion);
     ::org::labcrypto::hottentot::generator::Generator *generator = 0;
-    if (!dontGenerate && isCC) {
+    if (isCC) {
       generator = new ::org::labcrypto::hottentot::generator::cc::CCGenerator();
       ::org::labcrypto::hottentot::generator::cc::CCGenerator* ccGenerator =
           dynamic_cast< ::org::labcrypto::hottentot::generator::cc::CCGenerator*>(generator);
@@ -463,9 +480,14 @@ int main(int argc, char **argv) {
         ccGenerator->GenerateStub(currentHot, generationConfig);
       }
     }
-    if (!dontGenerate && isJava) {
+    if (isJava) {
       generator = new ::org::labcrypto::hottentot::generator::java::JavaGenerator();
-      generator->Generate(currentHot, generationConfig);
+      ::org::labcrypto::hottentot::generator::java::JavaGenerator* javaGenerator =
+          dynamic_cast< ::org::labcrypto::hottentot::generator::java::JavaGenerator*>(generator);
+      javaGenerator->Generate(currentHot, generationConfig);
+      if (pom) {
+        javaGenerator->GeneratePomFile(currentHot, generationConfig);
+      }
     }
     delete generator;
     delete currentHot;

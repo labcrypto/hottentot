@@ -38,6 +38,7 @@
 #include "templates/byte_arrays/serverMain.h" 
 #include "templates/byte_arrays/serverImpl.h" 
 #include "templates/byte_arrays/enum.h" 
+#include "templates/byte_arrays/pom.h" 
 
 #include "../hot.h"
 #include "../string_helper.h"
@@ -109,6 +110,13 @@ namespace java {
       GenerateServerImpls(pModule);
     }
     Destroy();
+  }
+  void
+  JavaGenerator::GeneratePomFile (
+    ::org::labcrypto::hottentot::generator::Hot *hot,
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig
+  ) {
+    // TODO
   }
 } // END NAMESPACE java
 } // END NAMESPACE generator
