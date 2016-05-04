@@ -21,8 +21,10 @@
 #  SOFTWARE.
 #
 
-compile:
+compile: init c_cc c_java build_output
 
+
+init:
 	mkdir -p .lib
 	./java/templates/byte_array_maker.sh
 	./cc/templates/generate_templates_header.sh ./cc/templates/
@@ -37,6 +39,7 @@ compile:
 	g++ -c -g service.cc -o .lib/service.o
 	g++ -c -g method.cc -o .lib/method.o
 
+c_cc:
 	g++ -c -g cc/runtime.cc -o .lib/runtime.o
 	g++ -c -g cc/cc_generator.cc -o .lib/cc_generator.o
 	g++ -c -g cc/generate_abstract_service_header.cc -o .lib/generate_abstract_service_header.o
@@ -56,34 +59,27 @@ compile:
 	g++ -c -g cc/generate_stub.cc -o .lib/generate_stub.o
 	g++ -c -g cc/templates/templates.cc -o .lib/templates.o
 	
-	# g++ -c -g java/java_generator.cc -o .lib/java_generator.o
-	# g++ -c -g java/generate_abstract_service_java.cc -o .lib/generate_abstract_service_java.o
-	# g++ -c -g java/generate_structs_java.cc -o .lib/generate_structs_java.o
-	# g++ -c -g java/generate_service_interface_java.cc -o .lib/generate_service_interface_java.o
-	# g++ -c -g java/generate_request_handler_java.cc -o .lib/generate_request_handler_java.o
-	# g++ -c -g java/generate_service_proxy_builder_java.cc -o .lib/generate_service_proxy_builder_java.o
-	# g++ -c -g java/generate_service_proxy_java.cc -o .lib/generate_service_proxy_java.o
-	# g++ -c -g java/generate_serializable_struct_list_java.cc -o .lib/generate_serializable_struct_list_java.o
-	# g++ -c -g java/generate_client_main_java.cc -o .lib/generate_client_main_java.o
-	# g++ -c -g java/generate_server_main_java.cc -o .lib/generate_server_main_java.o
-	# g++ -c -g java/generate_server_impls_java.cc -o .lib/generate_server_impls_java.o
-	# g++ -c -g java/generate_enums_java.cc -o .lib/generate_enums_java.o
+c_java:
+	g++ -c -g java/java_generator.cc -o .lib/java_generator.o
+	g++ -c -g java/generate_abstract_service_java.cc -o .lib/generate_abstract_service_java.o
+	g++ -c -g java/generate_structs_java.cc -o .lib/generate_structs_java.o
+	g++ -c -g java/generate_service_interface_java.cc -o .lib/generate_service_interface_java.o
+	g++ -c -g java/generate_request_handler_java.cc -o .lib/generate_request_handler_java.o
+	g++ -c -g java/generate_service_proxy_builder_java.cc -o .lib/generate_service_proxy_builder_java.o
+	g++ -c -g java/generate_service_proxy_java.cc -o .lib/generate_service_proxy_java.o
+	g++ -c -g java/generate_serializable_struct_list_java.cc -o .lib/generate_serializable_struct_list_java.o
+	g++ -c -g java/generate_client_main_java.cc -o .lib/generate_client_main_java.o
+	g++ -c -g java/generate_server_main_java.cc -o .lib/generate_server_main_java.o
+	g++ -c -g java/generate_server_impls_java.cc -o .lib/generate_server_impls_java.o
+	g++ -c -g java/generate_enums_java.cc -o .lib/generate_enums_java.o
 	
-		    # .lib/java_generator.o \
-	    # .lib/generate_structs_java.o \
-	    # .lib/generate_enums_java.o \
-	    # .lib/generate_abstract_service_java.o \
-	    # .lib/generate_service_interface_java.o \
-	    # .lib/generate_request_handler_java.o \
-	    # .lib/generate_service_proxy_builder_java.o \
-	    # .lib/generate_service_proxy_java.o \
-	    # .lib/generate_serializable_struct_list_java.o \
-	    # .lib/generate_client_main_java.o \
-	    # .lib/generate_server_main_java.o \
-	    # .lib/generate_server_impls_java.o \
-	    
+build_output:
 	g++ -g .lib/y.tab.o \
 	    .lib/lex.yy.o \
+	    .lib/templates.o \
+	    .lib/fasthash.o \
+	    .lib/service.o \
+	    .lib/method.o \
 	    .lib/runtime_common.o \
 	    .lib/runtime.o \
 	    .lib/cc_generator.o \
@@ -102,8 +98,16 @@ compile:
 	    .lib/generate_makefile.o \
 	    .lib/generate_client.o \
 	    .lib/generate_stub.o \
-	    .lib/templates.o \
-	    .lib/fasthash.o \
-	    .lib/service.o \
-	    .lib/method.o \
+	    .lib/java_generator.o \
+	    .lib/generate_structs_java.o \
+	    .lib/generate_enums_java.o \
+	    .lib/generate_abstract_service_java.o \
+	    .lib/generate_service_interface_java.o \
+	    .lib/generate_request_handler_java.o \
+	    .lib/generate_service_proxy_builder_java.o \
+	    .lib/generate_service_proxy_java.o \
+	    .lib/generate_serializable_struct_list_java.o \
+	    .lib/generate_client_main_java.o \
+	    .lib/generate_server_main_java.o \
+	    .lib/generate_server_impls_java.o \
 	    -lfl -ll -o hot
