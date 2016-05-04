@@ -9,12 +9,12 @@ package ir.ntnaeem.hottentot.examples.echoer;
 
 import java.io.IOException;
 
-import ir.ntnaeem.hottentot.examples.echoer.hotgen.EchoService;
-import ir.ntnaeem.hottentot.examples.echoer.hotgen.EchoServiceProxyBuilder;
+import ir.ntnaeem.hottentot.examples.echoer.EchoService;
+import ir.ntnaeem.hottentot.examples.echoer.EchoServiceProxyBuilder;
 
 
 
-public class Main {
+public class SampleClient {
   public static void main(String[] args) throws IOException {
     org.labcrypto.hottentot.runtime.config.Config.setMainArgs(args);
     final EchoService echoProxy = EchoServiceProxyBuilder.create("127.0.0.1", 8080);
