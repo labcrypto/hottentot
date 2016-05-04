@@ -7,6 +7,8 @@
  ******************************************************************/
 package ir.ntnaeem.hottentot.examples.listtest;
 
+import java.util.*;
+
 import org.labcrypto.hottentot.runtime.Argument;
 import org.labcrypto.hottentot.runtime.Proxy;
 import org.labcrypto.hottentot.runtime.Request;
