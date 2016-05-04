@@ -32,3 +32,6 @@ Service side thread pooling                                                     
 Handle errors while writing data to service                                           [DONE]
 Handle errors while writing data to proxy                                             [DONE]
 Callbacks                                                                             [TODO]
+Create package directories for java generated sources                                 [TODO]
+Add a base package name to be added to module namespace                               [TODO]
+Add a helper class for manipulation of java unsigned data types                       [TODO]
