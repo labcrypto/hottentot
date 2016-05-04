@@ -40,9 +40,9 @@ namespace generator {
 namespace java {
   void
   JavaGenerator::GenerateRequestHandler (
-    ::naeem::hottentot::generator::ds::Module *pModule
+    ::org::labcrypto::hottentot::generator::Module *pModule
   ) {
-    ::naeem::hottentot::generator::ds::Service *pService;
+    ::org::labcrypto::hottentot::generator::Service *pService;
     std::string basePackageName = pModule->package_;
     for (int i = 0; i < pModule->services_.size(); i++) {
       std::string basePackageName = pModule->package_;
@@ -51,31 +51,31 @@ namespace java {
       std::string lowerCaseServiceName = pService->name_;
       lowerCaseServiceName[0] += 32;
       std::string replacableRequestHandlerTmpStr = requestHandlerTmpStr_;
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableRequestHandlerTmpStr, 
         "[%INDENT%]", 
         indent_, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace ( 
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace ( 
         replacableRequestHandlerTmpStr, 
         "[%BASE_PACKAGE_NAME%]", 
         basePackageName, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableRequestHandlerTmpStr,
         "[%SERVICE_NAME%]", 
         pService->name_, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableRequestHandlerTmpStr,
         "[%SERVICE_NAME_LOWERCASE%]", 
         lowerCaseServiceName, 
         1
       );
-      ::naeem::hottentot::generator::ds::Method *pMethod;
+      ::org::labcrypto::hottentot::generator::Method *pMethod;
       std::string methodConditionStr;
       for (int i = 0; i < pService->methods_.size(); i++) {
         pMethod = pService->methods_.at(i);
@@ -83,11 +83,11 @@ namespace java {
         lowerCaseReturnType[0] += 32;
         std::string fetchedReturnTypeOfList;
         std::string lowerCaseFetchedReturnTypeOfList;
-        if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)) {
+        if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
           fetchedReturnTypeOfList = 
-            ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
+            ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pMethod->returnType_);
           lowerCaseFetchedReturnTypeOfList = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(fetchedReturnTypeOfList);
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeLowerCase(fetchedReturnTypeOfList);
         }
         std::stringstream ssID;
         ssID << pMethod->GetHash();
@@ -95,7 +95,7 @@ namespace java {
                               "if(methodId == " + ssID.str() + "L){\n";
         methodConditionStr += indent_ + indent_ +
                               indent_ + "List <Argument> args = request.getArgs();\n";
-        ::naeem::hottentot::generator::ds::Argument *pArg;
+        ::org::labcrypto::hottentot::generator::Argument *pArg;
         for (int i = 0; i < pMethod->arguments_.size(); i++) {
           pArg = pMethod->arguments_.at(i);
           std::stringstream ssI;
@@ -104,18 +104,18 @@ namespace java {
             indent_ + indent_ + indent_ + "Argument arg" + ssI.str() + 
               " = args.get(" + ssI.str() + ");\n";
           std::string argType = 
-            ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pArg->type_);
+            ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(pArg->type_);
           std::string capitalizedArgVar =  
-            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_);
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(pArg->variable_);
           methodConditionStr += indent_ + indent_ + indent_ +
                                 "byte[] serialized" + capitalizedArgVar;
           methodConditionStr += " = arg" + ssI.str() + ".getData();\n";
 
-          if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)) {
+          if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pArg->type_)) {
             std::string fetchedArgTypeOfList = 
-            ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
+            ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pArg->type_);
             std::string upperCaseArgTypeOfList = 
-              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedArgTypeOfList);
+              ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(fetchedArgTypeOfList);
             methodConditionStr += indent_ + indent_ + indent_ + 
                                   "Serializable" + upperCaseArgTypeOfList + "List " +
                                   "serializable" + upperCaseArgTypeOfList + "List = " +  
@@ -124,17 +124,17 @@ namespace java {
                                   "serializable" + upperCaseArgTypeOfList + "List." + 
                                   "deserialize( serialized" + capitalizedArgVar + ");\n";
             std::string argTypeOfList = 
-              ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(fetchedArgTypeOfList);                                        
+              ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaClassType(fetchedArgTypeOfList);                                        
             methodConditionStr += indent_ + indent_ + indent_ + 
                                   "List<" + argTypeOfList + "> " +  pArg->variable_ + " = " + 
                                   "serializable" + upperCaseArgTypeOfList + "List." +
                                   "get" + upperCaseArgTypeOfList + "List();\n"; 
-          } else if (::naeem::hottentot::generator::common::TypeHelper::IsEnum(pArg->type_)) {
+          } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsEnum(pArg->type_)) {
             methodConditionStr += indent_ + indent_ + indent_ +
                                   pArg->type_ + " " + pArg->variable_ +  " = " + 
                                   pArg->type_ + ".deserialize(serialized" +
                                   capitalizedArgVar + ");\n";
-          } else if (::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)) {
+          } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsUDT(pArg->type_)) {
             methodConditionStr += indent_ + indent_ + indent_ +
                                   pArg->type_ + " " + pArg->variable_ +
                                   " = new " + pArg->type_ + "();\n";
@@ -143,48 +143,48 @@ namespace java {
                                   capitalizedArgVar+ ");\n";
           } else {
             std::string javaType = 
-              ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pArg->type_);
+              ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(pArg->type_);
             std::string capitalizedArgType = 
-              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->type_);
+              ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(pArg->type_);
             std::string capitalizedArgVar = 
-              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_);
+              ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(pArg->variable_);
             methodConditionStr += indent_ + indent_ + indent_ +
                                   javaType + " " + pArg->variable_.c_str() +
                                   " = PDTDeserializer.get" + capitalizedArgType +
                                   "(serialized" + capitalizedArgVar + ");\n";
           }
         }
-        if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)) {
+        if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
           std::string upperCaseReturnTypeOfList = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
           methodConditionStr += indent_ + indent_ + indent_ +
                                 "Serializable" + upperCaseReturnTypeOfList + "List" + " " +
                                 "serializable" + upperCaseReturnTypeOfList + "List = " +
                                 "new Serializable" + upperCaseReturnTypeOfList + "List();\n";
-        } else if (::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)) {
+        } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsUDT(pMethod->returnType_)) {
           methodConditionStr += indent_ + indent_ + indent_ +
                                 pMethod->returnType_ + " " + lowerCaseReturnType + " = null;\n"; 
         }
         methodConditionStr += indent_ + indent_ + indent_ + "Response response = new Response();\n";
-        if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)) {
+        if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
           std::string returnTypeOfList = 
-            ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(fetchedReturnTypeOfList);
+            ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(fetchedReturnTypeOfList);
           methodConditionStr += indent_ + indent_ + indent_ +
                                 "List<" + returnTypeOfList + ">" + " " +   
                                 lowerCaseFetchedReturnTypeOfList + "List = " + 
                                 lowerCaseServiceName +
                                 "Impl." + pMethod->name_ + "(";
-        } else if (::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)) {
+        } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsUDT(pMethod->returnType_)) {
           methodConditionStr += indent_ + indent_ + indent_ +
                               lowerCaseReturnType + " = " + lowerCaseServiceName +
                               "Impl." + pMethod->name_ + "(";
-        } else if (::naeem::hottentot::generator::common::TypeHelper::IsVoid(pMethod->returnType_)) {
+        } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsVoid(pMethod->returnType_)) {
           methodConditionStr += indent_ + indent_ + indent_ +
                                 lowerCaseServiceName +
                                 "Impl." + pMethod->name_ + "(";
         } else {
           std::string javaReturnType = 
-            ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
+            ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(pMethod->returnType_);
           methodConditionStr += indent_ + indent_ + indent_ +
                                 javaReturnType +
                                 " result = " +
@@ -200,9 +200,9 @@ namespace java {
           }
         }
         methodConditionStr += ");\n";
-        if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)) {
+        if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
           std::string upperCaseReturnTypeOfList = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
           methodConditionStr += indent_ + indent_ + indent_ + 
                               "byte[] serialized" + upperCaseReturnTypeOfList + "List;\n";
           methodConditionStr += indent_ + indent_ + indent_ + 
@@ -219,7 +219,7 @@ namespace java {
                                 "serializable" + upperCaseReturnTypeOfList + "List.serialize();\n"; 
           methodConditionStr += indent_ + indent_ + indent_ + "}\n";
 
-        } else if (::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)) {
+        } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsUDT(pMethod->returnType_)) {
           methodConditionStr += indent_ + indent_ + indent_ + 
                               "byte[] serialized" + pMethod->returnType_ + ";\n";
           methodConditionStr += indent_ + indent_ + indent_ + 
@@ -230,31 +230,31 @@ namespace java {
           methodConditionStr += indent_ + indent_ + indent_ + "serialized" + pMethod->returnType_ + " = " +
           lowerCaseReturnType + ".serialize();\n"; 
           methodConditionStr += indent_ + indent_ + indent_ + "}\n";   
-        } else if (!::naeem::hottentot::generator::common::TypeHelper::IsVoid(pMethod->returnType_)) {
+        } else if (!::org::labcrypto::hottentot::generator::TypeHelper::IsVoid(pMethod->returnType_)) {
           std::string javaReturnType = 
-            ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
+            ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(pMethod->returnType_);
           std::string capitalizedReturnType = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pMethod->returnType_);
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(pMethod->returnType_);
           methodConditionStr += indent_ + indent_ + indent_ +
                                 "byte[] serializedResult = PDTSerializer.get" + capitalizedReturnType + 
                                 "( result );\n";
         }
         methodConditionStr += indent_ + indent_ + indent_ + "response.setStatusCode((byte) 0);\n";
-        if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)) {
+        if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
           std::string upperCaseReturnTypeOfList = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
           methodConditionStr += indent_ + indent_ + indent_ +
                                 "response.setData(serialized" + upperCaseReturnTypeOfList +
                                 "List);\n";
           methodConditionStr += indent_ + indent_ + indent_ +
                                 "response.setLength(serialized" + 
                                 upperCaseReturnTypeOfList + "List.length + 1);\n";  
-        } else if(::naeem::hottentot::generator::common::TypeHelper::IsVoid(pMethod->returnType_)) {
+        } else if(::org::labcrypto::hottentot::generator::TypeHelper::IsVoid(pMethod->returnType_)) {
           methodConditionStr += indent_ + indent_ + indent_ + 
                                 "response.setData(new byte[]{0});\n";
           methodConditionStr += indent_ + indent_ + indent_ + 
                                 "response.setLength(0);\n";
-        } else if (::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)) {
+        } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsUDT(pMethod->returnType_)) {
           methodConditionStr += indent_ + indent_ + indent_ +
                                 "response.setData(serialized" + pMethod->returnType_ + ");\n";
           methodConditionStr += indent_ + indent_ + indent_ +
@@ -276,7 +276,7 @@ namespace java {
         methodConditionStr
       );
       std::string path = outDir_ + "/" + pService->name_.c_str() + "RequestHandler.java";
-      ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableRequestHandlerTmpStr);
+      ::org::labcrypto::hottentot::generator::Os::WriteFile(path , replacableRequestHandlerTmpStr);
     }
   }
 } // END NAMESPACE java

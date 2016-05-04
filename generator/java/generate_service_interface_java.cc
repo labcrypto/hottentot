@@ -40,61 +40,61 @@ namespace generator {
 namespace java {
   void
   JavaGenerator::GenerateServiceInterface (
-    ::naeem::hottentot::generator::ds::Module *pModule
+    ::org::labcrypto::hottentot::generator::Module *pModule
   ) {
-    ::naeem::hottentot::generator::ds::Service *pService;
+    ::org::labcrypto::hottentot::generator::Service *pService;
     for (int i = 0; i < pModule->services_.size(); i++) {
       std::string basePackageName = pModule->package_;
       pService = pModule->services_.at(i);
       std::string replacableServiceTmpStr = serviceTmpStr_;
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableServiceTmpStr, 
         "[%INDENT%]", 
         indent_, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableServiceTmpStr, 
         "[%BASE_PACKAGE_NAME%]", 
         basePackageName, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableServiceTmpStr, 
         "[%SERVICE_NAME%]", 
         pService->name_, 
         1
       );
       std::string serviceMethodsStr;
-      ::naeem::hottentot::generator::ds::Method *pMethod;
+      ::org::labcrypto::hottentot::generator::Method *pMethod;
       for (int i = 0; i < pService->methods_.size(); i++) {
         pMethod = pService->methods_.at(i);
         std::string fetchedReturnTypeOfList;
         std::string lowerCaseFetchedReturnTypeOfList;
         std::string returnType = 
-          ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
-        if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)) {
+          ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(pMethod->returnType_);
+        if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
           fetchedReturnTypeOfList = 
-            ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
+            ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pMethod->returnType_);
           lowerCaseFetchedReturnTypeOfList = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(fetchedReturnTypeOfList);
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeLowerCase(fetchedReturnTypeOfList);
           std::string returnTypeOfList = 
-           ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(fetchedReturnTypeOfList);
+           ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaClassType(fetchedReturnTypeOfList);
           returnType = "List<" + returnTypeOfList + ">";
         }
         serviceMethodsStr += indent_ + "" + returnType + " " + pMethod->name_ + "(";    
-        ::naeem::hottentot::generator::ds::Argument *pArg;
+        ::org::labcrypto::hottentot::generator::Argument *pArg;
         for (int i = 0; i < pMethod->arguments_.size(); i++) {
           pArg = pMethod->arguments_.at(i);
-          if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)) {
+          if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pArg->type_)) {
             std::string fetchedArgTypeOfList = 
-              ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
+              ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pArg->type_);
             std::string argTypeOfList = 
-              ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(fetchedArgTypeOfList);
+              ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaClassType(fetchedArgTypeOfList);
             serviceMethodsStr += "List<" + argTypeOfList + "> " + pArg->variable_;    
           } else {
             std::string argType = 
-              ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pArg->type_);
+              ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(pArg->type_);
             serviceMethodsStr += argType + " " + pArg->variable_;    
           }
           if (i < pMethod->arguments_.size() - 1) {
@@ -109,7 +109,7 @@ namespace java {
         serviceMethodsStr
       );
       std::string path = outDir_ + "/" + pService->name_.c_str() + "Service.java";
-      ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableServiceTmpStr);
+      ::org::labcrypto::hottentot::generator::Os::WriteFile(path , replacableServiceTmpStr);
     }
   }
 } // END NAMESPACE java

@@ -40,26 +40,26 @@ namespace generator {
 namespace java {
   void
   JavaGenerator::GenerateStructs (
-    ::naeem::hottentot::generator::ds::Module *pModule
+    ::org::labcrypto::hottentot::generator::Module *pModule
   ) {
     //TODO make struct for PDT arg and return type in methods
     for (int i = 0; i < pModule->structs_.size(); i++) {
-      ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(i);
+      ::org::labcrypto::hottentot::generator::Struct *pStruct = pModule->structs_.at(i);
       std::string basePackageName = pModule->package_;
       std::string replacableStructTmpStr = structTmpStr_;
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableStructTmpStr, 
         "[%BASE_PACKAGE_NAME%]", 
         basePackageName, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableStructTmpStr, 
         "[%INDENT%]", 
         indent_, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableStructTmpStr, 
         "[%STRUCT_NAME%]", 
         pStruct->name_, 
@@ -69,26 +69,26 @@ namespace java {
       std::string getterSetterStr;
       std::string declarationJavaType;
       std::string capitalizedDeclarationJavaType;
-      for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+      for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it 
              = pStruct->declarations_.begin();
            it != pStruct->declarations_.end();
            ++it) {
-        ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
+        ::org::labcrypto::hottentot::generator::Declaration *declarationPtr = it->second;
         declarationJavaType = 
-          ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);              
+          ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(declarationPtr->type_);              
         capitalizedDeclarationJavaType  = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(declarationJavaType);
         std::string declarationName = declarationPtr->variable_;
         std::string capitalizedDeclarationName = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital (
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital (
             declarationPtr->variable_
           );
         if (declarationJavaType.compare("String") == 0) {
           declarationStr += indent_ + "private " + declarationJavaType +
                             " " + declarationName + " = \"\";\n";  
-        } else if (::naeem::hottentot::generator::common::TypeHelper::IsListType(declarationPtr->type_)) {
+        } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(declarationPtr->type_)) {
             std::string fetchedListType = 
-              ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(declarationPtr->type_);
+              ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(declarationPtr->type_);
             declarationStr += indent_ + "private " + declarationJavaType +
                               " " + declarationName + " = new Array" + 
                               declarationJavaType +"();\n";   
@@ -111,11 +111,11 @@ namespace java {
       toStringMethodStr += indent_  + "public String toString() { \n"; 
       toStringMethodStr += indent_ + indent_ + "return \"" + pStruct->name_.c_str() + "{\" + \n";
       int counter = 0;
-      for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+      for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it 
              = pStruct->declarations_.begin();
            it != pStruct->declarations_.end();
            ++it) {
-        ::naeem::hottentot::generator::ds::Declaration *pDeclaration = it->second;
+        ::org::labcrypto::hottentot::generator::Declaration *pDeclaration = it->second;
         toStringMethodStr += indent_ + indent_ + indent_ + "\"";
         if(counter != 0){
           toStringMethodStr += ",";
@@ -133,25 +133,25 @@ namespace java {
       );
       std::string serializeMethodStr;
       int declarationCounter = 0;
-      for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+      for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it 
              = pStruct->declarations_.begin();
            it != pStruct->declarations_.end();
            ++it) {
             declarationCounter++;
             std::stringstream declarationCounterStr;
             declarationCounterStr << declarationCounter;
-            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
+            ::org::labcrypto::hottentot::generator::Declaration *declarationPtr = it->second;
             std::string capitalizedDeclarationName = 
-              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
-            if (::naeem::hottentot::generator::common::TypeHelper::IsEnum(declarationPtr->type_)) {
+              ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(declarationPtr->variable_);
+            if (::org::labcrypto::hottentot::generator::TypeHelper::IsEnum(declarationPtr->type_)) {
                serializeMethodStr += indent_ + indent_ + 
                                     "byte[] serialized" + capitalizedDeclarationName + " = " +
                                     declarationPtr->variable_ + ".serialize();\n";
-            } else if (::naeem::hottentot::generator::common::TypeHelper::IsListType(declarationPtr->type_)) {
+            } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(declarationPtr->type_)) {
               std::string fetchedListType = 
-                ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(declarationPtr->type_);
+                ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(declarationPtr->type_);
               std::string capitalizedFetchedListType = 
-                ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedListType);
+                ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(fetchedListType);
               std::string serializableVar =
                 "serializable" + capitalizedFetchedListType + 
                   "List" + declarationCounterStr.str();
@@ -175,11 +175,11 @@ namespace java {
               serializeMethodStr += indent_ + indent_ + "byte[] serialized" + 
                 capitalizedDeclarationName + " = PDTSerializer.get";
               declarationJavaType = 
-                ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
+                ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(declarationPtr->type_);
               capitalizedDeclarationJavaType = 
-                ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
+                ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(declarationJavaType);
               if(declarationPtr->type_[0] == 'u'){
-                ::naeem::hottentot::generator::common::StringHelper::Replace (
+                ::org::labcrypto::hottentot::generator::StringHelper::Replace (
                   declarationPtr->type_ ,
                   "u" ,
                   "" ,
@@ -187,19 +187,19 @@ namespace java {
                 );
               }
               std::string capitalizedDeclarationType  = 
-                ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->type_);
+                ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(declarationPtr->type_);
               serializeMethodStr += capitalizedDeclarationType + "(";
               serializeMethodStr += declarationPtr->variable_ + ");\n";
             }
       }
       serializeMethodStr += indent_ + indent_ + "byte[] output = new byte[";
-      for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+      for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it 
              = pStruct->declarations_.begin();
            it != pStruct->declarations_.end();
            ++it) {
-            ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
+            ::org::labcrypto::hottentot::generator::Declaration *declarationPtr = it->second;
             std::string capitalizedDeclarationName = 
-              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_.c_str());
+              ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(declarationPtr->variable_.c_str());
             serializeMethodStr += "serialized" + capitalizedDeclarationName + ".length";
             if (it == (--(pStruct->declarations_.end()))) {
               serializeMethodStr += "];\n";
@@ -209,17 +209,17 @@ namespace java {
       }
       serializeMethodStr += indent_ + indent_ + "int counter = 0;\n";
       serializeMethodStr += indent_ + indent_ + "//use a loop for every property\n";
-      for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+      for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it 
              = pStruct->declarations_.begin();
            it != pStruct->declarations_.end();
            ++it) {
-        ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
+        ::org::labcrypto::hottentot::generator::Declaration *declarationPtr = it->second;
         declarationJavaType = 
-          ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
+          ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(declarationPtr->type_);
         capitalizedDeclarationJavaType = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(declarationJavaType);
         std::string capitalizedDeclarationName = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(declarationPtr->variable_);
         serializeMethodStr += indent_ + indent_ + "for (int i = 0; i < serialized" +
           capitalizedDeclarationName + ".length; i++) {\n";
         serializeMethodStr += indent_ + indent_ + indent_ + "output[counter++] = serialized" +
@@ -238,21 +238,21 @@ namespace java {
       deserializeMethodStr += indent_ + indent_ + indent_ + "int dataLength = 0;\n";
       deserializeMethodStr += indent_ + indent_ + indent_ + "int numbersOfBytesForDataLength;\n";
       deserializeMethodStr += indent_ + indent_ + indent_ + "//do for every property\n";
-      for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+      for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it 
              = pStruct->declarations_.begin();
            it != pStruct->declarations_.end();
            ++it) {
-          ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
+          ::org::labcrypto::hottentot::generator::Declaration *declarationPtr = it->second;
           declarationJavaType = 
-            ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(declarationPtr->type_);
+            ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(declarationPtr->type_);
           std::string capitalizedDeclarationType = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->type_);
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(declarationPtr->type_);
           std::string capitalizedDeclarationName = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationPtr->variable_);
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(declarationPtr->variable_);
           deserializeMethodStr += indent_ + indent_ + "//" + declarationPtr->variable_ + " : " + declarationJavaType + "\n";
           if (declarationPtr->type_.compare("string") == 0 ||
               declarationJavaType.compare("data") == 0 || 
-              ::naeem::hottentot::generator::common::TypeHelper::IsListType(declarationPtr->type_)) {
+              ::org::labcrypto::hottentot::generator::TypeHelper::IsListType(declarationPtr->type_)) {
                 deserializeMethodStr += indent_ + indent_ + "dataLength = 0;\n";
                 deserializeMethodStr += indent_ + indent_ +
                 "if (( serializedByteArray[counter] & 0x80) == 0 ) {\n";
@@ -286,11 +286,11 @@ namespace java {
                   deserializeMethodStr += indent_ + indent_ + "set" + 
                     capitalizedDeclarationName + "(" + declarationPtr->variable_.c_str() + 
                       "ByteArray);\n";
-                } else if (::naeem::hottentot::generator::common::TypeHelper::IsListType(declarationPtr->type_)) {
+                } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(declarationPtr->type_)) {
                   std::string fetchedListType = 
-                    ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(declarationPtr->type_);                        
+                    ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(declarationPtr->type_);                        
                   std::string upperCaseListType = 
-                    ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedListType);
+                    ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(fetchedListType);
                   declarationCounter++;
                   std::stringstream declarationCounterStr;
                   declarationCounterStr << declarationCounter;
@@ -311,16 +311,16 @@ namespace java {
                 }
           } else {
             uint32_t dataLength = 
-              ::naeem::hottentot::generator::common::TypeHelper::GetTypeLength(declarationPtr->type_.c_str());
+              ::org::labcrypto::hottentot::generator::TypeHelper::GetTypeLength(declarationPtr->type_.c_str());
             capitalizedDeclarationJavaType = 
-              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(declarationJavaType);
+              ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(declarationJavaType);
             std::stringstream dataLengthStr;
             dataLengthStr << dataLength;
             deserializeMethodStr += indent_ + indent_ + "byte[] " + declarationPtr->variable_.c_str() + "ByteArray = new byte[" + dataLengthStr.str() + "];\n";
             deserializeMethodStr += indent_ + indent_ + "for(int i = 0 ; i < " + dataLengthStr.str() + " ; i++){\n";
             deserializeMethodStr += indent_ + indent_ + indent_ + declarationPtr->variable_.c_str() + "ByteArray[i] = serializedByteArray[counter++];\n";            
             deserializeMethodStr += indent_ + indent_ + "}\n";
-            if (::naeem::hottentot::generator::common::TypeHelper::IsEnum(declarationPtr->type_)) {
+            if (::org::labcrypto::hottentot::generator::TypeHelper::IsEnum(declarationPtr->type_)) {
               deserializeMethodStr += indent_ + indent_ + 
                                       "set" + capitalizedDeclarationName + "(" + 
                                       declarationPtr->type_ + ".deserialize(" + 
@@ -339,7 +339,7 @@ namespace java {
         deserializeMethodStr
       );
       std::string path = outDir_ + "/" + pStruct->name_.c_str() + ".java";
-      ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableStructTmpStr);
+      ::org::labcrypto::hottentot::generator::Os::WriteFile(path , replacableStructTmpStr);
     }
   }
 } // END NAMESPACE java

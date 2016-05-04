@@ -72,7 +72,7 @@ namespace java {
   JavaGenerator::ReadTemplateFiles() {
   }
   void
-  JavaGenerator::SetTabStr(::naeem::hottentot::generator::GenerationConfig &generationConfig) {
+  JavaGenerator::SetTabStr(::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig) {
     if (generationConfig.IsSpacesUsedInsteadOfTabsForIndentation()) {
       for (int i = 0; i < generationConfig.GetNumberOfSpacesUsedForIndentation(); i++) {
         indent_ += " ";
@@ -83,19 +83,19 @@ namespace java {
   }
   void
   JavaGenerator::Generate (
-    ::naeem::hottentot::generator::ds::Hot *hot,
-    ::naeem::hottentot::generator::GenerationConfig &generationConfig
+    ::org::labcrypto::hottentot::generator::Hot *hot,
+    ::org::labcrypto::hottentot::generator::GenerationConfig &generationConfig
   ) {
     SetTabStr(generationConfig);
     outDir_ = generationConfig.outDir_ + "/hotgen";
     clientOutDir_ = outDir_ + "/client";
     serverOutDir_ = outDir_ + "/server";
-    ::naeem::hottentot::generator::common::Os::MakeDir(outDir_.c_str());
-    ::naeem::hottentot::generator::common::Os::MakeDir(clientOutDir_.c_str());
-    ::naeem::hottentot::generator::common::Os::MakeDir(serverOutDir_.c_str());
+    ::org::labcrypto::hottentot::generator::Os::MakeDir(outDir_.c_str());
+    ::org::labcrypto::hottentot::generator::Os::MakeDir(clientOutDir_.c_str());
+    ::org::labcrypto::hottentot::generator::Os::MakeDir(serverOutDir_.c_str());
     modules_ = hot->modules_;
     for (int i = 0; i < modules_.size(); i++) {
-      ::naeem::hottentot::generator::ds::Module *pModule = modules_.at(i);
+      ::org::labcrypto::hottentot::generator::Module *pModule = modules_.at(i);
       GenerateEnums(pModule);
       GenerateStructs(pModule);
       GenerateAbstractService(pModule);

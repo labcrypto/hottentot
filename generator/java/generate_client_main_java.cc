@@ -40,17 +40,17 @@ namespace generator {
 namespace java {
   void
   JavaGenerator::GenerateClientMain (
-    ::naeem::hottentot::generator::ds::Module *pModule
+    ::org::labcrypto::hottentot::generator::Module *pModule
   ) {
     std::string basePackageName = pModule->package_;
     std::string replacableClientMainTmpStr = clientMainTmpStr_;
-    ::naeem::hottentot::generator::common::StringHelper::Replace (
+    ::org::labcrypto::hottentot::generator::StringHelper::Replace (
       replacableClientMainTmpStr, 
       "[%BASE_PACKAGE_NAME%]", 
       basePackageName, 
       1
     );
-    ::naeem::hottentot::generator::common::StringHelper::Replace (
+    ::org::labcrypto::hottentot::generator::StringHelper::Replace (
       replacableClientMainTmpStr, 
       "[%INDENT%]", 
       indent_, 
@@ -58,12 +58,12 @@ namespace java {
     );
     std::string importProxiesStr = "";
     std::string allProxiesStr = "";
-    ::naeem::hottentot::generator::ds::Service *pService;
+    ::org::labcrypto::hottentot::generator::Service *pService;
     for (int i = 0; i < pModule->services_.size(); i++) {
       pService = pModule->services_.at(i);
       std::string serviceName = pService->GetName();
       std::string lowerCaseServiceName = 
-      ::naeem::hottentot::generator::common::StringHelper::MakeLowerCase(serviceName);
+      ::org::labcrypto::hottentot::generator::StringHelper::MakeLowerCase(serviceName);
       importProxiesStr += "import " + basePackageName + ".hotgen." +
                           serviceName +  "Service;\n";
       importProxiesStr += "import " + basePackageName + ".hotgen." +
@@ -72,20 +72,20 @@ namespace java {
                         lowerCaseServiceName + "Proxy = " + serviceName +
                         "ServiceProxyBuilder.create(\"127.0.0.1\", 8080);\n";
     }
-    ::naeem::hottentot::generator::common::StringHelper::Replace (
+    ::org::labcrypto::hottentot::generator::StringHelper::Replace (
       replacableClientMainTmpStr,
       "[%ALL_PROXIES%]", 
       allProxiesStr,
       1
     );
-    ::naeem::hottentot::generator::common::StringHelper::Replace (
+    ::org::labcrypto::hottentot::generator::StringHelper::Replace (
       replacableClientMainTmpStr,
       "[%IMPORT_PROXIES%]", 
       importProxiesStr, 
       1
     );
     std::string path = clientOutDir_ + "/Main.java";
-    ::naeem::hottentot::generator::common::Os::WriteFile (
+    ::org::labcrypto::hottentot::generator::Os::WriteFile (
       path, 
       replacableClientMainTmpStr
     );

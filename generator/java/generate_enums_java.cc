@@ -41,27 +41,27 @@ namespace hottentot {
 namespace generator {
 namespace java {
   void
-  JavaGenerator::GenerateEnums(::naeem::hottentot::generator::ds::Module *pModule) {
+  JavaGenerator::GenerateEnums(::org::labcrypto::hottentot::generator::Module *pModule) {
     //TODO make struct for PDT arg and return type in methods
     for (int i = 0; i < pModule->enums_.size(); i++) {
-      ::naeem::hottentot::generator::ds::Enum *pEnum = pModule->enums_.at(i);
+      ::org::labcrypto::hottentot::generator::Enum *pEnum = pModule->enums_.at(i);
       std::string basePackageName = pModule->package_;
       std::string replacableEnumTmpStr = enumTmpStr_;
-      ::naeem::hottentot::generator::common::Runtime::enums_.push_back(pEnum);
+      ::org::labcrypto::hottentot::generator::Runtime::enums_.push_back(pEnum);
       std::map<uint16_t, std::string>::iterator it;
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableEnumTmpStr, 
         "[%BASE_PACKAGE_NAME%]", 
         basePackageName, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableEnumTmpStr, 
         "[%INDENT%]", 
         indent_, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableEnumTmpStr, 
         "[%ENUM_NAME%]", 
         pEnum->GetName(),
@@ -84,7 +84,7 @@ namespace java {
         }
         mapCounter++;
       }
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableEnumTmpStr, 
         "[%MEMBERS%]", 
         membersStr, 
@@ -104,14 +104,14 @@ namespace java {
                                     "return " + pEnum->GetName() + "." + itemName + ";\n";
         deserializeMethodBodyStr += indent_ + indent_ + "}\n";
       }
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableEnumTmpStr, 
         "[%DESERIALIZE_METHOD_BODY%]", 
         deserializeMethodBodyStr, 
         1
       );  
       std::string path = outDir_ + "/" + pEnum->GetName().c_str() + ".java";
-      ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableEnumTmpStr);
+      ::org::labcrypto::hottentot::generator::Os::WriteFile(path , replacableEnumTmpStr);
     }
   }
 } // END NAMESPACE java

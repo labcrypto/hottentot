@@ -39,35 +39,35 @@ namespace generator {
 namespace java {
   void
   JavaGenerator::GenerateServiceProxyBuilder (
-    ::naeem::hottentot::generator::ds::Module *pModule
+    ::org::labcrypto::hottentot::generator::Module *pModule
   ) {
-    ::naeem::hottentot::generator::ds::Service *pService;
+    ::org::labcrypto::hottentot::generator::Service *pService;
     std::string replacableServiceProxyBuilderTmpStr;
     for (int i = 0; i < pModule->services_.size(); i++) {
       std::string basePackageName = pModule->package_;
       pService = pModule->services_.at(i);
       std::string replacableServiceProxyBuilderTmpStr;
       replacableServiceProxyBuilderTmpStr = serviceProxyBuilderTmpStr_;
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableServiceProxyBuilderTmpStr, 
         "[%INDENT%]", 
         indent_, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableServiceProxyBuilderTmpStr, 
         "[%BASE_PACKAGE_NAME%]", 
         basePackageName,
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableServiceProxyBuilderTmpStr, 
         "[%SERVICE_NAME%]", 
         pService->name_, 
         1
       );
       std::string path = outDir_ + "/" + pService->name_.c_str() + "ServiceProxyBuilder.java";
-      ::naeem::hottentot::generator::common::Os::WriteFile (
+      ::org::labcrypto::hottentot::generator::Os::WriteFile (
         path, 
         replacableServiceProxyBuilderTmpStr
       );

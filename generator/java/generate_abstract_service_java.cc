@@ -40,9 +40,9 @@ namespace generator {
 namespace java {
   void
   JavaGenerator::GenerateAbstractService (
-    ::naeem::hottentot::generator::ds::Module *pModule
+    ::org::labcrypto::hottentot::generator::Module *pModule
   ) {
-    ::naeem::hottentot::generator::ds::Service *pService;
+    ::org::labcrypto::hottentot::generator::Service *pService;
     std::string replacableAbstractServiceTmpStr;
     for (int i = 0; i < pModule->services_.size(); i++) {
       std::string basePackageName = pModule->package_;
@@ -50,18 +50,18 @@ namespace java {
       std::string path = outDir_ + "/Abstract" + pService->name_.c_str() + "Service.java";
       os.open(path.c_str(), std::ios::trunc);
       replacableAbstractServiceTmpStr = abstractServiceTmpStr_;
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableAbstractServiceTmpStr , "[%INDENT%]", 
         indent_, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableAbstractServiceTmpStr, 
         "[%BASE_PACKAGE_NAME%]", 
         basePackageName, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableAbstractServiceTmpStr, 
         "[%SERVICE_NAME%]", 
         pService->name_, 

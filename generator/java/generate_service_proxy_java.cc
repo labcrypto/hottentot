@@ -40,64 +40,64 @@ namespace generator {
 namespace java {
   void
   JavaGenerator::GenerateServiceProxy (
-    ::naeem::hottentot::generator::ds::Module *pModule
+    ::org::labcrypto::hottentot::generator::Module *pModule
   ) {
-    ::naeem::hottentot::generator::ds::Service *pService;
+    ::org::labcrypto::hottentot::generator::Service *pService;
     std::string basePackageName = pModule->package_;
     for (int i = 0; i < pModule->services_.size(); i++) {
       std::string replacableServiceProxyStrTmp = serviceProxyTmpStr_;
       pService = pModule->services_.at(i);
       pService = pModule->services_.at(i);
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableServiceProxyStrTmp, 
         "[%INDENT%]", 
         indent_, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace (
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableServiceProxyStrTmp,
         "[%BASE_PACKAGE_NAME%]", 
         basePackageName, 
         1
       );
-      ::naeem::hottentot::generator::common::StringHelper::Replace ( 
+      ::org::labcrypto::hottentot::generator::StringHelper::Replace ( 
         replacableServiceProxyStrTmp,
         "[%SERVICE_NAME%]", 
         pService->name_, 
         1
       );
-      ::naeem::hottentot::generator::ds::Method *pMethod;
+      ::org::labcrypto::hottentot::generator::Method *pMethod;
       std::string methodsStr;
       for (int i = 0; i < pService->methods_.size(); i++) {
         pMethod = pService->methods_.at(i);
         std::string fetchedReturnTypeOfList;
         std::string lowerCaseFetchedReturnTypeOfList;
-        std::string returnType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pMethod->returnType_);
+        std::string returnType = ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(pMethod->returnType_);
         std::string lowerCaseReturnType = pMethod->returnType_;
         std::string capitalizedReturnType = 
-        ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pMethod->returnType_);
+        ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(pMethod->returnType_);
         lowerCaseReturnType[0] += 32;
-        if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)) {
+        if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
           fetchedReturnTypeOfList = 
-            ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
+            ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pMethod->returnType_);
           std::string returnTypeOfList = 
-            ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(fetchedReturnTypeOfList);
+            ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaClassType(fetchedReturnTypeOfList);
           returnType = "List<" + returnTypeOfList + ">";
         }
         methodsStr += indent_ + "public " + returnType + " " + pMethod->name_ + "(";
-        ::naeem::hottentot::generator::ds::Argument *pArg;
+        ::org::labcrypto::hottentot::generator::Argument *pArg;
         std::string fetchedArgTypeOfList;
         std::string argType;
         for (int i = 0; i < pMethod->arguments_.size(); i++) {
           pArg = pMethod->arguments_.at(i);
-          if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)) {
+          if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pArg->type_)) {
             fetchedArgTypeOfList =
-              ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);  
+              ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pArg->type_);  
             std::string argTypeOfList = 
-              ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(fetchedArgTypeOfList);
+              ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaClassType(fetchedArgTypeOfList);
             argType = "List<" + argTypeOfList + ">";
           } else {
-            argType = ::naeem::hottentot::generator::common::TypeHelper::GetJavaType(pArg->type_);  
+            argType = ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(pArg->type_);  
           }
           methodsStr += argType + " " + pArg->variable_;
           if (i < pMethod->arguments_.size() - 1) {
@@ -109,13 +109,13 @@ namespace java {
           pArg = pMethod->arguments_.at(i);
           methodsStr += indent_ + indent_ + "//serialize " + pArg->variable_ + "\n";
           std::string capitalalizedArgVar = 
-          ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_);     
-          if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)) {
+          ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(pArg->variable_);     
+          if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pArg->type_)) {
             std::string fetchedArgTypeOfList;
             fetchedArgTypeOfList = 
-              ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
+              ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pArg->type_);
             std::string upperCaseArgTypeOfList = 
-              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedArgTypeOfList);
+              ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(fetchedArgTypeOfList);
             methodsStr += indent_ + indent_ + 
                           "Serializable" + upperCaseArgTypeOfList + "List " + 
                           "serializable" + upperCaseArgTypeOfList + "List = new " +
@@ -124,14 +124,14 @@ namespace java {
                           upperCaseArgTypeOfList + "List(" + pArg->variable_ + ");\n";
             methodsStr += "byte[] serialized" +  capitalalizedArgVar + 
                           " = serializable" + upperCaseArgTypeOfList + "List.serialize();\n";
-          } else if (::naeem::hottentot::generator::common::TypeHelper::IsUDT(pArg->type_)) {
+          } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsUDT(pArg->type_)) {
             methodsStr += indent_ + indent_ +
                           "byte[] serialized" +
                           capitalalizedArgVar + " = " +
                           pArg->variable_ + ".serialize();\n";  
           } else {
             std::string pdtWrapperClass = 
-              ::naeem::hottentot::generator::common::TypeHelper::GetPdtWrapperClassName(pArg->type_);
+              ::org::labcrypto::hottentot::generator::TypeHelper::GetPdtWrapperClassName(pArg->type_);
             methodsStr += indent_ + indent_ + 
                           pdtWrapperClass + " " + pArg->variable_ + "Wrapper = new " + 
                           pdtWrapperClass + "(" + pArg->variable_ + ");\n";
@@ -166,7 +166,7 @@ namespace java {
           pArg = pMethod->arguments_.at(i);
           ssI << i;
           std::string capitalizedArgVar = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_);
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(pArg->variable_);
           methodsStr += indent_ + indent_ + "Argument arg" + ssI.str() + " = new Argument();\n";
           methodsStr += indent_ + indent_ + "arg" + ssI.str() + ".setDataLength(" +
                         "serialized" + capitalizedArgVar + ".length);\n";
@@ -181,7 +181,7 @@ namespace java {
           pArg = pMethod->arguments_.at(i);
           std::string argDataLengthVarName = pArg->variable_ + "DataLength";
           std::string capitalizedArgVar = 
-            ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(pArg->variable_); 
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(pArg->variable_); 
           std::string argDataLengthByteArrayLengthVarName =
           pArg->variable_ + "DataLengthByteArrayLength";
           methodsStr += indent_ + indent_ + "// calulate " + argDataLengthVarName + "\n";
@@ -225,7 +225,7 @@ namespace java {
         methodsStr += indent_ + indent_ + "} catch (TcpClientWriteException e) {\n";
         methodsStr += indent_ + indent_ + indent_ + "throw new HottentotRuntimeException(e);\n";
         methodsStr += indent_ + indent_ + "}\n";
-        if (!::naeem::hottentot::generator::common::TypeHelper::IsVoid(pMethod->returnType_)) {
+        if (!::org::labcrypto::hottentot::generator::TypeHelper::IsVoid(pMethod->returnType_)) {
           methodsStr += indent_ + indent_ + "// read response from server\n";
           methodsStr += indent_ + indent_ + "byte[] buffer = new byte[256];\n";
           methodsStr += indent_ + indent_ + "while (!protocol.isResponseComplete()) {\n";
@@ -247,9 +247,9 @@ namespace java {
           methodsStr += indent_ + indent_ + indent_ + "e.printStackTrace(); \n";
           methodsStr += indent_ + indent_ + "} \n";
           methodsStr += indent_ + indent_ + "//deserialize " + pMethod->returnType_ + "part from response\n";
-          if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)) {
+          if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
             std::string upperCaseReturnTypeOfList = 
-              ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
+              ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
             methodsStr += indent_ + indent_ +
                           "Serializable" + upperCaseReturnTypeOfList + "List" + 
                           " serializable" + upperCaseReturnTypeOfList + "List = null;\n"; 
@@ -265,13 +265,13 @@ namespace java {
             methodsStr += indent_ + indent_ +
                           "return serializable" + upperCaseReturnTypeOfList + 
                           "List.get" + upperCaseReturnTypeOfList + "List();\n"; 
-          } else if (::naeem::hottentot::generator::common::TypeHelper::IsEnum(pMethod->returnType_)) {
+          } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsEnum(pMethod->returnType_)) {
             methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
             methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
             methodsStr += indent_ + indent_ + "}\n";
             methodsStr += indent_ + indent_ +
                           "return " + pMethod->returnType_ + ".deserialize(response.getData());\n";
-          } else if (::naeem::hottentot::generator::common::TypeHelper::IsUDT(pMethod->returnType_)) {
+          } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsUDT(pMethod->returnType_)) {
             methodsStr += indent_ + indent_ +
                           returnType + " " + lowerCaseReturnType + "= null;\n"; 
             methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
@@ -287,7 +287,7 @@ namespace java {
             methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
             methodsStr += indent_ + indent_ + "}\n";
             std::string pdtWrapperClassName = 
-              ::naeem::hottentot::generator::common::TypeHelper::GetPdtWrapperClassName (pMethod->returnType_);
+              ::org::labcrypto::hottentot::generator::TypeHelper::GetPdtWrapperClassName (pMethod->returnType_);
             methodsStr += indent_ + indent_ + 
                           pdtWrapperClassName + " ret = new " +
                           pdtWrapperClassName + "();\n";
@@ -305,7 +305,7 @@ namespace java {
         methodsStr
       );
       std::string path = outDir_ + "/" + pService->name_.c_str() + "ServiceProxy.java";
-      ::naeem::hottentot::generator::common::Os::WriteFile(path , replacableServiceProxyStrTmp);
+      ::org::labcrypto::hottentot::generator::Os::WriteFile(path , replacableServiceProxyStrTmp);
     }
   }
 } // END NAMESPACE java

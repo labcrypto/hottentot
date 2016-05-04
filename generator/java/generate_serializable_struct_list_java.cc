@@ -42,21 +42,21 @@ GenerateSerializableStructListFile (
   std::string indent
 ) {
   std::string lowerCaseStructName = 
-    ::naeem::hottentot::generator::common::StringHelper::MakeFirstLowerCase(listStructName);
+    ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstLowerCase(listStructName);
   std::string upperCaseStructName = 
-    ::naeem::hottentot::generator::common::StringHelper::MakeFirstCapital(listStructName);
+    ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(listStructName);
   std::string serializableHottentotTypeName = 
-    ::naeem::hottentot::generator::common::TypeHelper::GetSerializableHottentotType(listStructName);
+    ::org::labcrypto::hottentot::generator::TypeHelper::GetSerializableHottentotType(listStructName);
   std::string lowerCaseSerializableHottentotTypeName = 
-    ::naeem::hottentot::generator::common::StringHelper::MakeFirstLowerCase(serializableHottentotTypeName);
+    ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstLowerCase(serializableHottentotTypeName);
   std::string javaClassType = 
-    ::naeem::hottentot::generator::common::TypeHelper::GetJavaClassType(listStructName);
+    ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaClassType(listStructName);
   std::string instanciationHottentotTypeStr = "";
   std::string getValueMethodStr = "";
-  if (!::naeem::hottentot::generator::common::TypeHelper::IsUDT(listStructName)) {
+  if (!::org::labcrypto::hottentot::generator::TypeHelper::IsUDT(listStructName)) {
     getValueMethodStr = ".getValue()";
   }
-  if (!::naeem::hottentot::generator::common::TypeHelper::IsUDT(listStructName)) {
+  if (!::org::labcrypto::hottentot::generator::TypeHelper::IsUDT(listStructName)) {
     instanciationHottentotTypeStr = 
       serializableHottentotTypeName + " " +
       lowerCaseSerializableHottentotTypeName + " = " + 
@@ -64,67 +64,67 @@ GenerateSerializableStructListFile (
       lowerCaseStructName + 
       " );";
   }
-  ::naeem::hottentot::generator::common::StringHelper::Replace (
+  ::org::labcrypto::hottentot::generator::StringHelper::Replace (
     replacableSerializableStructListTmpStr,
     "[%BASE_PACKAGE_NAME%]",
     basePackageName,
     1
   );
-  ::naeem::hottentot::generator::common::StringHelper::Replace (
+  ::org::labcrypto::hottentot::generator::StringHelper::Replace (
     replacableSerializableStructListTmpStr,
     "[%INDENT%]", 
     indent ,
     1
   );
-  ::naeem::hottentot::generator::common::StringHelper::Replace (
+  ::org::labcrypto::hottentot::generator::StringHelper::Replace (
     replacableSerializableStructListTmpStr,
     "[%STRUCT_NAME%]",
     listStructName,
     1
   );
-  ::naeem::hottentot::generator::common::StringHelper::Replace (
+  ::org::labcrypto::hottentot::generator::StringHelper::Replace (
     replacableSerializableStructListTmpStr,
     "[%UPPER_CASE_STRUCT_NAME%]",
     upperCaseStructName,
     1
   );
-  ::naeem::hottentot::generator::common::StringHelper::Replace (
+  ::org::labcrypto::hottentot::generator::StringHelper::Replace (
     replacableSerializableStructListTmpStr,
     "[%LOWER_CASE_STRUCT_NAME%]",
     lowerCaseStructName,
     1
   );            
-  ::naeem::hottentot::generator::common::StringHelper::Replace (
+  ::org::labcrypto::hottentot::generator::StringHelper::Replace (
     replacableSerializableStructListTmpStr,
     "[%HOTTENTOT_TYPE%]",
     serializableHottentotTypeName,
     1
   );            
-  ::naeem::hottentot::generator::common::StringHelper::Replace (
+  ::org::labcrypto::hottentot::generator::StringHelper::Replace (
     replacableSerializableStructListTmpStr,
     "[%LOWER_CASE_HOTTENTOT_TYPE%]",
     lowerCaseSerializableHottentotTypeName,
     1
   );            
-  ::naeem::hottentot::generator::common::StringHelper::Replace (
+  ::org::labcrypto::hottentot::generator::StringHelper::Replace (
     replacableSerializableStructListTmpStr,
     "[%JAVA_CLASS_TYPE%]",
     javaClassType,
     1
   );            
-  ::naeem::hottentot::generator::common::StringHelper::Replace (
+  ::org::labcrypto::hottentot::generator::StringHelper::Replace (
     replacableSerializableStructListTmpStr,
     "[%INSTANCIATION_HOTTENTOT_TYPE%]",
     instanciationHottentotTypeStr,
     1
   );     
-  ::naeem::hottentot::generator::common::StringHelper::Replace (
+  ::org::labcrypto::hottentot::generator::StringHelper::Replace (
     replacableSerializableStructListTmpStr, 
     "[%GET_VALUE_METHOD%]",
     getValueMethodStr,
     1);        
   std::string path = outDir + "/Serializable" + upperCaseStructName.c_str() + "List.java";
-  ::naeem::hottentot::generator::common::Os::WriteFile (
+  ::org::labcrypto::hottentot::generator::Os::WriteFile (
     path, 
     replacableSerializableStructListTmpStr
   );
@@ -137,20 +137,20 @@ namespace generator {
 namespace java {
   void
   JavaGenerator::GenerateSerializableStructList (
-    ::naeem::hottentot::generator::ds::Module *pModule
+    ::org::labcrypto::hottentot::generator::Module *pModule
   ) {
-    ::naeem::hottentot::generator::ds::Service *pService;
+    ::org::labcrypto::hottentot::generator::Service *pService;
     std::string basePackageName = pModule->package_;
     for (int i = 0; i < pModule->structs_.size(); i++) {
-      ::naeem::hottentot::generator::ds::Struct *pStruct = pModule->structs_.at(i);
-      for (std::map<uint32_t, ::naeem::hottentot::generator::ds::Declaration*>::iterator it 
+      ::org::labcrypto::hottentot::generator::Struct *pStruct = pModule->structs_.at(i);
+      for (std::map<uint32_t, ::org::labcrypto::hottentot::generator::Declaration*>::iterator it 
              = pStruct->declarations_.begin();
            it != pStruct->declarations_.end();
            ++it) {
-        ::naeem::hottentot::generator::ds::Declaration *declarationPtr = it->second;
-        if (::naeem::hottentot::generator::common::TypeHelper::IsListType(declarationPtr->type_)) {
+        ::org::labcrypto::hottentot::generator::Declaration *declarationPtr = it->second;
+        if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(declarationPtr->type_)) {
           std::string listStructName = 
-            ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(declarationPtr->type_);
+            ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(declarationPtr->type_);
           GnerateSerializableStructListFile (
             listStructName,
             basePackageName, 
@@ -164,14 +164,14 @@ namespace java {
     for (int i = 0; i < pModule->services_.size(); i++) {
       pService = pModule->services_.at(i);
       std::string serviceName = pService->name_;
-      ::naeem::hottentot::generator::ds::Method *pMethod;
+      ::org::labcrypto::hottentot::generator::Method *pMethod;
       for (int i = 0; i < pService->methods_.size(); i++) {
         pMethod = pService->methods_.at(i);
         std::string lowerCaseReturnType = pMethod->returnType_;
         //TODO do this for args of method and all declaration in struct
-        if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pMethod->returnType_)) {
+        if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
           std::string listStructName = 
-            ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pMethod->returnType_);
+            ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pMethod->returnType_);
           GenerateSerializableStructListFile (
             listStructName,
             basePackageName, 
@@ -180,12 +180,12 @@ namespace java {
             indent_
           );
         }
-        ::naeem::hottentot::generator::ds::Argument *pArg;
+        ::org::labcrypto::hottentot::generator::Argument *pArg;
         for (int i = 0; i < pMethod->arguments_.size(); i++) {
           pArg = pMethod->arguments_.at(i);
-          if (::naeem::hottentot::generator::common::TypeHelper::IsListType(pArg->type_)) {
+          if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pArg->type_)) {
             std::string listStructName =
-              ::naeem::hottentot::generator::common::TypeHelper::FetchTypeOfList(pArg->type_);
+              ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pArg->type_);
             GenerateSerializableStructListFile (
               listStructName,
               basePackageName, 
