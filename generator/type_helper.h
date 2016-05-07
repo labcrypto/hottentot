@@ -65,6 +65,8 @@ namespace generator {
         return false;
       } else if (type == "void") {
         return false;
+      } else if (type == "long") {
+        return false;
       }
       return true;
     }
@@ -100,6 +102,8 @@ namespace generator {
         return "double";
       } else if (type == "void") {
         return "void";
+      } else if (type == "long") {
+        return "long";
       }
       return type;
     }
@@ -133,6 +137,8 @@ namespace generator {
       } else if (type == "uint32") {
         return "_Int32";
       } else if (type == "uint64") {
+        return "_Int64";
+      } else if (type == "long") {
         return "_Int64";
       } else if (type == "bool") {
         return "_Boolean";
@@ -179,6 +185,8 @@ namespace generator {
         return "Character";
       } else if (type == "double") {
         return "Double";
+      } else if (type == "long") {
+        return "Long";
       } else {
          std::runtime_error("type is not supported"); 
       }
@@ -220,6 +228,8 @@ namespace generator {
         return "double";
       } else if (type == "void") {
         return "void";
+      } else if (type == "long") {
+        return "long";
       } else if (IsListType(type)){
         return "List<" + GetJavaClassType(FetchTypeOfList(type)) + ">";
       }
@@ -227,6 +237,7 @@ namespace generator {
     }
 
     static inline bool IsJavaNullable(std::string type) {
+      std::cout << ">>>> '" << type << "'" << std::endl;
       if (type == "int8") {
         return false;
       } else if (type == "int16") {
@@ -257,6 +268,10 @@ namespace generator {
         return false;
       } else if (type == "void") {
         return false;
+      } else if (type == "long") {
+        return false;
+      } else if (IsListType(type)){
+        return true;
       }
       return true;
     }
@@ -280,6 +295,8 @@ namespace generator {
       } else if (type == "uint32") {
         return "_Int32";
       } else if (type == "uint64") {
+        return "_Int64";
+      } else if (type == "long") {
         return "_Int64";
       } else if (type == "bool") {
         return "_Boolean";
@@ -312,6 +329,9 @@ namespace generator {
       } else if (type.compare("int64") == 0 ||
        type.compare("uint64") == 0) {
         return 8;
+      } else if (type.compare("long") == 0 ||
+       type.compare("long") == 0) {
+        return 8;
       } else if (type.compare("bool") == 0) {
         return 1;
       }
@@ -320,6 +340,11 @@ namespace generator {
 
     static inline bool IsVoid(std::string type) {
       return ::org::labcrypto::hottentot::generator::StringHelper::MakeLowerCase(type) == "void";
+    }
+
+    static inline bool IsBoolean(std::string type) {
+      std::cout << ">> '" << type << "'" << std::endl;
+      return ::org::labcrypto::hottentot::generator::StringHelper::MakeLowerCase(type) == "bool";
     }
   
     static inline bool IsEnum(std::string type) {

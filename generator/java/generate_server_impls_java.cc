@@ -89,11 +89,15 @@ namespace java {
           }
         }
         methodsStr += ") { \n";
-        if (!TypeHelper::IsVoid(returnType)) {
-          if (TypeHelper::IsJavaNullable(returnType)) {
+        if (!TypeHelper::IsVoid(pMethod->returnType_)) {
+          if (TypeHelper::IsJavaNullable(pMethod->returnType_)) {
             methodsStr += indent_ + indent_ + "return null;\n";
           } else {
-            methodsStr += indent_ + indent_ + "return 0;\n";
+            if (TypeHelper::IsBoolean(pMethod->returnType_)) {
+              methodsStr += indent_ + indent_ + "return false;\n";
+            } else {
+              methodsStr += indent_ + indent_ + "return 0;\n";
+            }
           }
         }
         methodsStr +=  indent_ + "}\n";

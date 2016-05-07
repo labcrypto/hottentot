@@ -9,6 +9,7 @@ package [%BASE_PACKAGE_NAME%];
 
 import java.util.List;
 
+import org.labcrypto.hottentot.helper.*;
 import org.labcrypto.hottentot.runtime.Argument;
 import org.labcrypto.hottentot.runtime.Request;
 import org.labcrypto.hottentot.runtime.RequestHandler;
