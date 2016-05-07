@@ -31,8 +31,6 @@ public class PDTSerializer {
     if(bytes == null){
       return new byte[]{0};
     }
-//    byte[] concat = ArrayUtil.concat(DataLengthByteArrayMaker.getByteArray(bytes.length), bytes);
-//    System.out.println(Arrays.toString(concat));
     return ArrayUtil.concat(DataLengthByteArrayMaker.getByteArray(bytes.length), bytes);
   }
 

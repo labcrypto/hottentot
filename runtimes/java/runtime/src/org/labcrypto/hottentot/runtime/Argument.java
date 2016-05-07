@@ -48,7 +48,5 @@ public class Argument {
     }
 
     public Argument() {
-        this.dataLength = dataLength;
-        this.data = data;
     }
 }
