@@ -62,7 +62,9 @@ namespace java {
       ::org::labcrypto::hottentot::generator::StringHelper::Replace (
         replacableStructTmpStr, 
         "[%STRUCT_NAME%]", 
-        pStruct->name_, 
+        ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstCapital (
+          pStruct->GetName()
+        ), 
         1
       );
       std::string declarationStr;
@@ -348,7 +350,9 @@ namespace java {
         );
       ::org::labcrypto::hottentot::generator::Os::MakeDir(outDir_ + "/" + packages);
       std::string path = outDir_ + "/" + packages + "/" + 
-        pStruct->name_.c_str() + ".java";
+        ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstCapital (
+          pStruct->GetName()
+        ) + ".java";
       ::org::labcrypto::hottentot::generator::Os::WriteFile(path , replacableStructTmpStr);
     }
   }

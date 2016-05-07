@@ -190,7 +190,7 @@ namespace generator {
       } else {
          std::runtime_error("type is not supported"); 
       }
-      return type;
+      return ::org::labcrypto::hottentot::generator::StringHelper::MakeCamelCaseFirstCapital(type);
     }
 
 
@@ -237,7 +237,6 @@ namespace generator {
     }
 
     static inline bool IsJavaNullable(std::string type) {
-      std::cout << ">>>> '" << type << "'" << std::endl;
       if (type == "int8") {
         return false;
       } else if (type == "int16") {
@@ -343,7 +342,6 @@ namespace generator {
     }
 
     static inline bool IsBoolean(std::string type) {
-      std::cout << ">> '" << type << "'" << std::endl;
       return ::org::labcrypto::hottentot::generator::StringHelper::MakeLowerCase(type) == "bool";
     }
   
