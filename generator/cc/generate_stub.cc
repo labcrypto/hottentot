@@ -112,7 +112,7 @@ namespace cc {
           methodDefs += indent + indent + "virtual void " + 
             ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(method->GetName()) + "(\r\n";
           for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-            methodDefs += indent + indent + indent + 
+            methodDefs += indent + indent + indent +
               TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + 
                 method->arguments_[j]->GetVariable() + ", \r\n";
           }
@@ -120,7 +120,7 @@ namespace cc {
             methodDefs += indent + indent + indent + 
               TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out, \r\n";
           }
-          methodDefs += indent + indent + indent + 
+          methodDefs += indent + indent + indent +
             "::org::labcrypto::hottentot::runtime::service::HotContext &hotContext\r\n";
           methodDefs += indent + indent + ");\r\n";
         }
@@ -130,15 +130,15 @@ namespace cc {
           ::org::labcrypto::hottentot::generator::Method *method = service->methods_[i];
           std::string arguments = "";
           for (uint32_t j = 0; j < method->arguments_.size(); j++) {
-            arguments += indent + indent + indent + 
+            arguments += indent + indent + 
               TypeHelper::GetCCType(method->arguments_[j]->GetType(), ns) + " &" + 
                 method->arguments_[j]->GetVariable() + ", \r\n";
           }
           if (!TypeHelper::IsVoid(method->GetReturnType())) {
-            arguments += indent + indent + indent + 
+            arguments += indent + indent + 
               TypeHelper::GetCCType(method->GetReturnType(), ns) + " &out, \r\n";
           }
-          arguments += indent + indent + indent + 
+          arguments += indent + indent + 
             "::org::labcrypto::hottentot::runtime::service::HotContext &hotContext\r\n";
           std::string methodTemplate (
             (char *)__cc_templates_service_impl_cc__method_template, 
