@@ -2,6 +2,7 @@
 \usepackage{titling}
 \usepackage[margin=1 in]{geometry}
 \usepackage{graphicx}
+\usepackage{listings}
 \graphicspath{{.}}
 \newcommand{\subtitle}[1]{%
   \posttitle{%
@@ -37,6 +38,8 @@ This document talks about request and response structures and mechanisms in Hott
   \textit {ENDPOINT} \\ \indent {Endpoint is a combination of IP address and a port. A service object is bound to an endpoint.} \\\\
   \textit {SERVICE} \\ \indent {Service is an object serving method invocation requests.} \\\\
   \textit {PROXY} \\ \indent {Proxy is an object which produces method invocation requests and receives the response. A proxy object directly talks to a service object.} \\\\
+  \textit {PROXY SIDE} \\ \indent {.} \\\\
+  \textit {SERVICE SIDE} \\ \indent {.} \\\\
 
 \section {Request}
 A Method Invocation request consists of following fields:
@@ -62,6 +65,30 @@ Figure 1 shows the structure of a request. Arguments can be transferred using LV
     \scalebox{2.2}{\includegraphics[width=0.5\textwidth]{hot-protocol-v1__figure2.png}}
 \end{figure}
 
+Value can be any byte array but usually it is a serialized object. Serialization method can be anything. Hottentot itself provides an algorithm for serialization and \texttt {serialize()} and \texttt {deserialize()} methods are generated for every struct. Current stub generation mechanism works only with Hottentot's internal serialization.
+
+\subsection {Request Type}
+Determines the request type. Following C enum shows the probable values for this field.
+
+\begin{verbatim}
+enum RequestType { 
+  Unknown = 0, 
+  ServiceListQuery = 1, 
+  InvokeStateless = 2, 
+  InvokeStateful = 3 
+};
+\end{verbatim}
+
+\noindent
+Different values can be:
+\begin{itemize}
+  \item \textbf{Unknown}: It means nothing to Hottentot service side and these requests should be ignored by the implementation.
+  \item \textbf{ServiceListQuery}: Proxy side queries about the list of available services at service side.
+\end{itemize}
+
 \section {Future Features}
+\begin{itemize}
+  \item Version should be added to request and response structures.
+\end{itemize}
 
 \end{document}
