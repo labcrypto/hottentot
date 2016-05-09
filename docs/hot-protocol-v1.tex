@@ -32,26 +32,34 @@ This document talks about request and response structures and mechanisms in Hott
   \textit {STRUCT} \\ \indent {A term used for encapsulation of fields related to a specific entity. It is a structure and  will be generated for each programming language differently.} \\\\
   \textit {IDL (INTERFACE DEFINITION LANGUAGE)} \\ \indent {An IDL is a language transparent to all programming languages which Hottentot supports. IDL can be generated to any target languages supported by Hottentot RPC Framework.} \\\\
   \textit {HOT FILE} \\ \indent {A file which contains IDL. Hot files usually end with \texttt{.hot} extension.} \\\\
-  \textit {Generator} \\ \indent {A tool for generating stub and struct source codes for a target programming language. Currently, generators for C++ and Java languages are available.} \\\\
-  \textit {Runtime} \\ \indent {A library for a specific programming language which performs Service and Proxy operations. Currently, runtimes are only available for C++ and Java.} \\\\
-  \textit {Endpoint} \\ \indent {Endpoint is a combination of IP address and a port. A service object is bound to an endpoint.} \\\\
-  \textit {Service} \\ \indent {Service is an object serving method invocation requests.} \\\\
-  \textit {Proxy} \\ \indent {Proxy is an object which produces method invocation requests and receives the response. A proxy object directly talks to a service object.} \\\\
+  \textit {GENERATOR} \\ \indent {A tool for generating stub and struct source codes for a target programming language. Currently, generators for C++ and Java languages are available.} \\\\
+  \textit {RUNTIME} \\ \indent {A library for a specific programming language which performs Service and Proxy operations. Currently, runtimes are only available for C++ and Java.} \\\\
+  \textit {ENDPOINT} \\ \indent {Endpoint is a combination of IP address and a port. A service object is bound to an endpoint.} \\\\
+  \textit {SERVICE} \\ \indent {Service is an object serving method invocation requests.} \\\\
+  \textit {PROXY} \\ \indent {Proxy is an object which produces method invocation requests and receives the response. A proxy object directly talks to a service object.} \\\\
 
 \section {Request}
 A Method Invocation request consists of following fields:
 \begin{itemize}
-  \item Service Type (1 Byte)
+  \item Request Type (1 Byte)
   \item Service Id (4 Bytes)
   \item Method Id (4 Bytes)
   \item Number of Arguments (1 Byte)
   \item Arguments as an array of LV Structures. (Variable Length)
 \end{itemize}
-Figure 1 shows the structure of request.
+
 \begin{figure}[!ht]
-  \caption{A picture of a gull.}
+  \caption{Structure of a Method Invocation request.}
   \centering
-    \scalebox{2}{\includegraphics[width=0.5\textwidth]{hot-protocol-v1__figure1.png}}
+    \scalebox{2.1}{\includegraphics[width=0.5\textwidth]{hot-protocol-v1__figure1.png}}
+\end{figure}
+
+Figure 1 shows the structure of a request. Arguments can be transferred using LV structures. LV structures include Length and Value. Maximum length for a single LV structure is $2^{32} - 1$ since length values can be stored in a field at most 4 bytes. Figure 2 shows the LV structures in detail.
+
+\begin{figure}[!ht]
+  \caption{Structure of a Method Invocation request with arguments' LV structures.}
+  \centering
+    \scalebox{2.2}{\includegraphics[width=0.5\textwidth]{hot-protocol-v1__figure2.png}}
 \end{figure}
 
 \section {Future Features}
