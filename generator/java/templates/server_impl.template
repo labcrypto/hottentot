@@ -3,5 +3,5 @@ package [%BASE_PACKAGE_NAME%];
 import java.util.*;
 
 
-class [%SERVICE_NAME%]Impl extends Abstract[%SERVICE_NAME%]Service {
+public class [%SERVICE_NAME%]Impl extends Abstract[%SERVICE_NAME%]Service {
 [%METHODS%]}
