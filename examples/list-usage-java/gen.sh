@@ -1,4 +1,3 @@
-rm -rf ./gen/hotgen
+rm -rf ./gen/*
 #rm -rf ./prj/src/ir/ntnaeem/hottentot/examples/listtest/hotgen
-hot --java --out ./gen test.hot
-hot --java --out ./prj/src/ir/ntnaeem/hottentot/examples/listtest test.hot
+hot --java --pom --pom-group-id test --pom-artifact-id test --pom-version 1.0 --out ./gen list.hot

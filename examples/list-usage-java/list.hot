@@ -1,4 +1,4 @@
-module ir.ntnaeem.hottentot.examples.listtest {
+module org.labcrypto.hottentot.examples.listtest {
   
   struct Test{
     int32 id ord(1);
