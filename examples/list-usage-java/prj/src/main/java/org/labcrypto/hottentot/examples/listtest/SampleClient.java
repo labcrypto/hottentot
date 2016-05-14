@@ -8,13 +8,15 @@
 package org.labcrypto.hottentot.examples.listtest;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public class SampleClient {
   public static void main(String[] args) throws IOException {
     org.labcrypto.hottentot.runtime.config.Config.setMainArgs(args);
     final ListTestService listtestProxy = ListTestServiceProxyBuilder.create("127.0.0.1", 8080);
-
+    List<String> names = listtestProxy.getNames();
+    System.out.println(names);
     //use server methods on proxies
   }
 }

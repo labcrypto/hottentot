@@ -8,6 +8,8 @@ import java.util.Properties;
 public class Config {
   public static String configPath = "";
   public static boolean isVerboseMode = false;
+  public static int SERVER_SOCKET_TIME_OUT = 60000;
+  public static int CLIENT_SOCKET_TIME_OUT = 60000;
   public static final String USAGE_HELP_STRING = "usage : -v -ssl --server-cert-file path/to/cert/file --server-cert-pass 123456 --config-path /path/to/config/file ";
   public static int threadPoolSize = 5;
   public static boolean isGCEnabledMode = false;
@@ -38,6 +40,18 @@ public class Config {
         mainArgsCounter++;
       } else if (args[mainArgsCounter].equals("-gc")) {
         isGCEnabledMode = true;
+        mainArgsCounter++;
+      }else if(args[mainArgsCounter].equals("-ssl")) {
+        isSslEnabledMode = true;
+        mainArgsCounter++;
+      }else if(args[mainArgsCounter].equals("--client-socket-timeout")) {
+        CLIENT_SOCKET_TIME_OUT = Integer.parseInt(args[mainArgsCounter + 1]);
+        mainArgsCounter++;
+      }else if(args[mainArgsCounter].equals("--server-socket-timeout")) {
+        SERVER_SOCKET_TIME_OUT = Integer.parseInt(args[mainArgsCounter + 1]);
+        mainArgsCounter++;
+      }else if(args[mainArgsCounter].equals("--thread-pool-size")) {
+        threadPoolSize = Integer.parseInt(args[mainArgsCounter + 1]);
         mainArgsCounter++;
       }else if(args[mainArgsCounter].equals("-ssl")) {
         isSslEnabledMode = true;

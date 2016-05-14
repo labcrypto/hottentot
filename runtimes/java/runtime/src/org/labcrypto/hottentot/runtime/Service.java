@@ -25,7 +25,6 @@ package org.labcrypto.hottentot.runtime;
 
 
 public interface Service {
-
     RequestHandler makeRequestHandler();
     long getServiceId();
 }

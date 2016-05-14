@@ -50,7 +50,7 @@ public class DefaultTcpServer implements TcpServer {
   private Map<Long, RequestHandler> requestHandlers;
 
   public DefaultTcpServer(String host, int port, Map<Long, RequestHandler> requestHandlers) {
-    if(Config.isVerboseMode) {
+    if (Config.isVerboseMode) {
       System.out.println("THREAD POOL SIZE : " + Config.threadPoolSize);
     }
     this.executor = Executors.newFixedThreadPool(Config.threadPoolSize);
@@ -63,27 +63,26 @@ public class DefaultTcpServer implements TcpServer {
 
     final ServerSocket serverSocket;
     InetAddress addr = InetAddress.getByName(host);
-    if(Config.isSslEnabledMode){
+    if (Config.isSslEnabledMode) {
       SSLServerSocketFactory serverSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-      if(host.equals("0.0.0.0")) {
+      if (host.equals("0.0.0.0")) {
         serverSocket = serverSocketFactory.createServerSocket(port);
-      }else {
+      } else {
         serverSocket = serverSocketFactory.createServerSocket(port, 50, addr);
       }
-      if(Config.isVerboseMode){
+      if (Config.isVerboseMode) {
         System.out.println("SSL server socket (host : " + host + " , port : " + port + ") has been opened ... ");
       }
-    }else {
-      if(host.equals("0.0.0.0")) {
+    } else {
+      if (host.equals("0.0.0.0")) {
         serverSocket = new ServerSocket(port);
-      }else {
+      } else {
         serverSocket = new ServerSocket(port, 50, addr);
       }
-      if(Config.isVerboseMode){
+      if (Config.isVerboseMode) {
         System.out.println("server socket (host : " + host + " , port : " + port + ") has been opened ... ");
       }
     }
-
     class ClientHandler implements Runnable, ResponseCallback {
       private Socket clientSocket;
       private int tCounter;
@@ -107,7 +106,7 @@ public class DefaultTcpServer implements TcpServer {
         protocol.setRequestCallback(requestCallback);
         protocol.setResponseCallback(this);
 
-        while(!protocol.isRequestComplete()) {
+        while (!protocol.isRequestComplete()) {
           int numReadBytes = 0;
           try {
             numReadBytes = is.read(buffer, 0, buffer.length);
@@ -115,7 +114,8 @@ public class DefaultTcpServer implements TcpServer {
             e.printStackTrace();
             try {
               clientSocket.close();
-            } catch (IOException e1) {}
+            } catch (IOException e1) {
+            }
           }
           byte[] readDataChunk;
           if (numReadBytes < 256) {
@@ -136,7 +136,8 @@ public class DefaultTcpServer implements TcpServer {
             } catch (ProtocolProcessException e) {
               try {
                 clientSocket.close();
-              } catch (IOException e1) {}
+              } catch (IOException e1) {
+              }
               throw new HottentotRuntimeException(e);
             }
           }
@@ -149,12 +150,12 @@ public class DefaultTcpServer implements TcpServer {
           os = clientSocket.getOutputStream();
           os.write(serializedResponse, 0, serializedResponse.length);
           //DANGER
-          if(Config.isGCEnabledMode) {
+          if (Config.isGCEnabledMode) {
             System.out.println("System.gc() has been called !");
             System.gc();
           }
           clientSocket.close();
-          if(Config.isVerboseMode) {
+          if (Config.isVerboseMode) {
             System.out.println("client socket has been closed");
           }
         } catch (IOException e) {

@@ -5,7 +5,7 @@ import java.util.*;
 
 public class ListTestImpl extends AbstractListTestService {
   @Override
-  public void addNames(List<String> names) { 
+  public void addNames(List<String> names) {
   }
   @Override
   public List<String> getNames() { 

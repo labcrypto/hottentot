@@ -8,10 +8,8 @@
 package org.labcrypto.hottentot.examples.listtest;
 
 import java.io.IOException;
-
 import org.labcrypto.hottentot.runtime.Service;
 import org.labcrypto.hottentot.runtime.ServiceRuntime;
-
 
 public class SampleServer {
   public static void main(String[] args) throws IOException {
