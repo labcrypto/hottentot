@@ -253,7 +253,7 @@ namespace java {
             ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(declarationPtr->variable_);
           deserializeMethodStr += indent_ + indent_ + "//" + declarationPtr->variable_ + " : " + declarationJavaType + "\n";
           if (declarationPtr->type_.compare("string") == 0 ||
-              declarationJavaType.compare("data") == 0 || 
+              declarationPtr->type_.compare("data") == 0 || 
               ::org::labcrypto::hottentot::generator::TypeHelper::IsListType(declarationPtr->type_)) {
                 deserializeMethodStr += indent_ + indent_ + "dataLength = 0;\n";
                 deserializeMethodStr += indent_ + indent_ +

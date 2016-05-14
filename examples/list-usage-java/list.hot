@@ -10,6 +10,7 @@ module org.labcrypto.hottentot.examples.listtest {
     list<uint8> yList ord(3);
     list<bool> zList ord(4);
     list<Test> testList ord(5);
+    data imageInBytes ord(6);
   };
 
   stateless service ListTest {

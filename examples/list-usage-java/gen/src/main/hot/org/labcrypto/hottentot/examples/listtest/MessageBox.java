@@ -20,6 +20,7 @@ public class MessageBox {
   private List<Byte> yList = new ArrayList<Byte>();
   private List<Boolean> zList = new ArrayList<Boolean>();
   private List<Test> testList = new ArrayList<Test>();
+  private byte[] imageInBytes;
   public void setValue(String value) {
     this.value = value;
   }
@@ -50,6 +51,12 @@ public class MessageBox {
   public List<Test> getTestList() {
     return testList;
   }
+  public void setImageInBytes(byte[] imageInBytes) {
+    this.imageInBytes = imageInBytes;
+  }
+  public byte[] getImageInBytes() {
+    return imageInBytes;
+  }
   @Override 
   public String toString() { 
     return "MessageBox{" + 
@@ -58,6 +65,7 @@ public class MessageBox {
       ",yList = '" + yList + '\'' + 
       ",zList = '" + zList + '\'' + 
       ",testList = '" + testList + '\'' + 
+      ",imageInBytes = '" + imageInBytes + '\'' + 
       "}"; 
   }
 	
@@ -75,7 +83,8 @@ public class MessageBox {
     SerializableTestList serializableTestList5 = new SerializableTestList();
     serializableTestList5.setTestList(testList);
     byte[] serializedTestList  = serializableTestList5.serializeWithLength();
-    byte[] output = new byte[serializedValue.length + serializedXList.length + serializedYList.length + serializedZList.length + serializedTestList.length];
+    byte[] serializedImageInBytes = PDTSerializer.getData(imageInBytes);
+    byte[] output = new byte[serializedValue.length + serializedXList.length + serializedYList.length + serializedZList.length + serializedTestList.length + serializedImageInBytes.length];
     int counter = 0;
     //use a loop for every property
     for (int i = 0; i < serializedValue.length; i++) {
@@ -92,6 +101,9 @@ public class MessageBox {
     }
     for (int i = 0; i < serializedTestList.length; i++) {
       output[counter++] = serializedTestList[i];
+    }
+    for (int i = 0; i < serializedImageInBytes.length; i++) {
+      output[counter++] = serializedImageInBytes[i];
     }
     return output;
   }
@@ -190,6 +202,21 @@ public class MessageBox {
     SerializableTestList serializableTestList4 = new SerializableTestList();
     serializableTestList4.deserialize(testListByteArray);
     setTestList(serializableTestList4.getTestList());
+    //imageInBytes : byte[]
+    dataLength = 0;
+    if (( serializedByteArray[counter] & 0x80) == 0 ) {
+      dataLength = serializedByteArray[counter++];
+    } else {
+      numbersOfBytesForDataLength = serializedByteArray[counter++] & 0x0f;
+      byte[] serializedByteArrayLength = new byte[numbersOfBytesForDataLength];
+      for (byte i = 0; i < numbersOfBytesForDataLength; i++) {
+        serializedByteArrayLength[i] = serializedByteArray[counter++];
+      }
+      dataLength = ByteArrayToInteger.getInt(serializedByteArrayLength);
+    }
+    byte[] imageInBytesByteArray = new byte[dataLength];
+    System.arraycopy(serializedByteArray,counter,imageInBytesByteArray,0,dataLength);
+    counter += dataLength;
 
     }
   }
