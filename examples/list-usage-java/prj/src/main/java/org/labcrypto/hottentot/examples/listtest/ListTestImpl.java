@@ -10,6 +10,7 @@ public class ListTestImpl extends AbstractListTestService {
   @Override
   public List<String> getNames() { 
     return null;
+    //while(true);
   }
   @Override
   public List<MessageBox> getMessages() { 

@@ -8,10 +8,8 @@
 package org.labcrypto.hottentot.examples.listtest;
 
 import java.io.IOException;
-
 import org.labcrypto.hottentot.runtime.Service;
 import org.labcrypto.hottentot.runtime.ServiceRuntime;
-
 
 public class SampleServer {
   public static void main(String[] args) throws IOException {
@@ -19,7 +17,7 @@ public class SampleServer {
     org.labcrypto.hottentot.runtime.config.Config.setConfigPropertiesFromConfigFile();
     ServiceRuntime serviceRuntime = new ServiceRuntime();
     Service listtestService = new ListTestImpl();
-    serviceRuntime.register("127.0.0.1",8080, listtestService);
+    serviceRuntime.register("127.0.0.1",6000, listtestService);
 
     serviceRuntime.start();
   }

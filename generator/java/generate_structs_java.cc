@@ -284,7 +284,7 @@ namespace java {
                     capitalizedDeclarationName + "(PDTDeserializer.get" + 
                       capitalizedDeclarationType + "(" + declarationPtr->variable_.c_str() + 
                         "ByteArray));\n";
-                } else if (declarationPtr->type_.compare("string") == 0 ) {
+                } else if (declarationPtr->type_.compare("data") == 0 ) {
                   deserializeMethodStr += indent_ + indent_ + "set" + 
                     capitalizedDeclarationName + "(" + declarationPtr->variable_.c_str() + 
                       "ByteArray);\n";
