@@ -254,7 +254,8 @@ namespace java {
                           "Serializable" + upperCaseReturnTypeOfList + "List" + 
                           " serializable" + upperCaseReturnTypeOfList + "List = null;\n"; 
             methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-            methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+            methodsStr += indent_ + indent_ + indent_ +
+                          "throw new MethodNotSupportRuntimeException();\n";
             methodsStr += indent_ + indent_ + "}\n";
             methodsStr += indent_ + indent_ + 
                           "serializable" + upperCaseReturnTypeOfList + "List = " 
@@ -267,7 +268,8 @@ namespace java {
                           "List.get" + upperCaseReturnTypeOfList + "List();\n"; 
           } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsEnum(pMethod->returnType_)) {
             methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-            methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+            methodsStr += indent_ + indent_ + indent_ +
+                          "throw new MethodNotSupportRuntimeException();\n";
             methodsStr += indent_ + indent_ + "}\n";
             methodsStr += indent_ + indent_ +
                           "return " + pMethod->returnType_ + ".deserialize(response.getData());\n";
@@ -275,8 +277,8 @@ namespace java {
             methodsStr += indent_ + indent_ +
                           returnType + " " + lowerCaseReturnType + "= null;\n"; 
             methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-            methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
-            methodsStr += indent_ + indent_ + "}\n";
+            methodsStr += indent_ + indent_ + indent_ +
+                          "throw new MethodNotSupportRuntimeException();\n";            methodsStr += indent_ + indent_ + "}\n";
             methodsStr += indent_ + indent_ + "" + lowerCaseReturnType + "= new " +
                           pMethod->returnType_ + "();\n";
             methodsStr += indent_ + indent_ + "" + lowerCaseReturnType +
@@ -284,7 +286,8 @@ namespace java {
             methodsStr += indent_ + indent_ + "return " + lowerCaseReturnType + ";\n";
           } else {
             methodsStr += indent_ + indent_ + "if (response.getStatusCode() == -1) {\n";
-            methodsStr += indent_ + indent_ + indent_ + "//TODO\n";
+            methodsStr += indent_ + indent_ + indent_ +
+                          "throw new MethodNotSupportRuntimeException();\n";
             methodsStr += indent_ + indent_ + "}\n";
             std::string pdtWrapperClassName = 
               ::org::labcrypto::hottentot::generator::TypeHelper::GetPdtWrapperClassName (pMethod->returnType_);
