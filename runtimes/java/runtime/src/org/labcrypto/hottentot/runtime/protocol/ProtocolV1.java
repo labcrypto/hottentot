@@ -75,9 +75,6 @@ public class ProtocolV1 implements Protocol {
             Response response = null;
             try {
               response = requestCallback.onRequest(deserializeRequestBody(data));
-              System.out.println("========================");
-              System.out.println(response);
-              System.out.println("========================");
             } catch (TcpClientReadException e) {
               throw new ProtocolProcessException(e);
             } catch (TcpClientConnectException e) {
