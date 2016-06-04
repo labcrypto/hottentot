@@ -20,11 +20,11 @@
           <y:Geometry height="138.0" width="1043.6666666666665" x="155.66666666666663" y="160.0"/>
           <y:Fill color="#FFFF99" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="275.201171875" x="4.0" y="-27.984375">HotPv2 Method Invocation Request Structure<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="326.353515625" x="358.65657552083326" y="142.0">HotPv2 Method Invocation Request Payload Structure<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
-              <y:SmartNodeLabelModelParameter labelRatioX="-0.5" labelRatioY="0.5" nodeRatioX="-0.5" nodeRatioY="-0.5" offsetX="4.0" offsetY="-10.015625" upX="0.0" upY="-1.0"/>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/>
             </y:ModelParameter>
           </y:NodeLabel>
           <y:Shape type="rectangle"/>

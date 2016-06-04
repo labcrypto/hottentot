@@ -102,12 +102,12 @@ A Method Invocation request payload consists of following fields:
     \scalebox{2.1}{\includegraphics[width=0.5\textwidth]{hotpv2__method-invocation-request.png}}
 \end{figure}
 
-Figure 1 shows the structure of a request. Arguments can be transferred using LV structures. LV structures include Length and Value. Maximum length for a single LV structure is $2^{32} - 1$ since length values can be stored in a field at most 4 bytes. Figure 2 shows the LV structures in detail.
+Figure 2 shows the structure of a request. Arguments can be transferred using LV structures. LV structures include Length and Value. Maximum length for a single LV structure is $2^{32} - 1$ since length values can be stored in a field at most 4 bytes. Figure 3 shows the LV structures in detail.
 
 \begin{figure}[!ht]
-  \caption{Structure of a Method Invocation request with arguments' LV structures.}
+  \caption{Structure of a Method Invocation request payload with arguments' LV structures.}
   \centering
-    \scalebox{2.2}{\includegraphics[width=0.5\textwidth]{hotpv2__request-type.png}}
+    \scalebox{2.2}{\includegraphics[width=0.5\textwidth]{hotpv2__method-invocation-request-payload-lv-structures.png}}
 \end{figure}
 
 Value can be any byte array but usually it is a serialized object. Serialization method can be anything. Hottentot itself provides an algorithm for serialization and \texttt {serialize()} and \texttt {deserialize()} methods are generated for every struct. Current stub generation mechanism works only with Hottentot's internal serialization.
