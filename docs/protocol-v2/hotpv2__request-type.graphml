@@ -87,7 +87,7 @@
           <y:Geometry height="90.0" width="255.0" x="793.0" y="177.0"/>
           <y:Fill color="#008080" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.9375" modelName="custom" textColor="#000000" visible="true" width="156.0390625" x="49.48046875" y="29.03125">Payload Digital Signature
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.9375" modelName="custom" textColor="#000000" visible="true" width="157.984375" x="48.5078125" y="29.03125">Request Digital Signature
 (Variable Length)<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
@@ -107,7 +107,6 @@
       </data>
     </node>
     <edge id="e0" source="n1" target="n0">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

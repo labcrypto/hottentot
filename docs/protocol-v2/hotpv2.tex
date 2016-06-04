@@ -46,9 +46,9 @@ This document talks about request and response structures and mechanisms in Hott
 \section {Request}
 Each request consists of 1 mandatory and 2 optional fields.
 \begin{itemize}
-  \item \textbf{Request Type}: This field is mandatory.
-  \item \textbf{Payload}: This files is optional. 
-  \item \textbf{Payload Digital Signature} This fields is optional. 
+  \item \textbf{Request Type}: This field is mandatory. Using this field determines type of request.
+  \item \textbf{Payload}: This files is optional and carries all necessary data to perform the request operation.
+  \item \textbf{Request Digital Signature} This fields is optional and carries a PKI compatible digital signature over Request Type and Payload.
 \end{itemize} 
 Below figure shows the request structure.
 
@@ -59,7 +59,7 @@ Below figure shows the request structure.
 \end{figure}
 
 \subsection {Request Type}
-Determines the request type. Following C enumeration shows the possible values for this field.
+Determines the request type and payload structure. Following C enumeration shows the possible values for this field.
 
 \begin{verbatim}
 enum RequestType { 
@@ -74,7 +74,7 @@ enum RequestType {
 \end{verbatim}
 
 \noindent
-Different values can be:
+Values can be:
 \begin{itemize}
   \item \textbf{Unknown}: It means nothing to Hottentot service side and these requests should be ignored by the implementation.
   \item \textbf{ServiceListQuery}: Proxy-side queries about the list of available services. Hottentot service runtime should return list of services exposed on current endpoint.
@@ -85,10 +85,11 @@ Different values can be:
   \item \textbf{ProxyInfo}: Proxy-side sends its parameters to current endpoint.
 \end{itemize}
 
-\subsubsection {Method Invocation Request}
-A Method Invocation request consists of following fields:
+\subsection {Payload}
+Requests can have payloads. Many request types need data for their operations and payload part carries the data. Following sections explain about payload structure for each request type.
+\subsubsection {Payload for MethodInvocation Request Type}
+A Method Invocation request payload consists of following fields:
 \begin{itemize}
-  \item Request Type (1 Byte)
   \item Service Id (4 Bytes)
   \item Method Id (4 Bytes)
   \item Number of Arguments (1 Byte)
@@ -96,9 +97,9 @@ A Method Invocation request consists of following fields:
 \end{itemize}
 
 \begin{figure}[!ht]
-  \caption{Structure of a Method Invocation request.}
+  \caption{HotPv2 Method Invocation Request Structure}
   \centering
-    \scalebox{2.1}{\includegraphics[width=0.5\textwidth]{hotpv2__request-type.png}}
+    \scalebox{2.1}{\includegraphics[width=0.5\textwidth]{hotpv2__method-invocation-request.png}}
 \end{figure}
 
 Figure 1 shows the structure of a request. Arguments can be transferred using LV structures. LV structures include Length and Value. Maximum length for a single LV structure is $2^{32} - 1$ since length values can be stored in a field at most 4 bytes. Figure 2 shows the LV structures in detail.
