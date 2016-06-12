@@ -1,3 +1,4 @@
+![alt tag][https://github.com/LabCryptoOrg/hottentot/blob/master/docs/logo/hottentot.png]
 # Hottentot RPC Framework
 ### About Hottentot
 Hottentot is a RPC Framework. It allows developers to focus on their business on client and server sides. Hottentot is light weight and it does not need any additional dependency to get compiled and work. Currently, it generates source files for C++ and Java. Other languages will be added soon. See Examples section for going through a quick guide.
