@@ -56,8 +56,7 @@ namespace runtime {
     enum RequestType {
       Unknown,
       ServiceListQuery,
-      ServiceInfoQuery,
-      MethodInvocation
+      InvokeStateless
     };
   public:
     Request()
