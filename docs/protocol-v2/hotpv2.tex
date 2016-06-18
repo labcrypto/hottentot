@@ -43,6 +43,11 @@ This document talks about request and response structures and mechanisms in Hott
   \textbf {PROXY-SIDE} \\ \indent {A software or library which tries to interact with service-side objects like endpoints, services, etc.} \\\\
   \textbf {SERVICE-SIDE} \\ \indent {A software or library which serves proxy-side requests and generates suitable response.} \\\\
 
+\section {Algorithms}
+
+\subsection {Fast Hash Algorithm}
+A fast hashing algorithm developed by Zilong Tan. It has 2 versions. One generated 32-bit has value for a given byte array and the other one generates a 64-bit hash value for the input. Hottentot uses fast hash algorithm for generating system independent identifiers (ids) for services and methods.
+
 \section {Request}
 Each request consists of 1 mandatory and 2 optional fields.
 \begin{itemize}
