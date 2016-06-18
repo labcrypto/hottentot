@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage[normalem]{ulem}
+\usepackage{amsmath}
 \graphicspath{{.}}
 \newcommand{\subtitle}[1]{%
   \posttitle{%
@@ -46,7 +47,14 @@ This document talks about request and response structures and mechanisms in Hott
 \section {Algorithms}
 
 \subsection {Fast Hash Algorithm}
-A fast hashing algorithm developed by Zilong Tan. It has 2 versions. One generated 32-bit has value for a given byte array and the other one generates a 64-bit hash value for the input. Hottentot uses fast hash algorithm for generating system independent identifiers (ids) for services and methods.
+A fast hashing algorithm developed by Zilong Tan. It has 2 versions. One version generates 32-bit has value for a given byte array and the other one generates a 64-bit hash value for the input. Hottentot uses 32-bit fast hash algorithm for generating system independent identifiers (ids) for services and methods. We denote this algorithm with $ FH_{32} $ and $ FH_{64} $ throughout this document.
+
+\begin{equation}
+\begin{split}
+  FH_{32}: \{0, 1\}^* \to \{0, 1\}^{32}  \\
+  FH_{64}: \{0, 1\}^* \to \{0, 1\}^{64}
+\end{split}
+\end{equation}
 
 \section {Request}
 Each request consists of 1 mandatory and 2 optional fields.
