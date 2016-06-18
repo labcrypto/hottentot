@@ -231,8 +231,8 @@
           <y:Geometry height="105.0" width="103.0" x="237.20277296360496" y="-8.402946273830125"/>
           <y:Fill color="#800000" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.9375" modelName="custom" textColor="#FFFFFF" visible="true" width="86.529296875" x="8.2353515625" y="36.53125">Request Type
-(1 Byte)<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.9375" modelName="custom" textColor="#FFFFFF" visible="true" width="99.923828125" x="1.5380859375" y="36.53125">Request Type
+(1 Byte = 0x02)<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -360,7 +360,6 @@ as LV structures
       </data>
     </node>
     <edge id="e0" source="n17" target="n0">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="-168.4792885532545" sy="44.699678385901834" tx="-431.5927209705368" ty="-46.276429809359"/>
@@ -371,7 +370,6 @@ as LV structures
       </data>
     </edge>
     <edge id="e1" source="n17" target="n0">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="168.5133496671923" sy="43.54510768232092" tx="433.5164644714041" ty="-43.11525129982692"/>
