@@ -6,12 +6,20 @@
 \usepackage[normalem]{ulem}
 \usepackage{amsmath}
 \graphicspath{{.}}
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
 \newcommand{\subtitle}[1]{%
   \posttitle{%
     \par\end{center}
     \begin{center}\large#1\end{center}
     \vskip0.5em}%
 }
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+            {-2.5ex\@plus -1ex \@minus -.25ex}%
+            {1.25ex \@plus .25ex}%
+            {\normalfont\normalsize\bfseries}}
+\makeatother
 
 \begin{document}
 
@@ -44,19 +52,16 @@ This document talks about request and response structures and mechanisms in Hott
   \textbf {PROXY-SIDE} \\ \indent {A software or library which tries to interact with service-side objects like endpoints, services, etc.} \\\\
   \textbf {SERVICE-SIDE} \\ \indent {A software or library which serves proxy-side requests and generates suitable response.} \\\\
 
-\section {Algorithms}
+\section {Protocol V2}
 
-\subsection {Fast Hash Algorithm}
-A fast hashing algorithm developed by Zilong Tan. It has 2 versions. One version generates 32-bit has value for a given byte array and the other one generates a 64-bit hash value for the input. Hottentot uses 32-bit fast hash algorithm for generating system independent identifiers (ids) for services and methods. We denote this algorithm with $ FH_{32} $ and $ FH_{64} $ throughout this document.
+\subsection {Properties}
+Protocol version 2 introduces new features to protocol version 1 in many aspects. Following sections talk about differences and new features in this version.
+\subsubsection {Type of Communication}
+Like version 1, communication in protocol version 2 starts with a request from proxy-side. In this version, server-side can not start the communication yet. This would be a future feature with its considerations.
 
-\begin{equation}
-\begin{split}
-  FH_{32}: \{0, 1\}^* \to \{0, 1\}^{32}  \\
-  FH_{64}: \{0, 1\}^* \to \{0, 1\}^{64}
-\end{split}
-\end{equation}
+\subsection {Handshake}
 
-\section {Request}
+\subsection {Request}
 Each request consists of 1 mandatory and 2 optional fields.
 \begin{itemize}
   \item \textbf{Request Type}: This field is mandatory. Using this field determines type of request.
@@ -71,7 +76,7 @@ Please notice that, there is no checksum or error detection block involved in re
     \scalebox{2.1}{\includegraphics[width=0.5\textwidth]{hotpv2__request-type.png}}
 \end{figure}
 
-\subsection {Request Type}
+\subsubsection {Request Type}
 Determines the request type and payload structure. Following C enumeration shows the possible values for this field.
 
 \begin{verbatim}
@@ -82,8 +87,7 @@ enum RequestType {
   MethodListQuery = 0x03,
   ServiceInfoQuery = 0x04,
   MethodInfoQuery = 0x05,
-  EndpointInfoQuery = 0x06,
-  ProxyInfo = 0x07
+  EndpointInfoQuery = 0x06
 };
 \end{verbatim}
 
@@ -97,13 +101,12 @@ Values can be:
   \item \textbf{ServiceInfoQuery}: Proxy-side asks about parameters of a specific service.
   \item \textbf{MethodInfoQuery}: Proxy-side asks about parameters of a specific method.
   \item \textbf{EndpointInfoQuery}: Proxy-side asks about parameters of current endpoint.
-  \item \textbf{ProxyInfo}: Proxy-side sends its parameters to current endpoint.
 \end{itemize}
 
-\subsection {Payloads}
+\subsubsection {Payloads}
 Requests can have payloads. Many request types need data for their operations and payload carries the data. Following sections explain about payload structure for each request type. Please notice that, any needed piece of information or security object for authentication and authorization purposes will not be included in payloads and these objects will be transferred in \textit{Handshake} phase.
 
-\subsubsection {Payload for \textit{Service List Query} Request Type}
+\paragraph {Payload for \textit{Service List Query} Request Type}
 A \textit{Service List Query} request has no payload. In other words, this request has only one byte carrying value 0x01 as \textit{Service List Query} request type identifier.
 
 \begin{figure}[!ht]
@@ -112,7 +115,7 @@ A \textit{Service List Query} request has no payload. In other words, this reque
     \scalebox{1.2}{\includegraphics[width=0.5\textwidth]{hotpv2__service-list-query-request.png}}
 \end{figure}
 
-\subsubsection {Payload for \textit{Method Invocation} Request Type}
+\paragraph {Payload for \textit{Method Invocation} Request Type}
 A \textit{Method Invocation} request payload consists of following fields:
 \begin{itemize}
   \item Service Id (4 Bytes)
@@ -137,7 +140,7 @@ Figure 2 shows the structure of a request. Arguments can be transferred using LV
 
 Value can be any byte array but usually it is a serialized object. Serialization method can be anything. Hottentot itself provides an algorithm for serialization and \texttt {serialize()} and \texttt {deserialize()} methods are generated for every struct. Current stub generation mechanism works only with Hottentot's internal serialization.
 
-\subsubsection {Payload for \textit{Method List Query} Request Type}
+\paragraph {Payload for \textit{Method List Query} Request Type} 
 A \textit{Method List Query} request has following fields:
 \begin{itemize}
   \item Service Id (4 Bytes)
@@ -150,7 +153,7 @@ This will return list of methods available on a service object identified by \te
     \scalebox{1.5}{\includegraphics[width=0.5\textwidth]{hotpv2__method-list-query-request.png}}
 \end{figure}
 
-\subsubsection {Payload for \textit{Service Info Query} Request Type}
+\paragraph {Payload for \textit{Service Info Query} Request Type} 
 A \textit{Service Info Query} request has following fields:
 \begin{itemize}
   \item Service Id (4 Bytes)
@@ -163,7 +166,7 @@ This will return the parameters and their values for a service object identified
     \scalebox{1.5}{\includegraphics[width=0.5\textwidth]{hotpv2__service-info-query-request.png}}
 \end{figure}
 
-\subsubsection {Payload for \textit{Method Info Query} Request Type}
+\paragraph {Payload for \textit{Method Info Query} Request Type} 
 A \textit{Method Info Query} request has following fields:
 \begin{itemize}
   \item Service Id (4 Bytes)
@@ -177,7 +180,7 @@ This will return the parameters and their values for a method identified by \tex
     \scalebox{1.5}{\includegraphics[width=0.5\textwidth]{hotpv2__method-info-query-request.png}}
 \end{figure}
 
-\subsubsection {Payload for \textit{Endpoint Info Query} Request Type}
+\paragraph {Payload for \textit{Endpoint Info Query} Request Type} 
 A \textit{Endpoint Info Query} request has no fields, hence we have no payload. Parameters of current endpoint selected by proxy-side will be returned as response. Parameters are serialized according to LV structures.
 
 \begin{figure}[!ht]
@@ -185,6 +188,19 @@ A \textit{Endpoint Info Query} request has no fields, hence we have no payload. 
   \centering
     \scalebox{1.2}{\includegraphics[width=0.5\textwidth]{hotpv2__endpoint-info-query-request.png}}
 \end{figure}
+
+\section {Algorithms}
+
+\subsection {Fast Hash Algorithm}
+A fast hashing algorithm developed by Zilong Tan. It has 2 versions. One version generates 32-bit has value for a given byte array and the other one generates a 64-bit hash value for the input. Hottentot uses 32-bit fast hash algorithm for generating system independent identifiers (ids) for services and methods. We denote this algorithm with $ FH_{32} $ and $ FH_{64} $ throughout this document.
+
+\begin{equation}
+\begin{split}
+  FH_{32}: \{0, 1\}^* \to \{0, 1\}^{32}  \\
+  FH_{64}: \{0, 1\}^* \to \{0, 1\}^{64}
+\end{split}
+\end{equation}
+
 
 \section {Future Features}
 \begin{itemize}
