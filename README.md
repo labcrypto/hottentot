@@ -18,6 +18,35 @@ First, install the few dependencies which they are ususally pre-isntalled on mos
 
 You should see a help message explaining the parameters for `hot` executable.
 
+```shell
+$ hot
+ ERROR: Target language is not specified
+
+ Hottentot Serialization and RPC Framework
+ LabCrypto Org. 2015-2016 Copyright
+ Usage: hot [OPTION]... [HOT-FILE]...
+   OPTIONS:
+     --java                     Generate java sources. [Default: MANDATORY]
+     --cc                       Generate C++ sources. [Default: MANDATORY]
+     --makefile                 Generate Makefile for C++ sources. [Default: disabled]
+     --client                   Generate sources for C++ client. [Default: disabled]
+     --stub                     Generate a C++ stub for service. [Default: disabled]
+     --indent-with-spaces       Generator will produce indents using spaces. [Default: enabled]
+     --indent-with-tabs         Generator will produce indents using tabs. [Default: disabled]
+     --indent-space-count       Number of spaces for producing a single indent. [Default: 2]
+     --out                      Path to output directory. [Default: MANDATORY]
+     --parse                    Displays parse result in a tree format. [Default: disabled]
+     --dont-generate            Don't generate sources. [Default: disabled]
+     --extend-module            A dot seperated string which will be added to module. [Default: '']
+     --pom                      Generate POM file for java sources. [Default: disabled]
+     --pom-group-id             GroupId of POM file. [Default: MANDATORT IF POM SPECIFIED.]
+     --pom-artifact-id          ArtifactId of POM file. [Default: MANDATORT IF POM SPECIFIED.]
+     --pom-version              Version of POM file. [Default: MANDATORT IF POM SPECIFIED.]
+
+ For more information and examples, please visit https://github.com/LabCryptoOrg/hottentot
+
+```
+
 #### Windows
 
 Support for Windows exists. We will add documentation so soon.
