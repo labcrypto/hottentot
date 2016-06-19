@@ -5,6 +5,7 @@
 \usepackage{listings}
 \usepackage[normalem]{ulem}
 \usepackage{amsmath}
+\usepackage{indentfirst}
 \graphicspath{{.}}
 \setcounter{secnumdepth}{5}
 \setcounter{tocdepth}{5}
@@ -34,10 +35,10 @@
 \tableofcontents
 \newpage
 
-\section {Introduction}
+\section{Introduction}
 This document talks about request and response structures and mechanisms in Hottentot RPC Framework. Purpose of this protocol is to convey Method Invocation request and response. Current protocol is serialization transparent and can convey a method call with arguments produced with different serialization algorithms. In this version, Hottentot's runtimes can only work with internal serialization mechanism.
 
-\section {Glossary}
+\section{Glossary}
   \bigskip
   \textbf {SERIALIZATION} \\ \indent {A process in which an object turns into a byte array to be transferred using a channel.} \\\\
   \textbf {STRUCT} \\ \indent {A term used for encapsulation of fields related to a specific entity. It is a structure and it will be generated differently for each programming language.} \\\\
@@ -51,32 +52,58 @@ This document talks about request and response structures and mechanisms in Hott
   \textbf {PROXY} \\ \indent {Proxy is an object which produces method invocation and other types of requests and receives the response. A proxy object talks to an endpoint at first and its request will be delegated to a service object in case of method invocation requests.} \\\\
   \textbf {PROXY-SIDE} \\ \indent {A software or library which tries to interact with service-side objects like endpoints, services, etc.} \\\\
   \textbf {SERVICE-SIDE} \\ \indent {A software or library which serves proxy-side requests and generates suitable response.} \\\\
+  \textbf{PUBLIC KEY INFRASTRUCTURE (PKI)} \\ \indent {An infrastructure built on top of specific asymmetric cryptography mechanisms and schemes to provide security solutions to known security issues.} \\\\
 
-\section {Protocol V2}
-
-\subsection {Properties}
+\section{Protocol V2}
 Protocol version 2 introduces new features to protocol version 1 in many aspects. Following sections talk about differences and new features in this version.
-\subsubsection {Type of Communication}
-Like version 1, communication in protocol version 2 starts with a request from proxy-side. In this version, server-side can not start the communication yet. This would be a future feature with its considerations.
 
-\subsection {Handshake}
+\subsection{Connection Properties}
+Hottentot connections uses Session layer and Application layer in OSI model. Hottnetot SHOULD use \textit {Secure Socket Library} for \textit{Authentication} and \textit{Encryption} purposes.
 
-\subsection {Request}
+\subsubsection{Transport}
+Hottentot SHOULD support TCP for its transport protocol. That's because of long payloads which need sequencing feature in transport layer. Hottentot MAY work with other transport protocols offering sequencing feature and this MAY be up to operating system to handle transport operations.
+
+\subsubsection{Type of Communication}
+Like version 1, communication in protocol version 2 starts with a request from proxy-side. In this version, server-side can not start the communication yet. This would be a future feature with its limitations. KeepAlive feature is not supported and connection SHOULD be closed by server-side after sending the response. All Hottentot connections SHOULD start with \textbf{handshake} in this version. Details about the handshake will be discussed in future chapters.
+
+\subsubsection{Error Detection}
+There is no error detection mechanism in this version. We trust underlying protocols like TCP for detecting errors found in the transimtted data. It's obvious that using some security features like SSL provides some tools for detection of communication errors but it is OPTIONAL.
+
+\subsubsection{Security}
+Default behaviour SHOULD use plain transfer of data. This means that security features are optional and they should be enabled by user using configurations. Following sections talk about different aspects of security concerns regarding the Hottentot communication. It is clear that default behaviour does not prevent none of following issues.
+
+\paragraph{Eavesdropping}
+In order to prevent eavesdropping, Hottentot SHOULD use \textit{Encryption}. Symmetric encryption SHOULD be enough but key distribution phase SHOULD use asymmetric cryptography. Any means necessary for implementing the eavesdropping prevention mechanism SHOULD be used in this scenario; examples of such means are certificates, public and private key pairs, etc.
+
+\paragraph{Injection}
+In order to prevent any external party to inject data in a communication channel, Hottentot SHOULD use \textit{Digital Signature}. Digital Signatures SHOULD use PKI in order to provide certificates and key pairs for authenticated parties. Hottentot requests and responses MAY carry Digital Signature over request data to assure other parties that data is not changed while transferring.
+
+\paragraph{Authentication}
+In order to provide authentication for parties, Hottentot SHOULD use asymmetric cryptography and PKI compliant certificates.
+
+\subsubsection{State Management}
+Communications SHOULD be stateless. States related to service objects SHOULD be retained from the request payload. Stateful objects are not supported in this version.
+
+
+\subsection{Handshake}
+As stated before, Hottentot communications SHOULD start with \textit{Handshake} phase. Since connections SHOULD start from proxy-side, \textit{Handshake Request} SHOULD be sent from proxy-side application. Notice that, this handshake is specific to Hottentot and has nothing to do with other possible handshakes in the system like SSL handshakes or TCP handshakes.
+
+\subsection{Request}
 Each request consists of 1 mandatory and 2 optional fields.
 \begin{itemize}
   \item \textbf{Request Type}: This field is mandatory. Using this field determines type of request.
   \item \textbf{Payload}: This files is optional and carries all necessary data to perform the request operation.
-  \item \textbf{Request Digital Signature} This fields is optional and carries a PKI compatible digital signature over Request Type and Payload.
+  \item \textbf{Request Digital Signature} This fields is optional and carries a PKI compliant digital signature over Request Type and Payload.
 \end{itemize} 
 Please notice that, there is no checksum or error detection block involved in request structure. This means that we trust underlying network connection for handling communication errors. Also security concerns like impersonation, eavesdropping or on-wire injection will not be discussed here. There is a dedicated chapter for explaining security issues and detailed provided solutions. Below figure shows the request structure.
 
 \begin{figure}[!ht]
   \caption{HotPv2 Request Structure}
   \centering
-    \scalebox{2.1}{\includegraphics[width=0.5\textwidth]{hotpv2__request-type.png}}
+    \scalebox{2.1}{\includegraphics [width=0.5\textwidth]{hotpv2__request-type.png}}
 \end{figure}
 
-\subsubsection {Request Type}
+\subsubsection{Request Type}
 Determines the request type and payload structure. Following C enumeration shows the possible values for this field.
 
 \begin{verbatim}
@@ -103,19 +130,19 @@ Values can be:
   \item \textbf{EndpointInfoQuery}: Proxy-side asks about parameters of current endpoint.
 \end{itemize}
 
-\subsubsection {Payloads}
+\subsubsection{Payloads}
 Requests can have payloads. Many request types need data for their operations and payload carries the data. Following sections explain about payload structure for each request type. Please notice that, any needed piece of information or security object for authentication and authorization purposes will not be included in payloads and these objects will be transferred in \textit{Handshake} phase.
 
-\paragraph {Payload for \textit{Service List Query} Request Type}
+\paragraph{Payload for \textit{Service List Query} Request Type}
 A \textit{Service List Query} request has no payload. In other words, this request has only one byte carrying value 0x01 as \textit{Service List Query} request type identifier.
 
 \begin{figure}[!ht]
   \caption{Structure of a Service List Query request.}
   \centering
-    \scalebox{1.2}{\includegraphics[width=0.5\textwidth]{hotpv2__service-list-query-request.png}}
+    \scalebox{1.2}{\includegraphics [width=0.5\textwidth]{hotpv2__service-list-query-request.png}}
 \end{figure}
 
-\paragraph {Payload for \textit{Method Invocation} Request Type}
+\paragraph{Payload for \textit{Method Invocation} Request Type}
 A \textit{Method Invocation} request payload consists of following fields:
 \begin{itemize}
   \item Service Id (4 Bytes)
@@ -127,7 +154,7 @@ A \textit{Method Invocation} request payload consists of following fields:
 \begin{figure}[!ht]
   \caption{HotPv2 Method Invocation Request Structure}
   \centering
-    \scalebox{2.1}{\includegraphics[width=0.5\textwidth]{hotpv2__method-invocation-request.png}}
+    \scalebox{2.1}{\includegraphics [width=0.5\textwidth]{hotpv2__method-invocation-request.png}}
 \end{figure}
 
 Figure 2 shows the structure of a request. Arguments can be transferred using LV structures. LV structures include Length and Value. Maximum length for a single LV structure is $2^{32} - 1$ since length values can be stored in a field at most 4 bytes. Figure 3 shows the LV structures in detail.
@@ -135,12 +162,12 @@ Figure 2 shows the structure of a request. Arguments can be transferred using LV
 \begin{figure}[!ht]
   \caption{Structure of a Method Invocation request payload with arguments' LV structures.}
   \centering
-    \scalebox{2.2}{\includegraphics[width=0.5\textwidth]{hotpv2__method-invocation-request-payload-lv-structures.png}}
+    \scalebox{2.2}{\includegraphics [width=0.5\textwidth]{hotpv2__method-invocation-request-payload-lv-structures.png}}
 \end{figure}
 
 Value can be any byte array but usually it is a serialized object. Serialization method can be anything. Hottentot itself provides an algorithm for serialization and \texttt {serialize()} and \texttt {deserialize()} methods are generated for every struct. Current stub generation mechanism works only with Hottentot's internal serialization.
 
-\paragraph {Payload for \textit{Method List Query} Request Type} 
+\paragraph{Payload for \textit{Method List Query} Request Type} 
 A \textit{Method List Query} request has following fields:
 \begin{itemize}
   \item Service Id (4 Bytes)
@@ -150,10 +177,10 @@ This will return list of methods available on a service object identified by \te
 \begin{figure}[!ht]
   \caption{Structure of a Method List Query request.}
   \centering
-    \scalebox{1.5}{\includegraphics[width=0.5\textwidth]{hotpv2__method-list-query-request.png}}
+    \scalebox{1.5}{\includegraphics [width=0.5\textwidth]{hotpv2__method-list-query-request.png}}
 \end{figure}
 
-\paragraph {Payload for \textit{Service Info Query} Request Type} 
+\paragraph{Payload for \textit{Service Info Query} Request Type} 
 A \textit{Service Info Query} request has following fields:
 \begin{itemize}
   \item Service Id (4 Bytes)
@@ -163,10 +190,10 @@ This will return the parameters and their values for a service object identified
 \begin{figure}[!ht]
   \caption{Structure of a Service Info Query request.}
   \centering
-    \scalebox{1.5}{\includegraphics[width=0.5\textwidth]{hotpv2__service-info-query-request.png}}
+    \scalebox{1.5}{\includegraphics [width=0.5\textwidth]{hotpv2__service-info-query-request.png}}
 \end{figure}
 
-\paragraph {Payload for \textit{Method Info Query} Request Type} 
+\paragraph{Payload for \textit{Method Info Query} Request Type} 
 A \textit{Method Info Query} request has following fields:
 \begin{itemize}
   \item Service Id (4 Bytes)
@@ -177,21 +204,21 @@ This will return the parameters and their values for a method identified by \tex
 \begin{figure}[!ht]
   \caption{Structure of a Method Info Query request.}
   \centering
-    \scalebox{1.5}{\includegraphics[width=0.5\textwidth]{hotpv2__method-info-query-request.png}}
+    \scalebox{1.5}{\includegraphics [width=0.5\textwidth]{hotpv2__method-info-query-request.png}}
 \end{figure}
 
-\paragraph {Payload for \textit{Endpoint Info Query} Request Type} 
+\paragraph{Payload for \textit{Endpoint Info Query} Request Type} 
 A \textit{Endpoint Info Query} request has no fields, hence we have no payload. Parameters of current endpoint selected by proxy-side will be returned as response. Parameters are serialized according to LV structures.
 
 \begin{figure}[!ht]
   \caption{Structure of a Endpoint Info Query request.}
   \centering
-    \scalebox{1.2}{\includegraphics[width=0.5\textwidth]{hotpv2__endpoint-info-query-request.png}}
+    \scalebox{1.2}{\includegraphics [width=0.5\textwidth]{hotpv2__endpoint-info-query-request.png}}
 \end{figure}
 
-\section {Algorithms}
+\section{Algorithms}
 
-\subsection {Fast Hash Algorithm}
+\subsection{Fast Hash Algorithm}
 A fast hashing algorithm developed by Zilong Tan. It has 2 versions. One version generates 32-bit has value for a given byte array and the other one generates a 64-bit hash value for the input. Hottentot uses 32-bit fast hash algorithm for generating system independent identifiers (ids) for services and methods. We denote this algorithm with $ FH_{32} $ and $ FH_{64} $ throughout this document.
 
 \begin{equation}
@@ -202,7 +229,7 @@ A fast hashing algorithm developed by Zilong Tan. It has 2 versions. One version
 \end{equation}
 
 
-\section {Future Features}
+\section{Future Features}
 \begin{itemize}
   \item Version should be added to request and response structures.
 \end{itemize}
