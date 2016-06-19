@@ -53,6 +53,8 @@ This document talks about request and response structures and mechanisms in Hott
   \textbf {PROXY-SIDE} \\ \indent {A software or library which tries to interact with service-side objects like endpoints, services, etc.} \\\\
   \textbf {SERVICE-SIDE} \\ \indent {A software or library which serves proxy-side requests and generates suitable response.} \\\\
   \textbf{PUBLIC KEY INFRASTRUCTURE (PKI)} \\ \indent {An infrastructure built on top of specific asymmetric cryptography mechanisms and schemes to provide security solutions to known security issues.} \\\\
+  \textbf{CONVERSATION} \\ \indent {Transfer of messages between proxy-side and server-side in a Hottentot connection.} \\\\
+
 
 \section{Protocol V2}
 Protocol version 2 introduces new features to protocol version 1 in many aspects. Following sections talk about differences and new features in this version.
@@ -64,7 +66,7 @@ Hottentot connections uses Session layer and Application layer in OSI model. Hot
 Hottentot SHOULD support TCP for its transport protocol. That's because of long payloads which need sequencing feature in transport layer. Hottentot MAY work with other transport protocols offering sequencing feature and this MAY be up to operating system to handle transport operations.
 
 \subsubsection{Type of Communication}
-Like version 1, communication in protocol version 2 starts with a request from proxy-side. In this version, server-side can not start the communication yet. This would be a future feature with its limitations. KeepAlive feature is not supported and connection SHOULD be closed by server-side after sending the response. All Hottentot connections SHOULD start with \textbf{handshake} in this version. Details about the handshake will be discussed in future chapters.
+Like version 1, communication in protocol version 2 SHOULD start with a request from proxy-side. In this version, server-side SHOULD NOT start the communication. This would be a future feature with its limitations. KeepAlive feature SHOULD NOT BE supported and connection SHOULD be closed by server-side after sending the response. A Hottentot conversation SHOULD start with \textbf{handshake} messages in this version. Details about the handshake phase will be discussed in next section.
 
 \subsubsection{Error Detection}
 There is no error detection mechanism in this version. We trust underlying protocols like TCP for detecting errors found in the transimtted data. It's obvious that using some security features like SSL provides some tools for detection of communication errors but it is OPTIONAL.
@@ -76,7 +78,7 @@ Default behaviour SHOULD use plain transfer of data. This means that security fe
 In order to prevent eavesdropping, Hottentot SHOULD use \textit{Encryption}. Symmetric encryption SHOULD be enough but key distribution phase SHOULD use asymmetric cryptography. Any means necessary for implementing the eavesdropping prevention mechanism SHOULD be used in this scenario; examples of such means are certificates, public and private key pairs, etc.
 
 \paragraph{Injection}
-In order to prevent any external party to inject data in a communication channel, Hottentot SHOULD use \textit{Digital Signature}. Digital Signatures SHOULD use PKI in order to provide certificates and key pairs for authenticated parties. Hottentot requests and responses MAY carry Digital Signature over request data to assure other parties that data is not changed while transferring.
+In order to prevent any external party to inject data in a communication channel, Hottentot SHOULD use \textit{Digital Signature} mechanism. A Digital Signature mechanism needs a deployed PKI in order to provide certificates and key pairs for authenticated parties. Hottentot requests and responses MAY carry Digital Signature of request data to assure other parties that data is not changed while transferring.
 
 \paragraph{Authentication}
 In order to provide authentication for parties, Hottentot SHOULD use asymmetric cryptography and PKI compliant certificates.
@@ -85,15 +87,18 @@ In order to provide authentication for parties, Hottentot SHOULD use asymmetric 
 Communications SHOULD be stateless. States related to service objects SHOULD be retained from the request payload. Stateful objects are not supported in this version.
 
 
-\subsection{Handshake}
-As stated before, Hottentot communications SHOULD start with \textit{Handshake} phase. Since connections SHOULD start from proxy-side, \textit{Handshake Request} SHOULD be sent from proxy-side application. Notice that, this handshake is specific to Hottentot and has nothing to do with other possible handshakes in the system like SSL handshakes or TCP handshakes.
+\subsection{Handshake Phase}
+As stated before, a Hottentot conversation SHOULD start with \textit{Handshake} messages. Handshakes are performed to let the parties know more about each other and plan for a successful communication. Security objects like Certificates or Encryption Keys are transferred in this phase and the rest of conversation should be set up according to data gathered in handshake phase. Since connections SHOULD start from proxy-side, first message or \textit{Handshake Request} SHOULD be sent from proxy-side application. Notice that, this handshake is specific to Hottentot and has nothing to do with other possible handshakes in the system e.g SSL handshakes or TCP handshakes.
+
+\subsubsection{Handshake Messages}
+Handshake phase consists of 3 messages. First message or \textit{Handshake Request} SHOULD be sent by proxy-side who wants to start the conversation with server-side endpoint. Second message or \textit{Handshake Response} SHOULD be sent back by server-side in response to first message. Last message or \textit{Handshake Commit} SHOULD be sent by proxy-side in order to confirm the conversation or reject it. Once 3 messages are transferred and conversation gets confirmed by proxy-side, request message SHOULD be sent by proxy-side application and it SHOULD wait for the response. Please note that, Hottentot handshake SHOULD be performed after all underlying handshakes. If Hottentot is configured to use SSL, TCP handshake and SSL handshake should be completed before Hottentot handshake takes place. Details about the handshake messages will come in next sections.
 
 \subsection{Request}
 Each request consists of 1 mandatory and 2 optional fields.
 \begin{itemize}
   \item \textbf{Request Type}: This field is mandatory. Using this field determines type of request.
-  \item \textbf{Payload}: This files is optional and carries all necessary data to perform the request operation.
-  \item \textbf{Request Digital Signature} This fields is optional and carries a PKI compliant digital signature over Request Type and Payload.
+  \item \textbf{Payload}: This field is optional and carries all necessary data to perform the request operation.
+  \item \textbf{Request Digital Signature} This field is optional and carries a PKI compliant digital signature over Request Type and Payload.
 \end{itemize} 
 Please notice that, there is no checksum or error detection block involved in request structure. This means that we trust underlying network connection for handling communication errors. Also security concerns like impersonation, eavesdropping or on-wire injection will not be discussed here. There is a dedicated chapter for explaining security issues and detailed provided solutions. Below figure shows the request structure.
 

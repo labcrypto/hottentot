@@ -337,9 +337,9 @@ void printHelpMessageAndExit() {
   std::cout << "    --dont-generate            Don't generate sources. [Default: disabled]" << std::endl;
   std::cout << "    --extend-module            A dot seperated string which will be added to module. [Default: '']" << std::endl;
   std::cout << "    --pom                      Generate POM file for java sources. [Default: disabled]" << std::endl;
-  std::cout << "    --pom-group-id             GroupId of POM file. [Default: MANDATORT IF POM SPECIFIED.]" << std::endl;
-  std::cout << "    --pom-artifact-id          ArtifactId of POM file. [Default: MANDATORT IF POM SPECIFIED.]" << std::endl;
-  std::cout << "    --pom-version              Version of POM file. [Default: MANDATORT IF POM SPECIFIED.]" << std::endl;
+  std::cout << "    --pom-group-id             GroupId of POM file. [Default: MANDATORY IF POM SPECIFIED.]" << std::endl;
+  std::cout << "    --pom-artifact-id          ArtifactId of POM file. [Default: MANDATORY IF POM SPECIFIED.]" << std::endl;
+  std::cout << "    --pom-version              Version of POM file. [Default: MANDATORY IF POM SPECIFIED.]" << std::endl;
   std::cout << std::endl;
   std::cout << "For more information and examples, please visit https://github.com/LabCryptoOrg/hottentot" << std::endl;
   std::cout << std::endl;
