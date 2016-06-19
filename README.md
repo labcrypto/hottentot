@@ -18,7 +18,7 @@ First, install the few dependencies which they are ususally pre-isntalled on mos
 
 You should see a help message explaining the parameters for `hot` executable. Below is an exmaple.
 
-```shell
+```{shell, engine='bash', count_lines}
 $ hot
  ERROR: Target language is not specified
 
@@ -36,12 +36,12 @@ $ hot
      --indent-space-count       Number of spaces for producing a single indent. [Default: 2]
      --out                      Path to output directory. [Default: MANDATORY]
      --parse                    Displays parse result in a tree format. [Default: disabled]
-     --dont-generate            Don\'t generate sources. [Default: disabled]
+     --dont-generate            Don't generate sources. [Default: disabled]
      --extend-module            A dot seperated string which will be added to module. [Default: '']
      --pom                      Generate POM file for java sources. [Default: disabled]
-     --pom-group-id             GroupId of POM file. [Default: MANDATORT IF POM SPECIFIED.]
-     --pom-artifact-id          ArtifactId of POM file. [Default: MANDATORT IF POM SPECIFIED.]
-     --pom-version              Version of POM file. [Default: MANDATORT IF POM SPECIFIED.]
+     --pom-group-id             GroupId of POM file. [Default: MANDATORY IF POM SPECIFIED.]
+     --pom-artifact-id          ArtifactId of POM file. [Default: MANDATORY IF POM SPECIFIED.]
+     --pom-version              Version of POM file. [Default: MANDATORY IF POM SPECIFIED.]
 
  For more information and examples, please visit https://github.com/LabCryptoOrg/hottentot
 
