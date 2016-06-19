@@ -8,10 +8,15 @@ Hottentot is a RPC Framework. It allows developers to focus on their business on
 Download or clone the source code from Github. Just run `make` and `make install` in order to compile and install Hottentot.
 
 ```shell
+ $ sudo apt-get install git build-essential bison flex
+ $ git clone https://github.com/LabCryptoOrg/hottentot
+ $ cd hottentot
  $ make
  $ sudo make install
  $ hot
 ```
+
+You should see a help message explaining the parameters for `hot` executable.
 
 #### Windows
 
