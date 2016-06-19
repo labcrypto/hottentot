@@ -90,8 +90,15 @@ Communications SHOULD be stateless. States related to service objects SHOULD be 
 \subsection{Handshake Phase}
 As stated before, a Hottentot conversation SHOULD start with \textit{Handshake} messages. Handshakes are performed to let the parties know more about each other and plan for a successful communication. Security objects like Certificates or Encryption Keys are transferred in this phase and the rest of conversation should be set up according to data gathered in handshake phase. Since connections SHOULD start from proxy-side, first message or \textit{Handshake Request} SHOULD be sent from proxy-side application. Notice that, this handshake is specific to Hottentot and has nothing to do with other possible handshakes in the system e.g SSL handshakes or TCP handshakes.
 
-\subsubsection{Handshake Messages}
+\subsubsection{Messages}
 Handshake phase consists of 3 messages. First message or \textit{Handshake Request} SHOULD be sent by proxy-side who wants to start the conversation with server-side endpoint. Second message or \textit{Handshake Response} SHOULD be sent back by server-side in response to first message. Last message or \textit{Handshake Commit} SHOULD be sent by proxy-side in order to confirm the conversation or reject it. Once 3 messages are transferred and conversation gets confirmed by proxy-side, request message SHOULD be sent by proxy-side application and it SHOULD wait for the response. Please note that, Hottentot handshake SHOULD be performed after all underlying handshakes. If Hottentot is configured to use SSL, TCP handshake and SSL handshake should be completed before Hottentot handshake takes place. Details about the handshake messages will come in next sections.
+
+\paragraph{Request Message}
+
+\paragraph{Response Message}
+
+\paragraph{Commit Message}
+
 
 \subsection{Request}
 Each request consists of 1 mandatory and 2 optional fields.
@@ -220,6 +227,8 @@ A \textit{Endpoint Info Query} request has no fields, hence we have no payload. 
   \centering
     \scalebox{1.2}{\includegraphics [width=0.5\textwidth]{hotpv2__endpoint-info-query-request.png}}
 \end{figure}
+
+\section{Structures}
 
 \section{Algorithms}
 
