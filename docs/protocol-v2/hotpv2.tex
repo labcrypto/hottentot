@@ -94,12 +94,12 @@ As stated before, a Hottentot conversation SHOULD start with \textit{Handshake} 
 Handshake phase consists of 3 messages. First message or \textit{Syn Message} SHOULD be sent by proxy-side who wants to start the conversation with service-side endpoint. Second message or \textit{Ack Message} SHOULD be sent back by service-side in response to first message. Last message or \textit{Commit Message} SHOULD be sent by proxy-side in order to confirm the conversation or reject it. Once 3 messages are transferred and conversation gets confirmed by proxy-side, request message SHOULD be sent by proxy-side application and it SHOULD wait for the response. Please note that, Hottentot handshake SHOULD be performed after all underlying handshakes. If Hottentot is configured to use SSL, TCP handshake and SSL handshake should be completed before Hottentot handshake takes place. Details about the handshake messages will come in next sections.
 
 \paragraph{Syn Message}
-Handshake request message has following fields:
+\textit{Handshake Syn Message} has following fields:
 \begin{flushleft}
 \fbox{\parbox{\textwidth}{
 \begin{enumerate}
-  \item \textit{Hottentot Protocol Major Version}, \texttt{FIXED LENGTH 1 byte}
-  \item \textit{Hottentot Protocol Minor Version}, \texttt{FIXED LENGTH 1 byte}
+  \item \textit{Proxy-side Hottentot Protocol Major Version}, \texttt{FIXED LENGTH 1 byte}
+  \item \textit{Proxy-side Hottentot Protocol Minor Version}, \texttt{FIXED LENGTH 1 byte}
   \item \textit{Flag byte}, \texttt{FIXED LENGTH 1 byte}
   \begin{itemize}
     \item \texttt{KeepAlive} flag, bit 0
@@ -115,6 +115,29 @@ Handshake request message has following fields:
 If \texttt{KeepAlive} flag is set to 1, service-side SHOULD keep connection active after sending back responses. If client is not responsive, the timeout occurs and connection SHOULD be closed by service-side application.
 
 \paragraph{Ack Message}
+\textit{Handshake Ack Message} has following fields:
+\begin{flushleft}
+\fbox{\parbox{\textwidth}{
+\begin{enumerate}
+  \item \textit{Service-side Hottentot Protocol Major Version}, \texttt{FIXED LENGTH 1 byte}
+  \item \textit{Service-side Hottentot Protocol Minor Version}, \texttt{FIXED LENGTH 1 byte}
+  \item \textit{Flag byte}, \texttt{FIXED LENGTH 1 byte}
+  \begin{itemize}
+    \item \texttt{Rejected} flag, bit 0
+    \item Bits from 1 to 7 are reserved for future usage.
+  \end{itemize}
+  \item \textit{Reason byte}, \texttt{FIXED LENGTH 1 byte}
+  \begin{itemize}
+    \item \texttt{Proxy-side protocol version is too old} flag, bit 0
+    \item \texttt{Proxy-side protocol version is too new} flag, bit 1
+    \item \texttt{Serialization algorithms mismatch} flag, bit 2
+    \item Bits from 3 to 7 are reserved for future usage.
+  \end{itemize}
+  \item \textit{Reserved}, \texttt{FIXED LENGTH 2 bytes}
+  \item \texttt{Array} \textit{of proxy-side} \texttt{Certificates}, \texttt{VARIABLE LENGTH}
+\end{enumerate}
+}}
+\end{flushleft}
 
 \paragraph{Commit Message}
 
