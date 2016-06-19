@@ -47,13 +47,13 @@ This document talks about request and response structures and mechanisms in Hott
   \textbf {GENERATOR} \\ \indent {A tool for generating stub and struct source codes for a target programming language. Currently, generators for C++ and Java languages are available.} \\\\
   \textbf {RUNTIME} \\ \indent {A library for a specific programming language which performs Service and Proxy operations. Currently, runtimes are only available for C++ and Java.} \\\\
   \textbf {ENDPOINT} \\ \indent {Endpoint is a combination of IP address and a port. One service object or many can be bound to an endpoint.} \\\\
-  \textbf {CURRENT ENDPOINT} \\ \indent {When talking about a proxy, Current Endpoint is an endpoint which client has used for connecting to server-side.} \\\\
+  \textbf {CURRENT ENDPOINT} \\ \indent {When talking about a proxy, Current Endpoint is an endpoint which client has used for connecting to service-side.} \\\\
   \textbf {SERVICE} \\ \indent {Service is an object serving method invocation requests.} \\\\
   \textbf {PROXY} \\ \indent {Proxy is an object which produces method invocation and other types of requests and receives the response. A proxy object talks to an endpoint at first and its request will be delegated to a service object in case of method invocation requests.} \\\\
   \textbf {PROXY-SIDE} \\ \indent {A software or library which tries to interact with service-side objects like endpoints, services, etc.} \\\\
   \textbf {SERVICE-SIDE} \\ \indent {A software or library which serves proxy-side requests and generates suitable response.} \\\\
   \textbf{PUBLIC KEY INFRASTRUCTURE (PKI)} \\ \indent {An infrastructure built on top of specific asymmetric cryptography mechanisms and schemes to provide security solutions to known security issues.} \\\\
-  \textbf{CONVERSATION} \\ \indent {Transfer of messages between proxy-side and server-side in a Hottentot connection.} \\\\
+  \textbf{CONVERSATION} \\ \indent {Transfer of messages between proxy-side and service-side in a Hottentot connection.} \\\\
 
 
 \section{Protocol V2}
@@ -66,7 +66,7 @@ Hottentot connections uses Session layer and Application layer in OSI model. Hot
 Hottentot SHOULD support TCP for its transport protocol. That's because of long payloads which need sequencing feature in transport layer. Hottentot MAY work with other transport protocols offering sequencing feature and this MAY be up to operating system to handle transport operations.
 
 \subsubsection{Type of Communication}
-Like version 1, communication in protocol version 2 SHOULD start with a request from proxy-side. In this version, server-side SHOULD NOT start the communication. This would be a future feature with its limitations. KeepAlive feature SHOULD NOT BE supported and connection SHOULD be closed by server-side after sending the response. A Hottentot conversation SHOULD start with \textbf{handshake} messages in this version. Details about the handshake phase will be discussed in next section.
+Like version 1, communication in protocol version 2 SHOULD start with a request from proxy-side. In this version, service-side SHOULD NOT start the communication. This would be a future feature with its limitations. KeepAlive feature SHOULD BE supported and connection SHOULD remain active by service-side after sending the response if KeepAlive is requested by proxy-side. A Hottentot conversation SHOULD start with \textbf{Handshake} messages. Details about the handshake phase will be discussed in next section.
 
 \subsubsection{Error Detection}
 There is no error detection mechanism in this version. We trust underlying protocols like TCP for detecting errors found in the transimtted data. It's obvious that using some security features like SSL provides some tools for detection of communication errors but it is OPTIONAL.
@@ -88,14 +88,29 @@ Communications SHOULD be stateless. States related to service objects SHOULD be 
 
 
 \subsection{Handshake Phase}
-As stated before, a Hottentot conversation SHOULD start with \textit{Handshake} messages. Handshakes are performed to let the parties know more about each other and plan for a successful communication. Security objects like Certificates or Encryption Keys are transferred in this phase and the rest of conversation should be set up according to data gathered in handshake phase. Since connections SHOULD start from proxy-side, first message or \textit{Handshake Request} SHOULD be sent from proxy-side application. Notice that, this handshake is specific to Hottentot and has nothing to do with other possible handshakes in the system e.g SSL handshakes or TCP handshakes.
+As stated before, a Hottentot conversation SHOULD start with \textit{Handshake} messages. Handshakes are performed to let the parties know more about each other and plan for a successful communication. Security objects like Certificates or Encryption Keys are transferred in this phase and the rest of conversation should be set up according to data gathered in handshake phase. Since connections SHOULD start from proxy-side, first message or \textit{Syn Message} SHOULD be sent from proxy-side application. Notice that, this handshake is specific to Hottentot and has nothing to do with other possible handshakes in the system e.g SSL handshakes or TCP handshakes.
 
 \subsubsection{Messages}
-Handshake phase consists of 3 messages. First message or \textit{Handshake Request} SHOULD be sent by proxy-side who wants to start the conversation with server-side endpoint. Second message or \textit{Handshake Response} SHOULD be sent back by server-side in response to first message. Last message or \textit{Handshake Commit} SHOULD be sent by proxy-side in order to confirm the conversation or reject it. Once 3 messages are transferred and conversation gets confirmed by proxy-side, request message SHOULD be sent by proxy-side application and it SHOULD wait for the response. Please note that, Hottentot handshake SHOULD be performed after all underlying handshakes. If Hottentot is configured to use SSL, TCP handshake and SSL handshake should be completed before Hottentot handshake takes place. Details about the handshake messages will come in next sections.
+Handshake phase consists of 3 messages. First message or \textit{Syn Message} SHOULD be sent by proxy-side who wants to start the conversation with service-side endpoint. Second message or \textit{Ack Message} SHOULD be sent back by service-side in response to first message. Last message or \textit{Commit Message} SHOULD be sent by proxy-side in order to confirm the conversation or reject it. Once 3 messages are transferred and conversation gets confirmed by proxy-side, request message SHOULD be sent by proxy-side application and it SHOULD wait for the response. Please note that, Hottentot handshake SHOULD be performed after all underlying handshakes. If Hottentot is configured to use SSL, TCP handshake and SSL handshake should be completed before Hottentot handshake takes place. Details about the handshake messages will come in next sections.
 
-\paragraph{Request Message}
+\paragraph{Syn Message}
+Handshake request message has following fields:
+\begin{itemize}
+  \item Hottentot Protocol Major Version, \texttt{fixed length 1 byte}
+  \item Hottentot Protocol Minor Version, \texttt{fixed length 1 byte}
+  \item Flag byte, \texttt{fixed length 1 byte}
+  \begin{itemize}
+    \item \texttt{KeepAlive} flag, bit 0
+    \item Bits from 1 to 7 are reserved for future usage.
+  \end{itemize}
+  \item Reserved, \texttt{fixed length 2 bytes}
+  \item \texttt{Array} of supported \texttt{SerializationAlgorithms}, variable length (See Structures \\ section for \texttt{SerializationAlgorithm})
+  \item \texttt{Array} of proxy-side \texttt{Certificates}, variable length (See Structures section for \texttt{Certificate})  
+\end{itemize}
 
-\paragraph{Response Message}
+If \texttt{KeepAlive} flag is set to 1, service-side SHOULD keep connection active after sending back responses. If client is not responsive, the timeout occurs and connection SHOULD be closed by service-side application.
+
+\paragraph{Ack Message}
 
 \paragraph{Commit Message}
 
