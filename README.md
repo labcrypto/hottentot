@@ -5,7 +5,7 @@ Hottentot is a RPC Framework. It allows developers to focus on their business on
 
 ### Installation
 #### Linux
-First, download or clone the source code from Github. Then, install the dependencies for your own Linux disto. And at last, run `make` and `make install` in order to compile runtimes and generators. Dependencies for current Hottentot release are `build-essential`, `flex` and `bison`. Below, you will see a demonstration of Hottentot compilation in a Debian based distro.
+First, install the few dependencies which they are ususally pre-isntalled on most systems. Then download or clone the source code from Github. And at last, run `make` and `make install` in order to compile runtimes and generators. Dependencies for current Hottentot release are `build-essential`, `flex` and `bison`. Below, you will see a demonstration of Hottentot compilation in a Debian-based distro.
 
 ```shell
  $ sudo apt-get install git build-essential bison flex
