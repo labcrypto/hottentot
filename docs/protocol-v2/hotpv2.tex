@@ -98,16 +98,16 @@ Handshake phase consists of 3 messages. First message or \textit{Syn Message} SH
 \begin{flushleft}
 \fbox{\parbox{\textwidth}{
 \begin{enumerate}
-  \item \textit{Proxy-side Hottentot Protocol Major Version}, \texttt{FIXED LENGTH 1 byte}
-  \item \textit{Proxy-side Hottentot Protocol Minor Version}, \texttt{FIXED LENGTH 1 byte}
-  \item \textit{Flag byte}, \texttt{FIXED LENGTH 1 byte}
+  \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Proxy-side Hottentot Protocol Major Version} 
+  \item (\texttt{START: 0x01, LENGTH: 1 byte}): \textit{Proxy-side Hottentot Protocol Minor Version}
+  \item (\texttt{START: 0x02, LENGTH: 1 byte}): \textit{Flag byte} 
   \begin{itemize}
-    \item \texttt{KeepAlive} flag, bit 0
-    \item Bits from 1 to 7 are reserved for future usage.
+    \item \texttt{BIT[0]}: \texttt{KeepAlive} flag
+    \item \texttt{BIT[1]} \textit{to} \texttt{BIT[7]} \textit{are reserved for future usage and SHOULD be} \texttt{0x00}
   \end{itemize}
-  \item \textit{Reserved}, \texttt{FIXED LENGTH 2 bytes}
-  \item \texttt{Array} \textit{of supported} \texttt{SerializationAlgorithms}, \texttt{VARIABLE LENGTH}
-  \item \texttt{Array} \textit{of proxy-side} \texttt{Certificates}, \texttt{VARIABLE LENGTH}
+  \item (\texttt{START: 0x03, LENGTH: 2 bytes}): \textit{Reserved for future usage and SHOULD be} \texttt{0x0000}
+  \item (\texttt{START: 0x05, LENGTH: VARIABLE}): \texttt{Array} \textit{of supported} \texttt{SerializationAlgorithms}
+  \item (\texttt{START: VARIABLE, LENGTH: VARIABLE}): \texttt{Array} \textit{of proxy-side} \texttt{Certificates}
 \end{enumerate}
 }}
 \end{flushleft}
@@ -116,25 +116,26 @@ If \texttt{KeepAlive} flag is set to 1, service-side SHOULD keep connection acti
 
 \paragraph{Ack Message}
 \textit{Handshake Ack Message} has following fields:
+
 \begin{flushleft}
 \fbox{\parbox{\textwidth}{
 \begin{enumerate}
-  \item \textit{Service-side Hottentot Protocol Major Version}, \texttt{FIXED LENGTH 1 byte}
-  \item \textit{Service-side Hottentot Protocol Minor Version}, \texttt{FIXED LENGTH 1 byte}
-  \item \textit{Flag byte}, \texttt{FIXED LENGTH 1 byte}
+  \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Service-side Hottentot Protocol Major Version} 
+  \item (\texttt{START: 0x01, LENGTH: 1 byte}): \textit{Service-side Hottentot Protocol Minor Version}
+  \item (\texttt{START: 0x02, LENGTH: 1 byte}): \textit{Flag byte} 
   \begin{itemize}
-    \item \texttt{Rejected} flag, bit 0
-    \item Bits from 1 to 7 are reserved for future usage.
+    \item \texttt{BIT[0]}: \texttt{Rejected} \textit{flag}
+    \item \texttt{BIT[1]} \textit{to} \texttt{BIT[7]} \textit{are reserved for future usage and SHOULD be} \texttt{0x00}
   \end{itemize}
   \item \textit{Reason byte}, \texttt{FIXED LENGTH 1 byte}
   \begin{itemize}
-    \item \texttt{Proxy-side protocol version is too old} flag, bit 0
-    \item \texttt{Proxy-side protocol version is too new} flag, bit 1
-    \item \texttt{Serialization algorithms mismatch} flag, bit 2
-    \item Bits from 3 to 7 are reserved for future usage.
+    \item \texttt{BIT[0]}: \texttt{Proxy-side protocol version is too old} \textit{flag}
+    \item \texttt{BIT[1]}: \texttt{Proxy-side protocol version is too new} \textit{flag}
+    \item \texttt{BIT[2]}: \texttt{Serialization algorithms mismatch} \textit{flag}
+    \item \texttt{BIT[3]} \textit{to} \texttt{BIT[7]} \textit{are reserved for future usage and SHOULD be} \texttt{0x00}
   \end{itemize}
-  \item \textit{Reserved}, \texttt{FIXED LENGTH 2 bytes}
-  \item \texttt{Array} \textit{of proxy-side} \texttt{Certificates}, \texttt{VARIABLE LENGTH}
+  \item (\texttt{START: 0x03, LENGTH: 2 bytes}): \textit{Reserved for future usage and SHOULD be} \texttt{0x0000}
+  \item (\texttt{START: 0x05, LENGTH: VARIABLE}): \texttt{Array} \textit{of supported} \texttt{SerializationAlgorithms}
 \end{enumerate}
 }}
 \end{flushleft}
