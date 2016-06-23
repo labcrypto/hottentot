@@ -100,19 +100,22 @@ Handshake phase consists of 3 messages. First message or \textit{Syn Message} SH
 \begin{enumerate}
   \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Proxy-side Hottentot Protocol Major Version} 
   \item (\texttt{START: 0x01, LENGTH: 1 byte}): \textit{Proxy-side Hottentot Protocol Minor Version}
-  \item (\texttt{START: 0x02, LENGTH: 1 byte}): \textit{Flag byte} 
+  \item (\texttt{START: 0x02, LENGTH: 2 byte}): \textit{Sequence Number} 
+  \item (\texttt{START: 0x04, LENGTH: 1 byte}): \textit{Flag byte} 
   \begin{itemize}
     \item \texttt{BIT[0]}: \texttt{KeepAlive} flag
     \item \texttt{BIT[1]} \textit{to} \texttt{BIT[7]} \textit{are reserved for future usage and SHOULD be} \texttt{0x00}
   \end{itemize}
-  \item (\texttt{START: 0x03, LENGTH: 2 bytes}): \textit{Reserved for future usage and SHOULD be} \texttt{0x0000}
-  \item (\texttt{START: 0x05, LENGTH: VARIABLE}): \texttt{Array} \textit{of supported} \texttt{SerializationAlgorithms}
-  \item (\texttt{START: VARIABLE, LENGTH: VARIABLE}): \texttt{Array} \textit{of proxy-side} \texttt{Certificates}
+  \item (\texttt{START: 0x05, LENGTH: 2 bytes}): \textit{Reserved for future usage and SHOULD be} \texttt{0x0000}
+  \item (\texttt{START: 0x07, LENGTH: VARIABLE}): \texttt{Array} \textit{of supported} \texttt{SerializationAlgorithm}\textit{s}
+  \item (\texttt{START: VARIABLE, LENGTH: VARIABLE}): \texttt{Array} \textit{of proxy-side} \texttt{Certificate}\textit{s}
 \end{enumerate}
 }}
 \end{flushleft}
 
 If \texttt{KeepAlive} flag is set to 1, service-side SHOULD keep connection active after sending back responses. If client is not responsive, the timeout occurs and connection SHOULD be closed by service-side application.
+
+\texttt{Sequence Number} SHOULD be generated using a suitable Random Number Generator function. The value SHOULD be used by service-side in order to generate new value for \texttt{Sequence Number} in Ack Message. This technique has been used in TCP and it tries to prevent \textit{Packet Injection} attacks.
 
 \paragraph{Ack Message}
 \textit{Handshake Ack Message} has following fields:
@@ -122,35 +125,74 @@ If \texttt{KeepAlive} flag is set to 1, service-side SHOULD keep connection acti
 \begin{enumerate}
   \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Service-side Hottentot Protocol Major Version} 
   \item (\texttt{START: 0x01, LENGTH: 1 byte}): \textit{Service-side Hottentot Protocol Minor Version}
+  \item (\texttt{START: 0x02, LENGTH: 2 byte}): \textit{Sequence Number} 
+  \item (\texttt{START: 0x04, LENGTH: 1 byte}): \textit{Flag byte} 
+  \begin{itemize}
+    \item \texttt{BIT[0]}: \texttt{Rejected} \textit{flag}
+    \item \texttt{BIT[1]} \textit{to} \texttt{BIT[7]} \textit{are reserved for future usage and SHOULD be} \texttt{0x00}
+  \end{itemize}
+  \item (\texttt{START: 0x05, LENGTH: 1 byte}): \textit{Reason byte}
+  \begin{itemize}
+    \item \texttt{BIT[0]}: \texttt{Unknown or not specified} \textit{flag}
+    \item \texttt{BIT[1]}: \texttt{Proxy-side protocol version is too old} \textit{flag}
+    \item \texttt{BIT[2]}: \texttt{Proxy-side protocol version is too new} \textit{flag}
+    \item \texttt{BIT[3]}: \texttt{Mismatch in set of serialization algorithms} \textit{flag}
+    \item \texttt{BIT[4]}: \texttt{Authentication failure} \textit{flag}
+    \item \texttt{BIT[5]}: \texttt{Certification not found} \textit{flag}
+    \item \texttt{BIT[6]} \textit{to} \texttt{BIT[7]} \textit{are reserved for future usage and SHOULD be} \texttt{0x00}
+  \end{itemize}
+  \item (\texttt{START: 0x06, LENGTH: 2 bytes}): \textit{Reserved for future usage and SHOULD be} \texttt{0x0000}
+  \item (\texttt{START: 0x08, LENGTH: VARIABLE}): \texttt{Array} \textit{of supported} \texttt{SerializationAlgorithm}\textit{s}
+  \item (\texttt{START: VARIABLE, LENGTH: VARIABLE}): \texttt{Array} \textit{of service-side} \texttt{Certificate}\textit{s}
+\end{enumerate}
+}}
+\end{flushleft}
+
+If service-side wants to mark the conversation as \textit{rejected}, it SHOULD change the value of \texttt{Rejected} flag to 1. If the value is 0, proxy-side MAY assume the conversation as \textit{accepted}. If the conversation is rejected by the service-side, proxy-side SHOULD close the connection instantly.
+
+\paragraph{Commit Message}
+\textit{Handshake Commit Message} has following fields:
+
+\begin{flushleft}
+\fbox{\parbox{\textwidth}{
+\begin{enumerate}
+  \item (\texttt{START: 0x00, LENGTH: 2 byte}): \textit{Sequence Number} 
   \item (\texttt{START: 0x02, LENGTH: 1 byte}): \textit{Flag byte} 
   \begin{itemize}
     \item \texttt{BIT[0]}: \texttt{Rejected} \textit{flag}
     \item \texttt{BIT[1]} \textit{to} \texttt{BIT[7]} \textit{are reserved for future usage and SHOULD be} \texttt{0x00}
   \end{itemize}
-  \item \textit{Reason byte}, \texttt{FIXED LENGTH 1 byte}
+  \item (\texttt{START: 0x03, LENGTH: 1 byte}): \textit{Reason byte}
   \begin{itemize}
-    \item \texttt{BIT[0]}: \texttt{Proxy-side protocol version is too old} \textit{flag}
-    \item \texttt{BIT[1]}: \texttt{Proxy-side protocol version is too new} \textit{flag}
-    \item \texttt{BIT[2]}: \texttt{Serialization algorithms mismatch} \textit{flag}
-    \item \texttt{BIT[3]} \textit{to} \texttt{BIT[7]} \textit{are reserved for future usage and SHOULD be} \texttt{0x00}
+    \item \texttt{BIT[0]}: \texttt{Unknown or not specified} \textit{flag}
+    \item \texttt{BIT[1]}: \texttt{Service-side protocol version is too old} \textit{flag}
+    \item \texttt{BIT[2]}: \texttt{Service-side protocol version is too new} \textit{flag}
+    \item \texttt{BIT[3]}: \texttt{Mismatch in set of serialization algorithms} \textit{flag}
+    \item \texttt{BIT[4]}: \texttt{Authentication failure} \textit{flag}
+    \item \texttt{BIT[5]}: \texttt{Certification not found} \textit{flag}
+    \item \texttt{BIT[6]} \textit{to} \texttt{BIT[7]} \textit{are reserved for future usage and SHOULD be} \texttt{0x00}
   \end{itemize}
-  \item (\texttt{START: 0x03, LENGTH: 2 bytes}): \textit{Reserved for future usage and SHOULD be} \texttt{0x0000}
-  \item (\texttt{START: 0x05, LENGTH: VARIABLE}): \texttt{Array} \textit{of supported} \texttt{SerializationAlgorithms}
+  \item (\texttt{START: 0x04, LENGTH: 2 bytes}): \textit{Reserved for future usage and SHOULD be} \texttt{0x0000}
 \end{enumerate}
 }}
 \end{flushleft}
 
-\paragraph{Commit Message}
-
+If proxy-side wants to mark the conversation as \textit{rejected}, it SHOULD change the value of \texttt{Rejected} flag to 1. If the value is 0, service-side MAY assume the conversation as \textit{accepted}. If the conversation is rejected by the proxy-side, service-side SHOULD close the connection instantly.
 
 \subsection{Request}
 Each request consists of 1 mandatory and 2 optional fields.
-\begin{itemize}
-  \item \textbf{Request Type}: This field is mandatory. Using this field determines type of request.
-  \item \textbf{Payload}: This field is optional and carries all necessary data to perform the request operation.
-  \item \textbf{Request Digital Signature} This field is optional and carries a PKI compliant digital signature over Request Type and Payload.
-\end{itemize} 
-Please notice that, there is no checksum or error detection block involved in request structure. This means that we trust underlying network connection for handling communication errors. Also security concerns like impersonation, eavesdropping or on-wire injection will not be discussed here. There is a dedicated chapter for explaining security issues and detailed provided solutions. Below figure shows the request structure.
+
+\begin{flushleft}
+\fbox{\parbox{\textwidth}{
+\begin{enumerate}
+  \item (\texttt{START: 0x00, LENGTH: 1}): \textit{Request Type}; It is MANDATORY. Using this field determines type of request.
+  \item (\texttt{START: 0x01, LENGTH: VARIABLE}): \textit{Payload}; It is OPTIONAL and carries all necessary data to perform the request operation.
+  \item (\texttt{START: VARIABLE, LENGTH: VARIABLE}): \textit{Request Digital Signature}; It is OPTIONAL and carries a PKI compliant digital signature over Request Type and Payload.
+\end{enumerate}
+}}
+\end{flushleft}
+
+Please notice that, there is no checksum or error detection block involved in request structure. This means that we trust underlying network connection for handling communication errors. Also security concerns like impersonation, eavesdropping or on-wire injection will not be discussed here. There is a dedicated chapter for explaining security issues and detailed provided solutions.
 
 \subsubsection{Request Type}
 Determines the request type and payload structure. Following C enumeration shows the possible values for this field.
@@ -169,15 +211,19 @@ enum RequestType {
 
 \noindent
 Values can be:
+\begin{flushleft}
+\fbox{\parbox{\textwidth}{
 \begin{itemize}
-  \item \textbf{Unknown}: It means nothing to Hottentot service side and these requests should be ignored by implementation.
-  \item \textbf{ServiceListQuery}: Proxy-side queries about the list of available services. Hottentot service runtime should return list of services exposed on current endpoint.
+  \item \textbf{Unknown}: It means nothing to Hottentot service-side and these requests SHOULD be ignored by implementation.
+  \item \textbf{ServiceListQuery}: Proxy-side queries about the list of available services. Hottentot service runtime SHOULD return list of services exposed on current endpoint.
   \item \textbf{MethodInvocation}: Invokes a method on a specific service object.
   \item \textbf{MethodListQuery}: Proxy-side queries about the list of callable methods on a specific service object.
   \item \textbf{ServiceInfoQuery}: Proxy-side asks about parameters of a specific service.
   \item \textbf{MethodInfoQuery}: Proxy-side asks about parameters of a specific method.
   \item \textbf{EndpointInfoQuery}: Proxy-side asks about parameters of current endpoint.
 \end{itemize}
+}}
+\end{flushleft}
 
 \subsubsection{Payloads}
 Requests can have payloads. Many request types need data for their operations and payload carries the data. Following sections explain about payload structure for each request type. Please notice that, any needed piece of information or security object for authentication and authorization purposes will not be included in payloads and these objects will be transferred in \textit{Handshake} phase.
