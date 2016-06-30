@@ -6,6 +6,7 @@
 \usepackage[normalem]{ulem}
 \usepackage{amsmath}
 \usepackage{indentfirst}
+\usepackage{picture,xcolor}
 \graphicspath{{.}}
 \setcounter{secnumdepth}{5}
 \setcounter{tocdepth}{5}
@@ -100,7 +101,7 @@ Handshake phase consists of 3 messages. First message or \textit{Syn Message} SH
 \begin{enumerate}
   \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Proxy-side Hottentot Protocol Major Version} 
   \item (\texttt{START: 0x01, LENGTH: 1 byte}): \textit{Proxy-side Hottentot Protocol Minor Version}
-  \item (\texttt{START: 0x02, LENGTH: 2 byte}): \textit{Sequence Number} 
+  \item (\texttt{START: 0x02, LENGTH: 2 bytes}): \textit{Sequence Number} 
   \item (\texttt{START: 0x04, LENGTH: 1 byte}): \textit{Flag byte} 
   \begin{itemize}
     \item \texttt{BIT[0]}: \texttt{KeepAlive} flag
@@ -125,7 +126,7 @@ If \texttt{KeepAlive} flag is set to 1, service-side SHOULD keep connection acti
 \begin{enumerate}
   \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Service-side Hottentot Protocol Major Version} 
   \item (\texttt{START: 0x01, LENGTH: 1 byte}): \textit{Service-side Hottentot Protocol Minor Version}
-  \item (\texttt{START: 0x02, LENGTH: 2 byte}): \textit{Sequence Number} 
+  \item (\texttt{START: 0x02, LENGTH: 2 bytes}): \textit{Sequence Number} 
   \item (\texttt{START: 0x04, LENGTH: 1 byte}): \textit{Flag byte} 
   \begin{itemize}
     \item \texttt{BIT[0]}: \texttt{Rejected} \textit{flag}
@@ -156,7 +157,7 @@ If service-side wants to mark the conversation as \textit{rejected}, it SHOULD c
 \begin{flushleft}
 \fbox{\parbox{\textwidth}{
 \begin{enumerate}
-  \item (\texttt{START: 0x00, LENGTH: 2 byte}): \textit{Sequence Number} 
+  \item (\texttt{START: 0x00, LENGTH: 2 bytes}): \textit{Sequence Number} 
   \item (\texttt{START: 0x02, LENGTH: 1 byte}): \textit{Flag byte} 
   \begin{itemize}
     \item \texttt{BIT[0]}: \texttt{Rejected} \textit{flag}
@@ -185,7 +186,7 @@ Each request consists of 1 mandatory and 2 optional fields.
 \begin{flushleft}
 \fbox{\parbox{\textwidth}{
 \begin{enumerate}
-  \item (\texttt{START: 0x00, LENGTH: 1}): \textit{Request Type}; It is MANDATORY. Using this field determines type of request.
+  \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Request Type}; It is MANDATORY. Using this field determines type of request.
   \item (\texttt{START: 0x01, LENGTH: VARIABLE}): \textit{Payload}; It is OPTIONAL and carries all necessary data to perform the request operation.
   \item (\texttt{START: VARIABLE, LENGTH: VARIABLE}): \textit{Request Digital Signature}; It is OPTIONAL and carries a PKI compliant digital signature over Request Type and Payload.
 \end{enumerate}
@@ -229,45 +230,130 @@ Values can be:
 Requests can have payloads. Many request types need data for their operations and payload carries the data. Following sections explain about payload structure for each request type. Please notice that, any needed piece of information or security object for authentication and authorization purposes will not be included in payloads and these objects will be transferred in \textit{Handshake} phase.
 
 \paragraph{Payload for \textit{Service List Query} Request Type}
-A \textit{Service List Query} request has no payload. In other words, this request has only one byte carrying value 0x01 as \textit{Service List Query} request type identifier.
+A \textit{Service List Query} request has no payload. In other words, this request has only one byte carrying value \texttt{0x01} as \textit{Service List Query} request type identifier.
+
+\begin{flushleft}
+\fbox{\parbox{\textwidth}{
+\begin{enumerate}
+  \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Request Type}; Value SHOULD be \texttt{0x01}.
+\end{enumerate}
+}}
+\end{flushleft}
 
 \paragraph{Payload for \textit{Method Invocation} Request Type}
-A \textit{Method Invocation} request payload consists of following fields:
-\begin{itemize}
-  \item Service Id (4 Bytes)
-  \item Method Id (4 Bytes)
-  \item Number of Arguments (1 Byte)
-  \item Arguments as an array of LV Structures. (Variable Length)
-\end{itemize}
+A \textit{Method Invocation} request payload consists of \underline{\textit{Service Id}}, \underline{\textit{Method Id}}, \underline{\textit{Number of Arguments}} and \underline{\textit{Array of Arguments}}. So, the structure of a \textit{Method Invocation} request is something like below.
 
-Figure 2 shows the structure of a request. Arguments can be transferred using LV structures. LV structures include Length and Value. Maximum length for a single LV structure is $2^{32} - 1$ since length values can be stored in a field at most 4 bytes. Figure 3 shows the LV structures in detail.
+\begin{flushleft}
+\fbox{\parbox{\textwidth}{
+\begin{enumerate}
+  \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Request Type}; Value SHOULD be \texttt{0x02}.
+  \item
+  \fbox{\colorbox{gray!20}{\parbox{400pt}{
+  \begin{enumerate}
+  \item (\texttt{START: 0x01, LENGTH: 4 bytes}): \textit{Service Id}; Indicates the service object. \\ See \textit{'Id Generation Algorithms'} section for more details.
+  \item (\texttt{START: 0x05, LENGTH: 4 bytes}): \textit{Method Id}; Indicates the method which should be \\ invoked on the service object. See \textit{'Id Generation Algorithms'} section for more details.
+  \item (\texttt{START: 0x09, LENGTH: 1 byte}): \textit{Number of Arguments}
+  \item (\texttt{START: 0x0A, LENGTH: VARIABLE}): \texttt{Array} \textit{of} \texttt{Argument}\textit{s}
+  \end{enumerate}
+  }}}
+  \item (\texttt{START: VARIABLE, LENGTH: VARIABLE}): \textit{Request Digital Signature}; See \textit{'Payload Signature'} chapter for more details.
+\end{enumerate}
+}}
+\end{flushleft}
 
-Value can be any byte array but usually it is a serialized object. Serialization method can be anything. Hottentot itself provides an algorithm for serialization and \texttt {serialize()} and \texttt {deserialize()} methods are generated for every struct. Current stub generation mechanism works only with Hottentot's internal serialization.
+Arguments SHOULD be transferred using LV structures (See \textit{'LV Structure'} chapter for more details). Arguments are serialized objects so each of them SHOULD indicate the serialization algorithm used for serializing itself.
 
 \paragraph{Payload for \textit{Method List Query} Request Type} 
-A \textit{Method List Query} request has following fields:
-\begin{itemize}
-  \item Service Id (4 Bytes)
-\end{itemize}
+A \textit{Method List Query} payload has only \underline{\textit{Service Id}} field. The request structure is like below.
+
+\begin{flushleft}
+\fbox{\parbox{\textwidth}{
+\begin{enumerate}
+  \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Request Type}; Value SHOULD be \texttt{0x03}.
+  \item
+  \fbox{\colorbox{gray!20}{\parbox{400pt}{
+  \begin{enumerate}
+  \item (\texttt{START: 0x01, LENGTH: 4 bytes}): \textit{Service Id}; Indicates the service object. \\ See \textit{'Id Generation Algorithms'} section for more details.
+  \end{enumerate}
+  }}}
+  \item (\texttt{START: 0x05, LENGTH: VARIABLE}): \textit{Request Digital Signature}; See \textit{'Payload Signature'} chapter for more details.
+\end{enumerate}
+}}
+\end{flushleft}
+
 This will return list of methods available on a service object identified by \textit{Service Id}.
 
 \paragraph{Payload for \textit{Service Info Query} Request Type} 
-A \textit{Service Info Query} request has following fields:
-\begin{itemize}
-  \item Service Id (4 Bytes)
-\end{itemize}
-This will return the parameters and their values for a service object identified by \textit{Service Id}. Parameters and values are serialized according to LV structures. Structure for service parameters will be explained in future chapters.
+A \textit{Service Info Query} payload has only \underline{\textit{Service Id}} field. The request structure is like below.
+
+\begin{flushleft}
+\fbox{\parbox{\textwidth}{
+\begin{enumerate}
+  \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Request Type}; Value SHOULD be \texttt{0x04}.
+  \item
+  \fbox{\colorbox{gray!20}{\parbox{400pt}{
+  \begin{enumerate}
+  \item (\texttt{START: 0x01, LENGTH: 4 bytes}): \textit{Service Id}; Indicates the service object. \\ See \textit{'Id Generation Algorithms'} section for more details.
+  \end{enumerate}
+  }}}
+  \item (\texttt{START: 0x05, LENGTH: VARIABLE}): \textit{Request Digital Signature}; See \textit{'Payload Signature'} chapter for more details.
+\end{enumerate}
+}}
+\end{flushleft}
+
+This will return the parameters and their values for a service object identified by \textit{Service Id}. Parameters and values are serialized according to LV structures (See \textit{'LV Structure'} chapter for more details).
 
 \paragraph{Payload for \textit{Method Info Query} Request Type} 
-A \textit{Method Info Query} request has following fields:
-\begin{itemize}
-  \item Service Id (4 Bytes)
-  \item Method Id (4 Bytes)
-\end{itemize}
-This will return the parameters and their values for a method identified by \textit{Method Id} on a specific service object identified by \textit{Service Id}. Parameters and values are serialized according to LV structures. Structure for method parameters will be explained in future chapters.
+A \textit{Method Info Query} payload has \underline{\textit{Service Id}} and \underline{\textit{Method Id}} fields.
+
+\begin{flushleft}
+\fbox{\parbox{\textwidth}{
+\begin{enumerate}
+  \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Request Type}; Value SHOULD be \texttt{0x05}.
+  \item
+  \fbox{\colorbox{gray!20}{\parbox{400pt}{
+  \begin{enumerate}
+  \item (\texttt{START: 0x01, LENGTH: 4 bytes}): \textit{Service Id}; Indicates the service object. \\ See \textit{'Id Generation Algorithms'} section for more details.
+  \item (\texttt{START: 0x05, LENGTH: 4 bytes}): \textit{Method Id}; Indicates the method on the service \\ object. See \textit{'Id Generation Algorithms'} section for more details.
+  \end{enumerate}
+  }}}
+  \item (\texttt{START: 0x09, LENGTH: VARIABLE}): \textit{Request Digital Signature}; See \textit{'Payload Signature'} chapter for more details.
+\end{enumerate}
+}}
+\end{flushleft}
+
+This will return the parameters and their values for a method identified by \textit{Method Id} on a specific service object identified by \textit{Service Id}. Parameters and values are serialized according to LV structures (See \textit{'LV Structure'} chapter for more details).
 
 \paragraph{Payload for \textit{Endpoint Info Query} Request Type} 
-A \textit{Endpoint Info Query} request has no fields, hence we have no payload. Parameters of current endpoint selected by proxy-side will be returned as response. Parameters are serialized according to LV structures.
+A \textit{Endpoint Info Query} payload has no field. Parameters of current endpoint (selected by proxy-side) will be returned as response. Parameters are serialized according to LV structures (See \textit{'LV Structure'} chapter for more details).
+
+\begin{flushleft}
+\fbox{\parbox{\textwidth}{
+\begin{enumerate}
+  \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Request Type}; Value SHOULD be \texttt{0x06}.
+\end{enumerate}
+}}
+\end{flushleft}
+
+\subsection{Response}
+Each response message consists of 1 mandatory and 2 optional fields.
+
+\begin{flushleft}
+\fbox{\parbox{\textwidth}{
+\begin{enumerate}
+  \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Request Type}; It is MANDATORY. Using this field determines type of request.
+  \item (\texttt{START: 0x01, LENGTH: VARIABLE}): \textit{Payload}; It is OPTIONAL and carries all necessary data to perform the request operation.
+  \item (\texttt{START: VARIABLE, LENGTH: VARIABLE}): \textit{Request Digital Signature}; It is OPTIONAL and carries a PKI compliant digital signature over Request Type and Payload.
+\end{enumerate}
+}}
+\end{flushleft}
+
+\section{Hottentot Serialization}
+This section explains \textit{Hottentot Serialization} in details. First, we talk about \textit{primitive data types}. Then, we explain the \textit{structs} which they provide a way to \textit{encapsulate} the primitive fields in a single body. And at last, we talk about \textit{nested data types} which they allow us to nest some structs in some other structs.
+
+\subsection{Primitive Data Types}
+\subsection{Struct Types}
+\subsection{Nested Data Types}
 
 \section{Structures}
 
