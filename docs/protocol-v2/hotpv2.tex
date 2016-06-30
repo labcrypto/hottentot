@@ -341,9 +341,9 @@ Each response message consists of 1 mandatory and 2 optional fields.
 \begin{flushleft}
 \fbox{\parbox{\textwidth}{
 \begin{enumerate}
-  \item (\texttt{START: 0x00, LENGTH: 1 byte}): \textit{Request Type}; It is MANDATORY. Using this field determines type of request.
-  \item (\texttt{START: 0x01, LENGTH: VARIABLE}): \textit{Payload}; It is OPTIONAL and carries all necessary data to perform the request operation.
-  \item (\texttt{START: VARIABLE, LENGTH: VARIABLE}): \textit{Request Digital Signature}; It is OPTIONAL and carries a PKI compliant digital signature over Request Type and Payload.
+  \item (\texttt{START: 0x00, LENGTH: 2 bytes}): \textit{Status Code}; It is MANDATORY. This field indicates the result. \texttt{0x0000} means success and other values SHOULD be interpreted. Status codes greater or equal than \texttt{0x0001} and less or equal than \texttt{0x0400} are reserved for Hottentot usage and interpretations of these values are provided in this document. Other values are application specific and they will be defined in application's business boundary.
+  \item (\texttt{START: 0x02, LENGTH: VARIABLE}): \textit{Payload}; It is OPTIONAL. It MAY be \texttt{Array} of \texttt{Object}s or an  \texttt{Exception} object (See 'Structures' section for more details about \texttt{Array}, \texttt{Object} and \texttt{Exception}).
+  \item (\texttt{START: VARIABLE, LENGTH: VARIABLE}): \textit{Response Digital Signature}; It is OPTIONAL and carries a PKI compliant digital signature over \textit{Status Code} and \textit{Payload}.
 \end{enumerate}
 }}
 \end{flushleft}
