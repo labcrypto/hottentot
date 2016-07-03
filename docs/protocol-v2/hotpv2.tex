@@ -357,7 +357,7 @@ Values in range $ [\texttt{0x0000}, \texttt{0x0400}] $ is reserved for Hottentot
 If status code indicates that an exception has been thrown, payload is a single \texttt{Exception} structure.
 
 \subsubsection{Response Payloads With Status Code = \texttt{0x0000}}
-Response \textit{Payload} is determined according to \textit{Request Type} and \texttt{Status Code}. When status code is not \texttt{0x0000}, payload is just a single \texttt{Exception} structure. If status code is \texttt{0x0000}, we have results and its structure is determined according to \textit{Request Type}.
+\textit{Response Payload} is determined according to \textit{Request Type} and \textit{Status Code}. When status code is not \texttt{0x0000}, payload SHOULD be just a single \texttt{Exception} structure. If status code is \texttt{0x0000}, we have results and its structure is determined according to \textit{Request Type}.
 
 \paragraph{Response Payload for \textit{Service List Query} Request Type}
 In this case, payload is an \texttt{Array} of \texttt{ServiceId}s.
@@ -369,6 +369,8 @@ In this case, payload is an \texttt{Array} of \texttt{Object}.
 In this case, payload is an \texttt{Array} of \texttt{MethodId}s.
 
 \paragraph{Response Payload for \textit{Service Info Query} Request Type}
+In this case, payload is single object of type \texttt{ServiceInfo}.
+
 \paragraph{Response Payload for \textit{Method Info Query} Request Type}
 \paragraph{Response Payload for \textit{Endpoint Info Query} Request Type}
 
