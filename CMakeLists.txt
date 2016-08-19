@@ -40,7 +40,7 @@ set(LEX_FILES
 )
 
 add_custom_command(OUTPUT ${LEX_FILES}
-  COMMAND yacc -d .hot.y
+  COMMAND yacc -d hot.y
   COMMAND flex hot.l
   COMMAND mv y.tab.c y.tab.cc
   COMMAND mv lex.yy.c lex.yy.cc
@@ -51,7 +51,7 @@ add_custom_command(OUTPUT ${LEX_FILES}
 add_custom_target(make_cc_template_files DEPENDS ${CC_TEMPLATE_FILES})
 add_custom_target(make_lex_files DEPENDS ${LEX_FILES})
 
-add_library(hottentot-generator-common SHARED 
+add_library(hottentot-generator-common-lib SHARED 
   ${PROJECT_SOURCE_DIR}/generator/lex.yy.cc
   ${PROJECT_SOURCE_DIR}/generator/runtime.cc
   ${PROJECT_SOURCE_DIR}/generator/fasthash.cc
@@ -59,7 +59,7 @@ add_library(hottentot-generator-common SHARED
   ${PROJECT_SOURCE_DIR}/generator/method.cc
 )
 
-add_library(hottentot-generator-cc SHARED
+add_library(hottentot-generator-cc-lib SHARED
   ${PROJECT_SOURCE_DIR}/generator/cc/runtime.cc
   ${PROJECT_SOURCE_DIR}/generator/cc/cc_generator.cc
   ${PROJECT_SOURCE_DIR}/generator/cc/generate_abstract_service_header.cc
@@ -80,7 +80,7 @@ add_library(hottentot-generator-cc SHARED
   ${PROJECT_SOURCE_DIR}/generator/cc/templates/templates.cc
 )
 
-add_library(hottentot-generator-java SHARED
+add_library(hottentot-generator-java-lib SHARED
   ${PROJECT_SOURCE_DIR}/generator/java/java_generator.cc
   ${PROJECT_SOURCE_DIR}/generator/java/generate_abstract_service_java.cc
   ${PROJECT_SOURCE_DIR}/generator/java/generate_structs_java.cc
@@ -95,21 +95,24 @@ add_library(hottentot-generator-java SHARED
   ${PROJECT_SOURCE_DIR}/generator/java/generate_enums_java.cc
 )
 
-add_executable(hot-exe
+add_executable(hot-executable
   ${PROJECT_SOURCE_DIR}/generator/y.tab.cc
 )
 
-target_compile_options(hottentot-generator-common PUBLIC -std=c++11 -O3)
-target_compile_options(hottentot-generator-cc PUBLIC -std=c++11 -O3)
-target_compile_options(hottentot-generator-java PUBLIC -std=c++11 -O3)
-target_compile_options(hot-exe PUBLIC -std=c++11 -O3)
+target_compile_options(hottentot-generator-common-lib PUBLIC -std=c++11 -O3)
+target_compile_options(hottentot-generator-cc-lib PUBLIC -std=c++11 -O3)
+target_compile_options(hottentot-generator-java-lib PUBLIC -std=c++11 -O3)
+target_compile_options(hot-executable PUBLIC -std=c++11 -O3)
 
-set_target_properties(hot-exe PROPERTIES RUNTIME_OUTPUT_NAME hot)
+set_target_properties(hottentot-generator-common-lib PROPERTIES OUTPUT_NAME hot-gen-common)
+set_target_properties(hottentot-generator-cc-lib PROPERTIES OUTPUT_NAME hot-gen-cc)
+set_target_properties(hottentot-generator-java-lib PROPERTIES OUTPUT_NAME hot-gen-java)
+set_target_properties(hot-executable PROPERTIES RUNTIME_OUTPUT_NAME hot)
 
-target_link_libraries(hot-exe
-  hottentot-generator-common
-  hottentot-generator-cc
-  hottentot-generator-java
+target_link_libraries(hot-executable
+  hottentot-generator-common-lib
+  hottentot-generator-cc-lib
+  hottentot-generator-java-lib
   fl
 )
 
