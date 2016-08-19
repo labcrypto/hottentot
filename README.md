@@ -4,19 +4,37 @@
 Hottentot is a RPC Framework. It allows developers to focus on their business on client and server sides. Hottentot is light weight and it does not need any additional dependency to get compiled and work. Currently, it generates source files for C++ and Java. Other languages will be added soon. See Examples section for going through a quick guide.
 
 ### Installation
-#### Linux
-First, install the few dependencies which they are ususally pre-isntalled on most systems. Then download or clone the source code from Github. And at last, run `make` and `make install` in order to compile runtimes and generators. Dependencies for current Hottentot release are `build-essential`, `flex` and `bison`. Below, you will see a demonstration of Hottentot compilation in a Debian-based distro.
+#### Linux (Debian-based distributions)
+First, install dependencies.
 
 ```shell
- $ sudo apt-get install git build-essential bison flex
+ $ sudo apt-get install git build-essential cmake bison flex
+```
+
+Then, clone source code from github.
+
+```shell
  $ git clone https://github.com/LabCryptoOrg/hottentot
+```
+
+Compile and install sources.
+
+```shell
  $ cd hottentot
+ $ mkdir -p build
+ $ cd build
+ $ cmake ..
  $ make
  $ sudo make install
+```
+
+Check for hottentot for being installed.
+
+```shell
  $ hot
 ```
 
-You should see a help message explaining the parameters for `hot` executable. Below is an exmaple.
+It should display a message like below.
 
 ```{shell, engine='bash', count_lines}
 $ hot
