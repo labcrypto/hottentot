@@ -15,3 +15,4 @@ templates.h
 *.swp
 runtimes/cc/win32/debug
 runtimes/cc/win32/release
+build
