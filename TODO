@@ -36,3 +36,4 @@ Create package directories for java generated sources                           
 Add a base package name to be added to module namespace                               [TODO]
 Add a helper class for manipulation of java unsigned data types                       [TODO]
 Hot semantic analysis                                                                 [TODO]
+Handle 4+ bytes length                                                                [TODO]
