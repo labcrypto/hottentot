@@ -2,17 +2,12 @@ cmake_minimum_required(VERSION 2.8)
 
 project(hottentot_generator)
 
-set(BIN_INSTALL_DIR "/usr/local/bin/" CACHE PATH "")
+set(BIN_INSTALL_DIR "/usr/bin/" CACHE PATH "")
+set(HEADERS_INSTALL_DIR "/usr/include")
+set(LIB_INSTALL_DIR "/usr/lib")
 
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 set(PROJECT_SOURCE_DIR ${CMAKE_SOURCE_DIR})
-set(PROJECT_INCLUDE_DIR ${CMAKE_SOURCE_DIR})
-
-include_directories(${PROJECT_INCLUDE_DIR})
-include_directories("/usr/include/")
-include_directories("/usr/local/include/")
-include_directories("/usr/include/hiredis")
-include_directories("/usr/local/include/hiredis")
 
 link_directories("/usr/local/lib")
 
@@ -104,9 +99,9 @@ target_compile_options(hottentot-generator-cc-lib PUBLIC -std=c++11 -O3)
 target_compile_options(hottentot-generator-java-lib PUBLIC -std=c++11 -O3)
 target_compile_options(hot-executable PUBLIC -std=c++11 -O3)
 
-set_target_properties(hottentot-generator-common-lib PROPERTIES OUTPUT_NAME hot-gen-common)
-set_target_properties(hottentot-generator-cc-lib PROPERTIES OUTPUT_NAME hot-gen-cc)
-set_target_properties(hottentot-generator-java-lib PROPERTIES OUTPUT_NAME hot-gen-java)
+set_target_properties(hottentot-generator-common-lib PROPERTIES OUTPUT_NAME hot-generator-common)
+set_target_properties(hottentot-generator-cc-lib PROPERTIES OUTPUT_NAME hot-generator-cc)
+set_target_properties(hottentot-generator-java-lib PROPERTIES OUTPUT_NAME hot-generator-java)
 set_target_properties(hot-executable PROPERTIES RUNTIME_OUTPUT_NAME hot)
 
 target_link_libraries(hot-executable
@@ -148,8 +143,41 @@ add_library(hotd SHARED
 
 target_compile_options(hotd PUBLIC -std=c++11 -O0 -g)
 
-# target_link_libraries(rtbe pthread ev httpxx cares systemd)
-# install(TARGETS rtbe
-#   RUNTIME DESTINATION ${BIN_INSTALL_DIR}
-#   LIBRARY DESTINATION /usr/local/lib/
-#   ARCHIVE DESTINATION /usr/local/lib/)
+set(HEADERS 
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/boolean.h
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
+)
+
+install(DIRECTORY 
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org 
+  DESTINATION 
+  ${HEADERS_INSTALL_DIR} 
+  FILES_MATCHING 
+  PATTERN "*.h"
+)
+
+install(TARGETS
+  hottentot-generator-common-lib
+  hottentot-generator-cc-lib
+  hottentot-generator-java-lib
+  hot
+  hotd
+  DESTINATION
+  ${LIB_INSTALL_DIR}
+)
+
+install(TARGETS
+  hot-executable
+  DESTINATION
+  ${BIN_INSTALL_DIR}
+)
+
+add_custom_target(uninstall
+  COMMAND rm -rfv ${BIN_INSTALL_DIR}/hot
+  COMMAND rm -rfv ${LIB_INSTALL_DIR}/libhot*
+  COMMAND rm -rfv ${HEADERS_INSTALL_DIR}/org/labcrypto/hottentot
+)
