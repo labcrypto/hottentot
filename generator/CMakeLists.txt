@@ -25,7 +25,11 @@ include_directories("/usr/local/include/hiredis")
 
 link_directories("/usr/local/lib")
 
-set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-writable-strings -Wno-deprecated-register -Wno-unused-function")
+if (APPLE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-writable-strings -Wno-deprecated-register -Wno-unused-function")
+elseif (UNIX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings -Wno-unused-but-set-variable -Wno-sign-compare -Wno-unused-function")
+endif()
 
 set(CC_TEMPLATE_FILES
   "${PROJECT_SOURCE_DIR}/cc/templates/templates.h"
@@ -34,7 +38,7 @@ set(CC_TEMPLATE_FILES
 
 add_custom_command(OUTPUT ${CC_TEMPLATE_FILES}
   COMMAND ./cc/templates/generate_templates_header.sh ./cc/templates/
-  # COMMAND ./java/templates/byte_array_maker.sh
+  COMMAND ./java/templates/byte_array_maker.sh
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   VERBATIM
 )
@@ -56,13 +60,59 @@ add_custom_command(OUTPUT ${LEX_FILES}
 add_custom_target(make_cc_template_files DEPENDS ${CC_TEMPLATE_FILES})
 add_custom_target(make_lex_files DEPENDS ${LEX_FILES})
 
-add_library(hottentot_generator_cc SHARED 
-  ${PROJECT_SOURCE_DIR}/y.tab.cc
+add_library(hottentot-generator-common SHARED 
   ${PROJECT_SOURCE_DIR}/lex.yy.cc
   ${PROJECT_SOURCE_DIR}/runtime.cc
   ${PROJECT_SOURCE_DIR}/fasthash.cc
   ${PROJECT_SOURCE_DIR}/service.cc
   ${PROJECT_SOURCE_DIR}/method.cc
+)
+
+add_library(hottentot-generator-cc SHARED
+  ${PROJECT_SOURCE_DIR}/cc/runtime.cc
+  ${PROJECT_SOURCE_DIR}/cc/cc_generator.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_abstract_service_header.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_enums.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_interface.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_service_interface.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_proxy_header.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_proxy_cc.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_proxy_builder_header.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_proxy_builder_cc.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_request_handler_header.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_request_handler_cc.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_struct_header.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_struct_cc.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_makefile.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_client.cc
+  ${PROJECT_SOURCE_DIR}/cc/generate_stub.cc
+  ${PROJECT_SOURCE_DIR}/cc/templates/templates.cc
+)
+
+add_library(hottentot-generator-java SHARED
+  ${PROJECT_SOURCE_DIR}/java/java_generator.cc
+  ${PROJECT_SOURCE_DIR}/java/generate_abstract_service_java.cc
+  ${PROJECT_SOURCE_DIR}/java/generate_structs_java.cc
+  ${PROJECT_SOURCE_DIR}/java/generate_service_interface_java.cc
+  ${PROJECT_SOURCE_DIR}/java/generate_request_handler_java.cc
+  ${PROJECT_SOURCE_DIR}/java/generate_service_proxy_builder_java.cc
+  ${PROJECT_SOURCE_DIR}/java/generate_service_proxy_java.cc
+  ${PROJECT_SOURCE_DIR}/java/generate_serializable_struct_list_java.cc
+  ${PROJECT_SOURCE_DIR}/java/generate_client_main_java.cc
+  ${PROJECT_SOURCE_DIR}/java/generate_server_main_java.cc
+  ${PROJECT_SOURCE_DIR}/java/generate_server_impls_java.cc
+  ${PROJECT_SOURCE_DIR}/java/generate_enums_java.cc
+)
+
+add_executable(hot
+  ${PROJECT_SOURCE_DIR}/y.tab.cc
+)
+
+target_link_libraries(hot
+  hottentot-generator-common
+  hottentot-generator-cc
+  hottentot-generator-java
+  fl
 )
 
 # target_link_libraries(rtbe pthread ev httpxx cares systemd)
