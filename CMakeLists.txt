@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 2.8)
 
 project(hottentot_generator)
 
+if (APPLE)
+  set(CMAKE_MACOSX_RPATH 1)
+endif()
+
 set(BIN_INSTALL_DIR "/usr/bin/" CACHE PATH "")
 set(HEADERS_INSTALL_DIR "/usr/include")
 set(LIB_INSTALL_DIR "/usr/lib")
@@ -10,6 +14,9 @@ set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 set(PROJECT_SOURCE_DIR ${CMAKE_SOURCE_DIR})
 
 link_directories("/usr/local/lib")
+if (APPLE)
+  link_directories("/opt/local/lib/")
+endif()
 
 if (APPLE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-writable-strings -Wno-deprecated-register -Wno-unused-function")
@@ -47,7 +54,6 @@ add_custom_target(make_cc_template_files DEPENDS ${CC_TEMPLATE_FILES})
 add_custom_target(make_lex_files DEPENDS ${LEX_FILES})
 
 add_library(hottentot-generator-common-lib SHARED 
-  ${PROJECT_SOURCE_DIR}/generator/lex.yy.cc
   ${PROJECT_SOURCE_DIR}/generator/runtime.cc
   ${PROJECT_SOURCE_DIR}/generator/fasthash.cc
   ${PROJECT_SOURCE_DIR}/generator/service.cc
@@ -76,6 +82,7 @@ add_library(hottentot-generator-cc-lib SHARED
 )
 
 add_library(hottentot-generator-java-lib SHARED
+  ${PROJECT_SOURCE_DIR}/generator/runtime.cc
   ${PROJECT_SOURCE_DIR}/generator/java/java_generator.cc
   ${PROJECT_SOURCE_DIR}/generator/java/generate_abstract_service_java.cc
   ${PROJECT_SOURCE_DIR}/generator/java/generate_structs_java.cc
@@ -91,6 +98,7 @@ add_library(hottentot-generator-java-lib SHARED
 )
 
 add_executable(hot-executable
+  ${PROJECT_SOURCE_DIR}/generator/lex.yy.cc
   ${PROJECT_SOURCE_DIR}/generator/y.tab.cc
 )
 
