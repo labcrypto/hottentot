@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8) 
 
-project(hottentot_generator)
+project(LabCryptoOrg-hottentot)
 
 if (APPLE)
   set(CMAKE_MACOSX_RPATH 1)
