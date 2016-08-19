@@ -1,7 +1,10 @@
 lex.yy.c
+lex.yy.cc
 y.tab.h
 y.tab.c
+y.tab.cc
 *.out
 *.o
 gen
 hot
+build
