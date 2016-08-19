@@ -2,16 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(hottentot_generator)
 
-set(DEBUG_MODE ON CACHE BOOL "Debug mode is enable or disable -- adds -g and -O0 flags") 
-set(BIN_NAME "generator" CACHE STRING "")
 set(BIN_INSTALL_DIR "/usr/local/bin/" CACHE PATH "")
-
-if(NOT DEBUG_MODE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
-else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O0 -g")
-  add_definitions(-D__DEBUG__)
-endif()
 
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 set(PROJECT_SOURCE_DIR ${CMAKE_SOURCE_DIR})
@@ -104,16 +95,55 @@ add_library(hottentot-generator-java SHARED
   ${PROJECT_SOURCE_DIR}/generator/java/generate_enums_java.cc
 )
 
-add_executable(hot
+add_executable(hot-exe
   ${PROJECT_SOURCE_DIR}/generator/y.tab.cc
 )
 
-target_link_libraries(hot
+target_compile_options(hottentot-generator-common PUBLIC -std=c++11 -O3)
+target_compile_options(hottentot-generator-cc PUBLIC -std=c++11 -O3)
+target_compile_options(hottentot-generator-java PUBLIC -std=c++11 -O3)
+target_compile_options(hot-exe PUBLIC -std=c++11 -O3)
+
+set_target_properties(hot-exe PROPERTIES RUNTIME_OUTPUT_NAME hot)
+
+target_link_libraries(hot-exe
   hottentot-generator-common
   hottentot-generator-cc
   hottentot-generator-java
   fl
 )
+
+add_library(hot SHARED
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/logger.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/protocol_v1.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/proxy.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/proxy_runtime.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/default_tcp_client.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/default_tcp_client_factory.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/service_runtime.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_tcp_server.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_tcp_server_factory.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_request_callback.cc
+)
+
+target_compile_options(hot PUBLIC -std=c++11 -O3)
+
+add_library(hotd SHARED
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/logger.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/protocol_v1.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/proxy.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/proxy_runtime.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/default_tcp_client.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/default_tcp_client_factory.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/service_runtime.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_tcp_server.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_tcp_server_factory.cc
+  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_request_callback.cc
+)
+
+target_compile_options(hotd PUBLIC -std=c++11 -O0 -g)
 
 # target_link_libraries(rtbe pthread ev httpxx cares systemd)
 # install(TARGETS rtbe
