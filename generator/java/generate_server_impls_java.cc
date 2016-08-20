@@ -32,6 +32,7 @@
 #include "../method.h" 
 #include "../service.h" 
 #include "../type_helper.h" 
+#include "../string_helper.h"
 
 
 namespace org {

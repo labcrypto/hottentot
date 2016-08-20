@@ -25,8 +25,10 @@
 #define _ORG_LABCRYPTO_HOTTENTOT_GENERATOR__TYPE_HELPER_H_
 
 #include <stdexcept>
- 
+
+#include "string_helper.h" 
 #include "runtime.h"
+
 
 namespace org {
 namespace labcrypto {

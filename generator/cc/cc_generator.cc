@@ -93,6 +93,7 @@ namespace cc {
     /*
      * Creating needed directories
      */
+    ::org::labcrypto::hottentot::generator::Os::MakeDir(generationConfig.GetOutDir());
     ::org::labcrypto::hottentot::generator::Os::MakeDir(generationConfig.GetOutDir() + "/proxy");
     ::org::labcrypto::hottentot::generator::Os::MakeDir(generationConfig.GetOutDir() + "/service");
     /*

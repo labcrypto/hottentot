@@ -58,6 +58,7 @@ add_library(hottentot-generator-common-lib SHARED
   ${PROJECT_SOURCE_DIR}/generator/fasthash.cc
   ${PROJECT_SOURCE_DIR}/generator/service.cc
   ${PROJECT_SOURCE_DIR}/generator/method.cc
+  ${PROJECT_SOURCE_DIR}/generator/os.cc
 )
 
 add_library(hottentot-generator-cc-lib SHARED
