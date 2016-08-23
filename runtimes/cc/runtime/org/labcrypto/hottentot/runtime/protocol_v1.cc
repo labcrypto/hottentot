@@ -28,6 +28,7 @@
 #include <exception>
 #include <stdexcept>
 #include <iomanip>
+#include <limits>
 
 #ifdef _MSC_VER
 // #include <windows.h>
@@ -110,7 +111,7 @@ namespace runtime {
       } else if (request.GetArgumentLength(i) < 256 * 256 * 256) {
         actualLength += 4;
         actualLength += request.GetArgumentLength(i);
-      } else if (request.GetArgumentLength(i) < 256 * 256 * 256 * 256) {
+      } else if (request.GetArgumentLength(i) <= std::numeric_limits<uint32_t>::max()) {
         actualLength += 5;
         actualLength += request.GetArgumentLength(i);
       }
@@ -146,7 +147,7 @@ namespace runtime {
         data[c + 2] = (request.GetArgumentLength(i) - data[c + 1] * 256 * 256) / 256;
         data[c + 3] = request.GetArgumentLength(i) % (256 * 256);
         c += 4;
-      } else if (request.GetArgumentLength(i) < 256 * 256 * 256 * 256) {
+      } else if (request.GetArgumentLength(i) <= std::numeric_limits<uint32_t>::max()) {
         data[c] = 0x84;
         data[c + 1] = request.GetArgumentLength(i) / (256 * 256 * 256);
         data[c + 2] = (request.GetArgumentLength(i) - data[c + 1] * 256 * 256 * 256) / (256 * 256);
@@ -184,7 +185,7 @@ namespace runtime {
     } else if (response.GetDataLength() < 256 * 256 * 256) {
       actualLength += 4;
       actualLength += response.GetDataLength();
-    } else if (response.GetDataLength() < 256 * 256 * 256 * 256) {
+    } else if (response.GetDataLength() <= std::numeric_limits<uint32_t>::max()) {
       actualLength += 5;
       actualLength += response.GetDataLength();
     }
@@ -207,12 +208,12 @@ namespace runtime {
       data[c + 2] = (response.GetDataLength() - data[c + 1] * 256 * 256) / 256;
       data[c + 3] = response.GetDataLength() % (256 * 256);
       c += 4;
-    } else if (response.GetArgumentLength(i) < 256 * 256 * 256 * 256) {
+    } else if (response.GetDataLength() <= std::numeric_limits<uint32_t>::max()) {
         data[c] = 0x84;
-        data[c + 1] = response.GetArgumentLength(i) / (256 * 256 * 256);
-        data[c + 2] = (response.GetArgumentLength(i) - data[c + 1] * 256 * 256 * 256) / (256 * 256);
-        data[c + 3] = (response.GetArgumentLength(i) - data[c + 1] * 256 * 256 * 256 - data[c + 2] * 256 * 256) / 256;
-        data[c + 4] = response.GetArgumentLength(i) % (256 * 256 * 256);
+        data[c + 1] = response.GetDataLength() / (256 * 256 * 256);
+        data[c + 2] = (response.GetDataLength() - data[c + 1] * 256 * 256 * 256) / (256 * 256);
+        data[c + 3] = (response.GetDataLength() - data[c + 1] * 256 * 256 * 256 - data[c + 2] * 256 * 256) / 256;
+        data[c + 4] = response.GetDataLength() % (256 * 256 * 256);
         c += 5;
       }
     unsigned char *argData = response.GetData();
@@ -474,7 +475,7 @@ namespace runtime {
                   sendLength = 3 + responseSerializedLength;
                 } else if (responseSerializedLength < 256 * 256 * 256) {
                   sendLength = 4 + responseSerializedLength;
-                } else if (responseSerializedLength < 256 * 256 * 256 * 256) {
+                } else if (responseSerializedLength <= std::numeric_limits<uint32_t>::max()) {
                   sendLength = 5 + responseSerializedLength;
                 }
                 unsigned char *sendData = new unsigned char[sendLength];
@@ -494,7 +495,7 @@ namespace runtime {
                   sendData[c + 2] = (responseSerializedLength - sendData[c + 1] * 256 * 256) / 256;
                   sendData[c + 3] = responseSerializedLength % (256 * 256);
                   c += 4;
-                } else if (responseSerializedLength < 256 * 256 * 256 * 256) {
+                } else if (responseSerializedLength <= std::numeric_limits<uint32_t>::max()) {
                   sendData[c] = 0x84;
                   sendData[c + 1] = responseSerializedLength / (256 * 256 * 256);
                   sendData[c + 2] = (responseSerializedLength - sendData[c + 1] * 256 * 256 * 256) / (256 * 256);
