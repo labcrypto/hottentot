@@ -110,6 +110,9 @@ namespace runtime {
       } else if (request.GetArgumentLength(i) < 256 * 256 * 256) {
         actualLength += 4;
         actualLength += request.GetArgumentLength(i);
+      } else if (request.GetArgumentLength(i) < 256 * 256 * 256 * 256) {
+        actualLength += 5;
+        actualLength += request.GetArgumentLength(i);
       }
     }
     *length = actualLength;
@@ -143,6 +146,13 @@ namespace runtime {
         data[c + 2] = (request.GetArgumentLength(i) - data[c + 1] * 256 * 256) / 256;
         data[c + 3] = request.GetArgumentLength(i) % (256 * 256);
         c += 4;
+      } else if (request.GetArgumentLength(i) < 256 * 256 * 256 * 256) {
+        data[c] = 0x84;
+        data[c + 1] = request.GetArgumentLength(i) / (256 * 256 * 256);
+        data[c + 2] = (request.GetArgumentLength(i) - data[c + 1] * 256 * 256 * 256) / (256 * 256);
+        data[c + 3] = (request.GetArgumentLength(i) - data[c + 1] * 256 * 256 * 256 - data[c + 2] * 256 * 256) / 256;
+        data[c + 4] = request.GetArgumentLength(i) % (256 * 256 * 256);
+        c += 5;
       }
       unsigned char *argData = request.GetArgumentData(i);
       for (unsigned int j = 0; j < request.GetArgumentLength(i); j++) {
@@ -174,6 +184,9 @@ namespace runtime {
     } else if (response.GetDataLength() < 256 * 256 * 256) {
       actualLength += 4;
       actualLength += response.GetDataLength();
+    } else if (response.GetDataLength() < 256 * 256 * 256 * 256) {
+      actualLength += 5;
+      actualLength += response.GetDataLength();
     }
     *length = actualLength;
     unsigned char *data = new unsigned char[*length];
@@ -194,7 +207,14 @@ namespace runtime {
       data[c + 2] = (response.GetDataLength() - data[c + 1] * 256 * 256) / 256;
       data[c + 3] = response.GetDataLength() % (256 * 256);
       c += 4;
-    }
+    } else if (response.GetArgumentLength(i) < 256 * 256 * 256 * 256) {
+        data[c] = 0x84;
+        data[c + 1] = response.GetArgumentLength(i) / (256 * 256 * 256);
+        data[c + 2] = (response.GetArgumentLength(i) - data[c + 1] * 256 * 256 * 256) / (256 * 256);
+        data[c + 3] = (response.GetArgumentLength(i) - data[c + 1] * 256 * 256 * 256 - data[c + 2] * 256 * 256) / 256;
+        data[c + 4] = response.GetArgumentLength(i) % (256 * 256 * 256);
+        c += 5;
+      }
     unsigned char *argData = response.GetData();
     for (uint32_t i = 0; i < response.GetDataLength(); i++) {
       data[c++] = argData[i];
@@ -265,6 +285,9 @@ namespace runtime {
         } else if (data[c] == 0x83) {
           argLength = data[c + 1] * 256 * 256 + data[c + 2] * 256 + data[c + 3];
           c += 4;
+        } else if (data[c] == 0x84) {
+          argLength = data[c + 1] * 256 * 256 * 256 + data[c + 2] * 256 * 256 + data[c + 3] * 256 + data[c + 4];
+          c += 4;
         }
         unsigned char *argData = new unsigned char[argLength];
         for (uint32_t i = 0; i < argLength; i++) {
@@ -309,6 +332,9 @@ namespace runtime {
         c += 3;
       } else if (data[c] == 0x83) {
         resultLength = data[c + 1] * 256 * 256 + data[c + 2] * 256 + data[c + 3];
+        c += 4;
+      } else if (data[c] == 0x84) {
+        resultLength = data[c + 1] * 256 * 256 * 256 + data[c + 2] * 256 * 256 + data[c + 3] * 256 + data[c + 4];
         c += 4;
       }
       unsigned char *resultData = new unsigned char[resultLength];
@@ -448,6 +474,8 @@ namespace runtime {
                   sendLength = 3 + responseSerializedLength;
                 } else if (responseSerializedLength < 256 * 256 * 256) {
                   sendLength = 4 + responseSerializedLength;
+                } else if (responseSerializedLength < 256 * 256 * 256 * 256) {
+                  sendLength = 5 + responseSerializedLength;
                 }
                 unsigned char *sendData = new unsigned char[sendLength];
                 uint32_t c = 0;
@@ -466,6 +494,13 @@ namespace runtime {
                   sendData[c + 2] = (responseSerializedLength - sendData[c + 1] * 256 * 256) / 256;
                   sendData[c + 3] = responseSerializedLength % (256 * 256);
                   c += 4;
+                } else if (responseSerializedLength < 256 * 256 * 256 * 256) {
+                  sendData[c] = 0x84;
+                  sendData[c + 1] = responseSerializedLength / (256 * 256 * 256);
+                  sendData[c + 2] = (responseSerializedLength - sendData[c + 1] * 256 * 256 * 256) / (256 * 256);
+                  sendData[c + 3] = (responseSerializedLength - sendData[c + 1] * 256 * 256 * 256 - sendData[c + 2] * 256 * 256) / 256;
+                  sendData[c + 4] = responseSerializedLength % (256 * 256 * 256);
+                  c += 5;
                 }
                 for (unsigned int k = 0; k < responseSerializedLength; k++) {
                   sendData[c++] = responseSerializedData[k];

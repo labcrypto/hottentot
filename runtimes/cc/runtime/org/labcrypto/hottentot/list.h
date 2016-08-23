@@ -97,9 +97,9 @@ namespace hottentot {
           length += 3 + lengths[i];
         } else if (lengths[i] < 256 * 256 * 256) {
           length += 4 + lengths[i];
-        } /* else if (lengths[i] <= (256 * 256 * 256 * 256 - 1)) {
+        } else if (lengths[i] < 256 * 256 * 256 * 256) {
           length += 5 + lengths[i];
-        } */
+        }
         // std::cout << "Len(" << i << ")" << std::endl;
       }
       uint32_t c = 0;
@@ -126,14 +126,14 @@ namespace hottentot {
           data[c + 2] = (lengths[i] - data[c + 1] * (256 * 256)) / 256;
           data[c + 3] = lengths[i] % (256 * 256);
           c += 4;
-        } /* else if (lengths[i] <= (256 * 256 * 256 * 256 - 1)) {
+        } else if (lengths[i] < 256 * 256 * 256 * 256) {
           data[c] = 0x84;
           data[c + 1] = lengths[i] / (256 * 256 * 256);
-          data[c + 2] = (lengths[i] - data[c + 1] * (256 * 256 * 256)) / (256 * 256);
-          data[c + 3] = (lengths[i] - data[c + 1] * (256 * 256 * 256) - data[c + 2] * (256 * 256)) / 256;
+          data[c + 2] = (lengths[i] - data[c + 1] * 256 * 256 * 256) / (256 * 256);
+          data[c + 3] = (lengths[i] - data[c + 1] * 256 * 256 * 256 - data[c + 2] * 256 * 256) / 256;
           data[c + 4] = lengths[i] % (256 * 256 * 256);
           c += 5;
-        } */
+        }
         for (uint32_t j = 0; j < lengths[i]; j++) {
           data[c++] = datas[i][j];
         }
