@@ -68,6 +68,8 @@
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 3 + requestSerializedDataLength;
 [[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256 * 256) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 4 + requestSerializedDataLength;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength <= std::numeric_limits<uint32_t>::max()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 5 + requestSerializedDataLength;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]unsigned char *sendData = new unsigned char[sendLength];
 [[[INDENT]]][[[INDENT]]]uint32_t c = 0;
@@ -86,6 +88,13 @@
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 2] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256) / 256;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 3] = requestSerializedDataLength % (256 * 256);
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]c += 4;
+[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength <= std::numeric_limits<uint32_t>::max()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c] = 0x84;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 1] = requestSerializedDataLength / (256 * 256 * 256);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 2] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256 * 256) / (256 * 256);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 3] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256 * 256 - sendData[c + 2] * 256 * 256) / 256;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 4] = requestSerializedDataLength % (256 * 256 * 256);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]c += 5;
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]for (uint32_t i = 0; i < requestSerializedDataLength; i++) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedData[i];

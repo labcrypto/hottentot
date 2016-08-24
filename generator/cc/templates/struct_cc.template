@@ -6,8 +6,11 @@
  *   This file contains implementation of [[[STRUCT_NAME]]] class.
  ******************************************************************/
 
-#include <iostream>
+
 #include <string.h>
+
+#include <iostream>
+#include <limits>
 
 #include <org/labcrypto/hottentot/runtime/hot_ptr.h>
 

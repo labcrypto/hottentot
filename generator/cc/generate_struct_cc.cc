@@ -139,6 +139,8 @@ namespace cc {
         serializationSS << indent << indent << indent << "totalLength += 3 + length" << counter << ";\r\n";
         serializationSS << indent << indent << "} else if (length" << counter << " < 256 * 256 * 256) {\r\n";
         serializationSS << indent << indent << indent << "totalLength += 4 + length" << counter << ";\r\n";
+        serializationSS << indent << indent << "} else if (length" << counter << " < std::numeric_limits<uint32_t>::max()) {\r\n";
+        serializationSS << indent << indent << indent << "totalLength += 5 + length" << counter << ";\r\n";
         serializationSS << indent << indent << "}\r\n";
       }
       counter++;
@@ -169,6 +171,13 @@ namespace cc {
         serializationSS << indent << indent << indent << "data[c + 2] = (length" << counter << " - data[c + 1] * (256 * 256)) / 256;\r\n";
         serializationSS << indent << indent << indent << "data[c + 3] = length" << counter << " % (256 * 256);\r\n";
         serializationSS << indent << indent << indent << "c += 4;\r\n";
+        serializationSS << indent << indent << "} else if (length" << counter << " < std::numberic_limits<uint32_t>::max()) {\r\n";
+        serializationSS << indent << indent << indent << "data[c] = 0x84;\r\n";
+        serializationSS << indent << indent << indent << "data[c + 1] = length" << counter << " / (256 * 256 * 256);\r\n";
+        serializationSS << indent << indent << indent << "data[c + 2] = (length" << counter << " - data[c + 1] * (256 * 256 * 256)) / (256 * 256);\r\n";
+        serializationSS << indent << indent << indent << "data[c + 3] = (length" << counter << " - data[c + 1] * (256 * 256 * 256) - data[c + 2] * (256 * 256)) / 256;\r\n";
+        serializationSS << indent << indent << indent << "data[c + 4] = length" << counter << " % (256 * 256 * 256);\r\n";
+        serializationSS << indent << indent << indent << "c += 5;\r\n";
         serializationSS << indent << indent << "}\r\n";
       }
       serializationSS << indent << indent << "unsigned char *data" << counter << " = ptr" << counter << ".Get();\r\n";
@@ -240,6 +249,9 @@ namespace cc {
         deserializationSS << indent << indent << indent << "} else if (ll == 3) {\r\n";
         deserializationSS << indent << indent << indent << indent << "elength = data[c] * 256 * 256 + data[c + 1] * 256 + data[c + 2];\r\n";
         deserializationSS << indent << indent << indent << indent << "c += 3;\r\n";
+        deserializationSS << indent << indent << indent << "} else if (ll == 4) {\r\n";
+        deserializationSS << indent << indent << indent << indent << "elength = data[c] * 256 * 256 * 256 + data[c + 1] * 256 * 256 + data[c + 2] * 256 + data[c + 3];\r\n";
+        deserializationSS << indent << indent << indent << indent << "c += 4;\r\n";
         deserializationSS << indent << indent << indent << "}\r\n";
         deserializationSS << indent << indent << "}\r\n";
         

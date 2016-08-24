@@ -6,6 +6,8 @@
  *   This file contains implementation of the proxy class.
  ***************************************************************/
 
+#include <limits>
+
 #include <org/labcrypto/hottentot/runtime/configuration.h>
 #include <org/labcrypto/hottentot/runtime/logger.h>
 #include <org/labcrypto/hottentot/runtime/utils.h>
