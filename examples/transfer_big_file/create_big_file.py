@@ -11,3 +11,5 @@ os.system("echo 'ABC' > " + fileName);
 for i in range(26) :
   os.system("cat " + fileName + " > .temp")
   os.system("cat .temp >> " + fileName)
+
+os.system("rm -rf .temp")
