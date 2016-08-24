@@ -8,7 +8,7 @@ if (len(sys.argv) > 1) :
 
 os.system("echo 'ABC' > " + fileName);
 
-for i in range(26) :
+for i in range(24) :
   os.system("cat " + fileName + " > .temp")
   os.system("cat .temp >> " + fileName)
 

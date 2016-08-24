@@ -1,0 +1,5 @@
+module org.labcrypto.hottentot.examples.bigfiletransfer {
+  stateless service BigFileTransfer {
+    bool SendBigFile(data fileData, string fileName);
+  };
+};

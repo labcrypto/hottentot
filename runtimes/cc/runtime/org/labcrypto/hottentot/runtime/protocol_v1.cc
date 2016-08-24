@@ -288,7 +288,7 @@ namespace runtime {
           c += 4;
         } else if (data[c] == 0x84) {
           argLength = data[c + 1] * 256 * 256 * 256 + data[c + 2] * 256 * 256 + data[c + 3] * 256 + data[c + 4];
-          c += 4;
+          c += 5;
         }
         unsigned char *argData = new unsigned char[argLength];
         for (uint32_t i = 0; i < argLength; i++) {
@@ -336,7 +336,7 @@ namespace runtime {
         c += 4;
       } else if (data[c] == 0x84) {
         resultLength = data[c + 1] * 256 * 256 * 256 + data[c + 2] * 256 * 256 + data[c + 3] * 256 + data[c + 4];
-        c += 4;
+        c += 5;
       }
       unsigned char *resultData = new unsigned char[resultLength];
       for (uint32_t i = 0; i < resultLength; i++) {
