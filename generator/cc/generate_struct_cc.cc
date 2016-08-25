@@ -171,7 +171,7 @@ namespace cc {
         serializationSS << indent << indent << indent << "data[c + 2] = (length" << counter << " - data[c + 1] * (256 * 256)) / 256;\r\n";
         serializationSS << indent << indent << indent << "data[c + 3] = length" << counter << " % (256 * 256);\r\n";
         serializationSS << indent << indent << indent << "c += 4;\r\n";
-        serializationSS << indent << indent << "} else if (length" << counter << " < std::numberic_limits<uint32_t>::max()) {\r\n";
+        serializationSS << indent << indent << "} else if (length" << counter << " < std::numeric_limits<uint32_t>::max()) {\r\n";
         serializationSS << indent << indent << indent << "data[c] = 0x84;\r\n";
         serializationSS << indent << indent << indent << "data[c + 1] = length" << counter << " / (256 * 256 * 256);\r\n";
         serializationSS << indent << indent << indent << "data[c + 2] = (length" << counter << " - data[c + 1] * (256 * 256 * 256)) / (256 * 256);\r\n";

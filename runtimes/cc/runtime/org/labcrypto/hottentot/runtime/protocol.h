@@ -54,23 +54,37 @@ namespace runtime {
     }
     virtual ~Protocol() {}
   public:
-    virtual unsigned char* SerializeRequest(Request &      /* Request object*/, 
-                                            uint32_t *     /* Length */) = 0;
-    virtual unsigned char* SerializeResponse(Response &    /* Response object*/, 
-                                             uint32_t *    /* Length */) = 0;
-    virtual Request* DeserializeRequest(unsigned char *   /* Request data */, 
-                                         uint32_t          /* Request data length */) = 0;
-    virtual Response* DeserializeResponse(unsigned char *  /* Response data */, 
-                                          uint32_t         /* Response data length */) = 0;
+    virtual unsigned char* SerializeRequest (
+      Request &      /* Request object*/, 
+      uint32_t *     /* Length */
+    ) = 0;
+    virtual unsigned char* SerializeResponse (
+      Response &    /* Response object*/, 
+      uint32_t *    /* Length */
+    ) = 0;
+    virtual Request* DeserializeRequest (
+      unsigned char *   /* Request data */, 
+      uint32_t          /* Request data length */
+    ) = 0;
+    virtual Response* DeserializeResponse (
+      unsigned char *  /* Response data */, 
+      uint32_t         /* Response data length */
+    ) = 0;
   public:
-    virtual void SetRequestCallback(::org::labcrypto::hottentot::runtime::service::RequestCallback *requestCallback) {
+    virtual void SetRequestCallback (
+      ::org::labcrypto::hottentot::runtime::service::RequestCallback *requestCallback
+    ) {
       requestCallback_ = requestCallback;
     }
   public:
-    virtual void ProcessDataForRequest(unsigned char *     /* Data chuck */,
-                                       uint32_t            /* Data chunk length */) = 0;
-    virtual void ProcessDataForResponse(unsigned char *    /* Data chuck */,
-                                        uint32_t           /* Data chunk length */) = 0;
+    virtual void FeedRequestData (
+      unsigned char *     /* Data chuck */,
+      uint32_t            /* Data chunk length */
+    ) = 0;
+    virtual void FeedResponseData (
+      unsigned char *    /* Data chuck */,
+      uint32_t           /* Data chunk length */
+    ) = 0;
   public:
     virtual bool IsResponseComplete() = 0;
     virtual Response* GetResponse() = 0;

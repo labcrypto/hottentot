@@ -91,8 +91,10 @@ namespace runtime {
     return response_;
   }
   unsigned char* 
-  ProtocolV1::SerializeRequest(Request  &request, 
-                               uint32_t *length) {
+  ProtocolV1::SerializeRequest (
+    Request  &request, 
+    uint32_t *length
+  ) {
     uint32_t actualLength = 0;
     actualLength += 1;  // Request type
     actualLength += 4;  // Service Id
@@ -169,8 +171,10 @@ namespace runtime {
     return data;
   }
   unsigned char* 
-  ProtocolV1::SerializeResponse(Response &response, 
-                                uint32_t *length) {
+  ProtocolV1::SerializeResponse (
+    Response &response, 
+    uint32_t *length
+  ) {
     uint32_t actualLength = 0;
     actualLength += 1;  // Status Code
     if (response.GetDataLength() < 128) {
@@ -223,8 +227,10 @@ namespace runtime {
     return data;
   }
   Request* 
-  ProtocolV1::DeserializeRequest(unsigned char  *data, 
-                                 uint32_t       dataLength) {
+  ProtocolV1::DeserializeRequest (
+    unsigned char *data, 
+    uint32_t dataLength
+  ) {
     uint32_t c = 0;
     Request *request = new Request;
     request->SetType((Request::RequestType)data[c++]);
@@ -306,8 +312,10 @@ namespace runtime {
     return request;
   }
   Response* 
-  ProtocolV1::DeserializeResponse(unsigned char *data, 
-                                  uint32_t       dataLength) {
+  ProtocolV1::DeserializeResponse (
+    unsigned char *data, 
+    uint32_t dataLength
+  ) {
     Response *response = new Response;
     uint32_t c = 0;
     response->SetStatusCode(data[c++]);
@@ -351,8 +359,10 @@ namespace runtime {
     return response;
   }
   void 
-  ProtocolV1::ProcessDataForRequest(unsigned char *data,
-                                    uint32_t       dataLength) {
+  ProtocolV1::FeedRequestData (
+    unsigned char *data,
+    uint32_t dataLength
+  ) {
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -556,8 +566,10 @@ namespace runtime {
     }
   }
   void 
-  ProtocolV1::ProcessDataForResponse(unsigned char *data,
-                                     uint32_t       dataLength) {
+  ProtocolV1::FeedResponseData (
+    unsigned char *data,
+    uint32_t dataLength
+  ) {
     for (unsigned int i = 0; i < dataLength;) {
       if (currentState_ == ReadingLengthState) {
         if (readingCounter_ == 0) {

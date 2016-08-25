@@ -42,19 +42,31 @@ namespace runtime {
     ProtocolV1(int /* Remote Socket FD */);
     virtual ~ProtocolV1();
   public:
-    virtual unsigned char* SerializeRequest(Request &      /* Request object*/, 
-                                            uint32_t *     /* Length */);
-    virtual unsigned char* SerializeResponse(Response &    /* Response object*/, 
-                                             uint32_t *    /* Length */);
-    virtual Request* DeserializeRequest(unsigned char *   /* Request data */, 
-                                         uint32_t          /* Request data length */);
-    virtual Response* DeserializeResponse(unsigned char *  /* Response data */, 
-                                          uint32_t         /* Response data length */);
+    virtual unsigned char* SerializeRequest (
+      Request &      /* Request object*/, 
+      uint32_t *     /* Length */
+    );
+    virtual unsigned char* SerializeResponse (
+      Response &    /* Response object*/, 
+      uint32_t *    /* Length */
+    );
+    virtual Request* DeserializeRequest (
+      unsigned char *   /* Request data */, 
+      uint32_t          /* Request data length */
+    );
+    virtual Response* DeserializeResponse (
+      unsigned char *  /* Response data */, 
+      uint32_t         /* Response data length */
+    );
   public:
-    virtual void ProcessDataForRequest(unsigned char *     /* Data chuck */,
-                                       uint32_t            /* Data chunk length */);
-    virtual void ProcessDataForResponse(unsigned char *    /* Data chuck */,
-                                        uint32_t           /* Data chunk length */);
+    virtual void FeedRequestData (
+      unsigned char *     /* Data chuck */,
+      uint32_t            /* Data chunk length */
+    );
+    virtual void FeedResponseData (
+      unsigned char *    /* Data chuck */,
+      uint32_t           /* Data chunk length */
+    );
   public:
     virtual bool IsResponseComplete();
     virtual Response* GetResponse();

@@ -148,7 +148,7 @@
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Read from service failed.");
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]protocol->ProcessDataForResponse(buffer, numOfReadBytes);
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]protocol->FeedResponseData(buffer, numOfReadBytes);
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]if (protocol->GetResponse()->GetStatusCode() == 0) {
 [[[RESPONSE_DESERIALIZATION]]][[[INDENT]]][[[INDENT]]]} else {

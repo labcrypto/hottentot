@@ -291,7 +291,7 @@ namespace service {
         if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
           ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Read", buffer, numOfReadBytes);
         }
-        protocol->ProcessDataForRequest(buffer, numOfReadBytes);
+        protocol->FeedRequestData(buffer, numOfReadBytes);
       }
     }
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
