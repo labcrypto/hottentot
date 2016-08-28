@@ -1,0 +1,6 @@
+module ir.ntnaeem.hottentot.examples.test_all {
+  stateless service Test{
+    data f1(data d);
+    list<string> f2(list<string> ls) ;
+  };
+};
