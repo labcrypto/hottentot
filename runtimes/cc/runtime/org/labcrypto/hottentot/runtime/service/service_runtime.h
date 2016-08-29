@@ -51,20 +51,25 @@ namespace hottentot {
 namespace runtime {
 namespace service {
   class Service;
-  class TcpServer;
+  class ClientAcceptor;
+  class ClientAcceptorFactory;
   class RequestHandler;
-  class TcpServerFactory;
   class ServiceRuntime {
   public:
-    static void Init(int argc, char **argv);
+    static void Init (
+      int argc, 
+      char **argv
+    );
     static void Shutdown();
-    static void Register(std::string   /* host */, 
-                         uint32_t      /* port */, 
-                         Service *     /* service implementation */);
+    static void Register (
+      std::string   /* host */, 
+      uint32_t      /* port */, 
+      Service *     /* service implementation */
+    );
     static void Start();
-    static TcpServerFactory* GetTcpServerFactory();
-    inline static void SetTcpServerFactory(TcpServerFactory *tcpServerFactory) {
-      tcpServerFactory_ = tcpServerFactory;
+    static ClientAcceptorFactory* GetClientAcceptorFactory();
+    inline static void SetClientAcceptorFactory(ClientAcceptorFactory *clientAcceptorFactory) {
+      clientAcceptorFactory_ = clientAcceptorFactory;
     }
     inline static bool Verbose() {
       return verbose_;
@@ -77,8 +82,8 @@ namespace service {
   private:
     static bool verbose_;
     static bool initialized_;
-    static TcpServerFactory *tcpServerFactory_;
-    static std::vector<TcpServer*> tcpServers_;
+    static ClientAcceptorFactory *clientAcceptorFactory_;
+    static std::vector<ClientAcceptor*> clientAcceptors_;
 #ifndef _MSC_VER
     static std::vector<pthread_t> threads_;
 #else

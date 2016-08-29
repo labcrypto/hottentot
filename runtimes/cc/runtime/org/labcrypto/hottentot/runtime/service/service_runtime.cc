@@ -32,13 +32,12 @@
 
 #include <iostream>
 
-#include "../logger.h"
-
 #include "service_runtime.h"
 #include "service.h"
-#include "tcp_server.h"
-#include "default_tcp_server_factory.h"
+#include "client_acceptor.h"
+#include "default_client_acceptor_factory.h"
 
+#include "../logger.h"
 #include "../configuration.h"
 #include "../utils.h"
 
@@ -48,9 +47,9 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace service {
-  TcpServerFactory* ServiceRuntime::tcpServerFactory_ = 0;
+  ClientAcceptorFactory* ServiceRuntime::clientAcceptorFactory_ = 0;
   bool ServiceRuntime::initialized_ = false;
-  std::vector<TcpServer*> ServiceRuntime::tcpServers_;
+  std::vector<ClientAcceptor*> ServiceRuntime::clientAcceptors_;
 #ifndef _MSC_VER
   std::vector<pthread_t> ServiceRuntime::threads_;
 #else
@@ -145,11 +144,11 @@ namespace service {
       delete it->second;
       requestHandlers_.erase(it++);
     }
-    for (uint32_t i = 0; i < tcpServers_.size(); i++) {
-      delete tcpServers_[i];
+    for (uint32_t i = 0; i < clientAcceptors_.size(); i++) {
+      delete clientAcceptors_[i];
     }
-    if (tcpServerFactory_) {
-      delete tcpServerFactory_;
+    if (clientAcceptorFactory_) {
+      delete clientAcceptorFactory_;
     }
     initialized_ = false;
   }
@@ -183,11 +182,17 @@ namespace service {
     for (std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator>::iterator it = services_.begin();
          it != services_.end();
          it++) {
-      TcpServer *tcpServer = GetTcpServerFactory()->CreateTcpServer(it->first.GetHost(), 
-                                                                    it->first.GetPort(), 
-                                                                    requestHandlers_[it->first]);
-      tcpServers_.push_back(tcpServer);
-      threads_.push_back(tcpServer->BindAndStart());
+      ClientAcceptor *clientAcceptor = GetClientAcceptorFactory()->
+        CreateTcpClientAcceptor (
+          it->first.GetHost(), 
+          it->first.GetPort(), 
+          requestHandlers_[it->first]
+        );
+      clientAcceptors_.push_back(clientAcceptor);
+      if(!clientAcceptor->Start()) {
+        // TODO
+      }
+      threads_.push_back(clientAcceptor->GetThread());
       if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
         ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
           "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -202,12 +207,12 @@ namespace service {
 #endif
     }
   }
-  TcpServerFactory*
-  ServiceRuntime::GetTcpServerFactory() {
-    if (tcpServerFactory_ == 0) {
-      tcpServerFactory_ = new DefaultTcpServerFactory;
+  ClientAcceptorFactory*
+  ServiceRuntime::GetClientAcceptorFactory() {
+    if (clientAcceptorFactory_ == 0) {
+      clientAcceptorFactory_ = new DefaultClientAcceptorFactory;
     }
-    return tcpServerFactory_;
+    return clientAcceptorFactory_;
   }
 }
 }
