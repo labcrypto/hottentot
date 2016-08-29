@@ -49,32 +49,19 @@ namespace hottentot {
 namespace runtime {
 namespace service {
   class RequestHandler;
-  class ClientAcceptor {
+  class ClientIO {
   public:
-    ClientAcceptor (
-      std::map<uint8_t, RequestHandler*> *requestHandlers
-    ) : requestHandlers_(requestHandlers) {
-    }
-    virtual ~ClientAcceptor() {}
+    ClientIO () {}
+    virtual ~ClientIO() {}
   public:
-#ifndef _MSC_VER
-    virtual inline pthread_t GetThread() {
-      return thread_;
-    }
-#else
-    virtual inline HANDLE GetThread() {
-      return thread_;
-    }
-#endif
-  public:
-    virtual bool Start() = 0;
-  protected:
-    std::map<uint8_t, RequestHandler*> *requestHandlers_;
-#ifndef _MSC_VER
-    pthread_t thread_;
-#else
-    HANDLE thread_;
-#endif
+    virtual uint32_t Read (
+      unsigned char *buffer, 
+      uint32_t bufferLength
+    ) = 0;
+    virtual void Write(
+      unsigned char *buffer,
+      uint32_t bufferLength
+    ) = 0;
   };
 }
 }

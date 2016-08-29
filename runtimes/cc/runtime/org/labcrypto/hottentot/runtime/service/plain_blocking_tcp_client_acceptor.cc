@@ -135,20 +135,22 @@ namespace service {
       int ret = pthread_create(&thread, NULL, AcceptClients, (void *)this);
       if (ret) {
         ::org::labcrypto::hottentot::runtime::Logger::GetError() << 
-          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-            "Error - pthread_create() return code: " << ret << std::endl;
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << 
+            "]: " << "Error - pthread_create() return code: " << ret << std::endl;
         exit(EXIT_FAILURE);
       }
       pthread_detach(ret);
       thread_ = thread;
       return true;
 #else
-      HANDLE res = CreateThread(NULL,
-                                0,
-                                AcceptClients,
-                                (LPVOID)this,
-                                0,
-                                NULL);
+      HANDLE res = CreateThread (
+        NULL,
+        0,
+        AcceptClients,
+        (LPVOID)this,
+        0,
+        NULL
+      );
       if (res == NULL) {
         printf("Acceptor thread couldn't start: %d\n", WSAGetLastError());
         closesocket(serverSocketFD_);
@@ -180,7 +182,12 @@ namespace service {
     PlainBlockingTcpClientAcceptor *ref = (PlainBlockingTcpClientAcceptor*)data;
     while (ok) {
 #ifndef _MSC_VER
-      int clientSocketFD = accept(ref->serverSocketFD_, (struct sockaddr *) &clientAddr, &clientAddrLength);
+      int clientSocketFD = 
+        accept (
+          ref->serverSocketFD_, 
+          (struct sockaddr *) &clientAddr, 
+          &clientAddrLength
+        );
 #else
       clientSocketFD = accept(ref->serverSocketFD_, NULL, NULL);
       if (clientSocketFD == INVALID_SOCKET) {
