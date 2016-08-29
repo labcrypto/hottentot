@@ -32,7 +32,6 @@
 #include "../os.h" 
 #include "../type_helper.h" 
 
-
 namespace org {
 namespace labcrypto {
 namespace hottentot {

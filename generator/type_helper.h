@@ -167,6 +167,8 @@ namespace generator {
         return "Byte";
       } else if (type == "int16") {
         return "Short";
+      } else if (type == "data") {
+        return "byte[]";
       } else if (type == "int32") {
         return "Integer";
       } else if (type == "int64") {
