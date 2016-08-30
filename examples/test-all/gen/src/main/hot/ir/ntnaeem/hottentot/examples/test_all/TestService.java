@@ -15,7 +15,7 @@ import org.labcrypto.hottentot.runtime.Service;
 
 public interface TestService extends Service {
   byte[] f1(byte[] d);
-  void f2(List<byte[]> dl);
-  void f3(List<String> ls);
+  List<byte[]> f2(List<byte[]> dl,List<byte[]> dl2);
+  List<String> f3(List<String> ls,List<String> ls2,List<String> ls3);
 
 }

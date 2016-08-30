@@ -41,6 +41,8 @@ namespace java {
   JavaGenerator::GenerateRequestHandler (
     ::org::labcrypto::hottentot::generator::Module *pModule
   ) {
+
+    int serializableListCounter = 0;
     ::org::labcrypto::hottentot::generator::Service *pService;
     std::string basePackageName = pModule->package_;
     for (int i = 0; i < pModule->services_.size(); i++) {
@@ -115,19 +117,26 @@ namespace java {
             ::org::labcrypto::hottentot::generator::TypeHelper::FetchTypeOfList(pArg->type_);
             std::string upperCaseArgTypeOfList = 
               ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(fetchedArgTypeOfList);
+            
+            serializableListCounter++;
+            std::stringstream serializableListCounterStream;
+            serializableListCounterStream << serializableListCounter;
             methodConditionStr += indent_ + indent_ + indent_ + 
                                   "Serializable" + upperCaseArgTypeOfList + "List " +
-                                  "serializable" + upperCaseArgTypeOfList + "List = " +  
-                                  "new Serializable" + upperCaseArgTypeOfList + "List();\n";
+                                  "serializable" + upperCaseArgTypeOfList + "List_" + 
+                                  serializableListCounterStream.str() +
+                                  " = new Serializable" + upperCaseArgTypeOfList + "List();\n";
             methodConditionStr += indent_ + indent_ + indent_ + 
-                                  "serializable" + upperCaseArgTypeOfList + "List." + 
-                                  "deserialize( serialized" + capitalizedArgVar + ");\n";
+                                  "serializable" + upperCaseArgTypeOfList + "List_" + 
+                                  serializableListCounterStream.str() +
+                                  ".deserialize( serialized" + capitalizedArgVar + ");\n";
             std::string argTypeOfList = 
               ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaClassType(fetchedArgTypeOfList);                                        
             methodConditionStr += indent_ + indent_ + indent_ + 
                                   "List<" + argTypeOfList + "> " +  pArg->variable_ + " = " + 
-                                  "serializable" + upperCaseArgTypeOfList + "List." +
-                                  "get" + upperCaseArgTypeOfList + "List();\n"; 
+                                  "serializable" + upperCaseArgTypeOfList + "List_"+ 
+                                  serializableListCounterStream.str() + 
+                                  ".get" + upperCaseArgTypeOfList + "List();\n"; 
           } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsEnum(pArg->type_)) {
             methodConditionStr += indent_ + indent_ + indent_ +
                                   pArg->type_ + " " + pArg->variable_ +  " = " + 
@@ -153,19 +162,30 @@ namespace java {
                                   "(serialized" + capitalizedArgVar + ");\n";
           }
         }
-        if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
+        
+        if (
+          ::org::labcrypto::hottentot::generator::TypeHelper::IsListType
+          (pMethod->returnType_)) 
+        {
+          serializableListCounter++;
+          std::stringstream serializableListCounterStream;
+          serializableListCounterStream << serializableListCounter;
           std::string upperCaseReturnTypeOfList = 
-            ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
+            ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital
+            (fetchedReturnTypeOfList);        
           methodConditionStr += indent_ + indent_ + indent_ +
                                 "Serializable" + upperCaseReturnTypeOfList + "List" + " " +
-                                "serializable" + upperCaseReturnTypeOfList + "List = " +
-                                "new Serializable" + upperCaseReturnTypeOfList + "List();\n";
+                                "serializable" + upperCaseReturnTypeOfList + "List_" + 
+                                serializableListCounterStream.str() +    
+                                "= new Serializable" + upperCaseReturnTypeOfList + "List();\n";
         } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsUDT(pMethod->returnType_)) {
           methodConditionStr += indent_ + indent_ + indent_ +
                                 pMethod->returnType_ + " " + lowerCaseReturnType + " = null;\n"; 
         }
         methodConditionStr += indent_ + indent_ + indent_ + "Response response = new Response();\n";
         if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
+          std::stringstream serializableListCounterStream;
+          serializableListCounterStream << serializableListCounter;
           std::string returnTypeOfList = 
             ::org::labcrypto::hottentot::generator::TypeHelper::GetJavaType(fetchedReturnTypeOfList);
           methodConditionStr += indent_ + indent_ + indent_ +
@@ -200,6 +220,8 @@ namespace java {
         }
         methodConditionStr += ");\n";
         if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pMethod->returnType_)) {
+          std::stringstream serializableListCounterStream;
+          serializableListCounterStream << serializableListCounter;
           std::string upperCaseReturnTypeOfList = 
             ::org::labcrypto::hottentot::generator::StringHelper::MakeFirstCapital(fetchedReturnTypeOfList);
           methodConditionStr += indent_ + indent_ + indent_ + 
@@ -210,12 +232,15 @@ namespace java {
                                 "serialized" + upperCaseReturnTypeOfList + "List  = new byte[0];\n";
           methodConditionStr += indent_ + indent_ + indent_ + "}else{\n";
           methodConditionStr += indent_ + indent_ + indent_ + indent_ +
-                                "serializable" + upperCaseReturnTypeOfList + "List." + 
-                                "set" + upperCaseReturnTypeOfList + "List(" + 
+                                "serializable" + upperCaseReturnTypeOfList + "List_" + 
+                                serializableListCounterStream.str() + 
+                                ".set" + upperCaseReturnTypeOfList + "List(" + 
                                 lowerCaseFetchedReturnTypeOfList + "List);\n";
           methodConditionStr += indent_ + indent_ + indent_ + indent_ +
                                 "serialized" + upperCaseReturnTypeOfList + "List = " +
-                                "serializable" + upperCaseReturnTypeOfList + "List.serialize();\n"; 
+                                "serializable" + upperCaseReturnTypeOfList + "List_" + 
+                                serializableListCounterStream.str() + 
+                                ".serialize();\n"; 
           methodConditionStr += indent_ + indent_ + indent_ + "}\n";
 
         } else if (::org::labcrypto::hottentot::generator::TypeHelper::IsUDT(pMethod->returnType_)) {

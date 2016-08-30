@@ -112,22 +112,30 @@ public class TestServiceProxy extends AbstractTestService implements Proxy {
     ret.deserialize(response.getData());
     return ret.getValue();
   }
-  public void f2(List<byte[]> dl) { 
+  public List<byte[]> f2(List<byte[]> dl,List<byte[]> dl2) { 
     //serialize dl
-    SerializableDataList serializableDataList = new SerializableDataList();
-serializableDataList.setDataList(dl);
-byte[] serializedDl = serializableDataList.serialize();
+    SerializableDataList serializableDataList_1 = new SerializableDataList();
+serializableDataList_1.setDataList(dl);
+byte[] serializedDl = serializableDataList_1.serialize();
+    //serialize dl2
+    SerializableDataList serializableDataList_2 = new SerializableDataList();
+serializableDataList_2.setDataList(dl2);
+byte[] serializedDl2 = serializableDataList_2.serialize();
 
     //make request
     Request request = new Request();
     request.setServiceId(3041265512L);
-    request.setMethodId(1601027192L);
-    request.setArgumentCount((byte) 1);
+    request.setMethodId(1537205373L);
+    request.setArgumentCount((byte) 2);
     request.setType(Request.RequestType.InvokeStateless);
     Argument arg0 = new Argument();
     arg0.setDataLength(serializedDl.length);
     arg0.setData(serializedDl);
     request.addArgument(arg0);
+    Argument arg1 = new Argument();
+    arg1.setDataLength(serializedDl2.length);
+    arg1.setData(serializedDl2);
+    request.addArgument(arg1);
     int dataLength = 0;
     //calculate data length for every argument
     // calulate dlDataLength
@@ -146,6 +154,22 @@ byte[] serializedDl = serializableDataList.serialize();
       }
     }
     dataLength += dlDataLength + dlDataLengthByteArrayLength;
+    // calulate dl2DataLength
+    int dl2DataLength= serializedDl2.length;
+    int dl2DataLengthByteArrayLength = 1;
+    if (dl2DataLength >= 0x80) {
+      if (dl2DataLength <= 0xff) {
+        //ex 0x81 0xff
+        dl2DataLengthByteArrayLength = 2;
+      } else if (dl2DataLength <= 0xffff) {
+        //ex 0x82 0xff 0xff
+        dl2DataLengthByteArrayLength = 3;
+      } else if (dl2DataLength <= 0xffffff) {
+        //ex 0x83 0xff 0xff 0xff
+        dl2DataLengthByteArrayLength = 4;
+      }
+    }
+    dataLength += dl2DataLength + dl2DataLengthByteArrayLength;
     // arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
     request.setLength(10 + dataLength);
     // connect to server
@@ -164,23 +188,65 @@ byte[] serializedDl = serializableDataList.serialize();
     } catch (TcpClientWriteException e) {
       throw new HottentotRuntimeException(e);
     }
+    // read response from server
+    byte[] buffer = new byte[256];
+    while (!protocol.isResponseComplete()) {
+      byte[] dataChunkRead;
+      try {
+        dataChunkRead = tcpClient.read();
+      } catch (TcpClientReadException e) {
+        throw new HottentotRuntimeException(e);
+      }
+      protocol.processDataForResponse(dataChunkRead);
+    }
+    Response response = protocol.getResponse();
+    // close everything
+     try { 
+       tcpClient.close(); 
+    } catch (TcpClientCloseException e) { 
+      e.printStackTrace(); 
+    } 
+    //deserialize list<data>part from response
+    SerializableDataList serializableDataList_3 = null;
+    if (response.getStatusCode() == -1) {
+      throw new MethodNotSupportRuntimeException();
+    }
+    serializableDataList_3 = new SerializableDataList();
+    serializableDataList_3.deserialize(response.getData());
+    return serializableDataList_3.getDataList();
   }
-  public void f3(List<String> ls) { 
+  public List<String> f3(List<String> ls,List<String> ls2,List<String> ls3) { 
     //serialize ls
-    SerializableStringList serializableStringList = new SerializableStringList();
-serializableStringList.setStringList(ls);
-byte[] serializedLs = serializableStringList.serialize();
+    SerializableStringList serializableStringList_4 = new SerializableStringList();
+serializableStringList_4.setStringList(ls);
+byte[] serializedLs = serializableStringList_4.serialize();
+    //serialize ls2
+    SerializableStringList serializableStringList_5 = new SerializableStringList();
+serializableStringList_5.setStringList(ls2);
+byte[] serializedLs2 = serializableStringList_5.serialize();
+    //serialize ls3
+    SerializableStringList serializableStringList_6 = new SerializableStringList();
+serializableStringList_6.setStringList(ls3);
+byte[] serializedLs3 = serializableStringList_6.serialize();
 
     //make request
     Request request = new Request();
     request.setServiceId(3041265512L);
-    request.setMethodId(3326818639L);
-    request.setArgumentCount((byte) 1);
+    request.setMethodId(4124847715L);
+    request.setArgumentCount((byte) 3);
     request.setType(Request.RequestType.InvokeStateless);
     Argument arg0 = new Argument();
     arg0.setDataLength(serializedLs.length);
     arg0.setData(serializedLs);
     request.addArgument(arg0);
+    Argument arg1 = new Argument();
+    arg1.setDataLength(serializedLs2.length);
+    arg1.setData(serializedLs2);
+    request.addArgument(arg1);
+    Argument arg2 = new Argument();
+    arg2.setDataLength(serializedLs3.length);
+    arg2.setData(serializedLs3);
+    request.addArgument(arg2);
     int dataLength = 0;
     //calculate data length for every argument
     // calulate lsDataLength
@@ -199,6 +265,38 @@ byte[] serializedLs = serializableStringList.serialize();
       }
     }
     dataLength += lsDataLength + lsDataLengthByteArrayLength;
+    // calulate ls2DataLength
+    int ls2DataLength= serializedLs2.length;
+    int ls2DataLengthByteArrayLength = 1;
+    if (ls2DataLength >= 0x80) {
+      if (ls2DataLength <= 0xff) {
+        //ex 0x81 0xff
+        ls2DataLengthByteArrayLength = 2;
+      } else if (ls2DataLength <= 0xffff) {
+        //ex 0x82 0xff 0xff
+        ls2DataLengthByteArrayLength = 3;
+      } else if (ls2DataLength <= 0xffffff) {
+        //ex 0x83 0xff 0xff 0xff
+        ls2DataLengthByteArrayLength = 4;
+      }
+    }
+    dataLength += ls2DataLength + ls2DataLengthByteArrayLength;
+    // calulate ls3DataLength
+    int ls3DataLength= serializedLs3.length;
+    int ls3DataLengthByteArrayLength = 1;
+    if (ls3DataLength >= 0x80) {
+      if (ls3DataLength <= 0xff) {
+        //ex 0x81 0xff
+        ls3DataLengthByteArrayLength = 2;
+      } else if (ls3DataLength <= 0xffff) {
+        //ex 0x82 0xff 0xff
+        ls3DataLengthByteArrayLength = 3;
+      } else if (ls3DataLength <= 0xffffff) {
+        //ex 0x83 0xff 0xff 0xff
+        ls3DataLengthByteArrayLength = 4;
+      }
+    }
+    dataLength += ls3DataLength + ls3DataLengthByteArrayLength;
     // arg count(1) + request type(1) + method ID(4) + service ID(4) = 10;
     request.setLength(10 + dataLength);
     // connect to server
@@ -217,6 +315,32 @@ byte[] serializedLs = serializableStringList.serialize();
     } catch (TcpClientWriteException e) {
       throw new HottentotRuntimeException(e);
     }
+    // read response from server
+    byte[] buffer = new byte[256];
+    while (!protocol.isResponseComplete()) {
+      byte[] dataChunkRead;
+      try {
+        dataChunkRead = tcpClient.read();
+      } catch (TcpClientReadException e) {
+        throw new HottentotRuntimeException(e);
+      }
+      protocol.processDataForResponse(dataChunkRead);
+    }
+    Response response = protocol.getResponse();
+    // close everything
+     try { 
+       tcpClient.close(); 
+    } catch (TcpClientCloseException e) { 
+      e.printStackTrace(); 
+    } 
+    //deserialize list<string>part from response
+    SerializableStringList serializableStringList_7 = null;
+    if (response.getStatusCode() == -1) {
+      throw new MethodNotSupportRuntimeException();
+    }
+    serializableStringList_7 = new SerializableStringList();
+    serializableStringList_7.deserialize(response.getData());
+    return serializableStringList_7.getStringList();
   }
 
   public void destroy() {

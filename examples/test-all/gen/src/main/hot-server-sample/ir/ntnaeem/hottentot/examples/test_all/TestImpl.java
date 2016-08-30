@@ -9,9 +9,11 @@ public class TestImpl extends AbstractTestService {
     return null;
   }
   @Override
-  public void f2(List<byte[]> dl) { 
+  public List<byte[]> f2(List<byte[]> dl,List<byte[]> dl2) { 
+    return null;
   }
   @Override
-  public void f3(List<String> ls) { 
+  public List<String> f3(List<String> ls,List<String> ls2,List<String> ls3) { 
+    return null;
   }
 }
