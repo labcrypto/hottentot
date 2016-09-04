@@ -46,11 +46,13 @@ typedef unsigned __int64 uint64_t;
 
 #include "../logger.h"
 #include "../utils.h"
-#include "../protocol_v1.h"
+// #include "../protocol_v1.h"
 #include "../configuration.h"
 
 #include "plain_blocking_tcp_client_acceptor.h"
-#include "default_request_callback.h"
+// #include "default_request_callback.h"
+#include "default_client_handler_factory.h"
+#include "client_handler.h"
 
 
 namespace org {
@@ -223,9 +225,9 @@ namespace service {
         }
 #endif
       }
-      ClientHandlerFactory *clientHandlerFactory = new DefaultHandlerFactory();
+      ClientHandlerFactory *clientHandlerFactory = new DefaultClientHandlerFactory();
       ClientHandler *clientHandler = clientHandlerFactory->CreateSocketClientHandler(clientSocketFD);
-      ClientHandler->Handle();
+      clientHandler->Handle();
     }
   }
 }

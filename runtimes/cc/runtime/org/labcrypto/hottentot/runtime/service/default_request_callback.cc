@@ -77,8 +77,8 @@ namespace service {
       // return response;
       uint32_t length = 0;
       unsigned char *data = protocol.SerializeResponse(*response, &length);
-      clientIO_.Write(data, length);
-      clientIO_.Close();
+      clientIO_->Write(data, length);
+      clientIO_->Close();
     } else {
       return 0;            
     }

@@ -32,11 +32,12 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace service {
+  class ClientIO;
   class DefaultRequestCallback : public ::org::labcrypto::hottentot::runtime::RequestCallback {
   public:
     DefaultRequestCallback (
-      ClientIO &clientIO,
-      std::map<uint8_t, RequestHandler*> &requestHandlers
+      ClientIO *clientIO,
+      std::map<uint8_t, RequestHandler*> *requestHandlers
     ) : clientIO_(clientIO),
         requestHandlers_(requestHandlers) {
     }
@@ -47,8 +48,8 @@ namespace service {
       ::org::labcrypto::hottentot::runtime::Request &
     );
   private:
-    ClientIO &clientIO_;
-    std::map<uint8_t, RequestHandler*> &requestHandlers_;
+    ClientIO *clientIO_;
+    std::map<uint8_t, RequestHandler*> *requestHandlers_;
   };
 }
 }

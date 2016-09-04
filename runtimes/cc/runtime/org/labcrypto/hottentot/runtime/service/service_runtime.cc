@@ -189,9 +189,7 @@ namespace service {
           requestHandlers_[it->first]
         );
       clientAcceptors_.push_back(clientAcceptor);
-      if(!clientAcceptor->Start()) {
-        // TODO
-      }
+      clientAcceptor->Start();
       threads_.push_back(clientAcceptor->GetThread());
       if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
         ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
