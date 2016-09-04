@@ -42,55 +42,85 @@ namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
-  namespace service {
-    class RequestCallback;
-  }
   class Request;
   class Response;
+  class RequestCallback {
+  public:
+    RequestCallback () {
+    }
+    virtual ~RequestCallback() {
+    }
+  public:
+    virtual void OnRequest (
+      Request &
+    ) = 0;
+  };
+  class ResponseCallback {
+  public:
+    ResponseCallback () {
+    }
+    virtual ~ResponseCallback() {
+    }
+  public:
+    virtual void OnResponse (
+      Response &
+    ) = 0;
+  };
   class Protocol {
   public:
-    Protocol(int remoteSocketFD) 
+    /* Protocol(int remoteSocketFD) 
       : remoteSocketFD_(remoteSocketFD) {
+    } */
+    Protocol() 
+      : requestCallback_(NULL),
+        responseCallback_(NULL) {
     }
-    virtual ~Protocol() {}
+    virtual ~Protocol() {
+    }
   public:
     virtual unsigned char* SerializeRequest (
-      Request &      /* Request object*/, 
-      uint32_t *     /* Length */
+      Request &, 
+      uint32_t *
     ) = 0;
     virtual unsigned char* SerializeResponse (
-      Response &    /* Response object*/, 
-      uint32_t *    /* Length */
+      Response &,
+      uint32_t *
     ) = 0;
     virtual Request* DeserializeRequest (
-      unsigned char *   /* Request data */, 
-      uint32_t          /* Request data length */
+      unsigned char *,
+      uint32_t
     ) = 0;
     virtual Response* DeserializeResponse (
-      unsigned char *  /* Response data */, 
-      uint32_t         /* Response data length */
+      unsigned char *,
+      uint32_t
     ) = 0;
   public:
     virtual void SetRequestCallback (
-      ::org::labcrypto::hottentot::runtime::service::RequestCallback *requestCallback
+      RequestCallback *requestCallback
     ) {
       requestCallback_ = requestCallback;
     }
+    virtual void SetResponseCallback (
+      ResponseCallback *responseCallback
+    ) {
+      responseCallback_ = responseCallback;
+    }
   public:
     virtual void FeedRequestData (
-      unsigned char *     /* Data chuck */,
-      uint32_t            /* Data chunk length */
+      unsigned char *,
+      uint32_t
     ) = 0;
     virtual void FeedResponseData (
-      unsigned char *    /* Data chuck */,
-      uint32_t           /* Data chunk length */
+      unsigned char *,
+      uint32_t
     ) = 0;
   public:
-    virtual bool IsResponseComplete() = 0;
-    virtual Response* GetResponse() = 0;
+    /* virtual bool IsResponseComplete() = 0;
+    virtual Response* GetResponse() = 0; */
   protected:
-    int remoteSocketFD_;
-    ::org::labcrypto::hottentot::runtime::service::RequestCallback *requestCallback_;
+    // int remoteSocketFD_;
+    RequestCallback *requestCallback_;
+    ResponseCallback *responseCallback_;
   };
 }
 }

@@ -58,7 +58,7 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace service {
-  bool 
+  void 
   PlainBlockingTcpClientAcceptor::Start() {
     if (serverSocketFD_ == 0) {
 #ifndef _MSC_VER
@@ -141,7 +141,6 @@ namespace service {
       }
       pthread_detach(ret);
       thread_ = thread;
-      return true;
 #else
       HANDLE res = CreateThread (
         NULL,
@@ -158,12 +157,10 @@ namespace service {
         exit(EXIT_FAILURE);
       }
       thread_ = res;
-      return true;
 #endif
     }
     printf("Error: Calling Start() method for second time.");
     exit(EXIT_FAILURE);
-    return false;
   }
 #ifndef _MSC_VER
   void*
@@ -200,7 +197,7 @@ namespace service {
       if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
         ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
           "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-            "A new client is connected." << std::endl;
+            "A new client is accepted." << std::endl;
         ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
           "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
             "Setting socket read timeout ..." << std::endl;
@@ -226,88 +223,10 @@ namespace service {
         }
 #endif
       }
-      _HandleClientConnectionParams *params = new _HandleClientConnectionParams;
-      params->clientAcceptor_ = ref;
-      params->clientSocketFD_ = clientSocketFD;
-#ifndef _MSC_VER
-      pthread_t thread; // TODO(kamran): We need a thread pool here.
-      pthread_attr_t attr;
-      pthread_attr_init(&attr);
-      pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-      int ret = pthread_create(&thread, &attr, HandleClientConnection, (void *)params);
-      if (ret) {
-        ::org::labcrypto::hottentot::runtime::Logger::GetError() << 
-          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-            "Error - pthread_create() return code: " << ret << std::endl;
-        exit(EXIT_FAILURE);
-      }
-      // pthread_detach(ret);
-#else
-      HANDLE res = CreateThread(NULL,
-                                0,
-                                HandleClientConnection,
-                                (LPVOID)params,
-                                0,
-                                NULL);
-      if (res == NULL) {
-        printf("Handler thread couldn't start: %d\n", WSAGetLastError());
-        closesocket(ref->serverSocketFD_);
-        WSACleanup();
-        exit(EXIT_FAILURE);
-      }
-#endif
+      ClientHandlerFactory *clientHandlerFactory = new DefaultHandlerFactory();
+      ClientHandler *clientHandler = clientHandlerFactory->CreateSocketClientHandler(clientSocketFD);
+      ClientHandler->Handle();
     }
-    return 0;
-  }
-#ifndef _MSC_VER
-  void*
-  PlainBlockingTcpClientAcceptor::HandleClientConnection(void *data) {
-#else
-  DWORD WINAPI
-  PlainBlockingTcpClientAcceptor::HandleClientConnection(LPVOID data) {
-#endif
-    bool ok = true;
-    _HandleClientConnectionParams *ref = (_HandleClientConnectionParams*)data;
-    unsigned char buffer[256];
-    ::org::labcrypto::hottentot::runtime::Protocol *protocol = 
-      new ::org::labcrypto::hottentot::runtime::ProtocolV1(ref->clientSocketFD_);
-    DefaultRequestCallback *requestCallback = 
-      new DefaultRequestCallback(ref->clientAcceptor_->requestHandlers_);
-    protocol->SetRequestCallback(requestCallback);
-    while (ok) {
-#ifndef _MSC_VER
-      int numOfReadBytes = read(ref->clientSocketFD_, buffer, 256);
-#else
-      int numOfReadBytes = recv(ref->clientSocketFD_, (char *)buffer, 256, 0);
-#endif
-      if (numOfReadBytes <= 0) {
-        ok = false;
-      }
-      if (ok) {
-        if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-          ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Read", buffer, numOfReadBytes);
-        }
-        protocol->FeedRequestData(buffer, numOfReadBytes);
-      }
-    }
-    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
-        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-          "Client is gone." << std::endl;
-    }
-#ifndef _MSC_VER
-    close(ref->clientSocketFD_);
-#else
-    shutdown(ref->clientSocketFD_, SD_SEND);
-    closesocket(ref->clientSocketFD_);
-#endif
-    delete requestCallback;
-    delete protocol;
-    delete ref;
-#ifndef _MSC_VER
-    pthread_exit(NULL);
-#endif
-    return 0;
   }
 }
 }

@@ -67,7 +67,7 @@ namespace service {
     }
 #endif
   public:
-    virtual bool Start() = 0;
+    virtual void Start() = 0;
   protected:
     std::map<uint8_t, RequestHandler*> *requestHandlers_;
 #ifndef _MSC_VER

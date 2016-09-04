@@ -21,47 +21,38 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__REQUEST_CALLBACK_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__REQUEST_CALLBACK_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__SOCKET_CLIENT_HANDLER_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__SOCKET_CLIENT_HANDLER_H_
 
-#include <map>
-
-#ifdef _MSC_VER
-typedef __int8 int8_t;
-typedef unsigned __int8 uint8_t;
-typedef __int16 int16_t;
-typedef unsigned __int16 uint16_t;
-typedef __int32 int32_t;
-typedef unsigned __int32 uint32_t;
-typedef __int64 int64_t;
-typedef unsigned __int64 uint64_t;
-#else
-#include <stdint.h>
-#endif
+#include "client_handler.h"
 
 
 namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
-class Request;
-class Response;
 namespace service {
   class RequestHandler;
-  class RequestCallback {
+  class SocketClientHandler : public ClientHandler {
   public:
-    RequestCallback (
-      std::map<uint8_t, RequestHandler*> *requestHandlers
-    ) : requestHandlers_(requestHandlers) {
+    SocketClientHandler(
+#ifndef _MSC_VER
+      int clientSocketFD
+#else
+      SOCKET clientSocketFD
+#endif
+    ) : clientSocketFD_(clientSocketFD) {
     }
-    virtual ~RequestCallback() {}
+    virtual ~SocketClientHandler() {
+    }
   public:
-    virtual Response* OnRequest (
-      void *,
-      Request &
-    ) = 0;
+    virtual void Handle() = 0;
   protected:
-    std::map<uint8_t, RequestHandler*> *requestHandlers_;
+#ifndef _MSC_VER
+    int clientSocketFD_;
+#else
+    SOCKET clientSocketFD_;
+#endif
   };
 }
 }

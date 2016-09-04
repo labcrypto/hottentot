@@ -47,14 +47,12 @@ namespace service {
     }
     virtual ~PlainBlockingTcpClientAcceptor() {}
   public:
-    virtual bool Start();
+    virtual void Start();
     private:
 #ifdef _MSC_VER
     static DWORD WINAPI AcceptClients(LPVOID);
-    static DWORD WINAPI HandleClientConnection(LPVOID);
 #else
     static void* AcceptClients(void *);
-    static void* HandleClientConnection(void *);
 #endif
   protected:
     std::string host_;
@@ -64,11 +62,6 @@ namespace service {
 #else
     int serverSocketFD_;
 #endif
-  };
-  class _HandleClientConnectionParams {
-  public:
-    PlainBlockingTcpClientAcceptor *clientAcceptor_;
-    int clientSocketFD_;
   };
 }
 }
