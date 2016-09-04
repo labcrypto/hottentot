@@ -22,6 +22,7 @@
  */
  
 #include <iostream>
+#include <stdexcept>
 
 #ifdef _MSC_VER
 typedef __int8 int8_t;
@@ -38,9 +39,11 @@ typedef unsigned __int64 uint64_t;
 
 #include "default_request_callback.h"
 #include "request_handler.h"
+#include "client_io.h"
 
-#include "../response.h"
-#include "../request.h"
+// #include "../response.h"
+// #include "../request.h"
+#include "../protocol_v1.h" // TODO
 #include "../logger.h"
 #include "../utils.h"
 #include "../configuration.h"
@@ -54,29 +57,29 @@ namespace service {
   // Response*
   void
   DefaultRequestCallback::OnRequest (
-    ::org::labcrypto::hottentot::runtime::Protocol &protocol,
-    ::org::labcrypto::hottentot::runtime::Request &request
+    ::org::labcrypto::hottentot::runtime::Protocol *protocol,
+    ::org::labcrypto::hottentot::runtime::Request *request
   ) {
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "A new request is received." << std::endl;
     }
-    if (requestHandlers_->count(request.GetServiceId()) > 0) {
-      Response *response = new Response;
-      RequestHandler *requestHandler = requestHandlers_->find(request.GetServiceId())->second;
+    if (requestHandlers_->count(request->GetServiceId()) > 0) {
+      Response *response = new ResponseV1; // TODO USe factory
+      RequestHandler *requestHandler = requestHandlers_->find(request->GetServiceId())->second;
       if (requestHandler == 0) {
-        return 0;
+        throw std::runtime_error("Request handler is not found.");
       }
       if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
         ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
           "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
             "Calling handler method ..." << std::endl;
       }
-      requestHandler->HandleRequest(request, *response);
+      requestHandler->HandleRequest(*request, *response);
       // return response;
       uint32_t length = 0;
-      unsigned char *data = protocol.SerializeResponse(*response, &length);
+      unsigned char *data = protocol->SerializeResponse(response, &length);
       clientIO_->Write(data, length);
       clientIO_->Close();
     } else {

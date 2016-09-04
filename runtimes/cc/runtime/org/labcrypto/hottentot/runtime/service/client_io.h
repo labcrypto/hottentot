@@ -62,6 +62,7 @@ namespace service {
       unsigned char *buffer,
       uint32_t bufferLength
     ) = 0;
+    virtual void Close() = 0;
   };
 }
 }

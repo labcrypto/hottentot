@@ -60,12 +60,6 @@ namespace runtime {
     inline void SetType(RequestType type) {
       type_ = type;
     }
-    inline uint32_t GetServiceId() const {
-      return serviceId_;
-    }
-    inline void SetServiceId(uint32_t serviceId) {
-      serviceId_ = serviceId;
-    }
     inline uint32_t GetMethodId() const {
       return methodId_;
     }
@@ -93,7 +87,6 @@ namespace runtime {
     }
   private:
     RequestType type_;
-    uint32_t serviceId_;
     uint32_t methodId_;
     uint32_t argumentCount_;
     std::vector<_Argument> args_;

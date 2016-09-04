@@ -24,6 +24,8 @@
 #ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_REQUEST_CALLBACK_H_
 #define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_REQUEST_CALLBACK_H_
 
+#include <map>
+
 #include "../protocol.h"
 
 
@@ -33,6 +35,7 @@ namespace hottentot {
 namespace runtime {
 namespace service {
   class ClientIO;
+  class RequestHandler;
   class DefaultRequestCallback : public ::org::labcrypto::hottentot::runtime::RequestCallback {
   public:
     DefaultRequestCallback (
@@ -44,8 +47,8 @@ namespace service {
     virtual ~DefaultRequestCallback() {}
   public:
     virtual void OnRequest (
-      ::org::labcrypto::hottentot::runtime::Protocol &,
-      ::org::labcrypto::hottentot::runtime::Request &
+      ::org::labcrypto::hottentot::runtime::Protocol *,
+      ::org::labcrypto::hottentot::runtime::Request *
     );
   private:
     ClientIO *clientIO_;

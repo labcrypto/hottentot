@@ -47,6 +47,15 @@ namespace runtime {
   protected:
     Request() {   
     }
+  public:
+    inline uint32_t GetServiceId() const {
+      return serviceId_;
+    }
+    inline void SetServiceId(uint32_t serviceId) {
+      serviceId_ = serviceId;
+    }
+  protected:
+    uint32_t serviceId_;
   };
   class Response {
   protected:
