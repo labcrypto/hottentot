@@ -20,11 +20,8 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
- 
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__PLAIN_BLOCKING_SOCKET_CLIENT_IO_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__PLAIN_BLOCKING_SOCKET_CLIENT_IO_H_
 
-#include "socket_client_io.h"
+#include "plain_blocking_socket_client_io.h"
 
 
 namespace org {
@@ -32,33 +29,26 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace service {
-  class RequestHandler;
-  class PlainBlockingSocketClientIO : public SocketClientIO {
-  public:
-    PlainBlockingSocketClientIO (
-#ifdef _MSC_VER
-    SOCKET clientSocketFD
-#else
-    int clientSocketFD
-#endif
-    ) : SocketClientIO(clientSocketFD) {
-    }
-    virtual ~PlainBlockingSocketClientIO() {}
-  public:
-    virtual uint32_t Read (
-      unsigned char *buffer, 
-      uint32_t length
-    );
-    virtual void Write(
-      unsigned char *buffer,
-      uint32_t length
-    );
-    virtual void Close();
-  };
+  void 
+  PlainBlockingSocketClientIO::Write(
+    unsigned char *buffer,
+    uint32_t length
+  ) {
+    // TODO
+  }
+  uint32_t 
+  PlainBlockingSocketClientIO::Read(
+    unsigned char *buffer,
+    uint32_t length
+  ) {
+    // TODO
+  }
+  void
+  PlainBlockingSocketClientIO::Close() {
+    // TODO
+  }
 }
 }
 }
 }
 }
-
-#endif

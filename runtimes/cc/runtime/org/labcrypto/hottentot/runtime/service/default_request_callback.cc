@@ -69,7 +69,7 @@ namespace service {
       Response *response = new ResponseV1; // TODO USe factory
       RequestHandler *requestHandler = requestHandlers_->find(request->GetServiceId())->second;
       if (requestHandler == 0) {
-        throw std::runtime_error("Request handler is not found.");
+        throw std::runtime_error("Request handler is null.");
       }
       if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
         ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
@@ -83,7 +83,7 @@ namespace service {
       clientIO_->Write(data, length);
       clientIO_->Close();
     } else {
-      return 0;            
+      throw std::runtime_error("Service id is not found.");           
     }
   }
 }
