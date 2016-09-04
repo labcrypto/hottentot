@@ -40,19 +40,22 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 
-namespace org {
+/* namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 class Request;
 class Response;
+class Protocol;
 namespace service {
   class RequestHandler;
   class RequestCallback {
   public:
     RequestCallback (
-      std::map<uint8_t, RequestHandler*> *requestHandlers
-    ) : requestHandlers_(requestHandlers) {
+      std::map<uint8_t, RequestHandler*> *requestHandlers,
+      Protocol *protocol
+    ) : requestHandlers_(requestHandlers),
+        protocol_(protocol) {
     }
     virtual ~RequestCallback() {}
   public:
@@ -67,6 +70,6 @@ namespace service {
 }
 }
 }
-}
+} */
 
 #endif

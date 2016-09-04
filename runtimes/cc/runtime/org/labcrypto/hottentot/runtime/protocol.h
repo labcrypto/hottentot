@@ -42,8 +42,17 @@ namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
-  class Request;
-  class Response;
+  class Protocol;
+  class Request {
+  protected:
+    Request() {   
+    }
+  };
+  class Response {
+  protected:
+    Response() {
+    }
+  };
   class RequestCallback {
   public:
     RequestCallback () {
@@ -52,7 +61,8 @@ namespace runtime {
     }
   public:
     virtual void OnRequest (
-      Request &
+      Protocol *,
+      Request *
     ) = 0;
   };
   class ResponseCallback {
@@ -63,7 +73,8 @@ namespace runtime {
     }
   public:
     virtual void OnResponse (
-      Response &
+      Protocol *,
+      Response *
     ) = 0;
   };
   class Protocol {
@@ -79,11 +90,11 @@ namespace runtime {
     }
   public:
     virtual unsigned char* SerializeRequest (
-      Request &, 
+      Request *, 
       uint32_t *
     ) = 0;
     virtual unsigned char* SerializeResponse (
-      Response &,
+      Response *,
       uint32_t *
     ) = 0;
     virtual Request* DeserializeRequest (

@@ -33,46 +33,148 @@ namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
+  class _Argument {
+  public:
+    unsigned char *data_;
+    uint32_t dataLength_;
+  };
+  class RequestV1 : public Request {
+  public:
+    enum RequestType {
+      Unknown,
+      ServiceListQuery,
+      InvokeStateless
+    };
+  public:
+    RequestV1()
+      : argumentCount_(0) {
+    }
+    ~RequestV1() {
+      for (uint32_t i = 0; i < args_.size(); i++) {
+        delete [] args_[i].data_;
+      }
+    }
+    inline RequestType GetType() const {
+      return type_;
+    }
+    inline void SetType(RequestType type) {
+      type_ = type;
+    }
+    inline uint32_t GetServiceId() const {
+      return serviceId_;
+    }
+    inline void SetServiceId(uint32_t serviceId) {
+      serviceId_ = serviceId;
+    }
+    inline uint32_t GetMethodId() const {
+      return methodId_;
+    }
+    inline void SetMethodId(uint32_t methodId) {
+      methodId_ = methodId;
+    }
+    inline uint32_t GetArgumentCount() const {
+      return argumentCount_;
+    }
+    inline void SetArgumentCount(uint32_t argumentCount) {
+      argumentCount_ = argumentCount;
+    }
+    inline void AddArgument(unsigned char *data, uint32_t dataLength) {
+      _Argument argument;
+      argument.data_ = data;
+      argument.dataLength_ = dataLength;
+      args_.push_back(argument);
+      argumentCount_++;
+    }
+    inline unsigned char* GetArgumentData(uint8_t index) {
+      return args_[index].data_;
+    }
+    inline uint32_t GetArgumentLength(uint8_t index) {
+      return args_[index].dataLength_;
+    }
+  private:
+    RequestType type_;
+    uint32_t serviceId_;
+    uint32_t methodId_;
+    uint32_t argumentCount_;
+    std::vector<_Argument> args_;
+  };
+  class ResponseV1 : public Response {
+  public:
+    ResponseV1() {
+    }
+    virtual ~ResponseV1() {
+      if (data_) {
+        delete [] data_;
+      }
+    }
+  public:
+    inline uint8_t GetStatusCode() const {
+      return statusCode_;
+    }
+    inline void SetStatusCode(uint8_t statusCode) {
+      statusCode_ = statusCode;
+    }
+    inline unsigned char* GetData() const {
+      return data_;
+    }
+    inline void SetData(unsigned char *data) {
+      data_ = data;
+    }
+    inline uint32_t GetDataLength() const {
+      return dataLength_;
+    }
+    inline void SetDataLength(uint32_t dataLength) {
+      dataLength_ = dataLength;
+    }
+  private:
+    /*
+     * Success = 0
+     * Fault > 0
+     */
+    uint8_t statusCode_;
+    unsigned char *data_;
+    uint32_t dataLength_;
+  };
   class ProtocolV1 : public Protocol {
   enum State {
     ReadingLengthState,
     ReadingDataState
   };
   public:
-    ProtocolV1(int /* Remote Socket FD */);
+    ProtocolV1();
     virtual ~ProtocolV1();
   public:
     virtual unsigned char* SerializeRequest (
-      Request &      /* Request object*/, 
-      uint32_t *     /* Length */
+      Request *,
+      uint32_t *
     );
     virtual unsigned char* SerializeResponse (
-      Response &    /* Response object*/, 
-      uint32_t *    /* Length */
+      Response *,
+      uint32_t *
     );
     virtual Request* DeserializeRequest (
-      unsigned char *   /* Request data */, 
-      uint32_t          /* Request data length */
+      unsigned char *,
+      uint32_t
     );
     virtual Response* DeserializeResponse (
-      unsigned char *  /* Response data */, 
-      uint32_t         /* Response data length */
+      unsigned char *,
+      uint32_t
     );
   public:
     virtual void FeedRequestData (
-      unsigned char *     /* Data chuck */,
-      uint32_t            /* Data chunk length */
+      unsigned char *,
+      uint32_t
     );
     virtual void FeedResponseData (
-      unsigned char *    /* Data chuck */,
-      uint32_t           /* Data chunk length */
+      unsigned char *,
+      uint32_t
     );
   public:
-    virtual bool IsResponseComplete();
-    virtual Response* GetResponse();
+    // virtual bool IsResponseComplete();
+    // virtual Response* GetResponse();
   private:
-    bool isResponseComplete_;
-    Response *response_;
+    // bool isResponseComplete_;
+    // Response *response_;
   private:
     uint32_t readingLength_;
     uint32_t readingCounter_;

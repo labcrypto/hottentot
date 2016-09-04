@@ -51,9 +51,12 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace service {
-  Response*
-  DefaultRequestCallback::OnRequest(void *source,
-                                    Request &request) {
+  // Response*
+  void
+  DefaultRequestCallback::OnRequest (
+    ::org::labcrypto::hottentot::runtime::Protocol &protocol,
+    ::org::labcrypto::hottentot::runtime::Request &request
+  ) {
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -71,7 +74,11 @@ namespace service {
             "Calling handler method ..." << std::endl;
       }
       requestHandler->HandleRequest(request, *response);
-      return response;
+      // return response;
+      uint32_t length = 0;
+      unsigned char *data = protocol.SerializeResponse(*response, &length);
+      clientIO_.Write(data, length);
+      clientIO_.Close();
     } else {
       return 0;            
     }

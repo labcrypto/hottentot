@@ -56,10 +56,10 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #include "protocol_v1.h"
-#include "request.h"
+// #include "request.h"
 #include "logger.h"
 #include "utils.h"
-#include "response.h"
+// #include "response.h"
 #include "configuration.h"
 #include "service/request_callback.h"
 
@@ -68,97 +68,98 @@ namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
-  ProtocolV1::ProtocolV1(int remoteSocketFD) 
-    : Protocol(remoteSocketFD),
-      isResponseComplete_(false),
-      response_(0),
+  ProtocolV1::ProtocolV1 (/*int remoteSocketFD*/) 
+    : // Protocol(remoteSocketFD),
+      // isResponseComplete_(false),
+      // response_(0),
       readingLength_(0),
       readingCounter_(0),
       targetCounter_(0),
       currentState_(ReadingLengthState) {
   }
   ProtocolV1::~ProtocolV1() {
-    if (response_) {
+    /* if (response_) {
       delete response_;
-    }
+    } */
   }
-  bool
+  /* bool
   ProtocolV1::IsResponseComplete() {
     return isResponseComplete_;
   }
   Response*
   ProtocolV1::GetResponse() {
     return response_;
-  }
+  } */
   unsigned char* 
   ProtocolV1::SerializeRequest (
-    Request  &request, 
+    Request  *request, 
     uint32_t *length
   ) {
+    RequestV1 *requestV1 = (RequestV1 *)request;
     uint32_t actualLength = 0;
     actualLength += 1;  // Request type
     actualLength += 4;  // Service Id
     actualLength += 4;  // Method Id
     actualLength += 1;  // Number of arguments
-    for (unsigned int i = 0; i < request.GetArgumentCount(); i++) {
-      if (request.GetArgumentLength(i) < 128) {
+    for (unsigned int i = 0; i < requestV1->GetArgumentCount(); i++) {
+      if (requestV1->GetArgumentLength(i) < 128) {
         actualLength += 1;
-        actualLength += request.GetArgumentLength(i);
-      } else if (request.GetArgumentLength(i) < 256) {
+        actualLength += requestV1->GetArgumentLength(i);
+      } else if (requestV1->GetArgumentLength(i) < 256) {
         actualLength += 2;
-        actualLength += request.GetArgumentLength(i);
-      } else if (request.GetArgumentLength(i) < 256 * 256) {
+        actualLength += requestV1->GetArgumentLength(i);
+      } else if (requestV1->GetArgumentLength(i) < 256 * 256) {
         actualLength += 3;
-        actualLength += request.GetArgumentLength(i);
-      } else if (request.GetArgumentLength(i) < 256 * 256 * 256) {
+        actualLength += requestV1->GetArgumentLength(i);
+      } else if (requestV1->GetArgumentLength(i) < 256 * 256 * 256) {
         actualLength += 4;
-        actualLength += request.GetArgumentLength(i);
-      } else if (request.GetArgumentLength(i) <= std::numeric_limits<uint32_t>::max()) {
+        actualLength += requestV1->GetArgumentLength(i);
+      } else if (requestV1->GetArgumentLength(i) <= std::numeric_limits<uint32_t>::max()) {
         actualLength += 5;
-        actualLength += request.GetArgumentLength(i);
+        actualLength += requestV1->GetArgumentLength(i);
       }
     }
     *length = actualLength;
     unsigned char *data = new unsigned char[*length];
     unsigned int c = 0;
-    data[c++] = request.GetType();
-    uint32_t serviceId = request.GetServiceId();
+    data[c++] = requestV1->GetType();
+    uint32_t serviceId = requestV1->GetServiceId();
     data[c++] = ((unsigned char *)&serviceId)[3];
     data[c++] = ((unsigned char *)&serviceId)[2];
     data[c++] = ((unsigned char *)&serviceId)[1];
     data[c++] = ((unsigned char *)&serviceId)[0];
-    uint32_t methodId = request.GetMethodId();
+    uint32_t methodId = requestV1->GetMethodId();
     data[c++] = ((unsigned char *)&methodId)[3];
     data[c++] = ((unsigned char *)&methodId)[2];
     data[c++] = ((unsigned char *)&methodId)[1];
     data[c++] = ((unsigned char *)&methodId)[0];
-    data[c++] = request.GetArgumentCount();
-    for (unsigned int i = 0; i < request.GetArgumentCount(); i++) {
-      if (request.GetArgumentLength(i) < 128) {
-        data[c++] = request.GetArgumentLength(i);
-      } else if (request.GetArgumentLength(i) < 256) {
+    data[c++] = requestV1->GetArgumentCount();
+    for (unsigned int i = 0; i < requestV1->GetArgumentCount(); i++) {
+      if (requestV1->GetArgumentLength(i) < 128) {
+        data[c++] = requestV1->GetArgumentLength(i);
+      } else if (requestV1->GetArgumentLength(i) < 256) {
         data[c++] = 0x81;
-        data[c++] = request.GetArgumentLength(i);
-      } else if (request.GetArgumentLength(i) < 256 * 256) {
+        data[c++] = requestV1->GetArgumentLength(i);
+      } else if (requestV1->GetArgumentLength(i) < 256 * 256) {
         data[c++] = 0x82;
-        data[c++] = request.GetArgumentLength(i) / 256;
-        data[c++] = request.GetArgumentLength(i) % 256;
-      } else if (request.GetArgumentLength(i) < 256 * 256 * 256) {
+        data[c++] = requestV1->GetArgumentLength(i) / 256;
+        data[c++] = requestV1->GetArgumentLength(i) % 256;
+      } else if (requestV1->GetArgumentLength(i) < 256 * 256 * 256) {
         data[c] = 0x83;
-        data[c + 1] = request.GetArgumentLength(i) / (256 * 256);
-        data[c + 2] = (request.GetArgumentLength(i) - data[c + 1] * 256 * 256) / 256;
-        data[c + 3] = request.GetArgumentLength(i) % (256 * 256);
+        data[c + 1] = requestV1->GetArgumentLength(i) / (256 * 256);
+        data[c + 2] = (requestV1->GetArgumentLength(i) - data[c + 1] * 256 * 256) / 256;
+        data[c + 3] = requestV1->GetArgumentLength(i) % (256 * 256);
         c += 4;
-      } else if (request.GetArgumentLength(i) <= std::numeric_limits<uint32_t>::max()) {
+      } else if (requestV1->GetArgumentLength(i) <= std::numeric_limits<uint32_t>::max()) {
         data[c] = 0x84;
-        data[c + 1] = request.GetArgumentLength(i) / (256 * 256 * 256);
-        data[c + 2] = (request.GetArgumentLength(i) - data[c + 1] * 256 * 256 * 256) / (256 * 256);
-        data[c + 3] = (request.GetArgumentLength(i) - data[c + 1] * 256 * 256 * 256 - data[c + 2] * 256 * 256) / 256;
-        data[c + 4] = request.GetArgumentLength(i) % (256 * 256 * 256);
+        data[c + 1] = requestV1->GetArgumentLength(i) / (256 * 256 * 256);
+        data[c + 2] = (requestV1->GetArgumentLength(i) - data[c + 1] * 256 * 256 * 256) / (256 * 256);
+        data[c + 3] = (requestV1->GetArgumentLength(i) - data[c + 1] * 256 * 256 * 256 - data[c + 2] * 256 * 256) / 256;
+        data[c + 4] = requestV1->GetArgumentLength(i) % (256 * 256 * 256);
         c += 5;
       }
-      unsigned char *argData = request.GetArgumentData(i);
-      for (unsigned int j = 0; j < request.GetArgumentLength(i); j++) {
+      unsigned char *argData = requestV1->GetArgumentData(i);
+      for (unsigned int j = 0; j < requestV1->GetArgumentLength(i); j++) {
         data[c++] = argData[j];
       }
     }
@@ -172,56 +173,57 @@ namespace runtime {
   }
   unsigned char* 
   ProtocolV1::SerializeResponse (
-    Response &response, 
+    Response *response, 
     uint32_t *length
   ) {
+    ResponseV1 *responseV1 = (ResponseV1 *)response;
     uint32_t actualLength = 0;
     actualLength += 1;  // Status Code
-    if (response.GetDataLength() < 128) {
+    if (responseV1->GetDataLength() < 128) {
       actualLength += 1;
-      actualLength += response.GetDataLength();
-    } else if (response.GetDataLength() < 256) {
+      actualLength += responseV1->GetDataLength();
+    } else if (responseV1->GetDataLength() < 256) {
       actualLength += 2;
-      actualLength += response.GetDataLength();
-    } else if (response.GetDataLength() < 256 * 256) {
+      actualLength += responseV1->GetDataLength();
+    } else if (responseV1->GetDataLength() < 256 * 256) {
       actualLength += 3;
-      actualLength += response.GetDataLength();
-    } else if (response.GetDataLength() < 256 * 256 * 256) {
+      actualLength += responseV1->GetDataLength();
+    } else if (responseV1->GetDataLength() < 256 * 256 * 256) {
       actualLength += 4;
-      actualLength += response.GetDataLength();
-    } else if (response.GetDataLength() <= std::numeric_limits<uint32_t>::max()) {
+      actualLength += responseV1->GetDataLength();
+    } else if (responseV1->GetDataLength() <= std::numeric_limits<uint32_t>::max()) {
       actualLength += 5;
-      actualLength += response.GetDataLength();
+      actualLength += responseV1->GetDataLength();
     }
     *length = actualLength;
     unsigned char *data = new unsigned char[*length];
     unsigned int c = 0;
-    data[c++] = response.GetStatusCode();
-    if (response.GetDataLength() < 128) {
-      data[c++] = response.GetDataLength();
-    } else if (response.GetDataLength() < 256) {
+    data[c++] = responseV1->GetStatusCode();
+    if (responseV1->GetDataLength() < 128) {
+      data[c++] = responseV1->GetDataLength();
+    } else if (responseV1->GetDataLength() < 256) {
       data[c++] = 0x81;
-      data[c++] = response.GetDataLength();
-    } else if (response.GetDataLength() < 256 * 256) {
+      data[c++] = responseV1->GetDataLength();
+    } else if (responseV1->GetDataLength() < 256 * 256) {
       data[c++] = 0x82;
-      data[c++] = response.GetDataLength() / 256;
-      data[c++] = response.GetDataLength() % 256;
-    } else if (response.GetDataLength() < 256 * 256 * 256) {
+      data[c++] = responseV1->GetDataLength() / 256;
+      data[c++] = responseV1->GetDataLength() % 256;
+    } else if (responseV1->GetDataLength() < 256 * 256 * 256) {
       data[c] = 0x83;
-      data[c + 1] = response.GetDataLength() / (256 * 256);
-      data[c + 2] = (response.GetDataLength() - data[c + 1] * 256 * 256) / 256;
-      data[c + 3] = response.GetDataLength() % (256 * 256);
+      data[c + 1] = responseV1->GetDataLength() / (256 * 256);
+      data[c + 2] = (responseV1->GetDataLength() - data[c + 1] * 256 * 256) / 256;
+      data[c + 3] = responseV1->GetDataLength() % (256 * 256);
       c += 4;
-    } else if (response.GetDataLength() <= std::numeric_limits<uint32_t>::max()) {
+    } else if (responseV1->GetDataLength() <= std::numeric_limits<uint32_t>::max()) {
         data[c] = 0x84;
-        data[c + 1] = response.GetDataLength() / (256 * 256 * 256);
-        data[c + 2] = (response.GetDataLength() - data[c + 1] * 256 * 256 * 256) / (256 * 256);
-        data[c + 3] = (response.GetDataLength() - data[c + 1] * 256 * 256 * 256 - data[c + 2] * 256 * 256) / 256;
-        data[c + 4] = response.GetDataLength() % (256 * 256 * 256);
+        data[c + 1] = responseV1->GetDataLength() / (256 * 256 * 256);
+        data[c + 2] = (responseV1->GetDataLength() - data[c + 1] * 256 * 256 * 256) / (256 * 256);
+        data[c + 3] = (responseV1->GetDataLength() - data[c + 1] * 256 * 256 * 256 - data[c + 2] * 256 * 256) / 256;
+        data[c + 4] = responseV1->GetDataLength() % (256 * 256 * 256);
         c += 5;
       }
-    unsigned char *argData = response.GetData();
-    for (uint32_t i = 0; i < response.GetDataLength(); i++) {
+    unsigned char *argData = responseV1->GetData();
+    for (uint32_t i = 0; i < responseV1->GetDataLength(); i++) {
       data[c++] = argData[i];
     }
     return data;
@@ -232,19 +234,19 @@ namespace runtime {
     uint32_t dataLength
   ) {
     uint32_t c = 0;
-    Request *request = new Request;
-    request->SetType((Request::RequestType)data[c++]);
+    RequestV1 *requestV1 = new RequestV1;
+    requestV1->SetType((RequestV1::RequestType)data[c++]);
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
-          "Request Type: " << request->GetType() << std::endl;
+          "Request Type: " << requestV1->GetType() << std::endl;
     }
     uint32_t serviceId = 0;
     ((unsigned char *)(&serviceId))[3] = data[c++];
     ((unsigned char *)(&serviceId))[2] = data[c++];
     ((unsigned char *)(&serviceId))[1] = data[c++];
     ((unsigned char *)(&serviceId))[0] = data[c++];
-    request->SetServiceId(serviceId);
+    requestV1->SetServiceId(serviceId);
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -255,7 +257,7 @@ namespace runtime {
     ((unsigned char *)(&methodId))[2] = data[c++];
     ((unsigned char *)(&methodId))[1] = data[c++];
     ((unsigned char *)(&methodId))[0] = data[c++];
-    request->SetMethodId(methodId);
+    requestV1->SetMethodId(methodId);
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -269,7 +271,7 @@ namespace runtime {
     }
     for (unsigned int k = 0; k < (uint8_t)argCount; k++) {
       if (data[c] == 0x00) {
-        request->AddArgument(0, 0);
+        requestV1->AddArgument(0, 0);
         if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
           ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
             "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -306,29 +308,29 @@ namespace runtime {
               "Argument[" << k << "] Length: " << argLength << std::endl;
           ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Argument Data", argData, argLength);
         }
-        request->AddArgument(argData, argLength);
+        requestV1->AddArgument(argData, argLength);
       }
     }
-    return request;
+    return requestV1;
   }
   Response* 
   ProtocolV1::DeserializeResponse (
     unsigned char *data, 
     uint32_t dataLength
   ) {
-    Response *response = new Response;
+    ResponseV1 *responseV1 = new ResponseV1;
     uint32_t c = 0;
-    response->SetStatusCode(data[c++]);
+    responseV1->SetStatusCode(data[c++]);
     uint32_t resultLength = 0;
     if (data[c] == 0x00) {
-      response->SetData(0);
-      response->SetDataLength(0);
+      responseV1->SetData(0);
+      responseV1->SetDataLength(0);
       if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
         ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
           "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
             "Response has zero length." << std::endl;
       }
-      return response;
+      return responseV1;
     } else {
       if ((data[c] & 0x80) == 0) {
         resultLength = data[c];
@@ -350,13 +352,13 @@ namespace runtime {
       for (uint32_t i = 0; i < resultLength; i++) {
         resultData[i] = data[c++];
       }
-      response->SetData(resultData);
-      response->SetDataLength(resultLength);
+      responseV1->SetData(resultData);
+      responseV1->SetDataLength(resultLength);
       if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
         ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Response", resultData, resultLength);
       }
     }
-    return response;
+    return responseV1;
   }
   void 
   ProtocolV1::FeedRequestData (
@@ -462,15 +464,16 @@ namespace runtime {
               if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
                 ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                   "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
-                    "Calling callback ..." << std::endl;
+                    "Calling request callback ..." << std::endl;
               }
-              Response *response = requestCallback_->OnRequest(this, *request);
+              // Response *response = requestCallback_->OnRequest(this, *request);
+              requestCallback_->OnRequest(this, request);
               if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
                 ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                   "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
-                    "Callback was successful." << std::endl;
+                    "Request allback finished successfully." << std::endl;
               }
-              if (response) {
+              /*if (response) {
                 uint32_t responseSerializedLength = 0;
                 unsigned char *responseSerializedData = SerializeResponse(*response, &responseSerializedLength);
                 if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
@@ -518,8 +521,8 @@ namespace runtime {
                 }
                 if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
                   ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
-                }
-                if (sendLength > 0) {
+                } */
+                /*if (sendLength > 0) {
 #ifndef _MSC_VER
                   try {
                     int result = write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
@@ -535,7 +538,7 @@ namespace runtime {
                       }
                       sleep(2);
                     } */
-#else
+/* #else
                   try {
                     int result = send(remoteSocketFD_, (char *)sendData, sendLength * sizeof(unsigned char), 0);
                     if (result == SOCKET_ERROR) {
@@ -550,12 +553,12 @@ namespace runtime {
                 }
                 delete [] sendData;
                 delete [] responseSerializedData;
-                delete response;
+                delete response; 
               } else {
                 ::org::labcrypto::hottentot::runtime::Logger::GetError() << 
                   "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
                     "No handler is found." << std::endl;
-              }
+              } */
               delete request;
               delete [] requestData;
             }
@@ -574,7 +577,7 @@ namespace runtime {
       if (currentState_ == ReadingLengthState) {
         if (readingCounter_ == 0) {
           if ((data[i] & 0x80) == 0) {
-            isResponseComplete_ = false;
+            // isResponseComplete_ = false;
             readingLength_ = data[i];
             readingCounter_ = 0;
             currentState_ = ReadingDataState;
@@ -633,12 +636,13 @@ namespace runtime {
               if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
                 ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Response", responseData, responseLength);
               }
-              response_ = DeserializeResponse(responseData, responseLength);
+              Response *response = DeserializeResponse(responseData, responseLength);
               readingBuffer_.clear();
               readingCounter_ = 0;
               currentState_ = ReadingLengthState;
-              isResponseComplete_ = true;
+              // isResponseComplete_ = true;
               delete [] responseData;
+              responseCallback_->OnResponse(this, response);
             }
           }
         }
