@@ -11,7 +11,7 @@ import org.labcrypto.hottentot.helper.PDTDeserializer;
 import org.labcrypto.hottentot.helper.PDTSerializer;
 
 
-public enum [%ENUM_NAME%] {
+public enum [%ENUM_NAME%] { 
 
 [%INDENT%]Empty(),
 [%MEMBERS%]	

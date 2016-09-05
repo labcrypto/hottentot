@@ -19,7 +19,7 @@
 #include <org/labcrypto/hottentot/runtime/proxy/proxy_runtime.h>
 #include <org/labcrypto/hottentot/runtime/proxy/tcp_client_factory.h>
 
-#include "[[[SNAKE_CASE_SERVICE_NAME]]]_proxy.h"
+#include "[[[SNAKE_CASE_SERVICE_NAME]]]_proxy.h" 
 
 [[[INCLUDE_STRUCT_HEADERS]]]
 

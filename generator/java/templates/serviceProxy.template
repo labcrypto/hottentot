@@ -15,7 +15,7 @@ import org.labcrypto.hottentot.runtime.Argument;
 import org.labcrypto.hottentot.runtime.Proxy;
 import org.labcrypto.hottentot.runtime.Request;
 import org.labcrypto.hottentot.runtime.Response;
-import org.labcrypto.hottentot.runtime.TcpClient;
+import org.labcrypto.hottentot.runtime.TcpClient; 
 import org.labcrypto.hottentot.runtime.exception.HottentotRuntimeException;
 import org.labcrypto.hottentot.runtime.exception.TcpClientConnectException;
 import org.labcrypto.hottentot.runtime.exception.TcpClientReadException;
