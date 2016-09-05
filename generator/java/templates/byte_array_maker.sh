@@ -1,4 +1,7 @@
 #!/bin/bash
+
+mkdir -p ./java/templates/byte_arrays
+
 cat ./java/templates/abstractService.template > abstractServiceByteArray
 xxd -i abstractServiceByteArray > ./java/templates/byte_arrays/abstractService.h
 rm -rf abstractServiceByteArray
