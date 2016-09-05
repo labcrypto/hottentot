@@ -24,63 +24,34 @@ elseif (UNIX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings -Wno-unused-but-set-variable -Wno-sign-compare -Wno-unused-function")
 endif()
 
-set(CC_TEMPLATE_FILES
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/abstract_service_header.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/client.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/enums.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/interface.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_builder_cc.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_builder_header.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_cc.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_cc__method.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_cc__method_argument_serialization.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_cc__method_response_deserailization.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_header.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/request_handler_cc.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/request_handler_cc__method_if_clause.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/request_handler_header.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/server.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/service_impl_cc.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/service_impl_cc__method.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/service_impl_header.templpate"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/service_interface.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/struct_cc.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/struct_header.template"
-#  "${PROJECT_SOURCE_DIR}/generator/cc/templates/struct_header__getter_and_setter.template"
-  "${PROJECT_SOURCE_DIR}/generator/cc/templates/templates.h"
-  "${PROJECT_SOURCE_DIR}/generator/cc/templates/templates.cc"
-)
-
-add_custom_command(OUTPUT ${CC_TEMPLATE_FILES}
-  COMMAND ./cc/templates/generate_templates_header.sh ./cc/templates/
-  COMMAND ./java/templates/byte_array_maker.sh
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
-  VERBATIM
-)
-
-set(LEX_FILES
-  "${PROJECT_SOURCE_DIR}/generator/y.tab.cc"
-  "${PROJECT_SOURCE_DIR}/generator/lex.yy.cc"
-)
-
-add_custom_command(OUTPUT ${LEX_FILES}
-  COMMAND yacc -d hot.y
-  COMMAND flex hot.l
-  COMMAND mv y.tab.c y.tab.cc
-  COMMAND mv lex.yy.c lex.yy.cc
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
-  VERBATIM
-)
-
-add_custom_target(make_cc_template_files DEPENDS ${CC_TEMPLATE_FILES})
-add_custom_target(make_lex_files DEPENDS ${LEX_FILES})
-
 add_library(hottentot-generator-common-lib SHARED 
   ${PROJECT_SOURCE_DIR}/generator/runtime.cc
   ${PROJECT_SOURCE_DIR}/generator/fasthash.cc
   ${PROJECT_SOURCE_DIR}/generator/service.cc
   ${PROJECT_SOURCE_DIR}/generator/method.cc
   ${PROJECT_SOURCE_DIR}/generator/os.cc
+)
+
+add_custom_command(TARGET hottentot-generator-common-lib
+  PRE_BUILD
+  COMMAND echo "Generating templates ..."
+  COMMAND ./cc/templates/generate_templates_header.sh ./cc/templates/
+  COMMAND ./java/templates/byte_array_maker.sh
+  COMMAND echo "Templates are generated."
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
+  VERBATIM
+)
+
+add_custom_command(TARGET hottentot-generator-common-lib
+  PRE_BUILD
+  COMMAND echo "Building sources for yacc and lex ..."
+  COMMAND yacc -d hot.y
+  COMMAND flex hot.l
+  COMMAND mv y.tab.c y.tab.cc
+  COMMAND mv lex.yy.c lex.yy.cc
+  COMMAND echo "Yac and lex sources are generated."
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
+  VERBATIM
 )
 
 add_library(hottentot-generator-cc-lib SHARED
