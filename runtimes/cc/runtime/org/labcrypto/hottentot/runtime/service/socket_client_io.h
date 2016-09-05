@@ -37,19 +37,19 @@ namespace service {
   public:
     SocketClientIO (
 #ifdef _MSC_VER
-    SOCKET clientSocketFD
+    SOCKET socketFD
 #else
-    int clientSocketFD
+    int socketFD
 #endif
     ) : ClientIO(),
-        clientSocketFD_(clientSocketFD) {
+        socketFD_(socketFD) {
     }
     virtual ~SocketClientIO() {}
   protected:
 #ifdef _MSC_VER
-    SOCKET clientSocketFD_;
+    SOCKET socketFD_;
 #else
-    int clientSocketFD_;
+    int socketFD_;
 #endif
   };
 }

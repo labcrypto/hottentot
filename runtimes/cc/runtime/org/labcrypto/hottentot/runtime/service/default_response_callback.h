@@ -20,10 +20,13 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
+ 
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_RESPONSE_CALLBACK_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_RESPONSE_CALLBACK_H_
 
-#include <unistd.h>
+#include <map>
 
-#include "plain_blocking_socket_client_io.h"
+#include "../protocol.h"
 
 
 namespace org {
@@ -31,35 +34,26 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace service {
-  void 
-  PlainBlockingSocketClientIO::Write(
-    unsigned char *buffer,
-    uint32_t length
-  ) {
-    // TODO
-  }
-  uint32_t 
-  PlainBlockingSocketClientIO::Read(
-    unsigned char *buffer,
-    uint32_t length
-  ) {
-#ifndef _MSC_VER
-    return read(socketFD_, buffer, length);
-#else
-    return recv(socketFD_, (char *)buffer, length, 0);
+  class ClientIO;
+  class DefaultResponseCallback : public ::org::labcrypto::hottentot::runtime::ResponseCallback {
+  public:
+    DefaultResponseCallback (
+      ClientIO *clientIO
+    ) : clientIO_(clientIO) {
+    }
+    virtual ~DefaultResponseCallback() {}
+  public:
+    virtual void OnResponse (
+      ::org::labcrypto::hottentot::runtime::Protocol *,
+      ::org::labcrypto::hottentot::runtime::Response *
+    );
+  private:
+    ClientIO *clientIO_;
+  };
+}
+}
+}
+}
+}
+
 #endif
-  }
-  void
-  PlainBlockingSocketClientIO::Close() {
-#ifndef _MSC_VER
-    close(socketFD_);
-#else
-    shutdown(socketFD_, SD_SEND);
-    closesocket(socketFD_);
-#endif
-  }
-}
-}
-}
-}
-}

@@ -37,11 +37,13 @@ namespace service {
   public:
     MTSocketClientHandler(
 #ifndef _MSC_VER
-      int clientSocketFD
+      int clientSocketFD,
 #else
-      SOCKET clientSocketFD
+      SOCKET clientSocketFD,
 #endif
-    ) : SocketClientHandler(clientSocketFD) {
+      std::map<uint8_t, RequestHandler*> *requestHandlers
+    ) : SocketClientHandler(clientSocketFD),
+        requestHandlers_(requestHandlers) {
     }
     virtual ~MTSocketClientHandler() {
     }
@@ -53,6 +55,8 @@ namespace service {
 #endif
   public:
     virtual void Handle();
+  public:
+    std::map<uint8_t, RequestHandler*> *requestHandlers_;
   };
   class _HandleClientThreadParams {
   public:

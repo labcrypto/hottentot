@@ -226,7 +226,8 @@ namespace service {
 #endif
       }
       ClientHandlerFactory *clientHandlerFactory = new DefaultClientHandlerFactory();
-      ClientHandler *clientHandler = clientHandlerFactory->CreateSocketClientHandler(clientSocketFD);
+      ClientHandler *clientHandler = 
+        clientHandlerFactory->CreateSocketClientHandler(clientSocketFD, ref->requestHandlers_);
       clientHandler->Handle();
     }
   }

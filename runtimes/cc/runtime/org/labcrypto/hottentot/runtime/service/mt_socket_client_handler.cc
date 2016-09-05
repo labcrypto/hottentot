@@ -37,6 +37,14 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #include "mt_socket_client_handler.h"
+#include "plain_blocking_socket_client_io.h"
+#include "default_request_callback.h"
+#include "default_response_callback.h"
+
+#include "../logger.h"
+#include "../utils.h"
+#include "../configuration.h"
+#include "../protocol_v1.h"
 
 
 namespace org {
@@ -50,36 +58,34 @@ namespace service {
     params->clientHandler_ = this;
     params->clientSocketFD_ = clientSocketFD_;
 #ifndef _MSC_VER
-      pthread_t thread; // TODO(kamran): We need a thread pool here.
-      pthread_attr_t attr;
-      pthread_attr_init(&attr);
-      pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-      int ret = pthread_create(&thread, &attr, HandleClientConnection, (void *)params);
-      if (ret) {
-        ::org::labcrypto::hottentot::runtime::Logger::GetError() << 
-          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-            "Error - pthread_create() return code: " << ret << std::endl;
-        exit(EXIT_FAILURE);
-      }
-      // pthread_detach(ret);
-#else
-      HANDLE res = CreateThread (
-        NULL,
-        0,
-        HandleClientConnection,
-        (LPVOID)params,
-        0,
-        NULL
-      );
-      if (res == NULL) {
-        printf("Handler thread couldn't start: %d\n", WSAGetLastError());
-        closesocket(ref->serverSocketFD_);
-        WSACleanup();
-        exit(EXIT_FAILURE);
-      }
-#endif
+    pthread_t thread; // TODO(kamran): We need a thread pool here.
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    int ret = pthread_create(&thread, &attr, HandleClientConnection, (void *)params);
+    if (ret) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetError() << 
+        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+          "Error - pthread_create() return code: " << ret << std::endl;
+      exit(EXIT_FAILURE);
     }
-    return 0;
+    // pthread_detach(ret);
+#else
+    HANDLE res = CreateThread (
+      NULL,
+      0,
+      HandleClientConnection,
+      (LPVOID)params,
+      0,
+      NULL
+    );
+    if (res == NULL) {
+      printf("Handler thread couldn't start: %d\n", WSAGetLastError());
+      closesocket(ref->serverSocketFD_);
+      WSACleanup();
+      exit(EXIT_FAILURE);
+    }
+#endif
   }
 #ifndef _MSC_VER
   void*
@@ -92,16 +98,21 @@ namespace service {
     _HandleClientThreadParams *ref = (_HandleClientThreadParams*)data;
     unsigned char buffer[256];
     ::org::labcrypto::hottentot::runtime::Protocol *protocol = 
-      new ::org::labcrypto::hottentot::runtime::ProtocolV1(ref->clientSocketFD_);
-    DefaultRequestCallback *requestCallback = 
-      new DefaultRequestCallback(ref->clientAcceptor_->requestHandlers_);
+      new ::org::labcrypto::hottentot::runtime::ProtocolV1(); // TODO: User factory
+    // TODO: Create ClientIO
+    ClientIO *clientIO = new PlainBlockingSocketClientIO(ref->clientSocketFD_); // TODO: Use factory
+    RequestCallback *requestCallback = 
+      new DefaultRequestCallback (
+        clientIO, 
+        ref->clientHandler_->requestHandlers_
+      ); // TODO: User factory
     protocol->SetRequestCallback(requestCallback);
+    // TODO: Create ResponseCallback
+    ResponseCallback *responseCallback = 
+      new DefaultResponseCallback(clientIO); // TODO: User factory
+    protocol->SetResponseCallback(responseCallback);
     while (ok) {
-#ifndef _MSC_VER
-      int numOfReadBytes = read(ref->clientSocketFD_, buffer, 256);
-#else
-      int numOfReadBytes = recv(ref->clientSocketFD_, (char *)buffer, 256, 0);
-#endif
+      int numOfReadBytes = clientIO->Read(buffer, 256);
       if (numOfReadBytes <= 0) {
         ok = false;
       }
@@ -117,12 +128,7 @@ namespace service {
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "Client is gone." << std::endl;
     }
-#ifndef _MSC_VER
-    close(ref->clientSocketFD_);
-#else
-    shutdown(ref->clientSocketFD_, SD_SEND);
-    closesocket(ref->clientSocketFD_);
-#endif
+    clientIO->Close();
     delete requestCallback;
     delete protocol;
     delete ref;
@@ -130,7 +136,6 @@ namespace service {
     pthread_exit(NULL);
 #endif
     return 0;
-  }
   }
 }
 }

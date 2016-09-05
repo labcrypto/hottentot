@@ -41,10 +41,11 @@ namespace service {
   public:
     virtual ClientHandler* CreateSocketClientHandler (
 #ifndef _MSC_VER
-      int clientSocketFD
+      int clientSocketFD,
 #else
-      SOCKET clientSocketFD
+      SOCKET clientSocketFD,
 #endif
+      std::map<uint8_t, RequestHandler*> *requestHandlers
     );
   };
 }
