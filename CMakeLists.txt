@@ -24,26 +24,23 @@ elseif (UNIX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings -Wno-unused-but-set-variable -Wno-sign-compare -Wno-unused-function")
 endif()
 
-add_library(hottentot-generator-common-lib SHARED 
-  ${PROJECT_SOURCE_DIR}/generator/runtime.cc
-  ${PROJECT_SOURCE_DIR}/generator/fasthash.cc
-  ${PROJECT_SOURCE_DIR}/generator/service.cc
-  ${PROJECT_SOURCE_DIR}/generator/method.cc
-  ${PROJECT_SOURCE_DIR}/generator/os.cc
-)
-
-add_custom_command(TARGET hottentot-generator-common-lib
-  PRE_BUILD
-  COMMAND echo "Generating templates ..."
+add_custom_target(cc-templates
+  COMMAND echo "Generating C++ templates ..."
   COMMAND ./cc/templates/generate_templates_header.sh ./cc/templates/
-  COMMAND ./java/templates/byte_array_maker.sh
-  COMMAND echo "Templates are generated."
+  COMMAND echo "C++ templates are generated."
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
   VERBATIM
 )
 
-add_custom_command(TARGET hottentot-generator-common-lib
-  PRE_BUILD
+add_custom_target(java-templates
+  COMMAND echo "Generating Java templates ..."
+  COMMAND ./java/templates/byte_array_maker.sh
+  COMMAND echo "Java templates are generated."
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
+  VERBATIM
+)
+
+add_custom_target(yacc-lex-files
   COMMAND echo "Building sources for yacc and lex ..."
   COMMAND yacc -d hot.y
   COMMAND flex hot.l
@@ -52,6 +49,14 @@ add_custom_command(TARGET hottentot-generator-common-lib
   COMMAND echo "Yac and lex sources are generated."
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
   VERBATIM
+)
+
+add_library(hottentot-generator-common-lib SHARED 
+  ${PROJECT_SOURCE_DIR}/generator/runtime.cc
+  ${PROJECT_SOURCE_DIR}/generator/fasthash.cc
+  ${PROJECT_SOURCE_DIR}/generator/service.cc
+  ${PROJECT_SOURCE_DIR}/generator/method.cc
+  ${PROJECT_SOURCE_DIR}/generator/os.cc
 )
 
 add_library(hottentot-generator-cc-lib SHARED
@@ -96,14 +101,18 @@ add_executable(hot-executable
   ${PROJECT_SOURCE_DIR}/generator/y.tab.cc
 )
 
+add_dependencies(hot-executable yacc-lex-files)
+add_dependencies(hottentot-generator-cc-lib cc-templates)
+add_dependencies(hottentot-generator-java-lib java-templates)
+
 target_compile_options(hottentot-generator-common-lib PUBLIC -std=c++11 -O3)
 target_compile_options(hottentot-generator-cc-lib PUBLIC -std=c++11 -O3)
 target_compile_options(hottentot-generator-java-lib PUBLIC -std=c++11 -O3)
 target_compile_options(hot-executable PUBLIC -std=c++11 -O3)
 
-set_target_properties(hottentot-generator-common-lib PROPERTIES OUTPUT_NAME hot-generator-common)
-set_target_properties(hottentot-generator-cc-lib PROPERTIES OUTPUT_NAME hot-generator-cc)
-set_target_properties(hottentot-generator-java-lib PROPERTIES OUTPUT_NAME hot-generator-java)
+set_target_properties(hottentot-generator-common-lib PROPERTIES OUTPUT_NAME hottentot-generator-common)
+set_target_properties(hottentot-generator-cc-lib PROPERTIES OUTPUT_NAME hottentot-generator-cc)
+set_target_properties(hottentot-generator-java-lib PROPERTIES OUTPUT_NAME hottentot-generator-java)
 set_target_properties(hot-executable PROPERTIES RUNTIME_OUTPUT_NAME hot)
 
 target_link_libraries(hot-executable
@@ -113,14 +122,18 @@ target_link_libraries(hot-executable
   fl
 )
 
-add_library(hot SHARED
+add_library(hottentot-runtime-common-lib SHARED
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/logger.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/protocol_v1.cc
+)
+add_library(hottentot-runtime-proxy-lib SHARED
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/proxy.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/proxy_runtime.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/default_tcp_client.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/default_tcp_client_factory.cc
+)
+add_library(hottentot-runtime-service-lib SHARED
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_client_acceptor_factory.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_client_handler_factory.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_client_io_factory.cc
@@ -131,32 +144,31 @@ add_library(hot SHARED
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/service_runtime.cc
 )
 
-target_compile_options(hot PUBLIC -std=c++11 -O3)
+target_compile_options(hottentot-runtime-common-lib PUBLIC -std=c++11 -O3)
+target_compile_options(hottentot-runtime-proxy-lib PUBLIC -std=c++11 -O3)
+target_compile_options(hottentot-runtime-service-lib PUBLIC -std=c++11 -O3)
 
-add_library(hotd SHARED
+add_library(hottentot-runtime-common-debug-lib SHARED
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/logger.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/protocol_v1.cc
+)
+add_library(hottentot-runtime-proxy-debug-lib SHARED
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/proxy.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/proxy_runtime.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/default_tcp_client.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/proxy/default_tcp_client_factory.cc
+)
+add_library(hottentot-runtime-service-debug-lib SHARED
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/service_runtime.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/plain_blocking_tcp_client_acceptor.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_client_acceptor_factory.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_request_callback.cc
 )
 
-target_compile_options(hotd PUBLIC -std=c++11 -O0 -g)
-
-set(HEADERS 
-  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/boolean.h
-  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
-  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
-  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
-  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
-  ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
-)
+target_compile_options(hottentot-runtime-common-debug-lib PUBLIC -std=c++11 -O0 -g)
+target_compile_options(hottentot-runtime-proxy-debug-lib PUBLIC -std=c++11 -O0 -g)
+target_compile_options(hottentot-runtime-service-debug-lib PUBLIC -std=c++11 -O0 -g)
 
 install(DIRECTORY 
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org 
@@ -170,8 +182,12 @@ install(TARGETS
   hottentot-generator-common-lib
   hottentot-generator-cc-lib
   hottentot-generator-java-lib
-  hot
-  hotd
+  hottentot-runtime-common-lib
+  hottentot-runtime-proxy-lib
+  hottentot-runtime-service-lib
+  hottentot-runtime-common-debug-lib
+  hottentot-runtime-proxy-debug-lib
+  hottentot-runtime-service-debug-lib
   DESTINATION
   ${LIB_INSTALL_DIR}
 )
