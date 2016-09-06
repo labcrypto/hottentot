@@ -21,23 +21,7 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__TCP_CLIENT_FACTORY_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__TCP_CLIENT_FACTORY_H_
-
-#include <string>
-
-#ifdef _MSC_VER
-typedef __int8 int8_t;
-typedef unsigned __int8 uint8_t;
-typedef __int16 int16_t;
-typedef unsigned __int16 uint16_t;
-typedef __int32 int32_t;
-typedef unsigned __int32 uint32_t;
-typedef __int64 int64_t;
-typedef unsigned __int64 uint64_t;
-#else
-#include <stdint.h>
-#endif
+#include "plain_blocking_tcp_server_connector.h"
 
 
 namespace org {
@@ -45,18 +29,12 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class TcpClient;
-  class TcpClientFactory {
-  public:
-    virtual ~TcpClientFactory() {}
-  public:
-    virtual TcpClient* CreateTcpClient(std::string           /* Host */,
-                                       uint32_t              /* Port */) = 0;
-  };
+  void
+  PlainBlockingTcpServerConnector::Connect() {
+  	// TODO
+  } 
 }
 }
 }
 }
 }
-
-#endif

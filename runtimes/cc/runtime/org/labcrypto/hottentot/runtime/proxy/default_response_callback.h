@@ -21,10 +21,10 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__DEFAULT_TCP_CLIENT_FACTORY_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__DEFAULT_TCP_CLIENT_FACTORY_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__DEFAULT_RESPONSE_CALLBACK_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__DEFAULT_RESPONSE_CALLBACK_H_
 
-#include "tcp_client_factory.h"
+#include "../protocol.h"
 
 
 namespace org {
@@ -32,12 +32,21 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class DefaultTcpClientFactory : public TcpClientFactory {
+  class ServiceIO;
+  class DefaultResponseCallback : public ::org::labcrypto::hottentot::runtime::ResponseCallback {
   public:
-    virtual ~DefaultTcpClientFactory() {}
+    DefaultResponseCallback (
+      ServiceIO *serverIO
+    ) : serverIO_(serverIO) {
+    }
+    virtual ~DefaultResponseCallback() {}
   public:
-    virtual TcpClient* CreateTcpClient(std::string           /* Host */,
-                                       uint32_t              /* Port */);
+    virtual void OnResponse (
+      ::org::labcrypto::hottentot::runtime::Protocol *,
+      ::org::labcrypto::hottentot::runtime::Response *
+    );
+  private:
+    ServerIO *serverIO_;
   };
 }
 }

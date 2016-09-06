@@ -11,8 +11,8 @@
 #include <org/labcrypto/hottentot/runtime/configuration.h>
 #include <org/labcrypto/hottentot/runtime/logger.h>
 #include <org/labcrypto/hottentot/runtime/utils.h>
-#include <org/labcrypto/hottentot/runtime/request.h>
-#include <org/labcrypto/hottentot/runtime/response.h>
+// #include <org/labcrypto/hottentot/runtime/request.h>
+// #include <org/labcrypto/hottentot/runtime/response.h>
 #include <org/labcrypto/hottentot/runtime/protocol_v1.h>
 #include <org/labcrypto/hottentot/runtime/proxy/fault.h>
 #include <org/labcrypto/hottentot/runtime/proxy/tcp_client.h>

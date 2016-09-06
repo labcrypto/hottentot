@@ -40,7 +40,7 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 
-namespace org {
+/* namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
@@ -55,10 +55,14 @@ namespace proxy {
     virtual ~TcpClient() {}
   public:
     virtual bool Connect() = 0;
-    virtual void Write(unsigned char *         /* data */,
-                       uint32_t                /* Length */) = 0;
-    virtual uint32_t Read(unsigned char *      /* Buffer */,
-                          uint32_t             /* Buffer length */) = 0;
+    virtual void Write (
+      unsigned char *,
+      uint32_t
+    ) = 0;
+    virtual uint32_t Read (
+      unsigned char *,
+      uint32_t
+    ) = 0;
     virtual void Close() = 0;
     virtual int GetRemoteSocketFD() = 0;
   protected:
@@ -69,6 +73,6 @@ namespace proxy {
 }
 }
 }
-}
+} */
 
 #endif

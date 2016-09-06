@@ -9,7 +9,7 @@
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Making request object ..." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Request request;
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::RequestV1 request;
 [[[INDENT]]][[[INDENT]]]request.SetServiceId([[[SERVICE_HASH]]]);
 [[[INDENT]]][[[INDENT]]]request.SetMethodId([[[METHOD_HASH]]]);
 [[[INDENT]]][[[INDENT]]]request.SetType(::org::labcrypto::hottentot::runtime::Request::InvokeStateless);

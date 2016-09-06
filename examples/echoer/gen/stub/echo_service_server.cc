@@ -12,8 +12,8 @@
 #include <org/labcrypto/hottentot/runtime/logger.h>
 #include <org/labcrypto/hottentot/runtime/service/service_runtime.h>
 
-#include "../request_message.h"
-#include "../response_message.h"
+#include "../gen/request_message.h"
+#include "../gen/response_message.h"
 
 #include "echo_service_impl.h"
 
