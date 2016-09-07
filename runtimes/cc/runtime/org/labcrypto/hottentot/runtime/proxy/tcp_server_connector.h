@@ -21,35 +21,30 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_RESPONSE_CALLBACK_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_RESPONSE_CALLBACK_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__TCP_SERVER_CONNECTOR_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__TCP_SERVER_CONNECTOR_H_
 
-#include <map>
-
-#include "../protocol.h"
+#include "server_connector.h"
 
 
 namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
-namespace service {
-  /* class ClientIO;
-  class DefaultResponseCallback : public ::org::labcrypto::hottentot::runtime::ResponseCallback {
+namespace proxy {
+  class TcpServerConnector : public ServerConnector {
   public:
-    DefaultResponseCallback (
-      ClientIO *clientIO
-    ) : clientIO_(clientIO) {
+    TcpServerConnector() {
     }
-    virtual ~DefaultResponseCallback() {}
-  public:
-    virtual void OnResponse (
-      ::org::labcrypto::hottentot::runtime::Protocol *,
-      ::org::labcrypto::hottentot::runtime::Response *
-    );
-  private:
-    ClientIO *clientIO_;
-  }; */
+    virtual ~TcpServerConnector() {
+    }
+  protected:
+#ifdef _MSC_VER
+    SOCKET socketFD_;
+#else
+    int socketFD_;
+#endif
+  };
 }
 }
 }

@@ -24,7 +24,7 @@
 #ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_TCP_SERVER_CONNECTOR_H_
 #define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_TCP_SERVER_CONNECTOR_H_
 
-#include "server_connector.h"
+#include "tcp_server_connector.h"
 
 
 namespace org {
@@ -32,7 +32,7 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class PlainBlockingTcpServerConnector : public ServerConnector {
+  class PlainBlockingTcpServerConnector : public TcpServerConnector {
   public:
     PlainBlockingTcpServerConnector (
     	std::string host,

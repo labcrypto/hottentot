@@ -8,8 +8,7 @@
  
 #include <string.h>
 
-#include <org/labcrypto/hottentot/runtime/request.h>
-#include <org/labcrypto/hottentot/runtime/response.h>
+#include <org/labcrypto/hottentot/runtime/protocol_v1.h>
 
 #include "echo_service_request_handler.h"
 #include "abstract_echo_service.h"
@@ -25,15 +24,22 @@ namespace examples {
 namespace echoer {
 namespace service {
   void 
-  EchoServiceRequestHandler::HandleRequest(::org::labcrypto::hottentot::runtime::Request &request, ::org::labcrypto::hottentot::runtime::Response &response) {
-    if (request.GetMethodId() == 2482416905) {
+  EchoServiceRequestHandler::HandleRequest (
+    ::org::labcrypto::hottentot::runtime::Request &request, 
+    ::org::labcrypto::hottentot::runtime::Response &response
+  ) {
+    ::org::labcrypto::hottentot::runtime::RequestV1 &requestV1 = 
+      (::org::labcrypto::hottentot::runtime::RequestV1 &)request;
+    ::org::labcrypto::hottentot::runtime::ResponseV1 &responseV1 = 
+      (::org::labcrypto::hottentot::runtime::ResponseV1 &)response;
+    if (requestV1.GetMethodId() == 2482416905) {
       ::ir::ntnaeem::hottentot::examples::echoer::service::AbstractEchoService *serviceObject = 
         dynamic_cast< ::ir::ntnaeem::hottentot::examples::echoer::service::AbstractEchoService*>(service_);
       /*
        * Deserialization and making input variables
        */
       ::ir::ntnaeem::hottentot::examples::echoer::RequestMessage req;
-      req.Deserialize(request.GetArgumentData(0), request.GetArgumentLength(0));
+      req.Deserialize(requestV1.GetArgumentData(0), requestV1.GetArgumentLength(0));
       /*
        * Calling service method
        */
@@ -58,15 +64,15 @@ namespace service {
         ::org::labcrypto::hottentot::Utf8String faultMessage(hotContext.GetFaultMessage());
         serializedData = faultMessage.Serialize(&serializedDataLength);
       }
-      response.SetStatusCode(hotContext.GetResponseStatusCode());
-      response.SetData(serializedData);
-      response.SetDataLength(serializedDataLength);
+      responseV1.SetStatusCode(hotContext.GetResponseStatusCode());
+      responseV1.SetData(serializedData);
+      responseV1.SetDataLength(serializedDataLength);
       return;
     }
     char errorMessage[] = "Method not found.";
-    response.SetStatusCode(1);
-    response.SetData((unsigned char*)errorMessage);
-    response.SetDataLength(strlen(errorMessage));
+    responseV1.SetStatusCode(1);
+    responseV1.SetData((unsigned char*)errorMessage);
+    responseV1.SetDataLength(strlen(errorMessage));
   }
 } // END OF NAMESPACE service
 } // END OF NAMESPACE echoer

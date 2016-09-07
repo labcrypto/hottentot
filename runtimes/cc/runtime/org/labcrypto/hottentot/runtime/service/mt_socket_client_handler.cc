@@ -108,9 +108,9 @@ namespace service {
       ); // TODO: User factory
     protocol->SetRequestCallback(requestCallback);
     // TODO: Create ResponseCallback
-    ResponseCallback *responseCallback = 
+    /* ResponseCallback *responseCallback = 
       new DefaultResponseCallback(clientIO); // TODO: User factory
-    protocol->SetResponseCallback(responseCallback);
+    protocol->SetResponseCallback(responseCallback); */
     while (ok) {
       int numOfReadBytes = clientIO->Read(buffer, 256);
       if (numOfReadBytes <= 0) {

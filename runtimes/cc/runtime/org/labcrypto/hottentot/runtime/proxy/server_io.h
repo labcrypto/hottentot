@@ -50,7 +50,7 @@ namespace runtime {
 namespace proxy {
   class ServerIO {
   public:
-    ServerIO () {
+    ServerIO() {
     }
     virtual ~ServerIO() {
     }

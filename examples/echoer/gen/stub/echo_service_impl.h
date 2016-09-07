@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include <string>
 
-#include "../gen/service/abstract_echo_service.h"
+#include "../service/abstract_echo_service.h"
 
 
 namespace ir {

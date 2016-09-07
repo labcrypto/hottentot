@@ -14,10 +14,12 @@
 // #include <org/labcrypto/hottentot/runtime/request.h>
 // #include <org/labcrypto/hottentot/runtime/response.h>
 #include <org/labcrypto/hottentot/runtime/protocol_v1.h>
-#include <org/labcrypto/hottentot/runtime/proxy/fault.h>
-#include <org/labcrypto/hottentot/runtime/proxy/tcp_client.h>
 #include <org/labcrypto/hottentot/runtime/proxy/proxy_runtime.h>
-#include <org/labcrypto/hottentot/runtime/proxy/tcp_client_factory.h>
+#include <org/labcrypto/hottentot/runtime/proxy/default_response_callback.h>
+#include <org/labcrypto/hottentot/runtime/proxy/fault.h>
+#include <org/labcrypto/hottentot/runtime/proxy/server_connector.h> // CCC
+#include <org/labcrypto/hottentot/runtime/proxy/server_io.h> // CCC
+#include <org/labcrypto/hottentot/runtime/proxy/server_connector_factory.h> // CCC
 
 #include "echo_service_proxy.h" 
 
@@ -44,10 +46,11 @@ namespace proxy {
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "Making request object ..." << std::endl;
     }
-    ::org::labcrypto::hottentot::runtime::Request request;
+    // CCC
+    ::org::labcrypto::hottentot::runtime::RequestV1 request;
     request.SetServiceId(3639300462);
     request.SetMethodId(2482416905);
-    request.SetType(::org::labcrypto::hottentot::runtime::Request::InvokeStateless);
+    request.SetType(::org::labcrypto::hottentot::runtime::RequestV1::InvokeStateless);
     /*
      * Serialize arguments
      */
@@ -104,18 +107,20 @@ namespace proxy {
     /*
      * Serialize request according to HOTP
      */
-    ServerIO *serveIO = serverConnector->CreateServerIO();
-    ::org::labcrypto::hottentot::runtime::ResponseCallback *resposneCallback =
-      new ::org::labcrypto::hottentot::runtime::proxy::DefaultResponseCallback(serveIO);
+    ::org::labcrypto::hottentot::runtime::proxy::ServerIO *serverIO = 
+      serverConnector->CreateServerIO();
+    ::org::labcrypto::hottentot::runtime::ResponseCallback *responseCallback =
+      new ::org::labcrypto::hottentot::runtime::proxy::DefaultResponseCallback(serverIO);
     ::org::labcrypto::hottentot::runtime::Protocol *protocol = 
       new ::org::labcrypto::hottentot::runtime::ProtocolV1(/* tcpClient->GetRemoteSocketFD() */); // TODO(kamran): Use factory.
+    protocol->SetResponseCallback(responseCallback);
     uint32_t requestSerializedDataLength = 0;
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "Serializing request object ..." << std::endl;
     }
-    unsigned char *requestSerializedData = protocol->SerializeRequest(request, &requestSerializedDataLength);
+    unsigned char *requestSerializedData = protocol->SerializeRequest(&request, &requestSerializedDataLength);
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -171,7 +176,7 @@ namespace proxy {
       ::org::labcrypto::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
     }
     try {
-      serveIO->Write(sendData, sendLength);
+      serverIO->Write(sendData, sendLength);
       if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
         ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -180,14 +185,14 @@ namespace proxy {
     } catch (std::exception &e) {
       delete protocol;
       delete serverConnector;
-      delete serveIO;
+      delete serverIO;
       delete [] sendData;
       delete [] requestSerializedData;
       throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: " + e.what());
     } catch (...) {
       delete protocol;
       delete serverConnector;
-      delete serveIO;
+      delete serverIO;
       delete [] sendData;
       delete [] requestSerializedData;
       throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Exception occurred while writing to server socket.");
@@ -203,26 +208,27 @@ namespace proxy {
           "Waiting for response ..." << std::endl;
     }
     unsigned char buffer[256];
-    while (!resposneCallback->IsResponseProcessed()) { // CCC
-      int numOfReadBytes = tcpClient->Read(buffer, 256);
+    while (!responseCallback->IsResponseProcessed()) { // CCC
+      int numOfReadBytes = serverIO->Read(buffer, 256);
       if (numOfReadBytes == 0) {
         delete protocol;
         delete serverConnector;
-      delete serveIO;
+      delete serverIO;
         throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Service is gone.");
       }
       if (numOfReadBytes < 0) {
         delete protocol;
         delete serverConnector;
-        delete serveIO;
+        delete serverIO;
         throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Read from service failed.");
       }
       protocol->FeedResponseData(buffer, numOfReadBytes);
     }
     delete protocol;
     delete serverConnector;
-    delete serveIO;
+    delete serverIO;
     // CCC
+  }
 } // END OF NAMESPACE proxy
 } // END OF NAMESPACE echoer
 } // END OF NAMESPACE examples

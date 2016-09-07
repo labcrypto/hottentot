@@ -47,7 +47,7 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class TcpClientFactory;
+  class ServerConnectorFactory;
   class ProxyRuntime {
   public:
     static void Init(int argc, char **argv);
