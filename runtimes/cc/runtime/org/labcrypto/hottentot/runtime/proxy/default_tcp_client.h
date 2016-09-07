@@ -32,24 +32,30 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class DefaultTcpClient : public TcpClient {
+  /* class DefaultTcpClient : public TcpClient {
   public:
-    DefaultTcpClient(std::string /* Host */,
-                     uint32_t    /* Port */);
+    DefaultTcpClient (
+      std::string,
+      uint32_t
+    );
     virtual ~DefaultTcpClient();
   public:
     virtual bool Connect();
-    virtual void Write(unsigned char *         /* data */,
-                       uint32_t                /* Length */);
-    virtual uint32_t Read(unsigned char *          /* Buffer */,
-                          uint32_t                 /* Buffer length */);
+    virtual void Write (
+      unsigned char *,
+      uint32_t
+    );
+    virtual uint32_t Read (
+      unsigned char *,
+      uint32_t
+    );
     virtual void Close();
     virtual int GetRemoteSocketFD() {
       return socketFD_;
     }
   private:
     int socketFD_;
-  };
+  }; */
 }
 }
 }

@@ -22,6 +22,7 @@
  */
  
 #include "plain_blocking_tcp_server_connector.h"
+#include "plain_blocking_socket_server_io.h"
 
 
 namespace org {
@@ -29,9 +30,124 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  void
+  ServerIO* 
+  PlainBlockingTcpServerConnector::CreateServerIO() {
+    return new PlainBlockingSocketServerIO(socketFD_);
+  }
+  bool
   PlainBlockingTcpServerConnector::Connect() {
-  	// TODO
+#ifndef _MSC_VER
+    struct sockaddr_in serverAddr;
+    struct hostent *server;
+    socketFD_ = socket(AF_INET, SOCK_STREAM, 0);
+    if (socketFD_ < 0) {
+      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+        std::cerr << 
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+            "ERROR opening socket" << std::endl;
+      }
+      // exit(1);
+      return false;
+    }
+    server = gethostbyname(host_.c_str());
+    if (server == NULL) {
+      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+        std::cerr << 
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+            "ERROR, no such host" << std::endl;
+      }
+      close(socketFD_);
+      // exit(1);
+      return false;
+    }
+    memset((char *) &serverAddr, 0, sizeof(serverAddr));
+    serverAddr.sin_family = AF_INET;
+    // bcopy((char *)&serverAddr.sin_addr.s_addr, (char *)server->h_addr, server->h_length);
+    serverAddr.sin_port = htons(port_);
+    if (inet_pton(AF_INET, host_.c_str(), &serverAddr.sin_addr) <= 0) {
+      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+        std::cerr << 
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+            "ERROR setting host" << std::endl;
+      }
+      close(socketFD_);
+      // exit(1);
+      return false;
+    }
+    if (::org::labcrypto::hottentot::runtime::Configuration::SocketReadTimeout() > 0) {
+      struct timeval tv;
+      tv.tv_sec = ::org::labcrypto::hottentot::runtime::Configuration::SocketReadTimeout();
+      tv.tv_usec = 0;
+      if (setsockopt(socketFD_, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval)) < 0) {
+        if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+          std::cerr << 
+            "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+              "ERROR setting read timeout." << std::endl;
+        }
+        close(socketFD_);
+        // exit(1);
+        return false;
+      }
+    }
+    if (connect(socketFD_, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
+      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+        std::cerr << 
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+            "ERROR connecting" << std::endl;
+      }
+      close(socketFD_);
+      // exit(1);
+      return false;
+    }
+#else
+    WSADATA wsaData;
+    struct addrinfo *result = NULL,
+                    hints;
+    // Initialize Winsock
+    int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+    if (iResult != 0) {
+        printf("WSAStartup failed with error: %d\n", iResult);
+        return false;
+    }
+    ZeroMemory(&hints, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+    // Resolve the server address and port
+    std::stringstream ss;
+    ss << port_;
+    iResult = getaddrinfo(host_.c_str(), ss.str().c_str(), &hints, &result);
+    if ( iResult != 0 ) {
+        printf("getaddrinfo failed with error: %d\n", iResult);
+        WSACleanup();
+        return false;
+    }
+    // Create a SOCKET for connecting to server
+    socketFD_ = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+    if (socketFD_ == INVALID_SOCKET) {
+        printf("socket failed with error: %ld\n", WSAGetLastError());
+        WSACleanup();
+        return false;
+    }
+    // Set recv timeout
+    if (::org::labcrypto::hottentot::runtime::Configuration::SocketReadTimeout() > 0) {
+      int nTimeout = ::org::labcrypto::hottentot::runtime::Configuration::SocketReadTimeout() * 1000;
+      if (setsockopt(socketFD_, SOL_SOCKET, SO_RCVTIMEO, (const char*)&nTimeout, sizeof(int)) != 0) {
+        printf("setsockopt failed with error: %ld\n", WSAGetLastError());
+        WSACleanup();
+        return false;
+      }
+    }
+    // Connect to server.
+    iResult = connect(socketFD_, result->ai_addr, (int)result->ai_addrlen);
+    if (iResult == SOCKET_ERROR) {
+      closesocket(socketFD_);
+      socketFD_ = INVALID_SOCKET;
+      return false;
+    }
+    freeaddrinfo(result);
+#endif
+    return true;
   } 
 }
 }

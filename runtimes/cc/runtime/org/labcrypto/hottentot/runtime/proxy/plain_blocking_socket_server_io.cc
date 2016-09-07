@@ -21,10 +21,7 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_TCP_SERVER_CONNECTOR_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_TCP_SERVER_CONNECTOR_H_
-
-#include "server_connector.h"
+#include "plain_blocking_socket_server_io.h"
 
 
 namespace org {
@@ -32,28 +29,26 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class PlainBlockingTcpServerConnector : public ServerConnector {
-  public:
-    PlainBlockingTcpServerConnector (
-    	std::string host,
-      uint16_t port
-    ) : host_(host),
-        port_(port) {
-    }
-    virtual ~PlainBlockingTcpServerConnector() {
-    }
-  public:
-    virtual ServerIO* CreateServerIO();
-  public:
-    virtual bool Connect();
-  public:
-    std::string host_;
-    uint16_t port_;
-  };
+  uint32_t 
+  PlainBlockingSocketServerIO::Read (
+    unsigned char *buffer, 
+    uint32_t length    
+  ) {
+    // TODO
+  }
+  void 
+  PlainBlockingSocketServerIO::Write (
+    unsigned char *buffer,
+    uint32_t length
+  ) {
+    // TODO
+  }
+  void 
+  PlainBlockingSocketServerIO::Close() {
+    // TODO
+  }
 }
 }
 }
 }
 }
-
-#endif

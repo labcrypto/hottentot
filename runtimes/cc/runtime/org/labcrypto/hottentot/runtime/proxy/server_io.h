@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__SERVER_IO_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__SERVER_IO_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_IO_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_IO_H_
 
 #ifdef _MSC_VER
 #include <windows.h>
@@ -50,11 +50,7 @@ namespace runtime {
 namespace proxy {
   class ServerIO {
   public:
-    ServerIO (
-      std::string host,
-      uint32_t port
-    ) : host_(host),
-        port_(port) {
+    ServerIO () {
     }
     virtual ~ServerIO() {
     }
@@ -68,8 +64,6 @@ namespace proxy {
       uint32_t length
     ) = 0;
     virtual void Close() = 0;
-  private:
-    
   };
 }
 }

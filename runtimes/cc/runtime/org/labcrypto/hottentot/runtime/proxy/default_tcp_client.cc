@@ -73,7 +73,7 @@ namespace proxy {
   }
   DefaultTcpClient::~DefaultTcpClient() {
   }
-  bool 
+  /* bool 
   DefaultTcpClient::Connect() {
 #ifndef _MSC_VER
     struct sockaddr_in serverAddr;
@@ -187,7 +187,7 @@ namespace proxy {
     freeaddrinfo(result);
 #endif
     return true;
-  }
+  } */
   void 
   DefaultTcpClient::Write(unsigned char *data,
                           uint32_t       dataLength) {

@@ -38,8 +38,8 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #include "default_response_callback.h"
-#include "request_handler.h"
 #include "server_io.h"
+#include "fault.h"
 
 // #include "../response.h"
 // #include "../request.h"
@@ -47,6 +47,8 @@ typedef unsigned __int64 uint64_t;
 #include "../logger.h"
 #include "../utils.h"
 #include "../configuration.h"
+
+#include "../../utf8_string.h"
 
 
 namespace org {
@@ -65,16 +67,21 @@ namespace proxy {
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "Response is received." << std::endl;
     }
-    ResponseV1 *responseV1 = (Response *)response;
+    /* ResponseV1 *responseV1 = (ResponseV1 *)response;
     if (responseV1->GetStatusCode() == 0) {
       if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
         ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Response", responseV1->GetData(), responseV1->GetDataLength());
       }
-      out.Deserialize(responseV1->GetData(), responseV1->GetDataLength());
-    } else {
+      response_ = new ResponseV1();
+      response_->Deserialize(responseV1->GetData(), responseV1->GetDataLength());
+      responseReady_ = true;
+    } else { */
+    response_ = response;
+    if (response_->GetStatusCode() != 0) {
+      ResponseV1 *responseV1 = (ResponseV1 *)response;
       ::org::labcrypto::hottentot::Utf8String faultMessage;
       faultMessage.Deserialize(responseV1->GetData(), responseV1->GetDataLength());
-      uint8_t responseStatusCode = responseV1->GetStatusCode();
+      uint8_t responseStatusCode = response_->GetStatusCode();
       serverIO_->Close();
       // delete protocol;
       // delete tcpClient;

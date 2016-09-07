@@ -83,10 +83,17 @@ namespace proxy {
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "Connecting to server " << host_ << ":" << port_ << " ..." << std::endl;
     }
-    ::org::labcrypto::hottentot::runtime::proxy::TcpClient *tcpClient = 
-        ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
-    if (!tcpClient->Connect()) {
-      delete tcpClient;
+    // ::org::labcrypto::hottentot::runtime::proxy::TcpClient *tcpClient = 
+    //    ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
+    // if (!tcpClient->Connect()) {
+    //  delete tcpClient;
+    //  throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Could not connect.");
+    // }
+    ::org::labcrypto::hottentot::runtime::proxy::ServerConnector *serverConnector =
+      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServerConnectorFactory()->
+        CreateTcpServerConnector(host_, port_);
+    if (serverConnector->Connect()) {
+      delete serverConnector;
       throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Could not connect.");
     }
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
@@ -97,7 +104,11 @@ namespace proxy {
     /*
      * Serialize request according to HOTP
      */
-    ::org::labcrypto::hottentot::runtime::Protocol *protocol = new ::org::labcrypto::hottentot::runtime::ProtocolV1(tcpClient->GetRemoteSocketFD()); // TODO(kamran): Use factory.
+    ServerIO *serveIO = serverConnector->CreateServerIO();
+    ::org::labcrypto::hottentot::runtime::ResponseCallback *resposneCallback =
+      new ::org::labcrypto::hottentot::runtime::proxy::DefaultResponseCallback(serveIO);
+    ::org::labcrypto::hottentot::runtime::Protocol *protocol = 
+      new ::org::labcrypto::hottentot::runtime::ProtocolV1(/* tcpClient->GetRemoteSocketFD() */); // TODO(kamran): Use factory.
     uint32_t requestSerializedDataLength = 0;
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
@@ -160,7 +171,7 @@ namespace proxy {
       ::org::labcrypto::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
     }
     try {
-      tcpClient->Write(sendData, sendLength);
+      serveIO->Write(sendData, sendLength);
       if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
         ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -168,13 +179,15 @@ namespace proxy {
       }
     } catch (std::exception &e) {
       delete protocol;
-      delete tcpClient;
+      delete serverConnector;
+      delete serveIO;
       delete [] sendData;
       delete [] requestSerializedData;
       throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: " + e.what());
     } catch (...) {
       delete protocol;
-      delete tcpClient;
+      delete serverConnector;
+      delete serveIO;
       delete [] sendData;
       delete [] requestSerializedData;
       throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Exception occurred while writing to server socket.");
@@ -190,20 +203,25 @@ namespace proxy {
           "Waiting for response ..." << std::endl;
     }
     unsigned char buffer[256];
-    while (true) { // CCC
+    while (!resposneCallback->IsResponseProcessed()) { // CCC
       int numOfReadBytes = tcpClient->Read(buffer, 256);
       if (numOfReadBytes == 0) {
         delete protocol;
-        delete tcpClient;
+        delete serverConnector;
+      delete serveIO;
         throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Service is gone.");
       }
       if (numOfReadBytes < 0) {
         delete protocol;
-        delete tcpClient;
+        delete serverConnector;
+        delete serveIO;
         throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Read from service failed.");
       }
       protocol->FeedResponseData(buffer, numOfReadBytes);
     }
+    delete protocol;
+    delete serverConnector;
+    delete serveIO;
     // CCC
 } // END OF NAMESPACE proxy
 } // END OF NAMESPACE echoer

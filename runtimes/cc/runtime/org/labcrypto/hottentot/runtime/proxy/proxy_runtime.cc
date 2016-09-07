@@ -27,9 +27,8 @@
 #endif
  
 #include "proxy_runtime.h"
-#include "tcp_client.h"
-#include "tcp_client_factory.h"
-#include "default_tcp_client_factory.h"
+#include "server_connector.h"
+#include "default_server_connector_factory.h"
 
 #include "../configuration.h"
 
@@ -39,7 +38,7 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  TcpClientFactory* ProxyRuntime::tcpClientFactory_ = 0;
+  ServerConnectorFactory* ProxyRuntime::serverConnectorFactory_ = NULL;
   bool ProxyRuntime::initialized_ = false;
   void
   ProxyRuntime::Init(int argc,
@@ -58,17 +57,17 @@ namespace proxy {
     if (!initialized_) {
       return;
     }
-    if (tcpClientFactory_) {
-      delete tcpClientFactory_;
+    if (serverConnectorFactory_) {
+      delete serverConnectorFactory_;
     }
     initialized_ = false;
   }
-  TcpClientFactory*
-  ProxyRuntime::GetTcpClientFactory() {
-    if (tcpClientFactory_ == 0) {
-      tcpClientFactory_ = new DefaultTcpClientFactory;
+  ServerConnectorFactory*
+  ProxyRuntime::GetServerConnectorFactory() {
+    if (serverConnectorFactory_ == 0) {
+      serverConnectorFactory_ = new DefaultServerConnectorFactory;
     }
-    return tcpClientFactory_;
+    return serverConnectorFactory_;
   }
 }
 }

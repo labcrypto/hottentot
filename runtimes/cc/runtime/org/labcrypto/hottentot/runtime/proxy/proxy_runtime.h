@@ -52,12 +52,9 @@ namespace proxy {
   public:
     static void Init(int argc, char **argv);
     static void Shutdown();
-    static TcpClientFactory* GetTcpClientFactory();
-    inline static void SetTcpClientFactory(TcpClientFactory *tcpClientFactory) {
-      tcpClientFactory_ = tcpClientFactory;
-    }
+    static ServerConnectorFactory* GetServerConnectorFactory();
   private:
-    static TcpClientFactory *tcpClientFactory_;
+    static ServerConnectorFactory *serverConnectorFactory_;
     static bool initialized_;
   };
 }

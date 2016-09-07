@@ -21,10 +21,10 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__SOCKET_SERVER_IO_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__SOCKET_SERVER_IO_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SOCKET_SERVER_IO_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SOCKET_SERVER_IO_H_
 
-#include "server_io.h"
+#include "socket_server_io.h"
 
 
 namespace org {
@@ -32,28 +32,28 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class SocketServerIO : public ServerIO {
+  class PlainBlockingSocketServerIO : public SocketServerIO {
   public:
-    SocketServerIO (
-      std::string host,
-      uint32_t port
-    ) : host_(host),
-        port_(port) {
+    PlainBlockingSocketServerIO (
+#ifdef _MSC_VER
+    SOCKET socketFD
+#else
+    int socketFD
+#endif
+    ) : SocketServerIO(socketFD) {
     }
-    virtual ~SocketServerIO() {
+    virtual ~PlainBlockingSocketServerIO() {
     }
   public:
     virtual uint32_t Read (
       unsigned char *buffer, 
       uint32_t length
-    ) = 0;
+    );
     virtual void Write (
       unsigned char *buffer,
       uint32_t length
-    ) = 0;
-    virtual void Close() = 0;
-  private:
-    
+    );
+    virtual void Close();
   };
 }
 }

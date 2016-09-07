@@ -59,8 +59,20 @@ namespace runtime {
   };
   class Response {
   protected:
-    Response() {
+    Response()
+      : statusCode_(0) {
     }
+  public:
+    uint16_t
+    GetStatusCode() {
+      return statusCode_;
+    }
+    void
+    SetStatusCode(uint16_t statusCode) {
+      statusCode_ = statusCode;
+    }
+  protected:
+    uint16_t statusCode_;
   };
   class RequestCallback {
   public:
@@ -76,15 +88,24 @@ namespace runtime {
   };
   class ResponseCallback {
   public:
-    ResponseCallback () {
+    ResponseCallback ()
+      : responseProcessed_(false) {
     }
     virtual ~ResponseCallback() {
+    }
+  public:
+    bool
+    IsResponseProcessed() {
+      return responseProcessed_;
     }
   public:
     virtual void OnResponse (
       Protocol *,
       Response *
     ) = 0;
+  protected:
+    bool responseProcessed_;
+    uint16_t statusCode_;
   };
   class Protocol {
   public:

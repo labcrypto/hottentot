@@ -48,13 +48,16 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
+  class ServerIO; 
   class ServerConnector {
   public:
     ServerConnector () {
     }
     virtual ~ServerConnector() {}
   public:
-    virtual void Connect() = 0;
+	  virtual ServerIO* CreateServerIO() = 0;
+  public:
+    virtual bool Connect() = 0;
   };
 }
 }
