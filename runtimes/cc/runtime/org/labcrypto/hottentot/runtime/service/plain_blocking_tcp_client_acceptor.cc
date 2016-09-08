@@ -160,9 +160,10 @@ namespace service {
       }
       thread_ = res;
 #endif
+    } else {
+      printf("Error: Calling Start() method for second time.");
+      exit(EXIT_FAILURE);
     }
-    printf("Error: Calling Start() method for second time.");
-    exit(EXIT_FAILURE);
   }
 #ifndef _MSC_VER
   void*

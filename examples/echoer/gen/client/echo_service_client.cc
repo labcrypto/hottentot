@@ -38,8 +38,12 @@ main(int argc, char **argv) {
     }
     try {
       // ====================================================
-      // TODO: Do whatever you want with proxy objects.
-      // TODO: Delete allocated objects
+      ::ir::ntnaeem::hottentot::examples::echoer::RequestMessage request;
+      ::ir::ntnaeem::hottentot::examples::echoer::ResponseMessage response;
+      ::org::labcrypto::hottentot::Utf8String name("Kamran");
+      request.SetName(name);
+      proxy->EchoMessage(request, response);
+      std::cout << "RESPONSE: " << response.GetMessage() << std::endl;
       // ====================================================
     } catch (std::runtime_error &e) {
       ::org::labcrypto::hottentot::runtime::Logger::GetError() << 

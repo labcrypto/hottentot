@@ -92,6 +92,7 @@ namespace proxy {
         );
     }
     serverIO_->Close();
+    responseProcessed_ = true;
     // delete protocol;
     // delete tcpClient;
   }

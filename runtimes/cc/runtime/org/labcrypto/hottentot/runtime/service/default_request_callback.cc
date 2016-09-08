@@ -23,6 +23,8 @@
  
 #include <iostream>
 #include <stdexcept>
+#include <limits>
+
 
 #ifdef _MSC_VER
 typedef __int8 int8_t;
@@ -66,7 +68,7 @@ namespace service {
           "A new request is received." << std::endl;
     }
     if (requestHandlers_->count(request->GetServiceId()) > 0) {
-      Response *response = new ResponseV1; // TODO USe factory
+      Response *response = new ResponseV1; // TODO Use factory
       RequestHandler *requestHandler = requestHandlers_->find(request->GetServiceId())->second;
       if (requestHandler == 0) {
         throw std::runtime_error("Request handler is null.");
@@ -78,9 +80,66 @@ namespace service {
       }
       requestHandler->HandleRequest(*request, *response);
       // return response;
-      uint32_t length = 0;
-      unsigned char *data = protocol->SerializeResponse(response, &length);
-      clientIO_->Write(data, length);
+      uint32_t responseSerializedLength = 0;
+      unsigned char *responseSerializedData = protocol->SerializeResponse(response, &responseSerializedLength);
+      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+        ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+          "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+            "Writing response back to client ..." << std::endl;
+      }
+      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+        ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Serialized response", responseSerializedData, responseSerializedLength);
+      }
+      uint32_t sendLength = 0;
+      if (responseSerializedLength < 128) {
+        sendLength = 1 + responseSerializedLength;
+      } else if (responseSerializedLength < 256) {
+        sendLength = 2 + responseSerializedLength;
+      } else if (responseSerializedLength < 256 * 256) {
+        sendLength = 3 + responseSerializedLength;
+      } else if (responseSerializedLength < 256 * 256 * 256) {
+        sendLength = 4 + responseSerializedLength;
+      } else if (responseSerializedLength <= std::numeric_limits<uint32_t>::max()) {
+        sendLength = 5 + responseSerializedLength;
+      }
+      unsigned char *sendData = new unsigned char[sendLength];
+      uint32_t c = 0;
+      if (responseSerializedLength < 128) {
+        sendData[c++] = responseSerializedLength;
+      } else if (responseSerializedLength < 256) {
+        sendData[c++] = 0x81;
+        sendData[c++] = responseSerializedLength;
+      } else if (responseSerializedLength < 256 * 256) {
+        sendData[c++] = 0x82;
+        sendData[c++] = responseSerializedLength / 256;
+        sendData[c++] = responseSerializedLength % 256;
+      } else if (responseSerializedLength < 256 * 256 * 256) {
+        sendData[c] = 0x83;
+        sendData[c + 1] = responseSerializedLength / (256 * 256);
+        sendData[c + 2] = (responseSerializedLength - sendData[c + 1] * 256 * 256) / 256;
+        sendData[c + 3] = responseSerializedLength % (256 * 256);
+        c += 4;
+      } else if (responseSerializedLength <= std::numeric_limits<uint32_t>::max()) {
+        sendData[c] = 0x84;
+        sendData[c + 1] = responseSerializedLength / (256 * 256 * 256);
+        sendData[c + 2] = (responseSerializedLength - sendData[c + 1] * 256 * 256 * 256) / (256 * 256);
+        sendData[c + 3] = (responseSerializedLength - sendData[c + 1] * 256 * 256 * 256 - sendData[c + 2] * 256 * 256) / 256;
+        sendData[c + 4] = responseSerializedLength % (256 * 256 * 256);
+        c += 5;
+      }
+      for (unsigned int k = 0; k < responseSerializedLength; k++) {
+        sendData[c++] = responseSerializedData[k];
+      }
+      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+        ::org::labcrypto::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
+      } 
+      try {
+        clientIO_->Write(sendData, sendLength);
+      } catch (std::exception &e) {
+        ::org::labcrypto::hottentot::runtime::Logger::GetError() <<
+          "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+             e.what() << std::endl;
+      }
       clientIO_->Close();
     } else {
       throw std::runtime_error("Service id is not found.");           

@@ -95,7 +95,7 @@ namespace proxy {
     ::org::labcrypto::hottentot::runtime::proxy::ServerConnector *serverConnector =
       ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServerConnectorFactory()->
         CreateTcpServerConnector(host_, port_);
-    if (serverConnector->Connect()) {
+    if (!serverConnector->Connect()) {
       delete serverConnector;
       throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Could not connect.");
     }
@@ -172,7 +172,7 @@ namespace proxy {
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-          "Writing " << sendLength << "    Bytes to socket ..." << std::endl;
+          "Writing " << sendLength << " Bytes to socket ..." << std::endl;
       ::org::labcrypto::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
     }
     try {
@@ -213,7 +213,7 @@ namespace proxy {
       if (numOfReadBytes == 0) {
         delete protocol;
         delete serverConnector;
-      delete serverIO;
+        delete serverIO;
         throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Service is gone.");
       }
       if (numOfReadBytes < 0) {
@@ -224,11 +224,28 @@ namespace proxy {
       }
       protocol->FeedResponseData(buffer, numOfReadBytes);
     }
+    /*
+     * Response deserialization
+     */
+    ::org::labcrypto::hottentot::runtime::ResponseV1 *responseV1 = 
+      (::org::labcrypto::hottentot::runtime::ResponseV1 *)responseCallback->GetResponse();
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Utils::PrintArray (
+        "Response", 
+        responseV1->GetData(), 
+        responseV1->GetDataLength()
+      );
+    }
+    out.Deserialize (
+      responseV1->GetData(), 
+      responseV1->GetDataLength()
+    );
     delete protocol;
     delete serverConnector;
     delete serverIO;
     // CCC
   }
+
 } // END OF NAMESPACE proxy
 } // END OF NAMESPACE echoer
 } // END OF NAMESPACE examples

@@ -89,7 +89,8 @@ namespace runtime {
   class ResponseCallback {
   public:
     ResponseCallback ()
-      : responseProcessed_(false) {
+      : response_(NULL),
+        responseProcessed_(false) {
     }
     virtual ~ResponseCallback() {
     }
@@ -98,12 +99,17 @@ namespace runtime {
     IsResponseProcessed() {
       return responseProcessed_;
     }
+    Response*
+    GetResponse() {
+      return response_;
+    }
   public:
     virtual void OnResponse (
       Protocol *,
       Response *
     ) = 0;
   protected:
+    Response *response_;
     bool responseProcessed_;
     uint16_t statusCode_;
   };

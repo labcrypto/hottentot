@@ -38,8 +38,7 @@ namespace proxy {
     DefaultResponseCallback (
       ServerIO *serverIO
     ) : serverIO_(serverIO),
-        responseReady_(false),
-        response_(NULL) {
+        responseReady_(false) {
     }
     virtual ~DefaultResponseCallback() {}
   public:
@@ -52,14 +51,9 @@ namespace proxy {
     IsResponseReady() {
       return responseReady_;
     }
-    Response*
-    GetResponse() {
-      return response_;
-    }
   private:
     ServerIO *serverIO_;
     bool responseReady_;
-    Response *response_;
   };
 }
 }

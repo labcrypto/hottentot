@@ -178,7 +178,7 @@ namespace runtime {
   ) {
     ResponseV1 *responseV1 = (ResponseV1 *)response;
     uint32_t actualLength = 0;
-    actualLength += 1;  // Status Code
+    actualLength += 2;  // Status Code
     if (responseV1->GetDataLength() < 128) {
       actualLength += 1;
       actualLength += responseV1->GetDataLength();
@@ -198,7 +198,8 @@ namespace runtime {
     *length = actualLength;
     unsigned char *data = new unsigned char[*length];
     unsigned int c = 0;
-    data[c++] = responseV1->GetStatusCode();
+    data[c++] = responseV1->GetStatusCode() / 256;
+    data[c++] = responseV1->GetStatusCode() % 256;
     if (responseV1->GetDataLength() < 128) {
       data[c++] = responseV1->GetDataLength();
     } else if (responseV1->GetDataLength() < 256) {
@@ -320,7 +321,8 @@ namespace runtime {
   ) {
     ResponseV1 *responseV1 = new ResponseV1;
     uint32_t c = 0;
-    responseV1->SetStatusCode(data[c++]);
+    responseV1->SetStatusCode(data[c] * 256 + data[c + 1]);
+    c += 2;
     uint32_t resultLength = 0;
     if (data[c] == 0x00) {
       responseV1->SetData(0);
@@ -471,7 +473,7 @@ namespace runtime {
               if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
                 ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
                   "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
-                    "Request allback finished successfully." << std::endl;
+                    "Request callback finished successfully." << std::endl;
               }
               /*if (response) {
                 uint32_t responseSerializedLength = 0;
@@ -642,6 +644,16 @@ namespace runtime {
               currentState_ = ReadingLengthState;
               // isResponseComplete_ = true;
               delete [] responseData;
+              if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+                ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+                  "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                    "Calling response callback ..." << std::endl;
+              }
+              if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+                ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+                  "[" << Utils::GetCurrentUTCTimeString() << "]: " <<
+                    "Response callback finished successfully." << std::endl;
+              }
               responseCallback_->OnResponse(this, response);
             }
           }
