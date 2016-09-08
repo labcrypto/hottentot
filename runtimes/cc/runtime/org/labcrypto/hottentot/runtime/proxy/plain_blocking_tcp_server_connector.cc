@@ -190,13 +190,6 @@ namespace proxy {
     }
     return true;
   }
-  void 
-  PlainBlockingServerConnectCallback::OnConnect (
-    ServerConnector *serverConnector,
-    ::org::labcrypto::hottentot::runtime::Request *request
-  ) {
-    // TODO
-  }
 }
 }
 }

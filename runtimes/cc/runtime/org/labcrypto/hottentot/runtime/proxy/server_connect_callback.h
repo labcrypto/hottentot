@@ -62,6 +62,7 @@ namespace proxy {
     }
   public:
     virtual void OnConnect() = 0;
+    virtual void OnConnectFailure() = 0;
   protected:
     ServerConnector *serverConnector_;
     ::org::labcrypto::hottentot::runtime::Request *request_;

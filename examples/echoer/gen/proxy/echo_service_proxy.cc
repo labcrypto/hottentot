@@ -107,98 +107,98 @@ namespace proxy {
     /*
      * Serialize request according to HOTP
      */
-    ::org::labcrypto::hottentot::runtime::proxy::ServerIO *serverIO = 
-      serverConnector->CreateServerIO();
-    ::org::labcrypto::hottentot::runtime::ResponseCallback *responseCallback =
-      new ::org::labcrypto::hottentot::runtime::proxy::DefaultResponseCallback(serverIO);
-    ::org::labcrypto::hottentot::runtime::Protocol *protocol = 
-      new ::org::labcrypto::hottentot::runtime::ProtocolV1(/* tcpClient->GetRemoteSocketFD() */); // TODO(kamran): Use factory.
-    protocol->SetResponseCallback(responseCallback);
-    uint32_t requestSerializedDataLength = 0;
-    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
-        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-          "Serializing request object ..." << std::endl;
-    }
-    unsigned char *requestSerializedData = protocol->SerializeRequest(&request, &requestSerializedDataLength);
-    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
-        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-          "Request object is serialized." << std::endl;
-    }
-    /*
-     * Send request byte array
-     */
-    uint32_t sendLength = 0;
-    if (requestSerializedDataLength < 128) {
-      sendLength = 1 + requestSerializedDataLength;
-    } else if (requestSerializedDataLength < 256) {
-      sendLength = 2 + requestSerializedDataLength;
-    } else if (requestSerializedDataLength < 256 * 256) {
-      sendLength = 3 + requestSerializedDataLength;
-    } else if (requestSerializedDataLength < 256 * 256 * 256) {
-      sendLength = 4 + requestSerializedDataLength;
-    } else if (requestSerializedDataLength <= std::numeric_limits<uint32_t>::max()) {
-      sendLength = 5 + requestSerializedDataLength;
-    }
-    unsigned char *sendData = new unsigned char[sendLength];
-    uint32_t c = 0;
-    if (requestSerializedDataLength < 128) {
-      sendData[c++] = requestSerializedDataLength;
-    } else if (requestSerializedDataLength < 256) {
-      sendData[c++] = 0x81;
-      sendData[c++] = requestSerializedDataLength;
-    } else if (requestSerializedDataLength < 256 * 256) {
-      sendData[c++] = 0x82;
-      sendData[c++] = requestSerializedDataLength / 256;
-      sendData[c++] = requestSerializedDataLength % 256;
-    } else if (requestSerializedDataLength < 256 * 256 * 256) {
-      sendData[c] = 0x83;
-      sendData[c + 1] = requestSerializedDataLength / (256 * 256);
-      sendData[c + 2] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256) / 256;
-      sendData[c + 3] = requestSerializedDataLength % (256 * 256);
-      c += 4;
-    } else if (requestSerializedDataLength <= std::numeric_limits<uint32_t>::max()) {
-      sendData[c] = 0x84;
-      sendData[c + 1] = requestSerializedDataLength / (256 * 256 * 256);
-      sendData[c + 2] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256 * 256) / (256 * 256);
-      sendData[c + 3] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256 * 256 - sendData[c + 2] * 256 * 256) / 256;
-      sendData[c + 4] = requestSerializedDataLength % (256 * 256 * 256);
-      c += 5;
-    }
-    for (uint32_t i = 0; i < requestSerializedDataLength; i++) {
-      sendData[c++] = requestSerializedData[i];
-    }
-    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
-        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-          "Writing " << sendLength << " Bytes to socket ..." << std::endl;
-      ::org::labcrypto::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
-    }
-    try {
-      serverIO->Write(sendData, sendLength);
-      if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-        ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
-        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-          "Written." << std::endl;
-      }
-    } catch (std::exception &e) {
-      delete protocol;
-      delete serverConnector;
-      delete serverIO;
-      delete [] sendData;
-      delete [] requestSerializedData;
-      throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: " + e.what());
-    } catch (...) {
-      delete protocol;
-      delete serverConnector;
-      delete serverIO;
-      delete [] sendData;
-      delete [] requestSerializedData;
-      throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Exception occurred while writing to server socket.");
-    }
-    delete [] sendData;
-    delete [] requestSerializedData;
+    // ::org::labcrypto::hottentot::runtime::proxy::ServerIO *serverIO = 
+    //   serverConnector->CreateServerIO();
+    // ::org::labcrypto::hottentot::runtime::ResponseCallback *responseCallback =
+    //   new ::org::labcrypto::hottentot::runtime::proxy::DefaultResponseCallback(serverIO);
+    // ::org::labcrypto::hottentot::runtime::Protocol *protocol = 
+    //   new ::org::labcrypto::hottentot::runtime::ProtocolV1(/* tcpClient->GetRemoteSocketFD() */); // TODO(kamran): Use factory.
+    // protocol->SetResponseCallback(responseCallback);
+    // uint32_t requestSerializedDataLength = 0;
+    // if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+    //   ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+    //     "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+    //       "Serializing request object ..." << std::endl;
+    // }
+    // unsigned char *requestSerializedData = protocol->SerializeRequest(&request, &requestSerializedDataLength);
+    // if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+    //   ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+    //     "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+    //       "Request object is serialized." << std::endl;
+    // }
+    // /*
+    //  * Send request byte array
+    //  */
+    // uint32_t sendLength = 0;
+    // if (requestSerializedDataLength < 128) {
+    //   sendLength = 1 + requestSerializedDataLength;
+    // } else if (requestSerializedDataLength < 256) {
+    //   sendLength = 2 + requestSerializedDataLength;
+    // } else if (requestSerializedDataLength < 256 * 256) {
+    //   sendLength = 3 + requestSerializedDataLength;
+    // } else if (requestSerializedDataLength < 256 * 256 * 256) {
+    //   sendLength = 4 + requestSerializedDataLength;
+    // } else if (requestSerializedDataLength <= std::numeric_limits<uint32_t>::max()) {
+    //   sendLength = 5 + requestSerializedDataLength;
+    // }
+    // unsigned char *sendData = new unsigned char[sendLength];
+    // uint32_t c = 0;
+    // if (requestSerializedDataLength < 128) {
+    //   sendData[c++] = requestSerializedDataLength;
+    // } else if (requestSerializedDataLength < 256) {
+    //   sendData[c++] = 0x81;
+    //   sendData[c++] = requestSerializedDataLength;
+    // } else if (requestSerializedDataLength < 256 * 256) {
+    //   sendData[c++] = 0x82;
+    //   sendData[c++] = requestSerializedDataLength / 256;
+    //   sendData[c++] = requestSerializedDataLength % 256;
+    // } else if (requestSerializedDataLength < 256 * 256 * 256) {
+    //   sendData[c] = 0x83;
+    //   sendData[c + 1] = requestSerializedDataLength / (256 * 256);
+    //   sendData[c + 2] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256) / 256;
+    //   sendData[c + 3] = requestSerializedDataLength % (256 * 256);
+    //   c += 4;
+    // } else if (requestSerializedDataLength <= std::numeric_limits<uint32_t>::max()) {
+    //   sendData[c] = 0x84;
+    //   sendData[c + 1] = requestSerializedDataLength / (256 * 256 * 256);
+    //   sendData[c + 2] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256 * 256) / (256 * 256);
+    //   sendData[c + 3] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256 * 256 - sendData[c + 2] * 256 * 256) / 256;
+    //   sendData[c + 4] = requestSerializedDataLength % (256 * 256 * 256);
+    //   c += 5;
+    // }
+    // for (uint32_t i = 0; i < requestSerializedDataLength; i++) {
+    //   sendData[c++] = requestSerializedData[i];
+    // }
+    // if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+    //   ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+    //     "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+    //       "Writing " << sendLength << " Bytes to socket ..." << std::endl;
+    //   ::org::labcrypto::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
+    // }
+    // try {
+    //   serverIO->Write(sendData, sendLength);
+    //   if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+    //     ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+    //     "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+    //       "Written." << std::endl;
+    //   }
+    // } catch (std::exception &e) {
+    //   delete protocol;
+    //   delete serverConnector;
+    //   delete serverIO;
+    //   delete [] sendData;
+    //   delete [] requestSerializedData;
+    //   throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: " + e.what());
+    // } catch (...) {
+    //   delete protocol;
+    //   delete serverConnector;
+    //   delete serverIO;
+    //   delete [] sendData;
+    //   delete [] requestSerializedData;
+    //   throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Exception occurred while writing to server socket.");
+    // }
+    // delete [] sendData;
+    // delete [] requestSerializedData;
     /*
      * Read response from server
      */
