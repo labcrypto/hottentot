@@ -185,8 +185,18 @@ namespace proxy {
     }
     freeaddrinfo(result);
 #endif
+    if (serverConnectCallback_) {
+      serverConnectCallback_->OnConnect();
+    }
     return true;
-  } 
+  }
+  void 
+  PlainBlockingServerConnectCallback::OnConnect (
+    ServerConnector *serverConnector,
+    ::org::labcrypto::hottentot::runtime::Request *request
+  ) {
+    // TODO
+  }
 }
 }
 }

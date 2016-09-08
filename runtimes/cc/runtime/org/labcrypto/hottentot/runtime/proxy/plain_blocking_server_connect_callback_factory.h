@@ -21,8 +21,10 @@
  *  SOFTWARE.
  */
  
-#include "default_server_connector_factory.h"
-#include "plain_blocking_tcp_server_connector.h"
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SERVER_CONNECT_CALLBACK_FACTORY_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SERVER_CONNECT_CALLBACK_FACTORY_H_
+
+#include "server_connect_callback_factory.h"
 
 
 namespace org {
@@ -30,15 +32,23 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  ServerConnector* 
-  DefaultServerConnectorFactory::CreateTcpServerConnector (
-  	std::string host,
-    uint32_t port
-   ) {
-    return new PlainBlockingTcpServerConnector(host, port);
-  } 
+  class PlainBlockingServerConnectCallbackFactory : public ServerConnectCallbackFactory {
+  public:
+    PlainBlockingServerConnectCallbackFactory() {
+    }
+    virtual ~PlainBlockingServerConnectCallbackFactory() {
+    }
+  public:
+    virtual ServerConnectCallback* 
+    CreateServerConnectCallback (
+      ServerConnector *serverConnector,
+      ::org::labcrypto::hottentot::runtime::Request *request
+    );
+  };
 }
 }
 }
 }
 }
+
+#endif

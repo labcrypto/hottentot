@@ -50,6 +50,18 @@ namespace proxy {
     std::string host_;
     uint16_t port_;
   };
+  class PlainBlockingServerConnectCallback : public ServerConnectCallback {
+  public:
+    PlainBlockingServerConnectCallback(
+      ServerConnector *serverConnector,
+      ::org::labcrypto::hottentot::runtime::Request *request
+    ) : ServerConnectCallback(serverConnector, request) {
+    }
+    virtual ~PlainBlockingServerConnectCallback() {
+    }
+  public:
+    virtual void OnConnect();
+  };
 }
 }
 }

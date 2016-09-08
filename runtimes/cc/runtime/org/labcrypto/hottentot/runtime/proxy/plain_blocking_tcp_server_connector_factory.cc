@@ -21,10 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__DEFAULT_SERVER_CONNECTOR_FACTORY_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__DEFAULT_SERVER_CONNECTOR_FACTORY_H_
-
-#include "server_connector_factory.h"
+#include "plain_blocking_tcp_server_connector_factory.h"
+#include "plain_blocking_tcp_server_connector.h"
 
 
 namespace org {
@@ -32,20 +30,15 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class DefaultServerConnectorFactory : public ServerConnectorFactory {
-  public:
-    virtual ~DefaultServerConnectorFactory() {}
-  public:
-    virtual ServerConnector* 
-    CreateTcpServerConnector (
-      std::string,
-      uint32_t
-     );
-  };
+  ServerConnector* 
+  PlainBlockingTcpServerConnectorFactory::CreateTcpServerConnector (
+  	std::string host,
+    uint32_t port
+   ) {
+    return new PlainBlockingTcpServerConnector(host, port);
+  }
 }
 }
 }
 }
 }
-
-#endif

@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_CONNECTOR_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_CONNECTOR_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_CONNECT_CALLBACK_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_CONNECT_CALLBACK_H_
 
 #ifdef _MSC_VER
 #include <windows.h>
@@ -47,23 +47,24 @@ namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
+  class Request;
 namespace proxy {
-  class ServerIO;
-  class ServerConnectCallback;  
-  class ServerConnector {
+  class ServerConnector;
+  class ServerConnectCallback {
   public:
-    ServerConnector (
-      ServerConnectCallback *serverConnectCallback
-    ) : serverConnectCallback_(NULL) {
+    ServerConnectCallback (
+      ServerConnector *serverConnector,
+      ::org::labcrypto::hottentot::runtime::Request *request
+    )  : serverConnector_(serverConnector),
+         request_(request) {
     }
-    virtual ~ServerConnector() {
+    virtual ~ServerConnectCallback() {
     }
   public:
-	  virtual ServerIO* CreateServerIO() = 0;
-  public:
-    virtual bool Connect() = 0;
+    virtual void OnConnect() = 0;
   protected:
-    ServerConnectCallback serverConnectCallback_;
+    ServerConnector *serverConnector_;
+    ::org::labcrypto::hottentot::runtime::Request *request_;
   };
 }
 }

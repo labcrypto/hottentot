@@ -44,8 +44,10 @@ namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
+  class Request;
 namespace proxy {
   class ServerConnector;
+  class ServerConnectCallback;
   class ServerConnectorFactory {
   public:
     virtual ~ServerConnectorFactory() {
@@ -56,6 +58,19 @@ namespace proxy {
       std::string host,
       uint32_t port
      ) = 0;
+  };
+  class ServerConnectCallbackFactory {
+  public:
+    ServerConnectCallbackFactory() {
+    }
+    virtual ~ServerConnectCallbackFactory() {
+    }
+  public:
+    virtual ServerConnectCallback* 
+    CreateServerConnectCallback (
+      ServerConnector *serverConnector,
+      ::org::labcrypto::hottentot::runtime::Request *request
+    ) = 0;
   };
 }
 }
