@@ -20,11 +20,47 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
- 
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SERVER_CONNECT_CALLBACK_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SERVER_CONNECT_CALLBACK_H_
 
-#include "server_connect_callback.h"
+#ifdef _MSC_VER
+// #include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#else
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netdb.h> 
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <stdexcept>
+#include <iostream>
+#include <sstream>
+
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#include <unistd.h>
+#endif
+
+#include "plain_blocking_server_write_callback.h"
+
+
+#include "../utils.h"
+#include "../configuration.h"
+#include "../logger.h"
 
 
 namespace org {
@@ -32,23 +68,14 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class PlainBlockingServerConnectCallback : public ServerConnectCallback {
-  public:
-    PlainBlockingServerConnectCallback(
-      ServerConnector *serverConnector,
-      ::org::labcrypto::hottentot::runtime::Request *request
-    ) : ServerConnectCallback(serverConnector, request) {
-    }
-    virtual ~PlainBlockingServerConnectCallback() {
-    }
-  public:
-    virtual void OnSuccess();
-    virtual void OnFailure();
-  };
+  void 
+  PlainBlockingServerWriteCallback::OnSuccess () {
+  }
+   void 
+  PlainBlockingServerWriteCallback::OnFailure () {
+  }
 }
 }
 }
 }
 }
-
-#endif

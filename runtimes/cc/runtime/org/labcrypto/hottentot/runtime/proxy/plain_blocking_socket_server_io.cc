@@ -84,14 +84,25 @@ namespace proxy {
 #ifndef _MSC_VER
     int result = write(socketFD_, buffer, length * sizeof(unsigned char));
     if (result <= 0) {
-      throw std::runtime_error("[" + Utils::GetCurrentUTCTimeString() + "]: Write failed.");
+      if (serverWriteCallback_) {
+        serverWriteCallback_->OnFailure();
+        return;
+      }
+      // throw std::runtime_error("[" + Utils::GetCurrentUTCTimeString() + "]: Write failed.");
     }
 #else
     int result = send(socketFD_, (char *)buffer, length * sizeof(unsigned char), 0);
     if (result == SOCKET_ERROR) {
-      throw std::runtime_error("[" + Utils::GetCurrentUTCTimeString() + "]: Write failed.");
+      if (serverWriteCallback_) {
+        serverWriteCallback_->OnFailure();
+        return;
+      }
+      // throw std::runtime_error("[" + Utils::GetCurrentUTCTimeString() + "]: Write failed.");
     }
 #endif
+    if (serverWriteCallback_) {
+      serverWriteCallback_->OnSuccess();
+    }
   }
   void 
   PlainBlockingSocketServerIO::Close() {

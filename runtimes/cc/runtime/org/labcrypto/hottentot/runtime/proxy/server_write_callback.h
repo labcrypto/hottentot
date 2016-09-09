@@ -21,29 +21,52 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SERVER_CONNECT_CALLBACK_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SERVER_CONNECT_CALLBACK_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_WRITE_CALLBACK_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_WRITE_CALLBACK_H_
 
-#include "server_connect_callback.h"
+#ifdef _MSC_VER
+#include <windows.h>
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#endif
+
+#include <string>
+#include <map>
+#include <vector>
 
 
 namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
+  class Request;
+  class Protocol;
 namespace proxy {
-  class PlainBlockingServerConnectCallback : public ServerConnectCallback {
+  class ServerIO;
+  class ServerWriteCallback {
   public:
-    PlainBlockingServerConnectCallback(
-      ServerConnector *serverConnector,
-      ::org::labcrypto::hottentot::runtime::Request *request
-    ) : ServerConnectCallback(serverConnector, request) {
+    ServerWriteCallback (
+      ServerIO *serverIO,
+      ::org::labcrypto::hottentot::runtime::Protocol *protocol
+    ) : serverIO_(serverIO),
+        protocol_(protocol) {
     }
-    virtual ~PlainBlockingServerConnectCallback() {
+    virtual ~ServerWriteCallback() {
     }
   public:
-    virtual void OnSuccess();
-    virtual void OnFailure();
+    virtual void OnSuccess() = 0;
+    virtual void OnFailure() = 0;
+  protected:
+    ServerIO *serverIO_;
+    ::org::labcrypto::hottentot::runtime::Protocol *protocol_;
   };
 }
 }

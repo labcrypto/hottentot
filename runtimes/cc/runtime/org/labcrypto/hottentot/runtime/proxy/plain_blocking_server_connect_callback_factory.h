@@ -40,7 +40,7 @@ namespace proxy {
     }
   public:
     virtual ServerConnectCallback* 
-    CreateServerConnectCallback (
+    Create (
       ServerConnector *serverConnector,
       ::org::labcrypto::hottentot::runtime::Request *request
     );

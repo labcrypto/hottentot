@@ -48,22 +48,48 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
+  class ServerWriteCallback;
+  class ServerReadCallback;
+  class ServerCloseCallback;
   class ServerIO {
   public:
-    ServerIO() {
+    ServerIO(),
+      : serverWriteCallback_(NULL),
+        serverReadCallback_(NULL),
+        serverCloseCallback_(NULL) {
     }
     virtual ~ServerIO() {
     }
   public:
-    virtual uint32_t Read (
+    void
+    SetServerWriteCallback(ServerWriteCallback serverWriteCallback) {
+      serverWriteCallback_ = serverWriteCallback;
+    }
+    void
+    SetServerReadCallback(ServerReadCallback serverReadCallback) {
+      serverReadCallback_ = serverReadCallback;
+    }
+    void
+    SetServerCloseCallback(ServerCloseCallback serverCloseCallback) {
+      serverCloseCallback_ = serverCloseCallback;
+    }
+  public:
+    virtual uint32_t 
+    Read (
       unsigned char *buffer, 
       uint32_t length
     ) = 0;
-    virtual void Write (
+    virtual void 
+    Write (
       unsigned char *buffer,
       uint32_t length
     ) = 0;
-    virtual void Close() = 0;
+    virtual void 
+    Close() = 0;
+  protected:
+    ServerWriteCallback serverWriteCallback_;
+    ServerReadCallback serverReadCallback_;
+    ServerCloseCallback serverCloseCallback_;
   };
 }
 }

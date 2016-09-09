@@ -55,8 +55,7 @@ typedef unsigned __int64 uint64_t;
 #include <unistd.h>
 #endif
 
-#include "plain_blocking_tcp_server_connector.h"
-#include "plain_blocking_socket_server_io.h"
+#include "plain_blocking_server_connect_callback.h"
 
 #include "../utils.h"
 #include "../configuration.h"
@@ -69,7 +68,7 @@ namespace hottentot {
 namespace runtime {
 namespace proxy {
   void 
-  PlainBlockingServerConnectCallback::OnConnect () {
+  PlainBlockingServerConnectCallback::OnSuccess () {
     ::org::labcrypto::hottentot::runtime::proxy::ServerIO *serverIO = 
       serverConnector->CreateServerIO();
     ::org::labcrypto::hottentot::runtime::ResponseCallback *responseCallback =
@@ -138,15 +137,17 @@ namespace proxy {
           "Writing " << sendLength << " Bytes to socket ..." << std::endl;
       ::org::labcrypto::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
     }
-
-    try {
+    ServerWriteCallbackFactory *serverWriteCallbackFactory = new PlainBlockingServerWriteCallbackFactory(); // TODO: Use abstract factory
+    ServerWriteCallback *serverWriteCallback = serverWriteCallbackFactory.Create(serverIO, protocol);
+    serverIO->SetWriteCallback(serverWriteCallback);
+    // try {
       serverIO->Write(sendData, sendLength);
       if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
         ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "Written." << std::endl;
       }
-    } catch (std::exception &e) {
+    /*} catch (std::exception &e) {
       delete protocol;
       delete serverConnector;
       delete serverIO;
@@ -160,12 +161,12 @@ namespace proxy {
       delete [] sendData;
       delete [] requestSerializedData;
       throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Exception occurred while writing to server socket.");
-    }
-    delete [] sendData;
-    delete [] requestSerializedData;
+    } */
+    /* delete [] sendData;
+    delete [] requestSerializedData; */
   }
    void 
-  PlainBlockingServerConnectCallback::OnConnectFailure () {
+  PlainBlockingServerConnectCallback::OnFailure () {
   }
 }
 }

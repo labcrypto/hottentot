@@ -31,7 +31,7 @@ namespace hottentot {
 namespace runtime {
 namespace proxy {
   ServerConnectCallback*
-  PlainBlockingServerConnectCallbackFactory::CreateServerConnectCallback (
+  PlainBlockingServerConnectCallbackFactory::Create (
   	ServerConnector *serverConnector,
     ::org::labcrypto::hottentot::runtime::Request *request
   ) {

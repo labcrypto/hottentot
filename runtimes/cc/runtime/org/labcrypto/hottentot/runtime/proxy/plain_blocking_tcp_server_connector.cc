@@ -84,6 +84,9 @@ namespace proxy {
           "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
             "ERROR opening socket" << std::endl;
       }
+      if (serverConnectCallback_) {
+        serverConnectCallback_->OnFailure();
+      }
       // exit(1);
       return false;
     }
@@ -95,6 +98,9 @@ namespace proxy {
             "ERROR, no such host" << std::endl;
       }
       close(socketFD_);
+      if (serverConnectCallback_) {
+        serverConnectCallback_->OnFailure();
+      }
       // exit(1);
       return false;
     }
@@ -109,6 +115,9 @@ namespace proxy {
             "ERROR setting host" << std::endl;
       }
       close(socketFD_);
+      if (serverConnectCallback_) {
+        serverConnectCallback_->OnFailure();
+      }
       // exit(1);
       return false;
     }
@@ -123,6 +132,9 @@ namespace proxy {
               "ERROR setting read timeout." << std::endl;
         }
         close(socketFD_);
+        if (serverConnectCallback_) {
+          serverConnectCallback_->OnFailure();
+        }
         // exit(1);
         return false;
       }
@@ -134,6 +146,9 @@ namespace proxy {
             "ERROR connecting" << std::endl;
       }
       close(socketFD_);
+      if (serverConnectCallback_) {
+        serverConnectCallback_->OnFailure();
+      }
       // exit(1);
       return false;
     }
@@ -145,6 +160,9 @@ namespace proxy {
     int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
     if (iResult != 0) {
         printf("WSAStartup failed with error: %d\n", iResult);
+        if (serverConnectCallback_) {
+          serverConnectCallback_->OnFailure();
+        }
         return false;
     }
     ZeroMemory(&hints, sizeof(hints));
@@ -158,6 +176,9 @@ namespace proxy {
     if ( iResult != 0 ) {
         printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
+        if (serverConnectCallback_) {
+          serverConnectCallback_->OnFailure();
+        }
         return false;
     }
     // Create a SOCKET for connecting to server
@@ -165,6 +186,9 @@ namespace proxy {
     if (socketFD_ == INVALID_SOCKET) {
         printf("socket failed with error: %ld\n", WSAGetLastError());
         WSACleanup();
+        if (serverConnectCallback_) {
+          serverConnectCallback_->OnFailure();
+        }
         return false;
     }
     // Set recv timeout
@@ -173,6 +197,9 @@ namespace proxy {
       if (setsockopt(socketFD_, SOL_SOCKET, SO_RCVTIMEO, (const char*)&nTimeout, sizeof(int)) != 0) {
         printf("setsockopt failed with error: %ld\n", WSAGetLastError());
         WSACleanup();
+        if (serverConnectCallback_) {
+          serverConnectCallback_->OnFailure();
+        } 
         return false;
       }
     }
@@ -181,12 +208,15 @@ namespace proxy {
     if (iResult == SOCKET_ERROR) {
       closesocket(socketFD_);
       socketFD_ = INVALID_SOCKET;
+      if (serverConnectCallback_) {
+        serverConnectCallback_->OnFailure();
+      }
       return false;
     }
     freeaddrinfo(result);
 #endif
     if (serverConnectCallback_) {
-      serverConnectCallback_->OnConnect();
+      serverConnectCallback_->OnSuccess();
     }
     return true;
   }
