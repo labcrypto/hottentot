@@ -43,23 +43,6 @@ typedef unsigned __int64 uint64_t;
 #include <vector>
 
 
-namespace org {
-namespace labcrypto {
-namespace hottentot {
-namespace runtime {
-  class Protocol;
-  class ProtocolFactory {
-  public:
-    ProtocolFactory() {
-    }
-    virtual ~ProtocolFactory() {
-    }
-  public:
-    virtual Protocol* CreateProtocol() = 0;
-  };
-}
-}
-}
-}
+
 
 #endif

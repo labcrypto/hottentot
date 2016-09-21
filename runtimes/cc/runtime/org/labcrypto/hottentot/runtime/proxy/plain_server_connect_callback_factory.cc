@@ -21,10 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SERVER_CONNECT_CALLBACK_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SERVER_CONNECT_CALLBACK_H_
-
-#include "server_connect_callback.h"
+#include "plain_server_connect_callback_factory.h"
+#include "plain_server_connect_callback.h"
 
 
 namespace org {
@@ -32,23 +30,15 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class PlainBlockingServerConnectCallback : public ServerConnectCallback {
-  public:
-    PlainBlockingServerConnectCallback(
-      ServerConnector *serverConnector,
-      ::org::labcrypto::hottentot::runtime::Request *request
-    ) : ServerConnectCallback(serverConnector, request) {
-    }
-    virtual ~PlainBlockingServerConnectCallback() {
-    }
-  public:
-    virtual void OnSuccess();
-    virtual void OnFailure();
-  };
+  ServerConnectCallback*
+  PlainServerConnectCallbackFactory::Create (
+  	ServerConnector *serverConnector,
+    ::org::labcrypto::hottentot::runtime::Request *request
+  ) {
+  	return new PlainServerConnectCallback(serverConnector, request);
+  }
 }
 }
 }
 }
 }
-
-#endif

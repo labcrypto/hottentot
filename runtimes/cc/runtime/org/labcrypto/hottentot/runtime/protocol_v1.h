@@ -168,6 +168,17 @@ namespace runtime {
     std::vector<unsigned char> readingBuffer_;
     State currentState_;
   };
+  class ProtocolV1Factory : public ProtocolFactory {
+  public:
+    ProtocolV1Factory() {
+    }
+    virtual ~ProtocolV1Factory() {
+    }
+  public:
+    virtual Protocol* Create() {
+      return new ProtocolV1();
+    }
+  };
 }
 }
 }

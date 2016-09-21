@@ -21,11 +21,9 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PROXY_RUNTIME_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PROXY_RUNTIME_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_WRITE_CALLBACK_FACTORY_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_WRITE_CALLBACK_FACTORY_H_
 
-#include <vector>
-#include <map>
 #include <string>
 
 #ifdef _MSC_VER
@@ -46,18 +44,22 @@ namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
+  class Protocol;
 namespace proxy {
-  class ServerConnectorFactory;
-  class ProxyRuntime {
+  class ServerIO;
+  class ServerWriteCallback;
+  class ServerWriteCallbackFactory {
   public:
-    static void Init(int argc, char **argv);
-    static void Shutdown();
-    static ProtocolFactory* GetProtocolFactory();
-    static ServerConnectorFactory* GetServerConnectorFactory();
-  private:
-    static ProtocolFactory *protocolFactory_;
-    static ServerConnectorFactory *serverConnectorFactory_;
-    static bool initialized_;
+    ServerWriteCallbackFactory() {
+    }
+    virtual ~ServerWriteCallbackFactory() {
+    }
+  public:
+    virtual ServerWriteCallback* 
+    Create (
+      ServerIO *serverIO,
+      ::org::labcrypto::hottentot::runtime::Protocol *protocol
+    ) = 0;
   };
 }
 }

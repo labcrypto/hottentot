@@ -102,7 +102,7 @@ namespace proxy {
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-          "Connected." << std::endl;
+          "Connect request is sent." << std::endl;
     }
     /*
      * Serialize request according to HOTP
@@ -202,44 +202,44 @@ namespace proxy {
     /*
      * Read response from server
      */
-    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
-        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-          "Waiting for response ..." << std::endl;
-    }
-    unsigned char buffer[256];
-    while (!responseCallback->IsResponseProcessed()) { // CCC
-      int numOfReadBytes = serverIO->Read(buffer, 256);
-      if (numOfReadBytes == 0) {
-        delete protocol;
-        delete serverConnector;
-        delete serverIO;
-        throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Service is gone.");
-      }
-      if (numOfReadBytes < 0) {
-        delete protocol;
-        delete serverConnector;
-        delete serverIO;
-        throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Read from service failed.");
-      }
-      protocol->FeedResponseData(buffer, numOfReadBytes);
-    }
-    /*
-     * Response deserialization
-     */
-    ::org::labcrypto::hottentot::runtime::ResponseV1 *responseV1 = 
-      (::org::labcrypto::hottentot::runtime::ResponseV1 *)responseCallback->GetResponse();
-    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-      ::org::labcrypto::hottentot::runtime::Utils::PrintArray (
-        "Response", 
-        responseV1->GetData(), 
-        responseV1->GetDataLength()
-      );
-    }
-    out.Deserialize (
-      responseV1->GetData(), 
-      responseV1->GetDataLength()
-    );
+    // if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+    //   ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+    //     "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+    //       "Waiting for response ..." << std::endl;
+    // }
+    // unsigned char buffer[256];
+    // while (!responseCallback->IsResponseProcessed()) { // CCC
+    //   int numOfReadBytes = serverIO->Read(buffer, 256);
+    //   if (numOfReadBytes == 0) {
+    //     delete protocol;
+    //     delete serverConnector;
+    //     delete serverIO;
+    //     throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Service is gone.");
+    //   }
+    //   if (numOfReadBytes < 0) {
+    //     delete protocol;
+    //     delete serverConnector;
+    //     delete serverIO;
+    //     throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Read from service failed.");
+    //   }
+    //   protocol->FeedResponseData(buffer, numOfReadBytes);
+    // }
+    // /*
+    //  * Response deserialization
+    //  */
+    // ::org::labcrypto::hottentot::runtime::ResponseV1 *responseV1 = 
+    //   (::org::labcrypto::hottentot::runtime::ResponseV1 *)responseCallback->GetResponse();
+    // if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+    //   ::org::labcrypto::hottentot::runtime::Utils::PrintArray (
+    //     "Response", 
+    //     responseV1->GetData(), 
+    //     responseV1->GetDataLength()
+    //   );
+    // }
+    // out.Deserialize (
+    //   responseV1->GetData(), 
+    //   responseV1->GetDataLength()
+    // );
     delete protocol;
     delete serverConnector;
     delete serverIO;

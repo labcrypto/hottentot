@@ -21,25 +21,10 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PROXY_RUNTIME_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PROXY_RUNTIME_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVER_WRITE_CALLBACK_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVER_WRITE_CALLBACK_H_
 
-#include <vector>
-#include <map>
-#include <string>
-
-#ifdef _MSC_VER
-typedef __int8 int8_t;
-typedef unsigned __int8 uint8_t;
-typedef __int16 int16_t;
-typedef unsigned __int16 uint16_t;
-typedef __int32 int32_t;
-typedef unsigned __int32 uint32_t;
-typedef __int64 int64_t;
-typedef unsigned __int64 uint64_t;
-#else
-#include <stdint.h>
-#endif
+#include "server_write_callback.h"
 
 
 namespace org {
@@ -47,17 +32,18 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class ServerConnectorFactory;
-  class ProxyRuntime {
+  class PlainServerWriteCallback : public ServerConnectCallback {
   public:
-    static void Init(int argc, char **argv);
-    static void Shutdown();
-    static ProtocolFactory* GetProtocolFactory();
-    static ServerConnectorFactory* GetServerConnectorFactory();
-  private:
-    static ProtocolFactory *protocolFactory_;
-    static ServerConnectorFactory *serverConnectorFactory_;
-    static bool initialized_;
+    PlainServerWriteCallback(
+      ServerIO *serverIO,
+      ::org::labcrypto::hottentot::runtime::Protocol *protocol
+    ) : ServerWriteCallback(serverIO, protocol) {
+    }
+    virtual ~PlainServerWriteCallback() {
+    }
+  public:
+    virtual void OnSuccess();
+    virtual void OnFailure();
   };
 }
 }

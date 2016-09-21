@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#include "plain_blocking_server_connect_callback_factory.h"
-#include "plain_blocking_server_connect_callback.h"
+#include "plain_server_write_callback_factory.h"
+#include "plain_server_write_callback.h"
 
 
 namespace org {
@@ -30,12 +30,12 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  ServerConnectCallback*
-  PlainBlockingServerConnectCallbackFactory::Create (
-  	ServerConnector *serverConnector,
-    ::org::labcrypto::hottentot::runtime::Request *request
+  ServerWriteCallback*
+  PlainServerWriteCallbackFactory::Create (
+  	ServerIO *serverIO,
+    ::org::labcrypto::hottentot::runtime::Protocol *protocol
   ) {
-  	return new PlainBlockingServerConnectCallback(serverConnector, request);
+  	return new PlainServerWriteCallback(serverIO, protocol);
   }
 }
 }

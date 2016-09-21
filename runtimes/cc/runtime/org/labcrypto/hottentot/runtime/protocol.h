@@ -147,10 +147,16 @@ namespace runtime {
     ) {
       requestCallback_ = requestCallback;
     }
+    virtual RequestCallback* GetRequestCallback() {
+      return requestCallback_;
+    }
     virtual void SetResponseCallback (
       ResponseCallback *responseCallback
     ) {
       responseCallback_ = responseCallback;
+    }
+    virtual ResponseCallback* GetResponseCallback() {
+      return responseCallback_;
     }
   public:
     virtual void FeedRequestData (
@@ -169,6 +175,16 @@ namespace runtime {
     RequestCallback *requestCallback_;
     ResponseCallback *responseCallback_;
   };
+  class ProtocolFactory {
+  public:
+    ProtocolFactory() {
+    }
+    virtual ~ProtocolFactory() {
+    }
+  public:
+    virtual Protocol* Create() = 0;
+  };
+}
 }
 }
 }
