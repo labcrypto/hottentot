@@ -35,8 +35,8 @@ namespace proxy {
   class TcpServiceConnector : public ServiceConnector {
   public:
     TcpServiceConnector (
-      ServiceConnectCallback *serverConnectCallback
-    ) : ServerConnector(serverConnectCallback) {
+      ServiceConnectCallback *serviceConnectCallback
+    ) : ServiceConnector(serviceConnectCallback) {
     }
     virtual ~TcpServerConnector() {
     }

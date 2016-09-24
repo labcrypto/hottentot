@@ -20,7 +20,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-
+ 
 #ifdef _MSC_VER
 // #include <windows.h>
 #include <winsock2.h>
@@ -55,14 +55,10 @@ typedef unsigned __int64 uint64_t;
 #include <unistd.h>
 #endif
 
-#include "plain_server_read_callback.h"
-#include "server_io.h"
-
+#include "plain_blocking_socket_service_io.h"
+#include "service_write_callback.h"
 
 #include "../utils.h"
-#include "../protocol_v1.h"
-#include "../configuration.h"
-#include "../logger.h"
 
 
 namespace org {
@@ -71,31 +67,23 @@ namespace hottentot {
 namespace runtime {
 namespace proxy {
   void 
-  PlainServerReadCallback::onData (
-    unsigned char *buffer,
-    int32_t readLength,
-    uint32_t bufferLength
-  ) {
-    if (readLength == 0) {
-      throw std::runtime_error("[" + 
-        ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + 
-        "]: Service is gone.");
-    }
-    if (readLength < 0) {
-      throw std::runtime_error("[" + 
-        ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + 
-        "]: Read from service failed.");
-    }
-    protocol_->FeedResponseData(buffer, readLength);
-    /* if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
-        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-          "Waiting for response ..." << std::endl;
-    }
-    unsigned char buffer[256];
-    while (!protocol_->GetResponseCallback()->IsResponseProcessed()) { // CCC
-      int numOfReadBytes = serverIO_->Read(buffer, 256);
-      if (numOfReadBytes == 0) {
+  PlainBlockingSocketServiceIO::Read() {
+/* #ifndef _MSC_VER
+    return read(socketFD_, buffer, length * sizeof(unsigned char));
+#else
+    return recv(socketFD_, (char *)buffer, length * sizeof(unsigned char), 0);
+#endif */
+    stopped_ = false;
+    unsigned char data[256];
+    while (!stopped_) {
+#ifndef _MSC_VER
+      int numOfReadBytes = read(socketFD_, data, 256 * sizeof(unsigned char));
+#else
+      int numOfReadBytes = recv(socketFD_, (char *)data, 256 * sizeof(unsigned char), 0);
+#endif
+      uint32_t bufferLength = 0;
+      unsigned char *buffer = NULL;
+      /* if (numOfReadBytes == 0) {
         // delete protocol;
         // delete serverConnector;
         // delete serverIO;
@@ -110,28 +98,56 @@ namespace proxy {
         throw std::runtime_error("[" + 
           ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + 
           "]: Read from service failed.");
+      } */
+      if (numOfReadBytes > 0) {
+        bufferLength = numOfReadBytes;
+        buffer = (unsigned char *) malloc(bufferLength * sizeof(unsigned char));
+        memcpy(buffer, data, bufferLength);
       }
-      protocol_->FeedResponseData(buffer, numOfReadBytes);
-    } */
-    /*
-     * Response deserialization
-     */
-    /* ::org::labcrypto::hottentot::runtime::ResponseV1 *responseV1 = 
-      (::org::labcrypto::hottentot::runtime::ResponseV1 *)protocol_->GetResponseCallback()->GetResponse();
-    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-      ::org::labcrypto::hottentot::runtime::Utils::PrintArray (
-        "Response", 
-        responseV1->GetData(), 
-        responseV1->GetDataLength()
-      );
-    }
-    out.Deserialize (
-      responseV1->GetData(), 
-      responseV1->GetDataLength()
-    ); */
+      // protocol_->FeedResponseData(buffer, numOfReadBytes);
+      if (serviceReadCallback_) {
+        serviceReadCallback_->OnData(buffer, numOfReadBytes, bufferLength);
+      }
+    } 
   }
   void 
-  PlainServerWriteCallback::OnFailure () {
+  PlainBlockingSocketServiceIO::Write (
+    unsigned char *buffer,
+    uint32_t length
+  ) {
+#ifndef _MSC_VER
+    int result = write(socketFD_, buffer, length * sizeof(unsigned char));
+    if (result <= 0) {
+      if (serviceWriteCallback_) {
+        serviceWriteCallback_->OnFailure();
+        return;
+      }
+      // throw std::runtime_error("[" + Utils::GetCurrentUTCTimeString() + "]: Write failed.");
+    }
+#else
+    int result = send(socketFD_, (char *)buffer, length * sizeof(unsigned char), 0);
+    if (result == SOCKET_ERROR) {
+      if (serviceWriteCallback_) {
+        serviceWriteCallback_->OnFailure();
+        return;
+      }
+      // throw std::runtime_error("[" + Utils::GetCurrentUTCTimeString() + "]: Write failed.");
+    }
+#endif
+    if (serviceWriteCallback_) {
+      serviceWriteCallback_->OnSuccess();
+    }
+  }
+  void 
+  PlainBlockingSocketServiceIO::Close() {
+    if (socketFD_ > 0) {
+#ifndef _MSC_VER
+      close(socketFD_);
+#else
+      closesocket(socketFD_);
+#endif
+      socketFD_ = 0;
+    }
   }
 }
 }

@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_WRITE_CALLBACK_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_WRITE_CALLBACK_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_READ_CALLBACK_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_READ_CALLBACK_H_
 
 #ifdef _MSC_VER
 #include <windows.h>
@@ -50,22 +50,26 @@ namespace runtime {
   class Request;
   class Protocol;
 namespace proxy {
-  class ServerIO;
-  class ServerWriteCallback {
+  class ServiceIO;
+  class ServiceReadCallback {
   public:
-    ServerWriteCallback (
-      ServerIO *serverIO,
+    ServiceReadCallback (
+      ServiceIO *serviceIO,
       ::org::labcrypto::hottentot::runtime::Protocol *protocol
-    ) : serverIO_(serverIO),
+    ) : serviceIO_(serviceIO),
         protocol_(protocol) {
     }
-    virtual ~ServerWriteCallback() {
+    virtual ~ServiceReadCallback() {
     }
   public:
-    virtual void OnSuccess() = 0;
+    virtual void OnData (
+      unsigned char *buffer, 
+      int32_t readLength,
+      uint32_t bufferLength
+    ) = 0;
     virtual void OnFailure() = 0;
   protected:
-    ServerIO *serverIO_;
+    ServiceIO *serviceIO_;
     ::org::labcrypto::hottentot::runtime::Protocol *protocol_;
   };
 }

@@ -21,11 +21,12 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_IO_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_IO_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_WRITE_CALLBACK_FACTORY_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_WRITE_CALLBACK_FACTORY_H_
+
+#include <string>
 
 #ifdef _MSC_VER
-#include <windows.h>
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
@@ -38,57 +39,27 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
-#include <string>
-#include <map>
-#include <vector>
-
 
 namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
+  class Protocol;
 namespace proxy {
-  class ServerWriteCallback;
-  class ServerReadCallback;
-  class ServerCloseCallback;
-  class ServerIO {
+  class ServiceIO;
+  class ServiceWriteCallback;
+  class ServiceWriteCallbackFactory {
   public:
-    ServerIO()
-      : stopped_(false),
-        serverWriteCallback_(NULL),
-        serverReadCallback_(NULL),
-        serverCloseCallback_(NULL) {
+    ServiceWriteCallbackFactory() {
     }
-    virtual ~ServerIO() {
+    virtual ~ServiceWriteCallbackFactory() {
     }
   public:
-    void
-    SetServerWriteCallback(ServerWriteCallback*serverWriteCallback) {
-      serverWriteCallback_ = serverWriteCallback;
-    }
-    void
-    SetServerReadCallback(ServerReadCallback* serverReadCallback) {
-      serverReadCallback_ = serverReadCallback;
-    }
-    void
-    SetServerCloseCallback(ServerCloseCallback* serverCloseCallback) {
-      serverCloseCallback_ = serverCloseCallback;
-    }
-  public:
-    virtual void Read() = 0;
-    virtual void Stop() = 0;
-    virtual void 
-    Write (
-      unsigned char *buffer,
-      uint32_t length
+    virtual ServiceWriteCallback* 
+    Create (
+      ServerIO *serverIO,
+      ::org::labcrypto::hottentot::runtime::Protocol *protocol
     ) = 0;
-    virtual void 
-    Close() = 0;
-  protected:
-    bool stopped_;
-    ServerWriteCallback* serverWriteCallback_;
-    ServerReadCallback* serverReadCallback_;
-    ServerCloseCallback* serverCloseCallback_;
   };
 }
 }

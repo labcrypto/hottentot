@@ -21,25 +21,50 @@
  *  SOFTWARE.
  */
  
-#include "plain_blocking_tcp_server_connector_factory.h"
-#include "plain_blocking_tcp_server_connector.h"
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_CONNECT_CALLBACK_FACTORY_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_CONNECT_CALLBACK_FACTORY_H_
+
+#include <string>
+
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#endif
 
 
 namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
+  class Request;
 namespace proxy {
-  ServerConnector* 
-  PlainBlockingTcpServerConnectorFactory::CreateTcpServerConnector (
-  	std::string host,
-    uint32_t port,
-    ServerConnectCallback *serverConnectCallback
-   ) {
-    return new PlainBlockingTcpServerConnector(host, port, serverConnectCallback);
-  }
+  class ServiceConnector;
+  class ServiceConnectCallback;
+  class ServiceConnectCallbackFactory {
+  public:
+    ServiceConnectCallbackFactory() {
+    }
+    virtual ~ServiceConnectCallbackFactory() {
+    }
+  public:
+    virtual ServiceConnectCallback* 
+    Create (
+      ServiceConnector *serviceConnector,
+      ::org::labcrypto::hottentot::runtime::Request *request
+    ) = 0;
+  };
 }
 }
 }
 }
 }
+
+#endif

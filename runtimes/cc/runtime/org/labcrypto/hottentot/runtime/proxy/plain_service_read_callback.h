@@ -21,45 +21,33 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_CONNECT_CALLBACK_FACTORY_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_CONNECT_CALLBACK_FACTORY_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVICE_READ_CALLBACK_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVICE_READ_CALLBACK_H_
 
-#include <string>
-
-#ifdef _MSC_VER
-typedef __int8 int8_t;
-typedef unsigned __int8 uint8_t;
-typedef __int16 int16_t;
-typedef unsigned __int16 uint16_t;
-typedef __int32 int32_t;
-typedef unsigned __int32 uint32_t;
-typedef __int64 int64_t;
-typedef unsigned __int64 uint64_t;
-#else
-#include <stdint.h>
-#endif
+#include "service_read_callback.h"
 
 
 namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
-  class Request;
 namespace proxy {
-  class ServerConnector;
-  class ServerConnectCallback;
-  class ServerConnectCallbackFactory {
+  class PlainServiceReadCallback : public ServiceReadCallback {
   public:
-    ServerConnectCallbackFactory() {
+    PlainServiceReadCallback(
+      ServiceIO *serviceIO,
+      ::org::labcrypto::hottentot::runtime::Protocol *protocol
+    ) : ServiceReadCallback(serviceIO, protocol) {
     }
-    virtual ~ServerConnectCallbackFactory() {
+    virtual ~PlainServiceReadCallback() {
     }
   public:
-    virtual ServerConnectCallback* 
-    Create (
-      ServerConnector *serverConnector,
-      ::org::labcrypto::hottentot::runtime::Request *request
-    ) = 0;
+    virtual void OnData (
+      unsigned char *buffer, 
+      int32_t readLength,
+      uint32_t bufferLength
+    );
+    virtual void OnFailure();
   };
 }
 }

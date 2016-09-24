@@ -21,10 +21,10 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SOCKET_SERVER_IO_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SOCKET_SERVER_IO_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_TCP_SERVICE_CONNECTOR_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_TCP_SERVICE_CONNECTOR_H_
 
-#include "socket_server_io.h"
+#include "tcp_service_connector.h"
 
 
 namespace org {
@@ -32,25 +32,25 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class PlainBlockingSocketServerIO : public SocketServerIO {
+  class PlainBlockingTcpServiceConnector : public TcpServiceConnector {
   public:
-    PlainBlockingSocketServerIO (
-#ifdef _MSC_VER
-    SOCKET socketFD
-#else
-    int socketFD
-#endif
-    ) : SocketServerIO(socketFD) {
+    PlainBlockingTcpServiceConnector (
+    	std::string host,
+      uint16_t port,
+      ServiceConnectCallback *serviceConnectCallback
+    ) : TcpServiceConnector(serviceConnectCallback),
+        host_(host),
+        port_(port) {
     }
-    virtual ~PlainBlockingSocketServerIO() {
+    virtual ~PlainBlockingTcpServiceConnector() {
     }
   public:
-    virtual void Read();
-    virtual void Write (
-      unsigned char *buffer,
-      uint32_t length
-    );
-    virtual void Close();
+    virtual ServiceIO* CreateServiceIO();
+  public:
+    virtual bool Connect();
+  public:
+    std::string host_;
+    uint16_t port_;
   };
 }
 }

@@ -21,10 +21,10 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_TCP_SERVER_CONNECTOR_FACTORY_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_TCP_SERVER_CONNECTOR_FACTORY_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SOCKET_SERVICE_IO_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_SOCKET_SERVICE_IO_H_
 
-#include "server_connector_factory.h"
+#include "socket_service_io.h"
 
 
 namespace org {
@@ -32,16 +32,25 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class PlainBlockingTcpServerConnectorFactory : public ServerConnectorFactory {
+  class PlainBlockingSocketServiceIO : public SocketServiceIO {
   public:
-    virtual ~PlainBlockingTcpServerConnectorFactory() {}
+    PlainBlockingSocketServiceIO (
+#ifdef _MSC_VER
+    SOCKET socketFD
+#else
+    int socketFD
+#endif
+    ) : SocketServiceIO(socketFD) {
+    }
+    virtual ~PlainBlockingSocketServiceIO() {
+    }
   public:
-    virtual ServerConnector* 
-    CreateTcpServerConnector (
-      std::string host,
-      uint32_t port,
-      ServerConnectCallback *serverConnectCallback
-     );
+    virtual void Read();
+    virtual void Write (
+      unsigned char *buffer,
+      uint32_t length
+    );
+    virtual void Close();
   };
 }
 }

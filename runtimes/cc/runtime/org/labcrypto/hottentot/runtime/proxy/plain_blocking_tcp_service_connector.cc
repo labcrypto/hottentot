@@ -55,9 +55,9 @@ typedef unsigned __int64 uint64_t;
 #include <unistd.h>
 #endif
 
-#include "plain_blocking_tcp_server_connector.h"
-#include "plain_blocking_socket_server_io.h"
-#include "server_connect_callback.h"
+#include "plain_blocking_tcp_service_connector.h"
+#include "plain_blocking_socket_service_io.h"
+#include "service_connect_callback.h"
 
 #include "../utils.h"
 #include "../configuration.h"
@@ -70,11 +70,11 @@ namespace hottentot {
 namespace runtime {
 namespace proxy {
   ServerIO* 
-  PlainBlockingTcpServerConnector::CreateServerIO() {
-    return new PlainBlockingSocketServerIO(socketFD_);
+  PlainBlockingTcpServiceConnector::CreateServiceIO() {
+    return new PlainBlockingSocketServiceIO(socketFD_);
   }
   bool
-  PlainBlockingTcpServerConnector::Connect() {
+  PlainBlockingTcpServiceConnector::Connect() {
 #ifndef _MSC_VER
     struct sockaddr_in serverAddr;
     struct hostent *server;
@@ -85,8 +85,8 @@ namespace proxy {
           "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
             "ERROR opening socket" << std::endl;
       }
-      if (serverConnectCallback_) {
-        serverConnectCallback_->OnFailure();
+      if (serviceConnectCallback_) {
+        serviceConnectCallback_->OnFailure();
       }
       // exit(1);
       return false;
@@ -99,8 +99,8 @@ namespace proxy {
             "ERROR, no such host" << std::endl;
       }
       close(socketFD_);
-      if (serverConnectCallback_) {
-        serverConnectCallback_->OnFailure();
+      if (serviceConnectCallback_) {
+        serviceConnectCallback_->OnFailure();
       }
       // exit(1);
       return false;
@@ -116,8 +116,8 @@ namespace proxy {
             "ERROR setting host" << std::endl;
       }
       close(socketFD_);
-      if (serverConnectCallback_) {
-        serverConnectCallback_->OnFailure();
+      if (serviceConnectCallback_) {
+        serviceConnectCallback_->OnFailure();
       }
       // exit(1);
       return false;
@@ -133,8 +133,8 @@ namespace proxy {
               "ERROR setting read timeout." << std::endl;
         }
         close(socketFD_);
-        if (serverConnectCallback_) {
-          serverConnectCallback_->OnFailure();
+        if (serviceConnectCallback_) {
+          serviceConnectCallback_->OnFailure();
         }
         // exit(1);
         return false;
@@ -147,8 +147,8 @@ namespace proxy {
             "ERROR connecting" << std::endl;
       }
       close(socketFD_);
-      if (serverConnectCallback_) {
-        serverConnectCallback_->OnFailure();
+      if (serviceConnectCallback_) {
+        serviceConnectCallback_->OnFailure();
       }
       // exit(1);
       return false;
@@ -161,8 +161,8 @@ namespace proxy {
     int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
     if (iResult != 0) {
         printf("WSAStartup failed with error: %d\n", iResult);
-        if (serverConnectCallback_) {
-          serverConnectCallback_->OnFailure();
+        if (serviceConnectCallback_) {
+          serviceConnectCallback_->OnFailure();
         }
         return false;
     }
@@ -177,8 +177,8 @@ namespace proxy {
     if ( iResult != 0 ) {
         printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
-        if (serverConnectCallback_) {
-          serverConnectCallback_->OnFailure();
+        if (serviceConnectCallback_) {
+          serviceConnectCallback_->OnFailure();
         }
         return false;
     }
@@ -187,8 +187,8 @@ namespace proxy {
     if (socketFD_ == INVALID_SOCKET) {
         printf("socket failed with error: %ld\n", WSAGetLastError());
         WSACleanup();
-        if (serverConnectCallback_) {
-          serverConnectCallback_->OnFailure();
+        if (serviceConnectCallback_) {
+          serviceConnectCallback_->OnFailure();
         }
         return false;
     }
@@ -198,8 +198,8 @@ namespace proxy {
       if (setsockopt(socketFD_, SOL_SOCKET, SO_RCVTIMEO, (const char*)&nTimeout, sizeof(int)) != 0) {
         printf("setsockopt failed with error: %ld\n", WSAGetLastError());
         WSACleanup();
-        if (serverConnectCallback_) {
-          serverConnectCallback_->OnFailure();
+        if (serviceConnectCallback_) {
+          serviceConnectCallback_->OnFailure();
         } 
         return false;
       }
@@ -209,15 +209,15 @@ namespace proxy {
     if (iResult == SOCKET_ERROR) {
       closesocket(socketFD_);
       socketFD_ = INVALID_SOCKET;
-      if (serverConnectCallback_) {
-        serverConnectCallback_->OnFailure();
+      if (serviceConnectCallback_) {
+        serviceConnectCallback_->OnFailure();
       }
       return false;
     }
     freeaddrinfo(result);
 #endif
-    if (serverConnectCallback_) {
-      serverConnectCallback_->OnSuccess();
+    if (serviceConnectCallback_) {
+      serviceConnectCallback_->OnSuccess();
     }
     return true;
   }

@@ -21,36 +21,43 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_TCP_SERVER_CONNECTOR_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_BLOCKING_TCP_SERVER_CONNECTOR_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_CONNECTOR_FACTORY_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_CONNECTOR_FACTORY_H_
 
-#include "tcp_server_connector.h"
+#include <string>
+
+#ifdef _MSC_VER
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#endif
 
 
 namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
+  class Request;
 namespace proxy {
-  class PlainBlockingTcpServerConnector : public TcpServerConnector {
+  class ServiceConnector;
+  class ServiceConnectCallback;
+  class ServiceConnectorFactory {
   public:
-    PlainBlockingTcpServerConnector (
-    	std::string host,
-      uint16_t port,
-      ServerConnectCallback *serverConnectCallback
-    ) : TcpServerConnector(serverConnectCallback),
-        host_(host),
-        port_(port) {
-    }
-    virtual ~PlainBlockingTcpServerConnector() {
+    virtual ~ServiceConnectorFactory() {
     }
   public:
-    virtual ServerIO* CreateServerIO();
-  public:
-    virtual bool Connect();
-  public:
-    std::string host_;
-    uint16_t port_;
+    virtual ServiceConnector* 
+    CreateTcpServiceConnector (
+      std::string host,
+      uint32_t port
+     ) = 0;
   };
 }
 }

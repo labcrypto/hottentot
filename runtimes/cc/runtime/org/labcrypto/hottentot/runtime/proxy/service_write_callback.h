@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_CLOSE_CALLBACK_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_CLOSE_CALLBACK_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_WRITE_CALLBACK_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_WRITE_CALLBACK_H_
 
 #ifdef _MSC_VER
 #include <windows.h>
@@ -48,21 +48,25 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
   class Request;
+  class Protocol;
 namespace proxy {
-  class ServerIO;
-  class ServerCloseCallback {
+  class ServiceIO;
+  class ServiceWriteCallback {
   public:
-    ServerCloseCallback (
-      ServerIO *serverIO
-    ) : serverIO_(serverIO) {
+    ServiceWriteCallback (
+      ServiceIO *serviceIO,
+      ::org::labcrypto::hottentot::runtime::Protocol *protocol
+    ) : serviceIO_(serviceIO),
+        protocol_(protocol) {
     }
-    virtual ~ServerCloseCallback() {
+    virtual ~ServiceWriteCallback() {
     }
   public:
     virtual void OnSuccess() = 0;
     virtual void OnFailure() = 0;
   protected:
-    ServerIO *serverIO_;
+    ServiceIO *serviceIO_;
+    ::org::labcrypto::hottentot::runtime::Protocol *protocol_;
   };
 }
 }

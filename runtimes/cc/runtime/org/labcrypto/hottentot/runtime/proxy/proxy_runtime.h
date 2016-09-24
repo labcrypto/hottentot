@@ -47,19 +47,19 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class ServerConnectorFactory;
-  class ServerWriteCallbackFactory;
+  class ServiceConnectorFactory;
+  class ServiceWriteCallbackFactory;
   class ProxyRuntime {
   public:
     static void Init(int argc, char **argv);
     static void Shutdown();
     static ProtocolFactory* GetProtocolFactory();
-    static ServerConnectorFactory* GetServerConnectorFactory();
-    static ServerWriteCallbackFactory* GetServerWriteCallbackFactory();
+    static ServiceConnectorFactory* GetServiceConnectorFactory();
+    static ServiceWriteCallbackFactory* GetServiceWriteCallbackFactory();
   private:
     static ProtocolFactory *protocolFactory_;
-    static ServerConnectorFactory *serverConnectorFactory_;
-    static ServerWriteCallbackFactory *serverWriteCallbackFactory_;
+    static ServiceConnectorFactory *serviceConnectorFactory_;
+    static ServiceWriteCallbackFactory *serviceWriteCallbackFactory_;
     static bool initialized_;
   };
 }

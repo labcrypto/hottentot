@@ -21,12 +21,11 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_WRITE_CALLBACK_FACTORY_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_WRITE_CALLBACK_FACTORY_H_
-
-#include <string>
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_IO_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_IO_H_
 
 #ifdef _MSC_VER
+#include <windows.h>
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
@@ -39,27 +38,57 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
+#include <string>
+#include <map>
+#include <vector>
+
 
 namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
-  class Protocol;
 namespace proxy {
-  class ServerIO;
-  class ServerWriteCallback;
-  class ServerWriteCallbackFactory {
+  class ServiceWriteCallback;
+  class ServiceReadCallback;
+  class ServiceCloseCallback;
+  class ServiceIO {
   public:
-    ServerWriteCallbackFactory() {
+    ServerIO()
+      : stopped_(false),
+        serviceWriteCallback_(NULL),
+        serviceReadCallback_(NULL),
+        serviceCloseCallback_(NULL) {
     }
-    virtual ~ServerWriteCallbackFactory() {
+    virtual ~ServerIO() {
     }
   public:
-    virtual ServerWriteCallback* 
-    Create (
-      ServerIO *serverIO,
-      ::org::labcrypto::hottentot::runtime::Protocol *protocol
+    void
+    SetServiceWriteCallback(ServiceWriteCallback* serviceWriteCallback) {
+      serviceWriteCallback_ = serviceWriteCallback;
+    }
+    void
+    SetServiceReadCallback(ServiceReadCallback* serviceReadCallback) {
+      serviceReadCallback_ = serviceReadCallback;
+    }
+    void
+    SetServiceCloseCallback(ServiceCloseCallback* serviceCloseCallback) {
+      serviceCloseCallback_ = serviceCloseCallback;
+    }
+  public:
+    virtual void Read() = 0;
+    virtual void Stop() = 0;
+    virtual void 
+    Write (
+      unsigned char *buffer,
+      uint32_t length
     ) = 0;
+    virtual void 
+    Close() = 0;
+  protected:
+    bool stopped_;
+    ServiceWriteCallback* serviceWriteCallback_;
+    ServiceReadCallback* serviceReadCallback_;
+    ServiceCloseCallback* serviceCloseCallback_;
   };
 }
 }

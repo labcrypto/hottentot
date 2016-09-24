@@ -56,12 +56,12 @@ typedef unsigned __int64 uint64_t;
 #include <unistd.h>
 #endif
 
-#include "plain_server_connect_callback.h"
-#include "server_connector.h"
-#include "server_io.h"
+#include "plain_service_connect_callback.h"
+#include "service_connector.h"
+#include "service_io.h"
 #include "default_response_callback.h"
 #include "proxy_runtime.h"
-#include "server_write_callback_factory.h"
+#include "service_write_callback_factory.h"
 
 #include "../utils.h"
 #include "../configuration.h"
@@ -74,11 +74,11 @@ namespace hottentot {
 namespace runtime {
 namespace proxy {
   void 
-  PlainServerConnectCallback::OnSuccess () {
-    ::org::labcrypto::hottentot::runtime::proxy::ServerIO *serverIO = 
-      serverConnector_->CreateServerIO();
+  PlainServiceConnectCallback::OnSuccess () {
+    ::org::labcrypto::hottentot::runtime::proxy::ServiceIO *serviceIO = 
+      serviceConnector_->CreateServiceIO();
     ::org::labcrypto::hottentot::runtime::ResponseCallback *responseCallback =
-      new ::org::labcrypto::hottentot::runtime::proxy::DefaultResponseCallback(serverIO);
+      new ::org::labcrypto::hottentot::runtime::proxy::DefaultResponseCallback(serviceIO);
     ::org::labcrypto::hottentot::runtime::Protocol *protocol = 
       // new ::org::labcrypto::hottentot::runtime::ProtocolV1(/* tcpClient->GetRemoteSocketFD() */); // TODO(kamran): Use factory.
       ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetProtocolFactory()->Create();
@@ -146,12 +146,12 @@ namespace proxy {
       ::org::labcrypto::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
     }
     // ServerWriteCallbackFactory *serverWriteCallbackFactory = new PlainBlockingServerWriteCallbackFactory(); // TODO: Use abstract factory
-    ServerWriteCallback *serverWriteCallback = 
+    ServiceWriteCallback *serviceWriteCallback = 
       // serverWriteCallbackFactory.Create(serverIO, protocol);
-      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServerWriteCallbackFactory()->Create(serverIO, protocol);
-    serverIO->SetServerWriteCallback(serverWriteCallback);
+      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServerWriteCallbackFactory()->Create(serviceIO, protocol);
+    serviceIO_->SetServiceWriteCallback(serviceWriteCallback);
     // try {
-    serverIO->Write(sendData, sendLength);
+    serviceIO_->Write(sendData, sendLength);
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
       "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -176,7 +176,7 @@ namespace proxy {
     delete [] requestSerializedData; */
   }
    void 
-  PlainServerConnectCallback::OnFailure () {
+  PlainServiceConnectCallback::OnFailure () {
   }
 }
 }

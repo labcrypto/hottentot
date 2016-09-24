@@ -21,8 +21,10 @@
  *  SOFTWARE.
  */
  
-#include "plain_server_write_callback_factory.h"
-#include "plain_server_write_callback.h"
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVICE_WRITE_CALLBACK_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVICE_WRITE_CALLBACK_H_
+
+#include "service_write_callback.h"
 
 
 namespace org {
@@ -30,15 +32,23 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  ServerWriteCallback*
-  PlainServerWriteCallbackFactory::Create (
-  	ServerIO *serverIO,
-    ::org::labcrypto::hottentot::runtime::Protocol *protocol
-  ) {
-  	return new PlainServerWriteCallback(serverIO, protocol);
-  }
+  class PlainServiceWriteCallback : public ServiceWriteCallback {
+  public:
+    PlainServiceWriteCallback(
+      ServiceIO *serviceIO,
+      ::org::labcrypto::hottentot::runtime::Protocol *protocol
+    ) : ServiceWriteCallback(serviceIO, protocol) {
+    }
+    virtual ~PlainServiceWriteCallback() {
+    }
+  public:
+    virtual void OnSuccess();
+    virtual void OnFailure();
+  };
 }
 }
 }
 }
 }
+
+#endif

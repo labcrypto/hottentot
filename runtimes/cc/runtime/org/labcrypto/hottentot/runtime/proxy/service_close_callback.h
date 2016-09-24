@@ -21,29 +21,48 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVER_WRITE_CALLBACK_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVER_WRITE_CALLBACK_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_CLOSE_CALLBACK_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_CLOSE_CALLBACK_H_
 
-#include "server_write_callback.h"
+#ifdef _MSC_VER
+#include <windows.h>
+typedef __int8 int8_t;
+typedef unsigned __int8 uint8_t;
+typedef __int16 int16_t;
+typedef unsigned __int16 uint16_t;
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#endif
+
+#include <string>
+#include <map>
+#include <vector>
 
 
 namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
+  class Request;
 namespace proxy {
-  class PlainServerWriteCallback : public ServerWriteCallback {
+  class ServiceIO;
+  class ServiceCloseCallback {
   public:
-    PlainServerWriteCallback(
-      ServerIO *serverIO,
-      ::org::labcrypto::hottentot::runtime::Protocol *protocol
-    ) : ServerWriteCallback(serverIO, protocol) {
+    ServiceCloseCallback (
+      ServiceIO *serviceIO
+    ) : serviceIO_(serviceIO) {
     }
-    virtual ~PlainServerWriteCallback() {
+    virtual ~ServieCloseCallback() {
     }
   public:
-    virtual void OnSuccess();
-    virtual void OnFailure();
+    virtual void OnSuccess() = 0;
+    virtual void OnFailure() = 0;
+  protected:
+    ServiceIO *serviceIO_;
   };
 }
 }

@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#include "plain_server_connect_callback_factory.h"
-#include "plain_server_connect_callback.h"
+#include "plain_service_connect_callback_factory.h"
+#include "plain_service_connect_callback.h"
 
 
 namespace org {
@@ -30,12 +30,12 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  ServerConnectCallback*
-  PlainServerConnectCallbackFactory::Create (
-  	ServerConnector *serverConnector,
+  ServiceConnectCallback*
+  PlainServiceConnectCallbackFactory::Create (
+  	ServiceConnector *serviceConnector,
     ::org::labcrypto::hottentot::runtime::Request *request
   ) {
-  	return new PlainServerConnectCallback(serverConnector, request);
+  	return new PlainServiceConnectCallback(serviceConnector, request);
   }
 }
 }

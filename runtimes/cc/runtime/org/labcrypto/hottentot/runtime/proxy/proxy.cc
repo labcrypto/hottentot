@@ -117,7 +117,7 @@ namespace proxy {
     return true;
 #else
     WSADATA wsaData;
-    SOCKET clientSocket = INVALID_SOCKET;
+    SOCKET proxySocket = INVALID_SOCKET;
     struct addrinfo *result = NULL,
                     hints;
     // Initialize Winsock
@@ -139,27 +139,27 @@ namespace proxy {
         WSACleanup();
         return false;
     }
-    // Create a SOCKET for connecting to server
-    clientSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-    if (clientSocket == INVALID_SOCKET) {
+    // Create a SOCKET for connecting to service
+    proxySocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+    if (proxySocket == INVALID_SOCKET) {
         printf("socket failed with error: %ld\n", WSAGetLastError());
         WSACleanup();
         return false;
     }
     // Connect to server.
-    iResult = connect(clientSocket, result->ai_addr, (int)result->ai_addrlen);
+    iResult = connect(proxySocket, result->ai_addr, (int)result->ai_addrlen);
     if (iResult == SOCKET_ERROR) {
-        closesocket(clientSocket);
-        clientSocket = INVALID_SOCKET;
+        closesocket(proxySocket);
+        proxySocket = INVALID_SOCKET;
         return false;
     }
     freeaddrinfo(result);
-    if (clientSocket == INVALID_SOCKET) {
+    if (proxySocket == INVALID_SOCKET) {
         printf("Unable to connect to server!\n");
         WSACleanup();
         return false;
     }
-    closesocket(clientSocket);
+    closesocket(proxySocket);
     return true;
 #endif
   }

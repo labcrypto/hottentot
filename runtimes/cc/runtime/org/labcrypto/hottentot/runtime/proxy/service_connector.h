@@ -21,12 +21,11 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_CONNECTOR_FACTORY_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVER_CONNECTOR_FACTORY_H_
-
-#include <string>
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_CONNECTOR_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_CONNECTOR_H_
 
 #ifdef _MSC_VER
+#include <windows.h>
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
@@ -39,38 +38,32 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
+#include <string>
+#include <map>
+#include <vector>
+
 
 namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
-  class Request;
 namespace proxy {
-  class ServerConnector;
-  class ServerConnectCallback;
-  class ServerConnectorFactory {
+  class ServiceIO;
+  class ServiceConnectCallback;  
+  class ServiceConnector {
   public:
-    virtual ~ServerConnectorFactory() {
+    ServiceConnector (
+      ServiceConnectCallback *serviceConnectCallback
+    ) : serviceConnectCallback_(NULL) {
+    }
+    virtual ~ServiceConnector() {
     }
   public:
-    virtual ServerConnector* 
-    CreateTcpServerConnector (
-      std::string host,
-      uint32_t port
-     ) = 0;
-  };
-  class ServerConnectCallbackFactory {
+	  virtual ServerIO* CreateServiceIO() = 0;
   public:
-    ServerConnectCallbackFactory() {
-    }
-    virtual ~ServerConnectCallbackFactory() {
-    }
-  public:
-    virtual ServerConnectCallback* 
-    CreateServerConnectCallback (
-      ServerConnector *serverConnector,
-      ::org::labcrypto::hottentot::runtime::Request *request
-    ) = 0;
+    virtual bool Connect() = 0;
+  protected:
+    ServiceConnectCallback* serviceConnectCallback_;
   };
 }
 }

@@ -21,10 +21,10 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SOCKET_SERVER_IO_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SOCKET_SERVER_IO_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVICE_WRITE_CALLBACK_FACTORY_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVICE_WRITE_CALLBACK_FACTORY_H_
 
-#include "server_io.h"
+#include "service_write_callback_factory.h"
 
 
 namespace org {
@@ -32,31 +32,18 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class SocketServerIO : public ServerIO {
+  class PlainServiceWriteCallbackFactory : public ServiceConnectCallbackFactory {
   public:
-    SocketServerIO (
-#ifdef _MSC_VER
-    SOCKET socketFD
-#else
-    int socketFD
-#endif
-    ) : socketFD_(socketFD) {
+    PlainServiceWriteCallbackFactory() {
     }
-    virtual ~SocketServerIO() {
+    virtual ~PlainServiceWriteCallbackFactory() {
     }
   public:
-    virtual void Read() = 0;
-    virtual void Write (
-      unsigned char *buffer,
-      uint32_t length
-    ) = 0;
-    virtual void Close() = 0;
-  protected:
-#ifdef _MSC_VER
-    SOCKET socketFD_;
-#else
-    int socketFD_;
-#endif
+    virtual ServiceConnectCallback* 
+    Create (
+      ServiceIO *serviceIO,
+      ::org::labcrypto::hottentot::runtime::Protocol *protocol
+    );
   };
 }
 }

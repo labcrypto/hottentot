@@ -55,7 +55,7 @@ typedef unsigned __int64 uint64_t;
 #include <unistd.h>
 #endif
 
-#include "plain_server_write_callback.h"
+#include "plain_service_read_callback.h"
 #include "server_io.h"
 
 
@@ -71,12 +71,22 @@ namespace hottentot {
 namespace runtime {
 namespace proxy {
   void 
-  PlainServerWriteCallback::OnSuccess () {
-    ServerReadCallback *serverReadCallback = 
-      // serverWriteCallbackFactory.Create(serverIO, protocol);
-      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServerReadCallbackFactory()->Create(serverIO, protocol);
-    serverIO->SetServerReadCallback(serverReadCallback);
-    serverIO->StartReading();
+  PlainServiceReadCallback::onData (
+    unsigned char *buffer,
+    int32_t readLength,
+    uint32_t bufferLength
+  ) {
+    if (readLength == 0) {
+      throw std::runtime_error("[" + 
+        ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + 
+        "]: Service is gone.");
+    }
+    if (readLength < 0) {
+      throw std::runtime_error("[" + 
+        ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + 
+        "]: Read from service failed.");
+    }
+    protocol_->FeedResponseData(buffer, readLength);
     /* if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -121,7 +131,7 @@ namespace proxy {
     ); */
   }
   void 
-  PlainServerWriteCallback::OnFailure () {
+  PlainServiceWriteCallback::OnFailure () {
   }
 }
 }

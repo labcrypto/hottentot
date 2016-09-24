@@ -38,8 +38,8 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  ServerConnectorFactory* ProxyRuntime::serverConnectorFactory_ = NULL;
-  ServerWriteCallbackFactory* ProxyRuntime::serverWriteCallbackFactory_ = NULL;
+  ServiceConnectorFactory* ProxyRuntime::serviceConnectorFactory_ = NULL;
+  ServiceWriteCallbackFactory* ProxyRuntime::serviceWriteCallbackFactory_ = NULL;
   bool ProxyRuntime::initialized_ = false;
   void
   ProxyRuntime::Init(int argc,
@@ -63,19 +63,19 @@ namespace proxy {
     }
     initialized_ = false;
   }
-  ServerConnectorFactory*
-  ProxyRuntime::GetServerConnectorFactory() {
-    if (serverConnectorFactory_ == NULL) {
-      serverConnectorFactory_ = new DefaultServerConnectorFactory;
+  ServiceConnectorFactory*
+  ProxyRuntime::GetServiceConnectorFactory() {
+    if (serviceConnectorFactory_ == NULL) {
+      serviceConnectorFactory_ = new DefaultServiceConnectorFactory;
     }
-    return serverConnectorFactory_;
+    return serviceConnectorFactory_;
   }
-  ServerWriteCallbackFactory*
-  ProxyRuntime::GetServerWriteCallbackFactory() {
-    if (serverWriteCallbackFactory_ == NULL) {
-      serverWriteCallbackFactory_ = new PlainServerWriteCallbackFactory;
+  ServiceWriteCallbackFactory*
+  ProxyRuntime::GetServiceWriteCallbackFactory() {
+    if (serviceWriteCallbackFactory_ == NULL) {
+      serviceWriteCallbackFactory_ = new PlainServiceWriteCallbackFactory;
     }
-    return serverWriteCallbackFactory_;
+    return serviceWriteCallbackFactory_;
   }
 }
 }

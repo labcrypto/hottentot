@@ -21,10 +21,10 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVER_READ_CALLBACK_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVER_READ_CALLBACK_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVICE_CONNECT_CALLBACK_FACTORY_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVICE_CONNECT_CALLBACK_FACTORY_H_
 
-#include "server_read_callback.h"
+#include "service_connect_callback_factory.h"
 
 
 namespace org {
@@ -32,22 +32,18 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class PlainServerReadCallback : public ServerReadCallback {
+  class PlainServiceConnectCallbackFactory : public ServiceConnectCallbackFactory {
   public:
-    PlainServerReadCallback(
-      ServerIO *serverIO,
-      ::org::labcrypto::hottentot::runtime::Protocol *protocol
-    ) : ServerReadCallback(serverIO, protocol) {
+    PlainServiceConnectCallbackFactory() {
     }
-    virtual ~PlainServerWriteCallback() {
+    virtual ~PlainServiceConnectCallbackFactory() {
     }
   public:
-    virtual void OnData (
-      unsigned char *buffer, 
-      int32_t readLength,
-      uint32_t bufferLength
+    virtual ServiceConnectCallback* 
+    Create (
+      ServiceConnector *serviceConnector,
+      ::org::labcrypto::hottentot::runtime::Request *request
     );
-    virtual void OnFailure();
   };
 }
 }
