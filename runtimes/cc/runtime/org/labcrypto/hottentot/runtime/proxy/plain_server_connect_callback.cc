@@ -38,6 +38,7 @@
 #include <string.h>
 
 #include <stdexcept>
+#include <limits>
 #include <iostream>
 #include <sstream>
 
@@ -56,6 +57,11 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #include "plain_server_connect_callback.h"
+#include "server_connector.h"
+#include "server_io.h"
+#include "default_response_callback.h"
+#include "proxy_runtime.h"
+#include "server_write_callback_factory.h"
 
 #include "../utils.h"
 #include "../configuration.h"
@@ -70,7 +76,7 @@ namespace proxy {
   void 
   PlainServerConnectCallback::OnSuccess () {
     ::org::labcrypto::hottentot::runtime::proxy::ServerIO *serverIO = 
-      serverConnector->CreateServerIO();
+      serverConnector_->CreateServerIO();
     ::org::labcrypto::hottentot::runtime::ResponseCallback *responseCallback =
       new ::org::labcrypto::hottentot::runtime::proxy::DefaultResponseCallback(serverIO);
     ::org::labcrypto::hottentot::runtime::Protocol *protocol = 
@@ -84,7 +90,7 @@ namespace proxy {
           "Serializing request object ..." << std::endl;
     }
     unsigned char *requestSerializedData = 
-      protocol->SerializeRequest(&request, &requestSerializedDataLength);
+      protocol->SerializeRequest(request_, &requestSerializedDataLength);
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
@@ -143,7 +149,7 @@ namespace proxy {
     ServerWriteCallback *serverWriteCallback = 
       // serverWriteCallbackFactory.Create(serverIO, protocol);
       ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServerWriteCallbackFactory()->Create(serverIO, protocol);
-    serverIO->SetWriteCallback(serverWriteCallback);
+    serverIO->SetServerWriteCallback(serverWriteCallback);
     // try {
     serverIO->Write(sendData, sendLength);
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {

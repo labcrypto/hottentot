@@ -45,10 +45,7 @@ namespace proxy {
     virtual ~PlainBlockingSocketServerIO() {
     }
   public:
-    virtual uint32_t Read (
-      unsigned char *buffer, 
-      uint32_t length
-    );
+    virtual void Read();
     virtual void Write (
       unsigned char *buffer,
       uint32_t length

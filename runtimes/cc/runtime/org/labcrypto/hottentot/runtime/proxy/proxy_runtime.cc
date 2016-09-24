@@ -39,6 +39,7 @@ namespace hottentot {
 namespace runtime {
 namespace proxy {
   ServerConnectorFactory* ProxyRuntime::serverConnectorFactory_ = NULL;
+  ServerWriteCallbackFactory* ProxyRuntime::serverWriteCallbackFactory_ = NULL;
   bool ProxyRuntime::initialized_ = false;
   void
   ProxyRuntime::Init(int argc,
@@ -64,10 +65,17 @@ namespace proxy {
   }
   ServerConnectorFactory*
   ProxyRuntime::GetServerConnectorFactory() {
-    if (serverConnectorFactory_ == 0) {
+    if (serverConnectorFactory_ == NULL) {
       serverConnectorFactory_ = new DefaultServerConnectorFactory;
     }
     return serverConnectorFactory_;
+  }
+  ServerWriteCallbackFactory*
+  ProxyRuntime::GetServerWriteCallbackFactory() {
+    if (serverWriteCallbackFactory_ == NULL) {
+      serverWriteCallbackFactory_ = new PlainServerWriteCallbackFactory;
+    }
+    return serverWriteCallbackFactory_;
   }
 }
 }

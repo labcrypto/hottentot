@@ -33,9 +33,10 @@ namespace proxy {
   ServerConnector* 
   PlainBlockingTcpServerConnectorFactory::CreateTcpServerConnector (
   	std::string host,
-    uint32_t port
+    uint32_t port,
+    ServerConnectCallback *serverConnectCallback
    ) {
-    return new PlainBlockingTcpServerConnector(host, port);
+    return new PlainBlockingTcpServerConnector(host, port, serverConnectCallback);
   }
 }
 }

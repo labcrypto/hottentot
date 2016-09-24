@@ -36,8 +36,10 @@ namespace proxy {
   public:
     PlainBlockingTcpServerConnector (
     	std::string host,
-      uint16_t port
-    ) : host_(host),
+      uint16_t port,
+      ServerConnectCallback *serverConnectCallback
+    ) : TcpServerConnector(serverConnectCallback),
+        host_(host),
         port_(port) {
     }
     virtual ~PlainBlockingTcpServerConnector() {

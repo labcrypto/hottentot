@@ -188,6 +188,5 @@ namespace runtime {
 }
 }
 }
-}
 
 #endif

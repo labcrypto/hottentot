@@ -57,6 +57,7 @@ typedef unsigned __int64 uint64_t;
 
 #include "plain_blocking_tcp_server_connector.h"
 #include "plain_blocking_socket_server_io.h"
+#include "server_connect_callback.h"
 
 #include "../utils.h"
 #include "../configuration.h"

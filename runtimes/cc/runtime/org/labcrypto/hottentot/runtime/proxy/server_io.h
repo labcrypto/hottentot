@@ -53,8 +53,9 @@ namespace proxy {
   class ServerCloseCallback;
   class ServerIO {
   public:
-    ServerIO(),
-      : serverWriteCallback_(NULL),
+    ServerIO()
+      : stopped_(false),
+        serverWriteCallback_(NULL),
         serverReadCallback_(NULL),
         serverCloseCallback_(NULL) {
     }
@@ -62,23 +63,20 @@ namespace proxy {
     }
   public:
     void
-    SetServerWriteCallback(ServerWriteCallback serverWriteCallback) {
+    SetServerWriteCallback(ServerWriteCallback*serverWriteCallback) {
       serverWriteCallback_ = serverWriteCallback;
     }
     void
-    SetServerReadCallback(ServerReadCallback serverReadCallback) {
+    SetServerReadCallback(ServerReadCallback* serverReadCallback) {
       serverReadCallback_ = serverReadCallback;
     }
     void
-    SetServerCloseCallback(ServerCloseCallback serverCloseCallback) {
+    SetServerCloseCallback(ServerCloseCallback* serverCloseCallback) {
       serverCloseCallback_ = serverCloseCallback;
     }
   public:
-    virtual uint32_t 
-    Read (
-      unsigned char *buffer, 
-      uint32_t length
-    ) = 0;
+    virtual void Read() = 0;
+    virtual void Stop() = 0;
     virtual void 
     Write (
       unsigned char *buffer,
@@ -87,9 +85,10 @@ namespace proxy {
     virtual void 
     Close() = 0;
   protected:
-    ServerWriteCallback serverWriteCallback_;
-    ServerReadCallback serverReadCallback_;
-    ServerCloseCallback serverCloseCallback_;
+    bool stopped_;
+    ServerWriteCallback* serverWriteCallback_;
+    ServerReadCallback* serverReadCallback_;
+    ServerCloseCallback* serverCloseCallback_;
   };
 }
 }

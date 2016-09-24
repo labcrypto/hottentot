@@ -63,7 +63,7 @@ namespace proxy {
   public:
     virtual bool Connect() = 0;
   protected:
-    ServerConnectCallback serverConnectCallback_;
+    ServerConnectCallback* serverConnectCallback_;
   };
 }
 }

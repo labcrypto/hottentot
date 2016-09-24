@@ -45,10 +45,7 @@ namespace proxy {
     virtual ~SocketServerIO() {
     }
   public:
-    virtual uint32_t Read (
-      unsigned char *buffer, 
-      uint32_t length
-    ) = 0;
+    virtual void Read() = 0;
     virtual void Write (
       unsigned char *buffer,
       uint32_t length

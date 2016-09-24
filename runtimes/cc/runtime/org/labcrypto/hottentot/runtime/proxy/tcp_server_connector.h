@@ -21,10 +21,10 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__TCP_SERVER_CONNECTOR_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__TCP_SERVER_CONNECTOR_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__TCP_SERVICE_CONNECTOR_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__TCP_SERVICE_CONNECTOR_H_
 
-#include "server_connector.h"
+#include "service_connector.h"
 
 
 namespace org {
@@ -32,9 +32,11 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class TcpServerConnector : public ServerConnector {
+  class TcpServiceConnector : public ServiceConnector {
   public:
-    TcpServerConnector() {
+    TcpServiceConnector (
+      ServiceConnectCallback *serverConnectCallback
+    ) : ServerConnector(serverConnectCallback) {
     }
     virtual ~TcpServerConnector() {
     }

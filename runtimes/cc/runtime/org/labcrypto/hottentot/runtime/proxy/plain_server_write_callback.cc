@@ -56,9 +56,11 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #include "plain_server_write_callback.h"
+#include "server_io.h"
 
 
 #include "../utils.h"
+#include "../protocol_v1.h"
 #include "../configuration.h"
 #include "../logger.h"
 
@@ -70,14 +72,19 @@ namespace runtime {
 namespace proxy {
   void 
   PlainServerWriteCallback::OnSuccess () {
-    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+    ServerReadCallback *serverReadCallback = 
+      // serverWriteCallbackFactory.Create(serverIO, protocol);
+      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServerReadCallbackFactory()->Create(serverIO, protocol);
+    serverIO->SetServerReadCallback(serverReadCallback);
+    serverIO->StartReading();
+    /* if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "Waiting for response ..." << std::endl;
     }
     unsigned char buffer[256];
-    while (!responseCallback->IsResponseProcessed()) { // CCC
-      int numOfReadBytes = serverIO->Read(buffer, 256);
+    while (!protocol_->GetResponseCallback()->IsResponseProcessed()) { // CCC
+      int numOfReadBytes = serverIO_->Read(buffer, 256);
       if (numOfReadBytes == 0) {
         // delete protocol;
         // delete serverConnector;
@@ -94,13 +101,13 @@ namespace proxy {
           ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + 
           "]: Read from service failed.");
       }
-      protocol->FeedResponseData(buffer, numOfReadBytes);
-    }
+      protocol_->FeedResponseData(buffer, numOfReadBytes);
+    } */
     /*
      * Response deserialization
      */
-    ::org::labcrypto::hottentot::runtime::ResponseV1 *responseV1 = 
-      (::org::labcrypto::hottentot::runtime::ResponseV1 *)responseCallback->GetResponse();
+    /* ::org::labcrypto::hottentot::runtime::ResponseV1 *responseV1 = 
+      (::org::labcrypto::hottentot::runtime::ResponseV1 *)protocol_->GetResponseCallback()->GetResponse();
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Utils::PrintArray (
         "Response", 
@@ -111,7 +118,7 @@ namespace proxy {
     out.Deserialize (
       responseV1->GetData(), 
       responseV1->GetDataLength()
-    );
+    ); */
   }
   void 
   PlainServerWriteCallback::OnFailure () {

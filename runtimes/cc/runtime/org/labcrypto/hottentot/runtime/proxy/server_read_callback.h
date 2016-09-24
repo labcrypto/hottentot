@@ -62,7 +62,11 @@ namespace proxy {
     virtual ~ServerReadCallback() {
     }
   public:
-    virtual void OnSuccess() = 0;
+    virtual void OnData (
+      unsigned char *buffer, 
+      int32_t readLength,
+      uint32_t bufferLength
+    ) = 0;
     virtual void OnFailure() = 0;
   protected:
     ServerIO *serverIO_;

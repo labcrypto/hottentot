@@ -48,15 +48,18 @@ namespace hottentot {
 namespace runtime {
 namespace proxy {
   class ServerConnectorFactory;
+  class ServerWriteCallbackFactory;
   class ProxyRuntime {
   public:
     static void Init(int argc, char **argv);
     static void Shutdown();
     static ProtocolFactory* GetProtocolFactory();
     static ServerConnectorFactory* GetServerConnectorFactory();
+    static ServerWriteCallbackFactory* GetServerWriteCallbackFactory();
   private:
     static ProtocolFactory *protocolFactory_;
     static ServerConnectorFactory *serverConnectorFactory_;
+    static ServerWriteCallbackFactory *serverWriteCallbackFactory_;
     static bool initialized_;
   };
 }
