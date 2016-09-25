@@ -42,7 +42,8 @@ namespace proxy {
     virtual ~PlainServiceReadCallback() {
     }
   public:
-    virtual void OnData (
+    virtual void 
+    OnData (
       unsigned char *buffer, 
       int32_t readLength,
       uint32_t bufferLength

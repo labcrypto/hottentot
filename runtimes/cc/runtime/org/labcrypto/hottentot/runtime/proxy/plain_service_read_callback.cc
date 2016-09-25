@@ -56,7 +56,7 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #include "plain_service_read_callback.h"
-#include "server_io.h"
+#include "service_io.h"
 
 
 #include "../utils.h"
@@ -71,7 +71,7 @@ namespace hottentot {
 namespace runtime {
 namespace proxy {
   void 
-  PlainServiceReadCallback::onData (
+  PlainServiceReadCallback::OnData (
     unsigned char *buffer,
     int32_t readLength,
     uint32_t bufferLength
@@ -85,6 +85,11 @@ namespace proxy {
       throw std::runtime_error("[" + 
         ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + 
         "]: Read from service failed.");
+    }
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+          "Feeding protocol object ..." << std::endl;
     }
     protocol_->FeedResponseData(buffer, readLength);
     /* if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
@@ -131,7 +136,7 @@ namespace proxy {
     ); */
   }
   void 
-  PlainServiceWriteCallback::OnFailure () {
+  PlainServiceReadCallback::OnFailure () {
   }
 }
 }

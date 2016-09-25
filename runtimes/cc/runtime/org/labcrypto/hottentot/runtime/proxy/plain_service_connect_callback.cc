@@ -78,7 +78,7 @@ namespace proxy {
     ::org::labcrypto::hottentot::runtime::proxy::ServiceIO *serviceIO = 
       serviceConnector_->CreateServiceIO();
     ::org::labcrypto::hottentot::runtime::ResponseCallback *responseCallback =
-      new ::org::labcrypto::hottentot::runtime::proxy::DefaultResponseCallback(serviceIO);
+      new ::org::labcrypto::hottentot::runtime::proxy::DefaultResponseCallback(serviceIO, request_);
     ::org::labcrypto::hottentot::runtime::Protocol *protocol = 
       // new ::org::labcrypto::hottentot::runtime::ProtocolV1(/* tcpClient->GetRemoteSocketFD() */); // TODO(kamran): Use factory.
       ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetProtocolFactory()->Create();
@@ -148,10 +148,10 @@ namespace proxy {
     // ServerWriteCallbackFactory *serverWriteCallbackFactory = new PlainBlockingServerWriteCallbackFactory(); // TODO: Use abstract factory
     ServiceWriteCallback *serviceWriteCallback = 
       // serverWriteCallbackFactory.Create(serverIO, protocol);
-      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServerWriteCallbackFactory()->Create(serviceIO, protocol);
-    serviceIO_->SetServiceWriteCallback(serviceWriteCallback);
+      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServiceWriteCallbackFactory()->Create(serviceIO, protocol);
+    serviceIO->SetServiceWriteCallback(serviceWriteCallback);
     // try {
-    serviceIO_->Write(sendData, sendLength);
+    serviceIO->Write(sendData, sendLength);
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
       "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<

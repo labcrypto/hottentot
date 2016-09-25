@@ -37,6 +37,8 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
+#include "utils.h"
+
 
 namespace org {
 namespace labcrypto {
@@ -45,9 +47,16 @@ namespace runtime {
   class Protocol;
   class Request {
   protected:
-    Request() {   
+    Request() {
+      id_ = Utils::GetRandomUInt64();  
     }
   public:
+    inline uint64_t GetId() const {
+      return id_;
+    }
+    inline void SetId(uint64_t id) {
+      id_ = id;
+    }
     inline uint32_t GetServiceId() const {
       return serviceId_;
     }
@@ -55,14 +64,28 @@ namespace runtime {
       serviceId_ = serviceId;
     }
   protected:
+    uint64_t id_;
     uint32_t serviceId_;
   };
   class Response {
   protected:
     Response()
       : statusCode_(0) {
+      id_ = Utils::GetRandomUInt64();
     }
   public:
+    inline uint64_t GetId() const {
+      return id_;
+    }
+    inline void SetId(uint64_t id) {
+      id_ = id;
+    }
+    inline uint64_t GetRequestId() const {
+      return requestId_;
+    }
+    inline void SetRequestId(uint64_t requestId) {
+      requestId_ = requestId;
+    }
     uint16_t
     GetStatusCode() {
       return statusCode_;
@@ -72,6 +95,8 @@ namespace runtime {
       statusCode_ = statusCode;
     }
   protected:
+    uint64_t id_;
+    uint64_t requestId_;
     uint16_t statusCode_;
   };
   class RequestCallback {
@@ -88,20 +113,9 @@ namespace runtime {
   };
   class ResponseCallback {
   public:
-    ResponseCallback ()
-      : response_(NULL),
-        responseProcessed_(false) {
+    ResponseCallback() {
     }
     virtual ~ResponseCallback() {
-    }
-  public:
-    bool
-    IsResponseProcessed() {
-      return responseProcessed_;
-    }
-    Response*
-    GetResponse() {
-      return response_;
     }
   public:
     virtual void OnResponse (
@@ -109,8 +123,6 @@ namespace runtime {
       Response *
     ) = 0;
   protected:
-    Response *response_;
-    bool responseProcessed_;
     uint16_t statusCode_;
   };
   class Protocol {

@@ -27,10 +27,14 @@
 #endif
  
 #include "proxy_runtime.h"
-#include "server_connector.h"
-#include "default_server_connector_factory.h"
+#include "service_connector.h"
+#include "plain_blocking_tcp_service_connector_factory.h"
+#include "plain_service_connect_callback_factory.h"
+#include "plain_service_write_callback_factory.h"
+#include "plain_service_read_callback_factory.h"
 
 #include "../configuration.h"
+#include "../protocol_v1.h"
 
 
 namespace org {
@@ -38,12 +42,18 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
+  ::org::labcrypto::hottentot::runtime::ProtocolFactory* ProxyRuntime::protocolFactory_ = NULL;
   ServiceConnectorFactory* ProxyRuntime::serviceConnectorFactory_ = NULL;
+  ServiceConnectCallbackFactory* ProxyRuntime::serviceConnectCallbackFactory_ = NULL;
   ServiceWriteCallbackFactory* ProxyRuntime::serviceWriteCallbackFactory_ = NULL;
+  ServiceReadCallbackFactory* ProxyRuntime::serviceReadCallbackFactory_ = NULL;
   bool ProxyRuntime::initialized_ = false;
+  std::map<uint64_t, ::org::labcrypto::hottentot::runtime::Response*> ProxyRuntime::responses_;
   void
-  ProxyRuntime::Init(int argc,
-                     char **argv) {
+  ProxyRuntime::Init (
+    int argc,
+    char **argv
+  ) {
     if (initialized_) {
       return;
     }
@@ -58,17 +68,31 @@ namespace proxy {
     if (!initialized_) {
       return;
     }
-    if (serverConnectorFactory_) {
-      delete serverConnectorFactory_;
+    if (serviceConnectorFactory_) {
+      delete serviceConnectorFactory_;
     }
     initialized_ = false;
+  }
+  ::org::labcrypto::hottentot::runtime::ProtocolFactory*
+  ProxyRuntime::GetProtocolFactory() {
+    if (protocolFactory_ == NULL) {
+      protocolFactory_ = new ::org::labcrypto::hottentot::runtime::ProtocolV1Factory;
+    }
+    return protocolFactory_;
   }
   ServiceConnectorFactory*
   ProxyRuntime::GetServiceConnectorFactory() {
     if (serviceConnectorFactory_ == NULL) {
-      serviceConnectorFactory_ = new DefaultServiceConnectorFactory;
+      serviceConnectorFactory_ = new PlainBlockingTcpServiceConnectorFactory;
     }
     return serviceConnectorFactory_;
+  }
+  ServiceConnectCallbackFactory*
+  ProxyRuntime::GetServiceConnectCallbackFactory() {
+    if (serviceConnectCallbackFactory_ == NULL) {
+      serviceConnectCallbackFactory_ = new PlainServiceConnectCallbackFactory;
+    }
+    return serviceConnectCallbackFactory_;
   }
   ServiceWriteCallbackFactory*
   ProxyRuntime::GetServiceWriteCallbackFactory() {
@@ -76,6 +100,13 @@ namespace proxy {
       serviceWriteCallbackFactory_ = new PlainServiceWriteCallbackFactory;
     }
     return serviceWriteCallbackFactory_;
+  }
+  ServiceReadCallbackFactory*
+  ProxyRuntime::GetServiceReadCallbackFactory() {
+    if (serviceReadCallbackFactory_ == NULL) {
+      serviceReadCallbackFactory_ = new PlainServiceReadCallbackFactory;
+    }
+    return serviceReadCallbackFactory_;
   }
 }
 }

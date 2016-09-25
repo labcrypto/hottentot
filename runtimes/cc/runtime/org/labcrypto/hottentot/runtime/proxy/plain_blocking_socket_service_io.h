@@ -46,6 +46,7 @@ namespace proxy {
     }
   public:
     virtual void Read();
+    virtual void Stop();
     virtual void Write (
       unsigned char *buffer,
       uint32_t length

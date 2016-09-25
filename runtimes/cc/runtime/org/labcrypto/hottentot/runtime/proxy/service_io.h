@@ -53,13 +53,13 @@ namespace proxy {
   class ServiceCloseCallback;
   class ServiceIO {
   public:
-    ServerIO()
+    ServiceIO()
       : stopped_(false),
         serviceWriteCallback_(NULL),
         serviceReadCallback_(NULL),
         serviceCloseCallback_(NULL) {
     }
-    virtual ~ServerIO() {
+    virtual ~ServiceIO() {
     }
   public:
     void

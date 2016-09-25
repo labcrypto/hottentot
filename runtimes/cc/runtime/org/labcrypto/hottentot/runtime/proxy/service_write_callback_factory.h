@@ -57,7 +57,7 @@ namespace proxy {
   public:
     virtual ServiceWriteCallback* 
     Create (
-      ServerIO *serverIO,
+      ServiceIO *serviceIO,
       ::org::labcrypto::hottentot::runtime::Protocol *protocol
     ) = 0;
   };

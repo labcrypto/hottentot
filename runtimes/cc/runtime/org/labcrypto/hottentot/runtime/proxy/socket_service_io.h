@@ -24,7 +24,7 @@
 #ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SOCKET_SERVICE_IO_H_
 #define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SOCKET_SERVICE_IO_H_
 
-#include "server_io.h"
+#include "service_io.h"
 
 
 namespace org {
@@ -32,7 +32,7 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class SocketServiceIO : public ServerIO {
+  class SocketServiceIO : public ServiceIO {
   public:
     SocketServiceIO (
 #ifdef _MSC_VER
@@ -46,6 +46,7 @@ namespace proxy {
     }
   public:
     virtual void Read() = 0;
+    virtual void Stop() = 0;
     virtual void Write (
       unsigned char *buffer,
       uint32_t length

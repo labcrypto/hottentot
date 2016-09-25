@@ -38,8 +38,9 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #include "default_response_callback.h"
-#include "server_io.h"
+#include "service_io.h"
 #include "fault.h"
+#include "proxy_runtime.h"
 
 // #include "../response.h"
 // #include "../request.h"
@@ -76,13 +77,20 @@ namespace proxy {
       response_->Deserialize(responseV1->GetData(), responseV1->GetDataLength());
       responseReady_ = true;
     } else { */
-    response_ = response;
-    if (response_->GetStatusCode() != 0) {
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+          "Stopping service IO read operation ..." << std::endl;
+    }
+    serviceIO_->Stop();
+    response->SetRequestId(request_->GetId());
+    ProxyRuntime::StoreResponse(request_->GetId(), response);
+    if (response->GetStatusCode() != 0) {
       ResponseV1 *responseV1 = (ResponseV1 *)response;
       ::org::labcrypto::hottentot::Utf8String faultMessage;
       faultMessage.Deserialize(responseV1->GetData(), responseV1->GetDataLength());
-      uint8_t responseStatusCode = response_->GetStatusCode();
-      serverIO_->Close();
+      uint8_t responseStatusCode = response->GetStatusCode();
+      serviceIO_->Close();
       // delete protocol;
       // delete tcpClient;
       throw 
@@ -91,8 +99,12 @@ namespace proxy {
           faultMessage.ToStdString()
         );
     }
-    serverIO_->Close();
-    responseProcessed_ = true;
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
+        "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
+          "Closing service IO ..." << std::endl;
+    }
+    serviceIO_->Close();
     // delete protocol;
     // delete tcpClient;
   }

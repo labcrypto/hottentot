@@ -46,21 +46,41 @@ namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
+  class ProtocolFactory;
+  class Response;
 namespace proxy {
   class ServiceConnectorFactory;
+  class ServiceConnectCallbackFactory;
   class ServiceWriteCallbackFactory;
+  class ServiceReadCallbackFactory;
   class ProxyRuntime {
   public:
-    static void Init(int argc, char **argv);
+    static void Init (
+      int argc, 
+      char **argv
+    );
     static void Shutdown();
-    static ProtocolFactory* GetProtocolFactory();
+  public:
+    static ::org::labcrypto::hottentot::runtime::ProtocolFactory* GetProtocolFactory();
     static ServiceConnectorFactory* GetServiceConnectorFactory();
+    static ServiceConnectCallbackFactory* GetServiceConnectCallbackFactory();
     static ServiceWriteCallbackFactory* GetServiceWriteCallbackFactory();
+    static ServiceReadCallbackFactory* GetServiceReadCallbackFactory();
+    static Response* GetResponse(uint64_t requestId) {
+      return responses_[requestId];
+    }
+    static void StoreResponse(uint64_t requestId, ::org::labcrypto::hottentot::runtime::Response *response) {
+      // TODO If already we have the request id in the map.
+      responses_[requestId] = response;
+    }
   private:
-    static ProtocolFactory *protocolFactory_;
+    static ::org::labcrypto::hottentot::runtime::ProtocolFactory *protocolFactory_;
     static ServiceConnectorFactory *serviceConnectorFactory_;
+    static ServiceConnectCallbackFactory *serviceConnectCallbackFactory_;
     static ServiceWriteCallbackFactory *serviceWriteCallbackFactory_;
+    static ServiceReadCallbackFactory *serviceReadCallbackFactory_;
     static bool initialized_;
+    static std::map<uint64_t, ::org::labcrypto::hottentot::runtime::Response*> responses_;
   };
 }
 }

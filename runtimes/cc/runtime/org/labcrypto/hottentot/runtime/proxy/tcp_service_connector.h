@@ -38,7 +38,7 @@ namespace proxy {
       ServiceConnectCallback *serviceConnectCallback
     ) : ServiceConnector(serviceConnectCallback) {
     }
-    virtual ~TcpServerConnector() {
+    virtual ~TcpServiceConnector() {
     }
   protected:
 #ifdef _MSC_VER

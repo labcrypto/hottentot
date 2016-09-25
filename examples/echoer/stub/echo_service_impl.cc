@@ -42,7 +42,7 @@ namespace echoer {
     }
     unsigned char *str = req.GetName().Serialize(NULL);
     std::stringstream ss;
-    ss << "Hello " << str << "\r\n";
+    ss << "Hello '" << str << "' !";
     ::org::labcrypto::hottentot::Utf8String responseString(ss.str().c_str());
     out.SetMessage(responseString);
     delete [] str;

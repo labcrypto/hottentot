@@ -57,6 +57,7 @@ typedef unsigned __int64 uint64_t;
 
 #include "plain_blocking_socket_service_io.h"
 #include "service_write_callback.h"
+#include "service_read_callback.h"
 
 #include "../utils.h"
 
@@ -109,6 +110,10 @@ namespace proxy {
         serviceReadCallback_->OnData(buffer, numOfReadBytes, bufferLength);
       }
     } 
+  }
+  void
+  PlainBlockingSocketServiceIO::Stop() {
+    stopped_ = true;
   }
   void 
   PlainBlockingSocketServiceIO::Write (

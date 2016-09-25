@@ -30,6 +30,7 @@
 #include <iomanip>
 #include <string>
 #include <sstream>
+#include <random>
 
 #ifdef _MSC_VER
 typedef __int8 int8_t;
@@ -53,17 +54,16 @@ namespace hottentot {
 namespace runtime {
   class Utils {
   public:
+    static std::string 
+    GetCurrentUTCTimeString() {
 #ifndef _MSC_VER
-    static std::string GetCurrentUTCTimeString() {
       time_t     now = time(0);
       struct tm  tstruct;
       char       buffer[80];
       tstruct = *gmtime(&now);
       strftime(buffer, sizeof(buffer), "%Y-%m-%d.%X UTC", &tstruct);
       return buffer;
-    }
 #else
-    static std::string GetCurrentUTCTimeString(void) {
       time_t seconds_since_the_epoch;
       struct tm tm_struct;
       errno_t err;
@@ -85,11 +85,14 @@ namespace runtime {
           << ":" << std::setw(2) << std::setfill('0') << tm_struct.tm_sec
           << "Z";
       return buf.str();
-    }
 #endif
-    static void PrintArray(std::string label,
-                           unsigned char *buffer, 
-                           uint32_t length) {
+    }
+    static void 
+    PrintArray (
+      std::string label,
+      unsigned char *buffer, 
+      uint32_t length
+    ) {
       Logger::GetOut() << 
         "[" << GetCurrentUTCTimeString() << "]: " <<
           label << ":" << std::endl << "[" << GetCurrentUTCTimeString() << "]: ";
@@ -108,6 +111,13 @@ namespace runtime {
         Logger::GetOut() << std::endl << "[" << GetCurrentUTCTimeString() << "]: ";
       }
       Logger::GetOut() << std::dec;
+    }
+    static uint64_t
+    GetRandomUInt64() {
+      std::random_device rd;
+      std::mt19937_64 gen(rd());
+      std::uniform_int_distribution<uint64_t> dis;
+      return dis(gen);
     }
   };
 }

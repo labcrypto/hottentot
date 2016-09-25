@@ -21,26 +21,10 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_CONNECTOR_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_CONNECTOR_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVICE_READ_CALLBACK_FACTORY_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__PLAIN_SERVICE_READ_CALLBACK_FACTORY_H_
 
-#ifdef _MSC_VER
-#include <windows.h>
-typedef __int8 int8_t;
-typedef unsigned __int8 uint8_t;
-typedef __int16 int16_t;
-typedef unsigned __int16 uint16_t;
-typedef __int32 int32_t;
-typedef unsigned __int32 uint32_t;
-typedef __int64 int64_t;
-typedef unsigned __int64 uint64_t;
-#else
-#include <stdint.h>
-#endif
-
-#include <string>
-#include <map>
-#include <vector>
+#include "service_read_callback_factory.h"
 
 
 namespace org {
@@ -48,25 +32,18 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class ServiceIO;
-  class ServiceConnectCallback;  
-  class ServiceConnector {
+  class PlainServiceReadCallbackFactory : public ServiceReadCallbackFactory {
   public:
-    ServiceConnector (
-      ServiceConnectCallback *serviceConnectCallback = NULL
-    ) : serviceConnectCallback_(serviceConnectCallback) {
+    PlainServiceReadCallbackFactory() {
     }
-    virtual ~ServiceConnector() {
+    virtual ~PlainServiceReadCallbackFactory() {
     }
   public:
-	  virtual ServiceIO* CreateServiceIO() = 0;
-    virtual void SetServiceConnectCallback(ServiceConnectCallback *serviceConnectCallback) {
-      serviceConnectCallback_ = serviceConnectCallback;
-    }
-  public:
-    virtual bool Connect() = 0;
-  protected:
-    ServiceConnectCallback* serviceConnectCallback_;
+    virtual ServiceReadCallback* 
+    Create (
+      ServiceIO *serviceIO,
+      ::org::labcrypto::hottentot::runtime::Protocol *protocol
+    );
   };
 }
 }

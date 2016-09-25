@@ -21,28 +21,24 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__PROTOCOL_FACTORY_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__PROTOCOL_FACTORY_H_
-
-#ifdef _MSC_VER
-#include <windows.h>
-typedef __int8 int8_t;
-typedef unsigned __int8 uint8_t;
-typedef __int16 int16_t;
-typedef unsigned __int16 uint16_t;
-typedef __int32 int32_t;
-typedef unsigned __int32 uint32_t;
-typedef __int64 int64_t;
-typedef unsigned __int64 uint64_t;
-#else
-#include <stdint.h>
-#endif
-
-#include <string>
-#include <map>
-#include <vector>
+#include "plain_service_read_callback_factory.h"
+#include "plain_service_read_callback.h"
 
 
-
-
-#endif
+namespace org {
+namespace labcrypto {
+namespace hottentot {
+namespace runtime {
+namespace proxy {
+  ServiceReadCallback*
+  PlainServiceReadCallbackFactory::Create (
+  	ServiceIO *serviceIO,
+    ::org::labcrypto::hottentot::runtime::Protocol *protocol
+  ) {
+  	return new PlainServiceReadCallback(serviceIO, protocol);
+  }
+}
+}
+}
+}
+}

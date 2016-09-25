@@ -17,9 +17,10 @@
 #include <org/labcrypto/hottentot/runtime/proxy/proxy_runtime.h>
 #include <org/labcrypto/hottentot/runtime/proxy/default_response_callback.h>
 #include <org/labcrypto/hottentot/runtime/proxy/fault.h>
-#include <org/labcrypto/hottentot/runtime/proxy/server_connector.h> // CCC
-#include <org/labcrypto/hottentot/runtime/proxy/server_io.h> // CCC
-#include <org/labcrypto/hottentot/runtime/proxy/server_connector_factory.h> // CCC
+#include <org/labcrypto/hottentot/runtime/proxy/service_connector.h> // CCC
+#include <org/labcrypto/hottentot/runtime/proxy/service_io.h> // CCC
+#include <org/labcrypto/hottentot/runtime/proxy/service_connector_factory.h> // CCC
+#include <org/labcrypto/hottentot/runtime/proxy/service_connect_callback_factory.h> // CCC
 
 #include "echo_service_proxy.h" 
 
@@ -47,10 +48,11 @@ namespace proxy {
           "Making request object ..." << std::endl;
     }
     // CCC
-    ::org::labcrypto::hottentot::runtime::RequestV1 request;
-    request.SetServiceId(3639300462);
-    request.SetMethodId(2482416905);
-    request.SetType(::org::labcrypto::hottentot::runtime::RequestV1::InvokeStateless);
+    ::org::labcrypto::hottentot::runtime::RequestV1 *request = 
+      new ::org::labcrypto::hottentot::runtime::RequestV1;
+    request->SetServiceId(3639300462);
+    request->SetMethodId(2482416905);
+    request->SetType(::org::labcrypto::hottentot::runtime::RequestV1::InvokeStateless);
     /*
      * Serialize arguments
      */
@@ -71,7 +73,7 @@ namespace proxy {
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "req is serialized." << std::endl;
     }
-    request.AddArgument(serializedData, serializedDataLength);
+    request->AddArgument(serializedData, serializedDataLength);
 
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
@@ -92,11 +94,14 @@ namespace proxy {
     //  delete tcpClient;
     //  throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Could not connect.");
     // }
-    ::org::labcrypto::hottentot::runtime::proxy::ServerConnector *serverConnector =
-      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServerConnectorFactory()->
-        CreateTcpServerConnector(host_, port_);
-    if (!serverConnector->Connect()) {
-      delete serverConnector;
+    ::org::labcrypto::hottentot::runtime::proxy::ServiceConnector *serviceConnector =
+      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServiceConnectorFactory()->
+        CreateTcpServiceConnector(host_, port_, NULL);
+    ::org::labcrypto::hottentot::runtime::proxy::ServiceConnectCallback *serviceConnectCallback =
+      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServiceConnectCallbackFactory()->Create(serviceConnector, request);
+    serviceConnector->SetServiceConnectCallback(serviceConnectCallback);
+    if (!serviceConnector->Connect()) {
+      delete serviceConnector;
       throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Could not connect.");
     }
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
@@ -224,25 +229,26 @@ namespace proxy {
     //   }
     //   protocol->FeedResponseData(buffer, numOfReadBytes);
     // }
-    // /*
-    //  * Response deserialization
-    //  */
-    // ::org::labcrypto::hottentot::runtime::ResponseV1 *responseV1 = 
-    //   (::org::labcrypto::hottentot::runtime::ResponseV1 *)responseCallback->GetResponse();
-    // if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-    //   ::org::labcrypto::hottentot::runtime::Utils::PrintArray (
-    //     "Response", 
-    //     responseV1->GetData(), 
-    //     responseV1->GetDataLength()
-    //   );
-    // }
-    // out.Deserialize (
-    //   responseV1->GetData(), 
-    //   responseV1->GetDataLength()
-    // );
-    delete protocol;
-    delete serverConnector;
-    delete serverIO;
+    /*
+     * Response deserialization
+     */
+    ::org::labcrypto::hottentot::runtime::ResponseV1 *responseV1 = 
+      (::org::labcrypto::hottentot::runtime::ResponseV1 *)
+      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetResponse(request->GetId());
+    if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
+      ::org::labcrypto::hottentot::runtime::Utils::PrintArray (
+        "Response", 
+        responseV1->GetData(), 
+        responseV1->GetDataLength()
+      );
+    }
+    out.Deserialize (
+      responseV1->GetData(), 
+      responseV1->GetDataLength()
+    );
+    // delete protocol;
+    // delete serverConnector;
+    // delete serverIO;
     // CCC
   }
 

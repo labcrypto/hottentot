@@ -69,7 +69,7 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  ServerIO* 
+  ServiceIO* 
   PlainBlockingTcpServiceConnector::CreateServiceIO() {
     return new PlainBlockingSocketServiceIO(socketFD_);
   }

@@ -32,14 +32,14 @@ namespace labcrypto {
 namespace hottentot {
 namespace runtime {
 namespace proxy {
-  class PlainServiceWriteCallbackFactory : public ServiceConnectCallbackFactory {
+  class PlainServiceWriteCallbackFactory : public ServiceWriteCallbackFactory {
   public:
     PlainServiceWriteCallbackFactory() {
     }
     virtual ~PlainServiceWriteCallbackFactory() {
     }
   public:
-    virtual ServiceConnectCallback* 
+    virtual ServiceWriteCallback* 
     Create (
       ServiceIO *serviceIO,
       ::org::labcrypto::hottentot::runtime::Protocol *protocol

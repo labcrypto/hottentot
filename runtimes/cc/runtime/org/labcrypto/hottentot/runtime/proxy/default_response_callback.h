@@ -31,14 +31,16 @@ namespace org {
 namespace labcrypto {
 namespace hottentot {
 namespace runtime {
+  class Request;
 namespace proxy {
-  class ServerIO;
+  class ServiceIO;
   class DefaultResponseCallback : public ::org::labcrypto::hottentot::runtime::ResponseCallback {
   public:
     DefaultResponseCallback (
-      ServerIO *serverIO
-    ) : serverIO_(serverIO),
-        responseReady_(false) {
+      ServiceIO *serviceIO,
+      ::org::labcrypto::hottentot::runtime::Request *request
+    ) : serviceIO_(serviceIO),
+        request_(request) {
     }
     virtual ~DefaultResponseCallback() {}
   public:
@@ -46,14 +48,9 @@ namespace proxy {
       ::org::labcrypto::hottentot::runtime::Protocol *,
       ::org::labcrypto::hottentot::runtime::Response *
     );
-  public:
-    bool
-    IsResponseReady() {
-      return responseReady_;
-    }
   private:
-    ServerIO *serverIO_;
-    bool responseReady_;
+    ServiceIO *serviceIO_;
+    ::org::labcrypto::hottentot::runtime::Request *request_;
   };
 }
 }

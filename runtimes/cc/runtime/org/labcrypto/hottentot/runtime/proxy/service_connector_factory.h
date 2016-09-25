@@ -56,7 +56,8 @@ namespace proxy {
     virtual ServiceConnector* 
     CreateTcpServiceConnector (
       std::string host,
-      uint32_t port
+      uint32_t port,
+      ServiceConnectCallback *serviceConnectCallback
      ) = 0;
   };
 }

@@ -56,8 +56,9 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 #include "plain_service_write_callback.h"
-#include "server_io.h"
-
+#include "service_io.h"
+#include "proxy_runtime.h"
+#include "service_read_callback_factory.h"
 
 #include "../utils.h"
 #include "../protocol_v1.h"
@@ -74,8 +75,8 @@ namespace proxy {
   PlainServiceWriteCallback::OnSuccess () {
     ServiceReadCallback *serviceReadCallback = 
       // serverWriteCallbackFactory.Create(serverIO, protocol);
-      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServiceReadCallbackFactory()->Create(serviceIO_, protocol);
-    serviceIO_->SetServerReadCallback(serverReadCallback);
+      ::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServiceReadCallbackFactory()->Create(serviceIO_, protocol_);
+    serviceIO_->SetServiceReadCallback(serviceReadCallback);
     serviceIO_->Read();
     /* if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
       ::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
