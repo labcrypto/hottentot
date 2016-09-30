@@ -21,8 +21,8 @@
  *  SOFTWARE.
  */
  
-#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_CLOSE_CALLBACK_H_
-#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_CLOSE_CALLBACK_H_
+#ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_FAILURE_CALLBACK_H_
+#define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_PROXY__SERVICE_FAILURE_CALLBACK_H_
 
 #ifdef _MSC_VER
 #include <windows.h>
@@ -50,15 +50,15 @@ namespace runtime {
   class Request;
 namespace proxy {
   class ServiceIO;
-  class ServiceCloseCallback {
+  class ServiceFailureCallback {
   public:
-    ServiceCloseCallback (
+    ServiceFailureCallback (
       ServiceIO *serviceIO,
       ::org::labcrypto::hottentot::runtime::Request *request
     ) : serviceIO_(serviceIO),
         requets_(request) {
     }
-    virtual ~ServieCloseCallback() {
+    virtual ~ServiceFailureCallback() {
     }
   public:
     virtual void OnSuccess() = 0;

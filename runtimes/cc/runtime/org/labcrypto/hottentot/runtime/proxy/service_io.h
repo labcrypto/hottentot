@@ -77,13 +77,11 @@ namespace proxy {
   public:
     virtual void Read() = 0;
     virtual void Stop() = 0;
-    virtual void 
-    Write (
+    virtual void Write (
       unsigned char *buffer,
       uint32_t length
     ) = 0;
-    virtual void 
-    Close() = 0;
+    virtual void Close() = 0;
   protected:
     bool stopped_;
     ServiceWriteCallback* serviceWriteCallback_;

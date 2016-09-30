@@ -152,6 +152,9 @@ namespace proxy {
       closesocket(socketFD_);
 #endif
       socketFD_ = 0;
+      if (serviceCloseCallback_) {
+        serviceCloseCallback_->OnSuccess();
+      }
     }
   }
 }
