@@ -1,5 +1,5 @@
-echo > %1\templates.cc
+echo. 2> %1\templates.cc
 
-for %%i in (%1\*.template) do (
-  echo %%i
+for %%f in ("%1\*.template") do (
+  d:\xxd -i %%f >> %1\templates.cc
 )
