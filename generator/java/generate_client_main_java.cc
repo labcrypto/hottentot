@@ -59,7 +59,7 @@ namespace java {
     std::string importProxiesStr = "";
     std::string allProxiesStr = "";
     ::org::labcrypto::hottentot::generator::Service *pService;
-    for (int i = 0; i < pModule->services_.size(); i++) {
+    for (uint32_t i = 0; i < pModule->services_.size(); i++) {
       pService = pModule->services_.at(i);
       std::string serviceName = pService->GetName();
       std::string lowerCaseServiceName = 

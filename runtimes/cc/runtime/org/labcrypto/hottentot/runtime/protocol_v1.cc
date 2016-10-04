@@ -111,7 +111,11 @@ namespace runtime {
       } else if (request.GetArgumentLength(i) < 256 * 256 * 256) {
         actualLength += 4;
         actualLength += request.GetArgumentLength(i);
+#ifdef __CPPXX__
       } else if (request.GetArgumentLength(i) <= std::numeric_limits<uint32_t>::max()) {
+#elif __WIN32__
+      } else if (request.GetArgumentLength(i) <= _UI64_MAX) {
+#endif
         actualLength += 5;
         actualLength += request.GetArgumentLength(i);
       }
@@ -147,7 +151,11 @@ namespace runtime {
         data[c + 2] = (request.GetArgumentLength(i) - data[c + 1] * 256 * 256) / 256;
         data[c + 3] = request.GetArgumentLength(i) % (256 * 256);
         c += 4;
+#ifdef __CPPXX__
       } else if (request.GetArgumentLength(i) <= std::numeric_limits<uint32_t>::max()) {
+#elif __WIN32__
+      } else if (request.GetArgumentLength(i) <= _UI64_MAX) {
+#endif
         data[c] = 0x84;
         data[c + 1] = request.GetArgumentLength(i) / (256 * 256 * 256);
         data[c + 2] = (request.GetArgumentLength(i) - data[c + 1] * 256 * 256 * 256) / (256 * 256);
@@ -185,7 +193,11 @@ namespace runtime {
     } else if (response.GetDataLength() < 256 * 256 * 256) {
       actualLength += 4;
       actualLength += response.GetDataLength();
-    } else if (response.GetDataLength() <= std::numeric_limits<uint32_t>::max()) {
+#ifdef __CPPXX__
+      } else if (response.GetDataLength() <= std::numeric_limits<uint32_t>::max()) {
+#elif __WIN32__
+      } else if (response.GetDataLength() <= _UI64_MAX) {
+#endif
       actualLength += 5;
       actualLength += response.GetDataLength();
     }
@@ -208,14 +220,18 @@ namespace runtime {
       data[c + 2] = (response.GetDataLength() - data[c + 1] * 256 * 256) / 256;
       data[c + 3] = response.GetDataLength() % (256 * 256);
       c += 4;
+#ifdef __CPPXX__
     } else if (response.GetDataLength() <= std::numeric_limits<uint32_t>::max()) {
-        data[c] = 0x84;
-        data[c + 1] = response.GetDataLength() / (256 * 256 * 256);
-        data[c + 2] = (response.GetDataLength() - data[c + 1] * 256 * 256 * 256) / (256 * 256);
-        data[c + 3] = (response.GetDataLength() - data[c + 1] * 256 * 256 * 256 - data[c + 2] * 256 * 256) / 256;
-        data[c + 4] = response.GetDataLength() % (256 * 256 * 256);
-        c += 5;
-      }
+#elif __WIN32__
+    } else if (response.GetDataLength() <= _UI64_MAX) {
+#endif
+      data[c] = 0x84;
+      data[c + 1] = response.GetDataLength() / (256 * 256 * 256);
+      data[c + 2] = (response.GetDataLength() - data[c + 1] * 256 * 256 * 256) / (256 * 256);
+      data[c + 3] = (response.GetDataLength() - data[c + 1] * 256 * 256 * 256 - data[c + 2] * 256 * 256) / 256;
+      data[c + 4] = response.GetDataLength() % (256 * 256 * 256);
+      c += 5;
+    }
     unsigned char *argData = response.GetData();
     for (uint32_t i = 0; i < response.GetDataLength(); i++) {
       data[c++] = argData[i];
@@ -475,7 +491,11 @@ namespace runtime {
                   sendLength = 3 + responseSerializedLength;
                 } else if (responseSerializedLength < 256 * 256 * 256) {
                   sendLength = 4 + responseSerializedLength;
+#ifdef __CPPXX__
                 } else if (responseSerializedLength <= std::numeric_limits<uint32_t>::max()) {
+#elif __WIN32__
+                } else if (responseSerializedLength <= _UI64_MAX) {
+#endif
                   sendLength = 5 + responseSerializedLength;
                 }
                 unsigned char *sendData = new unsigned char[sendLength];
@@ -495,7 +515,11 @@ namespace runtime {
                   sendData[c + 2] = (responseSerializedLength - sendData[c + 1] * 256 * 256) / 256;
                   sendData[c + 3] = responseSerializedLength % (256 * 256);
                   c += 4;
+#ifdef __CPPXX__
                 } else if (responseSerializedLength <= std::numeric_limits<uint32_t>::max()) {
+#elif __WIN32__
+                } else if (responseSerializedLength <= _UI64_MAX) {
+#endif
                   sendData[c] = 0x84;
                   sendData[c + 1] = responseSerializedLength / (256 * 256 * 256);
                   sendData[c + 2] = (responseSerializedLength - sendData[c + 1] * 256 * 256 * 256) / (256 * 256);

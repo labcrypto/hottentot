@@ -47,12 +47,12 @@ namespace java {
     std::string basePackageName = pModule->package_;
     ::org::labcrypto::hottentot::generator::Service *pService;
     ::org::labcrypto::hottentot::generator::Method *pMethod;
-    for (int i = 0; i < pModule->services_.size(); i++) {
+    for (uint32_t i = 0; i < pModule->services_.size(); i++) {
       std::string replacableServerImplTmpStr = serverImplTmpStr_;  
       pService = pModule->services_.at(i);
       std::string serviceName = pService->GetName();
       std::string methodsStr = "";
-      for (int i = 0; i < pService->methods_.size(); i++) {
+      for (uint32_t i = 0; i < pService->methods_.size(); i++) {
         pMethod = pService->methods_.at(i);
         std::string fetchedReturnTypeOfList;
         std::string lowerCaseFetchedReturnTypeOfList;
@@ -73,7 +73,7 @@ namespace java {
         ::org::labcrypto::hottentot::generator::Argument *pArg;
         std::string fetchedArgTypeOfList;
         std::string argType;
-        for (int i = 0; i < pMethod->arguments_.size(); i++) {
+        for (uint32_t i = 0; i < pMethod->arguments_.size(); i++) {
           pArg = pMethod->arguments_.at(i);
           if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pArg->type_)) {
             fetchedArgTypeOfList =

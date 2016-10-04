@@ -46,7 +46,7 @@ namespace java {
     int serializableListCounter;
     ::org::labcrypto::hottentot::generator::Service *pService;
     std::string basePackageName = pModule->package_;
-    for (int i = 0; i < pModule->services_.size(); i++) {
+    for (uint32_t i = 0; i < pModule->services_.size(); i++) {
       std::string replacableServiceProxyStrTmp = serviceProxyTmpStr_;
       pService = pModule->services_.at(i);
       pService = pModule->services_.at(i);
@@ -70,7 +70,7 @@ namespace java {
       );
       ::org::labcrypto::hottentot::generator::Method *pMethod;
       std::string methodsStr;
-      for (int i = 0; i < pService->methods_.size(); i++) {
+      for (uint32_t i = 0; i < pService->methods_.size(); i++) {
         pMethod = pService->methods_.at(i);
         std::string fetchedReturnTypeOfList;
         std::string lowerCaseFetchedReturnTypeOfList;
@@ -90,7 +90,7 @@ namespace java {
         ::org::labcrypto::hottentot::generator::Argument *pArg;
         std::string fetchedArgTypeOfList;
         std::string argType;
-        for (int i = 0; i < pMethod->arguments_.size(); i++) {
+        for (uint32_t i = 0; i < pMethod->arguments_.size(); i++) {
           pArg = pMethod->arguments_.at(i);
           if (::org::labcrypto::hottentot::generator::TypeHelper::IsListType(pArg->type_)) {
             fetchedArgTypeOfList =
@@ -107,7 +107,7 @@ namespace java {
           }
         }
         methodsStr += ") { \n";
-        for (int i = 0; i < pMethod->arguments_.size(); i++) {
+        for (uint32_t i = 0; i < pMethod->arguments_.size(); i++) {
           pArg = pMethod->arguments_.at(i);
           methodsStr += indent_ + indent_ + "//serialize " + pArg->variable_ + "\n";
           std::string capitalalizedArgVar = 
@@ -171,7 +171,7 @@ namespace java {
           methodsStr += "InvokeStatefull";
         }
         methodsStr += ");\n";
-        for (int i = 0; i < pMethod->arguments_.size(); i++) {
+        for (uint32_t i = 0; i < pMethod->arguments_.size(); i++) {
           std::stringstream ssI;
           pArg = pMethod->arguments_.at(i);
           ssI << i;
@@ -187,7 +187,7 @@ namespace java {
         }
         methodsStr += indent_ + indent_ + "int dataLength = 0;\n";
         methodsStr += indent_ + indent_ + "//calculate data length for every argument\n";
-        for (int i = 0; i < pMethod->arguments_.size(); i++) {
+        for (uint32_t i = 0; i < pMethod->arguments_.size(); i++) {
           pArg = pMethod->arguments_.at(i);
           std::string argDataLengthVarName = pArg->variable_ + "DataLength";
           std::string capitalizedArgVar = 

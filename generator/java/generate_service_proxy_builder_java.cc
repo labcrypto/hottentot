@@ -43,7 +43,7 @@ namespace java {
   ) {
     ::org::labcrypto::hottentot::generator::Service *pService;
     std::string replacableServiceProxyBuilderTmpStr;
-    for (int i = 0; i < pModule->services_.size(); i++) {
+    for (uint32_t i = 0; i < pModule->services_.size(); i++) {
       std::string basePackageName = pModule->package_;
       pService = pModule->services_.at(i);
       std::string replacableServiceProxyBuilderTmpStr;

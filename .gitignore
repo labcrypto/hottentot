@@ -16,3 +16,6 @@ templates.h
 runtimes/cc/win32/debug
 runtimes/cc/win32/release
 build
+unix-build
+win32-build
+*.rule

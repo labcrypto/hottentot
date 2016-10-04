@@ -45,7 +45,7 @@ namespace java {
     int serializableListCounter = 0;
     ::org::labcrypto::hottentot::generator::Service *pService;
     std::string basePackageName = pModule->package_;
-    for (int i = 0; i < pModule->services_.size(); i++) {
+    for (uint32_t i = 0; i < pModule->services_.size(); i++) {
       std::string basePackageName = pModule->package_;
       pService = pModule->services_.at(i);
       std::string serviceName = pService->name_;
@@ -78,7 +78,7 @@ namespace java {
       );
       ::org::labcrypto::hottentot::generator::Method *pMethod;
       std::string methodConditionStr;
-      for (int i = 0; i < pService->methods_.size(); i++) {
+      for (uint32_t i = 0; i < pService->methods_.size(); i++) {
         pMethod = pService->methods_.at(i);
         std::string lowerCaseReturnType = pMethod->returnType_;
         lowerCaseReturnType[0] += 32;
@@ -97,7 +97,7 @@ namespace java {
         methodConditionStr += indent_ + indent_ +
                               indent_ + "List <Argument> args = request.getArgs();\n";
         ::org::labcrypto::hottentot::generator::Argument *pArg;
-        for (int i = 0; i < pMethod->arguments_.size(); i++) {
+        for (uint32_t i = 0; i < pMethod->arguments_.size(); i++) {
           pArg = pMethod->arguments_.at(i);
           std::stringstream ssI;
           ssI << i;
@@ -210,7 +210,7 @@ namespace java {
                                 lowerCaseServiceName +
                                 "Impl." + pMethod->name_ + "(";
         }
-        for (int i = 0; i < pMethod->arguments_.size(); i++) {
+        for (uint32_t i = 0; i < pMethod->arguments_.size(); i++) {
           pArg = pMethod->arguments_.at(i);
           if (i < pMethod->arguments_.size() - 1) {
             methodConditionStr += pArg->variable_ + ",";

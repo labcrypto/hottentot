@@ -43,7 +43,7 @@ namespace java {
     ::org::labcrypto::hottentot::generator::Module *pModule
   ) {
     //TODO make struct for PDT arg and return type in methods
-    for (int i = 0; i < pModule->structs_.size(); i++) {
+    for (uint32_t i = 0; i < pModule->structs_.size(); i++) {
       ::org::labcrypto::hottentot::generator::Struct *pStruct = pModule->structs_.at(i);
       std::string basePackageName = pModule->package_;
       std::string replacableStructTmpStr = structTmpStr_;

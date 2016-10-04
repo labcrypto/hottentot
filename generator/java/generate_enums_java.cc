@@ -43,7 +43,7 @@ namespace java {
   void
   JavaGenerator::GenerateEnums(::org::labcrypto::hottentot::generator::Module *pModule) {
     //TODO make struct for PDT arg and return type in methods
-    for (int i = 0; i < pModule->enums_.size(); i++) {
+    for (uint32_t i = 0; i < pModule->enums_.size(); i++) {
       ::org::labcrypto::hottentot::generator::Enum *pEnum = pModule->enums_.at(i);
       std::string basePackageName = pModule->package_;
       std::string replacableEnumTmpStr = enumTmpStr_;
