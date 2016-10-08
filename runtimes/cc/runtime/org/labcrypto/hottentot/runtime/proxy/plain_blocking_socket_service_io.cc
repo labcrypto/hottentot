@@ -58,6 +58,7 @@ typedef unsigned __int64 uint64_t;
 #include "plain_blocking_socket_service_io.h"
 #include "service_write_callback.h"
 #include "service_read_callback.h"
+#include "service_close_callback.h"
 
 #include "../utils.h"
 

@@ -56,9 +56,9 @@ namespace proxy {
       ServiceIO *serviceIO,
       ::org::labcrypto::hottentot::runtime::Request *request
     ) : serviceIO_(serviceIO),
-        requets_(request) {
+        request_(request) {
     }
-    virtual ~ServieCloseCallback() {
+    virtual ~ServiceCloseCallback() {
     }
   public:
     virtual void OnSuccess() = 0;
