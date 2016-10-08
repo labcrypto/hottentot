@@ -13,4 +13,4 @@
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[[[ARGUMENT_NAME]]] is serialized." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]request.AddArgument(serializedData, serializedDataLength);
+[[[INDENT]]][[[INDENT]]]request->AddArgument(serializedData, serializedDataLength);

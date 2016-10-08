@@ -9,10 +9,11 @@
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Making request object ..." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::RequestV1 request;
-[[[INDENT]]][[[INDENT]]]request.SetServiceId([[[SERVICE_HASH]]]);
-[[[INDENT]]][[[INDENT]]]request.SetMethodId([[[METHOD_HASH]]]);
-[[[INDENT]]][[[INDENT]]]request.SetType(::org::labcrypto::hottentot::runtime::Request::InvokeStateless);
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::RequestV1 *request =
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]new ::org::labcrypto::hottentot::runtime::RequestV1;
+[[[INDENT]]][[[INDENT]]]request->SetServiceId([[[SERVICE_HASH]]]);
+[[[INDENT]]][[[INDENT]]]request->SetMethodId([[[METHOD_HASH]]]);
+[[[INDENT]]][[[INDENT]]]request->SetType(::org::labcrypto::hottentot::runtime::RequestV1::InvokeStateless);
 [[[INDENT]]][[[INDENT]]]/*
 [[[INDENT]]][[[INDENT]]] * Serialize arguments
 [[[INDENT]]][[[INDENT]]] */
@@ -29,146 +30,33 @@
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Connecting to server " << host_ << ":" << port_ << " ..." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::proxy::TcpClient *tcpClient = 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetTcpClientFactory()->CreateTcpClient(host_, port_);
-[[[INDENT]]][[[INDENT]]]if (!tcpClient->Connect()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::proxy::ServiceConnector *serviceConnector =
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServiceConnectorFactory()->
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]CreateTcpServiceConnector(host_, port_, NULL);
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::proxy::ServiceConnectCallback *serviceConnectCallback =
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetServiceConnectCallbackFactory()->Create(serviceConnector, request);
+[[[INDENT]]][[[INDENT]]]serviceConnector->SetServiceConnectCallback(serviceConnectCallback);
+[[[INDENT]]][[[INDENT]]]if (!serviceConnector->Connect()) {
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete serviceConnector;
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Could not connect.");
 [[[INDENT]]][[[INDENT]]]}
 [[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
 [[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
 [[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Connected." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Connect request is sent." << std::endl;
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]/*
-[[[INDENT]]][[[INDENT]]] * Serialize request according to HOTP
-[[[INDENT]]][[[INDENT]]] */
-[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Protocol *protocol = new ::org::labcrypto::hottentot::runtime::ProtocolV1(tcpClient->GetRemoteSocketFD()); // TODO(kamran): Use factory.
-[[[INDENT]]][[[INDENT]]]uint32_t requestSerializedDataLength = 0;
+[[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::ResponseV1 *responseV1 = 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]](::org::labcrypto::hottentot::runtime::ResponseV1 *)
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::proxy::ProxyRuntime::GetResponse(request->GetId());
 [[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Serializing request object ..." << std::endl;
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Utils::PrintArray (
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Response", 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]responseV1->GetData(), 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]responseV1->GetDataLength()
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]);
 [[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]unsigned char *requestSerializedData = protocol->SerializeRequest(request, &requestSerializedDataLength);
-[[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Request object is serialized." << std::endl;
-[[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]/*
-[[[INDENT]]][[[INDENT]]] * Send request byte array
-[[[INDENT]]][[[INDENT]]] */
-[[[INDENT]]][[[INDENT]]]uint32_t sendLength = 0;
-[[[INDENT]]][[[INDENT]]]if (requestSerializedDataLength < 128) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 1 + requestSerializedDataLength;
-[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 2 + requestSerializedDataLength;
-[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 3 + requestSerializedDataLength;
-[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256 * 256) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 4 + requestSerializedDataLength;
-[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength <= std::numeric_limits<uint32_t>::max()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendLength = 5 + requestSerializedDataLength;
-[[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]unsigned char *sendData = new unsigned char[sendLength];
-[[[INDENT]]][[[INDENT]]]uint32_t c = 0;
-[[[INDENT]]][[[INDENT]]]if (requestSerializedDataLength < 128) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength;
-[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = 0x81;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength;
-[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = 0x82;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength / 256;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedDataLength % 256;
-[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength < 256 * 256 * 256) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c] = 0x83;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 1] = requestSerializedDataLength / (256 * 256);
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 2] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256) / 256;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 3] = requestSerializedDataLength % (256 * 256);
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]c += 4;
-[[[INDENT]]][[[INDENT]]]} else if (requestSerializedDataLength <= std::numeric_limits<uint32_t>::max()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c] = 0x84;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 1] = requestSerializedDataLength / (256 * 256 * 256);
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 2] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256 * 256) / (256 * 256);
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 3] = (requestSerializedDataLength - sendData[c + 1] * 256 * 256 * 256 - sendData[c + 2] * 256 * 256) / 256;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c + 4] = requestSerializedDataLength % (256 * 256 * 256);
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]c += 5;
-[[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]for (uint32_t i = 0; i < requestSerializedDataLength; i++) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]sendData[c++] = requestSerializedData[i];
-[[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Writing " << sendLength << "[[[INDENT]]][[[INDENT]]]Bytes to socket ..." << std::endl;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Utils::PrintArray("To Write", sendData, sendLength);
-[[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]try {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]tcpClient->Write(sendData, sendLength);
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Written." << std::endl;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]} catch (std::exception &e) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete protocol;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete [] sendData;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete [] requestSerializedData;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: " + e.what());
-[[[INDENT]]][[[INDENT]]]} catch (...) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete protocol;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete [] sendData;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete [] requestSerializedData;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Exception occurred while writing to server socket.");
-[[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]delete [] sendData;
-[[[INDENT]]][[[INDENT]]]delete [] requestSerializedData;
-[[[INDENT]]][[[INDENT]]]/*
-[[[INDENT]]][[[INDENT]]] * Read response from server
-[[[INDENT]]][[[INDENT]]] */
-[[[INDENT]]][[[INDENT]]]if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::runtime::Logger::GetOut() << 
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]"Waiting for response ..." << std::endl;
-[[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]unsigned char buffer[256];
-[[[INDENT]]][[[INDENT]]]while (!protocol->IsResponseComplete()) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]int numOfReadBytes = tcpClient->Read(buffer, 256);
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]if (numOfReadBytes == 0) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete protocol;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Service is gone.");
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]if (numOfReadBytes < 0) {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete protocol;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]][[[INDENT]]]throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Read from service failed.");
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]protocol->FeedResponseData(buffer, numOfReadBytes);
-[[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]if (protocol->GetResponse()->GetStatusCode() == 0) {
-[[[RESPONSE_DESERIALIZATION]]][[[INDENT]]][[[INDENT]]]} else {
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]::org::labcrypto::hottentot::Utf8String faultMessage;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]faultMessage.Deserialize(protocol->GetResponse()->GetData(), protocol->GetResponse()->GetDataLength());
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]uint8_t responseStatusCode = protocol->GetResponse()->GetStatusCode();
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]/*
-[[[INDENT]]][[[INDENT]]][[[INDENT]]] * Finalization before throwing fault
-[[[INDENT]]][[[INDENT]]][[[INDENT]]] */
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]tcpClient->Close();
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]// delete serializedData;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete protocol;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]delete tcpClient;
-[[[INDENT]]][[[INDENT]]][[[INDENT]]]throw ::org::labcrypto::hottentot::runtime::proxy::Fault(responseStatusCode, faultMessage.ToStdString());
-[[[INDENT]]][[[INDENT]]]}
-[[[INDENT]]][[[INDENT]]]/*
-[[[INDENT]]][[[INDENT]]] * Finalization
-[[[INDENT]]][[[INDENT]]] */
-[[[INDENT]]][[[INDENT]]]tcpClient->Close();
-[[[INDENT]]][[[INDENT]]]// delete serializedData;
-[[[INDENT]]][[[INDENT]]]delete protocol;
-[[[INDENT]]][[[INDENT]]]delete tcpClient;
+[[[INDENT]]][[[INDENT]]]out.Deserialize (
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]responseV1->GetData(), 
+[[[INDENT]]][[[INDENT]]][[[INDENT]]]responseV1->GetDataLength()
+[[[INDENT]]][[[INDENT]]]);
 [[[INDENT]]]}

@@ -83,22 +83,22 @@ namespace cc {
           serviceName + "_proxy_builder.cc -o lib/proxy/" + serviceName + "_proxy_builder.o\r\n";
         makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot service/" + 
           serviceName + "_request_handler.cc -o lib/service/" + serviceName + "_request_handler.o\r\n";
-        objectFiles += "lib/proxy/" + serviceName + "_proxy.o ";
-        objectFiles += "lib/proxy/" + serviceName + "_proxy_builder.o ";
-        objectFiles += "lib/service/" + serviceName + "_request_handler.o ";
+        std::string objectFiles1 = objectFiles + "lib/proxy/" + serviceName + "_proxy.o ";
+        objectFiles1 += "lib/proxy/" + serviceName + "_proxy_builder.o ";
+        std::string objectFiles2 = objectFiles + "lib/service/" + serviceName + "_request_handler.o ";
         if (generationConfig.IsClientGenerated()) {
           makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot client/" + 
             serviceName + "_client.cc -o lib/client/" + serviceName + "_client.o\r\n";
-          makefile += "\tg++ " + objectFiles + " lib/client/" + 
-            serviceName + "_client.o " + " -lhotd -lpthread -o bin/" + serviceName + "_client.out\r\n";
+          makefile += "\tg++ " + objectFiles1 + " lib/client/" + 
+            serviceName + "_client.o " + " -L/usr/lib -lhottentot-runtime-common-debug-lib -lhottentot-runtime-proxy-debug-lib -lpthread -o bin/" + serviceName + "_client.out\r\n";
         }
         if (generationConfig.IsStubGenerated()) {
           makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot stub/" + 
             serviceName + "_impl.cc -o lib/stub/" + serviceName + "_impl.o\r\n";
           makefile += "\tg++ -Wall -g -c -I/usr/local/include/hot stub/" + 
             serviceName + "_server.cc -o lib/stub/" + serviceName + "_server.o\r\n";
-          makefile += "\tg++ " + objectFiles + " lib/stub/" + 
-            serviceName + "_impl.o " + "lib/stub/" + serviceName + "_server.o " + " -lhotd -lpthread -o bin/" + serviceName + "_server.out\r\n";
+          makefile += "\tg++ " + objectFiles2 + " lib/stub/" + 
+            serviceName + "_impl.o " + "lib/stub/" + serviceName + "_server.o " + " -L/usr/lib -lhottentot-runtime-common-debug-lib -lhottentot-runtime-service-debug-lib -lpthread -o bin/" + serviceName + "_server.out\r\n";
         }
       }
     }

@@ -25,12 +25,16 @@
 #define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME__UTILS_H_
 
 #include <time.h>
+#include <stdlib.h>
 
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <sstream>
+#ifdef __CPPXX__
 #include <random>
+#endif
+
 
 #ifdef _MSC_VER
 typedef __int8 int8_t;
@@ -114,10 +118,22 @@ namespace runtime {
     }
     static uint64_t
     GetRandomUInt64() {
+      static bool randomInitialized_ = false;
+      if (!randomInitialized_) {
+        srand(time(NULL));
+        randomInitialized_ = true;
+      }
+#ifdef __CPPXX__
       std::random_device rd;
       std::mt19937_64 gen(rd());
       std::uniform_int_distribution<uint64_t> dis;
       return dis(gen);
+#else
+      uint64_t random = 
+        (((uint64_t) rand() <<  0) & 0x00000000FFFFFFFFull) | 
+        (((uint64_t) rand() << 32) & 0xFFFFFFFF00000000ull);
+      return random;
+#endif
     }
   };
 }
