@@ -1,7 +1,7 @@
 echo. 2> %1\templates.cc
 
 for %%f in ("%1\*.template") do (
-  %1\tools\xxd -i %%f >> %1\templates.cc
+  tools\xxd -i %%f >> %1\templates.cc
 )
 
 echo. 2> %1\templates.h
