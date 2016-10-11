@@ -97,7 +97,7 @@ namespace java {
     ::org::labcrypto::hottentot::generator::Os::MakeDir(clientOutDir_.c_str());
     ::org::labcrypto::hottentot::generator::Os::MakeDir(serverOutDir_.c_str());
     modules_ = hot->modules_;
-    for (int i = 0; i < modules_.size(); i++) {
+    for (uint32_t i = 0; i < modules_.size(); i++) {
       ::org::labcrypto::hottentot::generator::Module *pModule = modules_.at(i);
       GenerateEnums(pModule);
       GenerateStructs(pModule);

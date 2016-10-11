@@ -124,14 +124,25 @@ endif()
 
 add_custom_target(cc-templates DEPENDS ${CC_TEMPLATE_SOURCES})
 
-add_custom_command(OUTPUT ${JAVA_TEMPLATE_SOURCES}
-  COMMAND echo "Generating Java templates ..."
-  COMMAND ./java/templates/byte_array_maker.sh
-  COMMAND echo "Java templates are generated."
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
-  VERBATIM
-  DEPENDS ${JAVA_TEMPLATES}
-)
+if (UNNIX)
+  add_custom_command(OUTPUT ${JAVA_TEMPLATE_SOURCES}
+    COMMAND echo "Generating Java templates ..."
+    COMMAND ./java/templates/byte_array_maker.sh
+    COMMAND echo "Java templates are generated."
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
+    VERBATIM
+    DEPENDS ${JAVA_TEMPLATES}
+  )
+else()
+  add_custom_command(OUTPUT ${JAVA_TEMPLATE_SOURCES}
+    COMMAND echo "Generating Java templates ..."
+    COMMAND .\\java\\templates\\byte_array_maker.bat
+    COMMAND echo "Java templates are generated."
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}\\generator
+    VERBATIM
+    DEPENDS ${JAVA_TEMPLATES}
+  )
+endif()
 
 add_custom_target(java-templates DEPENDS ${JAVA_TEMPLATE_SOURCES})
 
