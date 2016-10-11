@@ -19,3 +19,4 @@ build
 unix-build
 win32-build
 *.rule
+/generator/java/templates/byte_arrays

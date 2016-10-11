@@ -178,6 +178,9 @@ add_library(hottentot-generator-cc-lib STATIC
   ${PROJECT_SOURCE_DIR}/generator/cc/templates/templates.cc
 )
 
+add_dependencies(hottentot-generator-cc-lib cc-templates)
+add_dependencies(hottentot-generator-cc-lib hottentot-generator-common-lib)
+
 add_library(hottentot-generator-java-lib STATIC
   ${PROJECT_SOURCE_DIR}/generator/runtime.cc
   ${PROJECT_SOURCE_DIR}/generator/java/java_generator.cc
@@ -194,10 +197,17 @@ add_library(hottentot-generator-java-lib STATIC
   ${PROJECT_SOURCE_DIR}/generator/java/generate_enums_java.cc
 )
 
-add_executable(hot-executable
+add_dependencies(hottentot-generator-java-lib java-templates)
+add_dependencies(hottentot-generator-java-lib hottentot-generator-common-lib)
+
+add_executable(hottentot-generator
   ${PROJECT_SOURCE_DIR}/generator/lex.yy.cc
   ${PROJECT_SOURCE_DIR}/generator/y.tab.cc
 )
+
+add_dependencies(hottentot-generator yacc-lex-sources)
+add_dependencies(hottentot-generator hottentot-generator-cc-lib)
+add_dependencies(hottentot-generator hottentot-generator-java-lib)
 
 if (__UNIX__)
   target_compile_options(hottentot-generator-common-lib PUBLIC -std=c++11 -O3)
@@ -209,16 +219,16 @@ endif()
 set_target_properties(hottentot-generator-common-lib PROPERTIES OUTPUT_NAME hot-generator-common)
 set_target_properties(hottentot-generator-cc-lib PROPERTIES OUTPUT_NAME hot-generator-cc)
 set_target_properties(hottentot-generator-java-lib PROPERTIES OUTPUT_NAME hot-generator-java)
-set_target_properties(hot-executable PROPERTIES RUNTIME_OUTPUT_NAME hot)
+set_target_properties(hottentot-generator PROPERTIES RUNTIME_OUTPUT_NAME hot)
 
-target_link_libraries(hot-executable
+target_link_libraries(hottentot-generator
   hottentot-generator-common-lib
   hottentot-generator-cc-lib
   hottentot-generator-java-lib
   fl
 )
 
-add_library(hot STATIC
+add_library(hottentot-runtime STATIC
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/logger.cc
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/protocol_v1.cc
@@ -233,11 +243,11 @@ add_library(hot STATIC
 )
 
 if (__UNIX__)
-  target_compile_options(hot PUBLIC -std=c++11 -O3)
+  target_compile_options(hottentot-runtime PUBLIC -std=c++11 -O3)
 endif()
 
 if (__UNIX__)
-  add_library(hotd STATIC
+  add_library(hottentot-runtime-debug STATIC
     ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.cc
     ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/logger.cc
     ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/protocol_v1.cc
@@ -250,7 +260,7 @@ if (__UNIX__)
     ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_tcp_server_factory.cc
     ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_request_callback.cc
   )
-  target_compile_options(hotd PUBLIC -D_DEBUG)
+  target_compile_options(hottentot-runtime-debug PUBLIC -D_DEBUG)
 endif()
 
 # set(HEADERS 
