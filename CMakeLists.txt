@@ -32,34 +32,122 @@ set(PROJECT_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 
 include_directories(${PROJECT_INCLUDE_DIR})
 
-set(CC_TEMPLATE_FILES
-  "${PROJECT_SOURCE_DIR}/generator/cc/templates/templates.h"
-  "${PROJECT_SOURCE_DIR}/generator/cc/templates/templates.cc"
+set(CC_TEMPLATE_SOURCES
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/templates.h
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/templates.cc
 )
 
-add_custom_command(OUTPUT ${CC_TEMPLATE_FILES}
-  COMMAND ./cc/templates/generate_templates_header.sh ./cc/templates/
+set(CC_TEMPLATES
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/abstract_service_header.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/client.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/enums.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/interface.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_builder_cc.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_builder_header.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_cc.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_cc__method.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_cc__method_argument_serialization.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_cc__method_response_deserialization.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/proxy_header.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/request_handler_cc.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/request_handler_cc__method_if_clause.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/request_handler_header.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/server.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/service_impl_cc.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/service_impl_cc__method.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/service_impl_header.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/service_interface.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/struct_cc.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/struct_header.template
+  ${PROJECT_SOURCE_DIR}/generator/cc/templates/struct_header__getter_and_setter.template
+)
+
+set(JAVA_TEMPLATES
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/abstractService.template
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/client_main.template
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/enum.template
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/pom.template
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/requestHandler.template
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/serializableStructList.template
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/server_impl.template
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/server_main.template
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/service.template
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/serviceProxy.template
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/serviceProxyBuilder.template
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/struct.template
+)
+
+set(JAVA_TEMPLATE_SOURCES
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/byte_arrays/abstractService.h
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/byte_arrays/clientMain.h
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/byte_arrays/enum.h
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/byte_arrays/pom.h
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/byte_arrays/requestHandler.h
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/byte_arrays/serializableStructList.h
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/byte_arrays/serverImpl.h
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/byte_arrays/serverMain.h
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/byte_arrays/service.h
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/byte_arrays/serviceProxy.h
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/byte_arrays/serviceProxyBuilder.h
+  ${PROJECT_SOURCE_DIR}/generator/java/templates/byte_arrays/struct.h
+)
+
+set(YACC_LEX_FILES
+  ${PROJECT_SOURCE_DIR}/generator/hot.y
+  ${PROJECT_SOURCE_DIR}/generator/hot.l
+)
+
+set(YACC_LEX_SOURCES
+  ${PROJECT_SOURCE_DIR}/generator/y.tab.cc
+  ${PROJECT_SOURCE_DIR}/generator/lex.yy.cc
+)
+
+if (UNNIX)
+  add_custom_command(OUTPUT ${CC_TEMPLATE_SOURCES}
+    COMMAND echo "Generating C++ templates ..."
+    COMMAND ./cc/templates/generate_templates_header.sh ./cc/templates/
+    COMMAND echo "C++ templates are generated."
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
+    VERBATIM
+    DEPENDS ${CC_TEMPLATES}
+  )
+else()
+  add_custom_command(OUTPUT ${CC_TEMPLATE_SOURCES}
+    COMMAND echo "Generating C++ templates ..."
+    COMMAND .\\cc\\templates\\generate_templates_header.bat .\\cc\\templates
+    COMMAND echo "C++ templates are generated."
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}\\generator
+    VERBATIM
+    DEPENDS ${CC_TEMPLATES}
+  )
+endif()
+
+add_custom_target(cc-templates DEPENDS ${CC_TEMPLATE_SOURCES})
+
+add_custom_command(OUTPUT ${JAVA_TEMPLATE_SOURCES}
+  COMMAND echo "Generating Java templates ..."
   COMMAND ./java/templates/byte_array_maker.sh
+  COMMAND echo "Java templates are generated."
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
   VERBATIM
+  DEPENDS ${JAVA_TEMPLATES}
 )
 
-set(LEX_FILES
-  "${PROJECT_SOURCE_DIR}/generator/y.tab.cc"
-  "${PROJECT_SOURCE_DIR}/generator/lex.yy.cc"
-)
+add_custom_target(java-templates DEPENDS ${JAVA_TEMPLATE_SOURCES})
 
-add_custom_command(OUTPUT ${LEX_FILES}
+add_custom_command(OUTPUT ${YACC_LEX_SOURCES}
+  COMMAND echo "Building sources for yacc and lex ..."
   COMMAND yacc -d hot.y
   COMMAND flex hot.l
   COMMAND mv y.tab.c y.tab.cc
   COMMAND mv lex.yy.c lex.yy.cc
+  COMMAND echo "Yac and lex sources are generated."
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
   VERBATIM
+  DEPENDS ${YACC_LEX_FILES}
 )
 
-add_custom_target(make_cc_template_files DEPENDS ${CC_TEMPLATE_FILES})
-add_custom_target(make_lex_files DEPENDS ${LEX_FILES})
+add_custom_target(yacc-lex-sources DEPENDS ${YACC_LEX_SOURCES})
 
 add_library(hottentot-generator-common-lib STATIC 
   ${PROJECT_SOURCE_DIR}/generator/runtime.cc

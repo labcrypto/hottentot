@@ -1,6 +1,6 @@
 md win32-build
 cd win32-build
 cmake ..
-# cmake --build .
-# cmake --build . --config Release
+rem cmake --build .
+rem cmake --build . --config Release
 cd ..
