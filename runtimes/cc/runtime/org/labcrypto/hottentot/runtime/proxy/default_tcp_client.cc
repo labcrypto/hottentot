@@ -21,7 +21,7 @@
  *  SOFTWARE.
  */
  
-#ifdef _MSC_VER
+#ifdef __WIN32__
 // #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -41,7 +41,7 @@
 #include <iostream>
 #include <sstream>
 
-#ifdef _MSC_VER
+#ifdef __WIN32__
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
@@ -75,7 +75,7 @@ namespace proxy {
   }
   bool 
   DefaultTcpClient::Connect() {
-#ifndef _MSC_VER
+#ifdef __UNIX__
     struct sockaddr_in serverAddr;
     struct hostent *server;
     socketFD_ = socket(AF_INET, SOCK_STREAM, 0);
@@ -194,7 +194,7 @@ namespace proxy {
     if (dataLength == 0) {
       return;
     }
-#ifndef _MSC_VER
+#ifdef __UNIX__
     int result = write(socketFD_, data, dataLength * sizeof(unsigned char));
     if (result <= 0) {
       throw std::runtime_error("[" + ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() + "]: Write to service failed.");
@@ -218,7 +218,7 @@ namespace proxy {
   uint32_t 
   DefaultTcpClient::Read(unsigned char *buffer,
                          uint32_t bufferLength) {
-#ifndef _MSC_VER
+#ifdef __UNIX__
     return read(socketFD_, buffer, bufferLength * sizeof(unsigned char));
 #else
     return recv(socketFD_, (char *)buffer, bufferLength * sizeof(unsigned char), 0);
@@ -227,7 +227,7 @@ namespace proxy {
   void 
   DefaultTcpClient::Close() {
     if (socketFD_ > 0) {
-#ifndef _MSC_VER
+#ifdef __UNIX__
       close(socketFD_);
 #else
       closesocket(socketFD_);

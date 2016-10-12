@@ -24,7 +24,7 @@
 #ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_TCP_SERVER_H_
 #define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__DEFAULT_TCP_SERVER_H_
 
-#ifdef _MSC_VER
+#ifdef __WIN32__
 // #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -50,13 +50,13 @@ namespace service {
                      std::map<uint8_t, RequestHandler*> *);
     virtual ~DefaultTcpServer();
   public:
-#ifndef _MSC_VER
+#ifdef __UNIX__
     virtual pthread_t BindAndStart();
 #else
     virtual HANDLE BindAndStart();
 #endif
   private:
-#ifdef _MSC_VER
+#ifdef __WIN32__
     static DWORD WINAPI AcceptClients(LPVOID);
     static DWORD WINAPI HandleClientConnection(LPVOID);
 #else
@@ -64,7 +64,7 @@ namespace service {
     static void* HandleClientConnection(void *);
 #endif
   private:
-#ifdef _MSC_VER
+#ifdef __WIN32__
     SOCKET serverSocketFD_;
 #else
     int serverSocketFD_;

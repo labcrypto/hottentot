@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifndef _MSC_VER
+#ifdef __UNIX__
 #include <signal.h>
 #include <unistd.h>
 #endif
@@ -51,14 +51,14 @@ namespace service {
   TcpServerFactory* ServiceRuntime::tcpServerFactory_ = 0;
   bool ServiceRuntime::initialized_ = false;
   std::vector<TcpServer*> ServiceRuntime::tcpServers_;
-#ifndef _MSC_VER
+#ifdef __UNIX__
   std::vector<pthread_t> ServiceRuntime::threads_;
 #else
   std::vector<HANDLE> ServiceRuntime::threads_;
 #endif
   std::map<Endpoint, std::vector<Service*>*, Endpoint::Comparator> ServiceRuntime::services_;
   std::map<Endpoint, std::map<uint8_t, RequestHandler*>*, Endpoint::Comparator2> ServiceRuntime::requestHandlers_;
-#ifndef _MSC_VER
+#ifdef __UNIX__
   void 
   ServiceRuntime::SigTermHanlder(int flag) {
     if (::org::labcrypto::hottentot::runtime::Configuration::Verbose()) {
@@ -111,7 +111,7 @@ namespace service {
       return;
     }
     Configuration::Init(argc, argv);
-#ifndef _MSC_VER
+#ifdef __UNIX__
     struct sigaction sigIntHandler;
     sigIntHandler.sa_handler = ServiceRuntime::SigTermHanlder;
     sigemptyset(&sigIntHandler.sa_mask);
@@ -195,7 +195,7 @@ namespace service {
       }
     }
     for (uint32_t i = 0; i < threads_.size(); i++) {
-#ifndef _MSC_VER
+#ifdef __UNIX__
       pthread_join(threads_[i], NULL);
 #else
       WaitForSingleObject(threads_[i], INFINITE);

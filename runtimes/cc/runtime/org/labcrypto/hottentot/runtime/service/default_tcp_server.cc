@@ -29,7 +29,7 @@
 #include <sstream>
 #include <string>
 
-#ifdef _MSC_VER
+#ifdef __WIN32__
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
@@ -66,7 +66,7 @@ namespace service {
   }
   DefaultTcpServer::~DefaultTcpServer() {
   }
-#ifndef _MSC_VER
+#ifdef __UNIX__
     pthread_t 
     DefaultTcpServer::BindAndStart() {
 #else
@@ -74,7 +74,7 @@ namespace service {
     DefaultTcpServer::BindAndStart() {
 #endif
     if (serverSocketFD_ == 0) {
-#ifndef _MSC_VER
+#ifdef __UNIX__
       struct sockaddr_in servAddr;
       int serverSocketFD = socket(AF_INET, SOCK_STREAM, 0);
       memset((char *) &servAddr, 0, sizeof(servAddr));
@@ -143,7 +143,7 @@ namespace service {
         exit(EXIT_FAILURE);
       }
 #endif
-#ifndef _MSC_VER
+#ifdef __UNIX__
       pthread_t thread;
       int ret = pthread_create(&thread, NULL, AcceptClients, (void *)this);
       if (ret) {
@@ -174,7 +174,7 @@ namespace service {
     exit(EXIT_FAILURE);
     return 0;
   }
-#ifndef _MSC_VER
+#ifdef __UNIX__
   void*
   DefaultTcpServer::AcceptClients(void *data) {
 #else
@@ -182,7 +182,7 @@ namespace service {
   DefaultTcpServer::AcceptClients(LPVOID data) {
 #endif
     bool ok = true;
-#ifndef _MSC_VER
+#ifdef __UNIX__
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLength = sizeof(clientAddr);
 #else
@@ -190,7 +190,7 @@ namespace service {
 #endif
     DefaultTcpServer *ref = (DefaultTcpServer*)data;
     while (ok) {
-#ifndef _MSC_VER
+#ifdef __UNIX__
       int clientSocketFD = accept(ref->serverSocketFD_, (struct sockaddr *) &clientAddr, &clientAddrLength);
 #else
       clientSocketFD = accept(ref->serverSocketFD_, NULL, NULL);
@@ -210,7 +210,7 @@ namespace service {
             "Setting socket read timeout ..." << std::endl;
       }
       if (::org::labcrypto::hottentot::runtime::Configuration::SocketReadTimeout() > 0) {
-#ifndef _MSC_VER
+#ifdef __UNIX__
         struct timeval tv;
         tv.tv_sec = ::org::labcrypto::hottentot::runtime::Configuration::SocketReadTimeout();
         tv.tv_usec = 0;
@@ -233,7 +233,7 @@ namespace service {
       _HandleClientConnectionParams *params = new _HandleClientConnectionParams;
       params->tcpServer_ = ref;
       params->clientSocketFD_ = clientSocketFD;
-#ifndef _MSC_VER
+#ifdef __UNIX__
       pthread_t thread; // TODO(kamran): We need a thread pool here.
       pthread_attr_t attr;
       pthread_attr_init(&attr);
@@ -263,7 +263,7 @@ namespace service {
     }
     return 0;
   }
-#ifndef _MSC_VER
+#ifdef __UNIX__
   void*
   DefaultTcpServer::HandleClientConnection(void *data) {
 #else
@@ -279,7 +279,7 @@ namespace service {
       new DefaultRequestCallback(ref->tcpServer_->requestHandlers_);
     protocol->SetRequestCallback(requestCallback);
     while (ok) {
-#ifndef _MSC_VER
+#ifdef __UNIX__
       int numOfReadBytes = read(ref->clientSocketFD_, buffer, 256);
 #else
       int numOfReadBytes = recv(ref->clientSocketFD_, (char *)buffer, 256, 0);
@@ -299,7 +299,7 @@ namespace service {
         "[" << ::org::labcrypto::hottentot::runtime::Utils::GetCurrentUTCTimeString() << "]: " <<
           "Client is gone." << std::endl;
     }
-#ifndef _MSC_VER
+#ifdef __UNIX__
     close(ref->clientSocketFD_);
 #else
     shutdown(ref->clientSocketFD_, SD_SEND);
@@ -308,7 +308,7 @@ namespace service {
     delete requestCallback;
     delete protocol;
     delete ref;
-#ifndef _MSC_VER
+#ifdef __UNIX__
     pthread_exit(NULL);
 #endif
     return 0;

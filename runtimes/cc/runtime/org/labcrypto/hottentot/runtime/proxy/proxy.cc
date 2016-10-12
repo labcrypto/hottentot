@@ -21,7 +21,7 @@
  *  SOFTWARE.
  */
 
-#ifdef _MSC_VER
+#ifdef __WIN32__
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #else
@@ -39,7 +39,7 @@
 #include <iostream>
 #include <sstream>
 
-#ifdef _MSC_VER
+#ifdef __WIN32__
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
@@ -70,7 +70,7 @@ namespace proxy {
   }
   bool
   Proxy::IsServerAlive() {
-#ifndef _MSC_VER
+#ifdef __UNIX__
     struct sockaddr_in serverAddr;
     struct hostent *server;
     int socketFD = socket(AF_INET, SOCK_STREAM, 0);

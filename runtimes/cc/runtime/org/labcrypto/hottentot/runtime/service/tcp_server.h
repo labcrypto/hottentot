@@ -24,7 +24,7 @@
 #ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_H_
 #define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__TCP_SERVER_H_
 
-#ifdef _MSC_VER
+#ifdef __WIN32__
 #include <windows.h>
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
@@ -61,7 +61,7 @@ namespace service {
     }
     virtual ~TcpServer() {}
   public:
-#ifndef _MSC_VER
+#ifdef __UNIX__
     virtual pthread_t BindAndStart() = 0;
 #else
     virtual HANDLE BindAndStart() = 0;

@@ -24,7 +24,7 @@
 #ifndef _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__SERVICE_RUNTIME_H_
 #define _ORG_LABCRYPTO_HOTTENTOT_RUNTIME_SERVICE__SERVICE_RUNTIME_H_
 
-#ifdef _MSC_VER
+#ifdef __WIN32__
 #include <windows.h>
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
@@ -69,7 +69,7 @@ namespace service {
     inline static bool Verbose() {
       return verbose_;
     }
-#ifndef _MSC_VER
+#ifdef __UNIX__
     static void SigTermHanlder(int);
 #else
     static BOOL SigTermHanlder(DWORD);
@@ -79,7 +79,7 @@ namespace service {
     static bool initialized_;
     static TcpServerFactory *tcpServerFactory_;
     static std::vector<TcpServer*> tcpServers_;
-#ifndef _MSC_VER
+#ifdef __UNIX__
     static std::vector<pthread_t> threads_;
 #else
     static std::vector<HANDLE> threads_;

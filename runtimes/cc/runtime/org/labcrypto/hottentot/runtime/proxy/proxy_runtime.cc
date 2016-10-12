@@ -21,7 +21,7 @@
  *  SOFTWARE.
  */
 
-#ifndef _MSC_VER
+#ifndef __WIN32__
 #include <signal.h>
 #include <unistd.h>
 #endif
@@ -48,7 +48,7 @@ namespace proxy {
       return;
     }
     Configuration::Init(argc, argv);
-#ifndef _MSC_VER
+#ifdef __UNIX__
     signal(SIGPIPE, SIG_IGN);
 #endif
     ProxyRuntime::initialized_ = true;

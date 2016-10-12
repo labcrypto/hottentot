@@ -30,7 +30,7 @@
 #include <iomanip>
 #include <limits>
 
-#ifdef _MSC_VER
+#ifdef __WIN32__
 // #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -41,7 +41,7 @@
 #include <pthread.h>
 #endif
 
-#ifdef _MSC_VER
+#ifdef __WIN32__
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
@@ -534,7 +534,7 @@ namespace runtime {
                   ::org::labcrypto::hottentot::runtime::Utils::PrintArray("Response2", sendData, sendLength);
                 }
                 if (sendLength > 0) {
-#ifndef _MSC_VER
+#ifdef __UNIX__
                   try {
                     int result = write(remoteSocketFD_, sendData, sendLength * sizeof(unsigned char));
                     if (result <= 0) {

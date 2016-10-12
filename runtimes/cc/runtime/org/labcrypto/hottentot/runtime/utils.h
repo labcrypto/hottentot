@@ -31,7 +31,7 @@
 #include <string>
 #include <sstream>
 
-#ifdef _MSC_VER
+#ifdef __WIN32__
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
@@ -53,7 +53,7 @@ namespace hottentot {
 namespace runtime {
   class Utils {
   public:
-#ifndef _MSC_VER
+#ifdef __UNIX__
     static std::string GetCurrentUTCTimeString() {
       time_t     now = time(0);
       struct tm  tstruct;

@@ -24,7 +24,7 @@
 #ifndef _ORG_LABCRYPTO_HOTTENTOT__SERIALIZABLE_H_
 #define _ORG_LABCRYPTO_HOTTENTOT__SERIALIZABLE_H_
 
-#ifdef _MSC_VER
+#ifdef __WIN32__
 typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
