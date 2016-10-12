@@ -26,7 +26,7 @@
 %{
 #include <stdio.h>
 
-#ifdef _MSC_VER
+#ifdef __WIN32__
 #include "hot.tab.h"
 #else
 #include "y.tab.h"

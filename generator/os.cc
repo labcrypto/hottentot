@@ -21,7 +21,7 @@
  *  SOFTWARE.
  */
 
-#ifdef _WIN32
+#ifdef __WIN32__
 #include <Windows.h>
 #else
 #include <sys/types.h>

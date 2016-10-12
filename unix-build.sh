@@ -3,5 +3,5 @@
 mkdir unix-build
 cd unix-build
 cmake ..
-make
+# make
 cd ..
