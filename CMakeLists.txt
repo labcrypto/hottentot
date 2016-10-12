@@ -29,7 +29,9 @@ endif()
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 set(PROJECT_SOURCE_DIR ${CMAKE_SOURCE_DIR}/)
 
-include_directories(${PROJECT_SOURCE_DIR}/generator)
+if (WIN32)
+  include_directories(${PROJECT_SOURCE_DIR}/generator)
+endif()
 
 set(CC_TEMPLATE_SOURCES
   ${PROJECT_SOURCE_DIR}/generator/cc/templates/templates.h
@@ -101,7 +103,7 @@ set(YACC_LEX_SOURCES
   ${PROJECT_SOURCE_DIR}/generator/lex.yy.cc
 )
 
-if (UNNIX)
+if (UNIX)
   add_custom_command(OUTPUT ${CC_TEMPLATE_SOURCES}
     COMMAND echo "Generating C++ templates ..."
     COMMAND ./cc/templates/generate_templates_header.sh ./cc/templates/
@@ -123,7 +125,7 @@ endif()
 
 add_custom_target(cc-templates DEPENDS ${CC_TEMPLATE_SOURCES})
 
-if (UNNIX)
+if (UNIX)
   add_custom_command(OUTPUT ${JAVA_TEMPLATE_SOURCES}
     COMMAND echo "Generating Java templates ..."
     COMMAND ./java/templates/byte_array_maker.sh
@@ -146,17 +148,31 @@ endif()
 add_custom_target(java-templates DEPENDS ${JAVA_TEMPLATE_SOURCES})
 
 if (UNIX)
-  add_custom_command(OUTPUT ${YACC_LEX_SOURCES}
-    COMMAND echo "Building sources for yacc and lex ..."
-    COMMAND bison -d hot.y
-    COMMAND flex hot.l
-    COMMAND mv y.tab.c y.tab.cc
-    COMMAND mv lex.yy.c lex.yy.cc
-    COMMAND echo "Yac and lex sources are generated."
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
-    VERBATIM
-    DEPENDS ${YACC_LEX_FILES}
-  )
+  if(APPLE)
+    add_custom_command(OUTPUT ${YACC_LEX_SOURCES}
+      COMMAND echo "Building sources for yacc and lex ..."
+      COMMAND bison -d hot.y
+      COMMAND flex hot.l
+      COMMAND mv hot.tab.c y.tab.cc
+      COMMAND mv lex.yy.c lex.yy.cc
+      COMMAND echo "Yac and lex sources are generated."
+      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
+      VERBATIM
+      DEPENDS ${YACC_LEX_FILES}
+    )
+  else()
+    add_custom_command(OUTPUT ${YACC_LEX_SOURCES}
+      COMMAND echo "Building sources for yacc and lex ..."
+      COMMAND bison -d hot.y
+      COMMAND flex hot.l
+      COMMAND mv y.tab.c y.tab.cc
+      COMMAND mv lex.yy.c lex.yy.cc
+      COMMAND echo "Yac and lex sources are generated."
+      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
+      VERBATIM
+      DEPENDS ${YACC_LEX_FILES}
+    )
+  endif()
 else()
   add_custom_command(OUTPUT ${YACC_LEX_SOURCES}
     COMMAND echo "Building sources for yacc and lex ..."

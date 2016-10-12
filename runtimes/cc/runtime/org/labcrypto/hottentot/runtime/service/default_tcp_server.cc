@@ -152,7 +152,11 @@ namespace service {
             "Error - pthread_create() return code: " << ret << std::endl;
         exit(EXIT_FAILURE);
       }
+#ifdef __LINUX__
       pthread_detach(ret);
+#elif __MACOS__
+      pthread_detach(thread);
+#endif
       return thread;
 #else
       HANDLE res = CreateThread(NULL,

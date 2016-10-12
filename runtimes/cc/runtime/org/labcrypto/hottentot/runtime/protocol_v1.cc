@@ -540,15 +540,6 @@ namespace runtime {
                     if (result <= 0) {
                       throw std::runtime_error("[" + Utils::GetCurrentUTCTimeString() + "]: Write to proxy failed.");
                     }
-                    /* for (uint32_t i = 0; i < sendLength; i++) {
-                      std::cout << "Writing ..." << std::endl;
-                      int result = write(remoteSocketFD_, &sendData[i], sizeof(unsigned char));
-                      std::cout << "Write result: " << result << std::endl;
-                      if (result <= 0) {
-                        throw std::runtime_error("Write to proxy failed.");
-                      }
-                      sleep(2);
-                    } */
 #else
                   try {
                     int result = send(remoteSocketFD_, (char *)sendData, sendLength * sizeof(unsigned char), 0);
