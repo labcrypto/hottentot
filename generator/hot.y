@@ -45,19 +45,6 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
-#ifdef _MSC_VER
-#include "../../hot.h"
-#include "../../declaration.h"
-#include "../../service.h"
-#include "../../method.h"
-#include "../../argument.h"
-#include "../../enum.h"
-
-#include "../../fasthash.h"
-
-#include "../../cc/cc_generator.h"
-#include "../../java/java_generator.h"
-#else
 #include "hot.h"
 #include "declaration.h"
 #include "service.h"
@@ -69,7 +56,6 @@ typedef unsigned __int64 uint64_t;
 
 #include "cc/cc_generator.h"
 #include "java/java_generator.h"
-#endif
 
 void yyerror(char *);
 

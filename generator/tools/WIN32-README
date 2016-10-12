@@ -1,0 +1,3 @@
+1- Install flex in C:\flex
+2- Install bison in C:\bison
+3- Run win32-env.bat as adminsitrator.

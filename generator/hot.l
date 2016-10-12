@@ -22,11 +22,12 @@
  */
 
 %option noyywrap
+%option never-interactive
 %{
 #include <stdio.h>
 
 #ifdef _MSC_VER
-#include "hot.tab.hpp"
+#include "hot.tab.h"
 #else
 #include "y.tab.h"
 #endif

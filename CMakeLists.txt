@@ -28,9 +28,8 @@ endif()
 
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 set(PROJECT_SOURCE_DIR ${CMAKE_SOURCE_DIR}/)
-set(PROJECT_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 
-include_directories(${PROJECT_INCLUDE_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/generator)
 
 set(CC_TEMPLATE_SOURCES
   ${PROJECT_SOURCE_DIR}/generator/cc/templates/templates.h
@@ -146,17 +145,31 @@ endif()
 
 add_custom_target(java-templates DEPENDS ${JAVA_TEMPLATE_SOURCES})
 
-add_custom_command(OUTPUT ${YACC_LEX_SOURCES}
-  COMMAND echo "Building sources for yacc and lex ..."
-  COMMAND yacc -d hot.y
-  COMMAND flex hot.l
-  COMMAND mv y.tab.c y.tab.cc
-  COMMAND mv lex.yy.c lex.yy.cc
-  COMMAND echo "Yac and lex sources are generated."
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
-  VERBATIM
-  DEPENDS ${YACC_LEX_FILES}
-)
+if (UNIX)
+  add_custom_command(OUTPUT ${YACC_LEX_SOURCES}
+    COMMAND echo "Building sources for yacc and lex ..."
+    COMMAND bison -d hot.y
+    COMMAND flex hot.l
+    COMMAND mv y.tab.c y.tab.cc
+    COMMAND mv lex.yy.c lex.yy.cc
+    COMMAND echo "Yac and lex sources are generated."
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
+    VERBATIM
+    DEPENDS ${YACC_LEX_FILES}
+  )
+else()
+  add_custom_command(OUTPUT ${YACC_LEX_SOURCES}
+    COMMAND echo "Building sources for yacc and lex ..."
+    COMMAND bison -d hot.y
+    COMMAND flex hot.l
+    COMMAND move hot.tab.c y.tab.cc
+    COMMAND move lex.yy.c lex.yy.cc
+    COMMAND echo "Yac and lex sources are generated."
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
+    VERBATIM
+    DEPENDS ${YACC_LEX_FILES}
+  )
+endif()
 
 add_custom_target(yacc-lex-sources DEPENDS ${YACC_LEX_SOURCES})
 
@@ -227,17 +240,25 @@ if (__UNIX__)
   target_compile_options(hot-executable PUBLIC -std=c++11 -O3)
 endif()
 
-set_target_properties(hottentot-generator-common-lib PROPERTIES OUTPUT_NAME hot-generator-common)
-set_target_properties(hottentot-generator-cc-lib PROPERTIES OUTPUT_NAME hot-generator-cc)
-set_target_properties(hottentot-generator-java-lib PROPERTIES OUTPUT_NAME hot-generator-java)
+set_target_properties(hottentot-generator-common-lib PROPERTIES OUTPUT_NAME hottentot-generator-common)
+set_target_properties(hottentot-generator-cc-lib PROPERTIES OUTPUT_NAME hottentot-generator-cc)
+set_target_properties(hottentot-generator-java-lib PROPERTIES OUTPUT_NAME hottentot-generator-java)
 set_target_properties(hottentot-generator PROPERTIES RUNTIME_OUTPUT_NAME hot)
 
-target_link_libraries(hottentot-generator
-  hottentot-generator-common-lib
-  hottentot-generator-cc-lib
-  hottentot-generator-java-lib
-  fl
-)
+if (UNIX)
+  target_link_libraries(hottentot-generator
+    hottentot-generator-common-lib
+    hottentot-generator-cc-lib
+    hottentot-generator-java-lib
+    fl
+  )
+else()
+  target_link_libraries(hottentot-generator
+    hottentot-generator-common-lib
+    hottentot-generator-cc-lib
+    hottentot-generator-java-lib
+  )
+endif()
 
 add_library(hottentot-runtime STATIC
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.cc
