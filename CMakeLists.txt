@@ -309,39 +309,29 @@ if (UNIX)
   target_compile_options(hottentot-runtime-debug PUBLIC -D_DEBUG -std=c++11 -O0 -g)
 endif()
 
-# set(HEADERS 
-#   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/boolean.h
-#   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
-#   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
-#   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
-#   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
-#   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.h
-# )
-# 
-# install(DIRECTORY 
-#   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org 
-#   DESTINATION 
-#   ${HEADERS_INSTALL_DIR} 
-#   FILES_MATCHING 
-#   PATTERN "*.h"
-# )
-# 
-# install(TARGETS
-#   hottentot-generator-common-lib
-#   hottentot-generator-cc-lib
-#   hottentot-generator-java-lib
-#   hot
-#   hotd
-#   DESTINATION
-#   ${LIB_INSTALL_DIR}
-# )
-# 
-# install(TARGETS
-#   hot-executable
-#   DESTINATION
-#   ${BIN_INSTALL_DIR}
-# )
-# 
+if (UNIX)
+  install(DIRECTORY 
+    ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org 
+    DESTINATION 
+    ${HEADERS_INSTALL_DIR} 
+    FILES_MATCHING 
+    PATTERN "*.h"
+  )
+
+  install(TARGETS
+    hottentot-runtime
+    hottentot-runtime-debug
+    DESTINATION
+    ${LIB_INSTALL_DIR}
+  )
+
+  install(TARGETS
+    hottentot-generator
+    DESTINATION
+    ${BIN_INSTALL_DIR}
+  )
+endif()
+ 
 # add_custom_target(uninstall
 #   COMMAND rm -rfv ${BIN_INSTALL_DIR}/hot
 #   COMMAND rm -rfv ${LIB_INSTALL_DIR}/libhot*
