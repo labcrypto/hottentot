@@ -27,6 +27,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <errno.h>
 #endif
 
 #include <string>
@@ -47,7 +48,7 @@ namespace generator {
   void 
   Os::MakeDir(std::string pathString) {
     std::string tPathString = StringHelper::Trim(pathString);
-#ifdef _WIN32
+#ifdef __WIN32__
     std::string adjPathString = StringHelper::Replace(tPathString, "/", "\\");
     std::size_t index = adjPathString.find("\\");
     while (index != std::string::npos) {

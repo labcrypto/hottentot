@@ -26,11 +26,11 @@
 %{
 #include <stdio.h>
 
-#if defined(__WIN32__) || defined(__MACOS__)
+// #if defined(__WIN32__) || defined(__MACOS__)
 #include "hot.tab.h"
-#else
-#include "y.tab.h"
-#endif
+// #else
+// #include "y.tab.h"
+// #endif
 
 extern unsigned int lineCounter;
 

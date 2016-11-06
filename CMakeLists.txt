@@ -165,7 +165,7 @@ if (UNIX)
       COMMAND echo "Building sources for yacc and lex ..."
       COMMAND bison -d hot.y
       COMMAND flex hot.l
-      COMMAND mv y.tab.c y.tab.cc
+      COMMAND mv hot.tab.c y.tab.cc
       COMMAND mv lex.yy.c lex.yy.cc
       COMMAND echo "Yac and lex sources are generated."
       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/generator
@@ -249,11 +249,11 @@ add_dependencies(hottentot-generator yacc-lex-sources)
 add_dependencies(hottentot-generator hottentot-generator-cc-lib)
 add_dependencies(hottentot-generator hottentot-generator-java-lib)
 
-if (__UNIX__)
+if (UNIX)
   target_compile_options(hottentot-generator-common-lib PUBLIC -std=c++11 -O3)
   target_compile_options(hottentot-generator-cc-lib PUBLIC -std=c++11 -O3)
   target_compile_options(hottentot-generator-java-lib PUBLIC -std=c++11 -O3)
-  target_compile_options(hot-executable PUBLIC -std=c++11 -O3)
+  target_compile_options(hottentot-generator PUBLIC -std=c++11 -O3)
 endif()
 
 set_target_properties(hottentot-generator-common-lib PROPERTIES OUTPUT_NAME hottentot-generator-common)
@@ -263,8 +263,8 @@ set_target_properties(hottentot-generator PROPERTIES RUNTIME_OUTPUT_NAME hot)
 
 if (UNIX)
   target_link_libraries(hottentot-generator
-    hottentot-generator-common-lib
     hottentot-generator-cc-lib
+    hottentot-generator-common-lib
     hottentot-generator-java-lib
     fl
   )
@@ -290,11 +290,9 @@ add_library(hottentot-runtime STATIC
   ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_request_callback.cc
 )
 
-if (__UNIX__)
+if (UNIX)
   target_compile_options(hottentot-runtime PUBLIC -std=c++11 -O3)
-endif()
-
-if (__UNIX__)
+  
   add_library(hottentot-runtime-debug STATIC
     ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/configuration.cc
     ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/logger.cc
@@ -308,7 +306,7 @@ if (__UNIX__)
     ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_tcp_server_factory.cc
     ${PROJECT_SOURCE_DIR}/runtimes/cc/runtime/org/labcrypto/hottentot/runtime/service/default_request_callback.cc
   )
-  target_compile_options(hottentot-runtime-debug PUBLIC -D_DEBUG)
+  target_compile_options(hottentot-runtime-debug PUBLIC -D_DEBUG -std=c++11 -O0 -g)
 endif()
 
 # set(HEADERS 
