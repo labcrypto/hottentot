@@ -97,7 +97,7 @@ namespace hottentot {
           length += 3 + lengths[i];
         } else if (lengths[i] < 256 * 256 * 256) {
           length += 4 + lengths[i];
-        } else if (lengths[i] < 256 * 256 * 256 * 256) {
+        } else {
           length += 5 + lengths[i];
         }
         // std::cout << "Len(" << i << ")" << std::endl;
@@ -126,7 +126,7 @@ namespace hottentot {
           data[c + 2] = (lengths[i] - data[c + 1] * (256 * 256)) / 256;
           data[c + 3] = lengths[i] % (256 * 256);
           c += 4;
-        } else if (lengths[i] < 256 * 256 * 256 * 256) {
+        } else {
           data[c] = 0x84;
           data[c + 1] = lengths[i] / (256 * 256 * 256);
           data[c + 2] = (lengths[i] - data[c + 1] * 256 * 256 * 256) / (256 * 256);
