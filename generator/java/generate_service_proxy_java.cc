@@ -43,7 +43,7 @@ namespace java {
     ::org::labcrypto::hottentot::generator::Module *pModule
   ) {
 
-    int serializableListCounter;
+    int serializableListCounter = 0;
     ::org::labcrypto::hottentot::generator::Service *pService;
     std::string basePackageName = pModule->package_;
     for (uint32_t i = 0; i < pModule->services_.size(); i++) {
